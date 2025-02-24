@@ -16,6 +16,7 @@ Material:
   - _COLOR2OVERLAYTYPE_UV_BASED
   - _FIXTHEBASEOFFOLIAGE_ON
   - _SNOWOVERLAYTYPE_WORLD_NORMAL_BASED
+  - _WIND_ON
   m_InvalidKeywords:
   - _COLOR2ON_ON
   - _COLOR2TYPE_VERTICALGRADIENT
@@ -145,7 +146,7 @@ Material:
     - _Translucency: 2
     - _TranslucencyInt: 5
     - _UVSec: 0
-    - _WIND: 0
+    - _WIND: 1
     - _Wind: 1
     - _WindForce: 0.4
     - _WindSpeed: 0.2
