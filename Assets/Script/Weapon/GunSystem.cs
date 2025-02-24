@@ -59,12 +59,23 @@ public class GunSystem : MonoBehaviour
 
         readyToShot = false;
 
+        Ray cameraRay = camera.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(cameraRay, out RaycastHit hit, range))
+        {
+            targetPoint = hit.point;
+        }
+        else
+        {
+            targetPoint = cameraRay.origin + cameraRay.direction * range;
+        }
+
+        Vector3 direction = (targetPoint - attackPoint.position).normalized;
+
         float x = Random.Range(-spread, spread);
         float y = Random.Range(-spread, spread);
-
-        Vector3 direction = camera.transform.forward + new Vector3(x,y,0);
-
-        Debug.DrawLine(attackPoint.position, direction * range, Color.red, 2f);
+        direction += new Vector3(x, y, 0);
 
         //射線判定
         if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Enemy) )
