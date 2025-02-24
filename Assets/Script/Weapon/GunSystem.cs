@@ -64,22 +64,15 @@ public class GunSystem : MonoBehaviour
 
         Vector3 direction = camera.transform.forward + new Vector3(x,y,0);
 
-        Debug.DrawLine(camera.transform.position, camera.transform.position + direction * range, Color.red, 2f);
+        Debug.DrawLine(attackPoint.position, direction * range, Color.red, 2f);
 
         //射線判定
-        if (Physics.Raycast(camera.transform.position, direction, out rayHit, range, Enemy) )
+        if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Enemy) )
         {
             Debug.Log(rayHit.collider.name);
 
             if (rayHit.collider.CompareTag("Enemy"))
                 rayHit.collider.GetComponent<Health>().TakeDamage(Damage);
-            
-        }
-        if (Physics.Raycast(camera.transform.position, direction, out rayHit, range, Wall))
-        {
-            if (rayHit.collider.CompareTag("Wall"))
-                Debug.Log($"你打中了牆壁!");
-
         }
 
         if(muzzleFlash != null)
