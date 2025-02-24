@@ -287,8 +287,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3538476031198503613, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -326,7 +325,7 @@ MonoBehaviour:
   DashSpeed: 10
   DashDuration: 0.4
   DashCoolTime: 1
-  HitCoolTime: 1
+  HitCoolTime: 0.5
   Velocity: {x: 0, y: 0, z: 0}
 --- !u!1001 &474701747
 PrefabInstance:
@@ -350,11 +349,11 @@ PrefabInstance:
       objectReference: {fileID: 397985503}
     - target: {fileID: 1920559016646865334, guid: 22eca212736e34f669a7308846a42048, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.36
+      value: -4.09
       objectReference: {fileID: 0}
     - target: {fileID: 1920559016646865334, guid: 22eca212736e34f669a7308846a42048, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.83
+      value: 4.85
       objectReference: {fileID: 0}
     - target: {fileID: 1920559016646865334, guid: 22eca212736e34f669a7308846a42048, type: 3}
       propertyPath: m_LocalPosition.z
