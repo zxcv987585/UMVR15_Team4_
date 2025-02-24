@@ -121,7 +121,26 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 1833c324095a8ea47951f42bb9da45d7, type: 2}
+--- !u!1 &115091279 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4902313336816358631, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+  m_PrefabInstance: {fileID: 1462853372}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &115091285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115091279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b9ff7337c0e49c891fa4da7672a04a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 100
+  CurrentHealth: 0
 --- !u!1 &388908862
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,6 +524,70 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1001 &1462853372
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4195535969837648465, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.0233765
+      objectReference: {fileID: 0}
+    - target: {fileID: 4195535969837648465, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.4328365
+      objectReference: {fileID: 0}
+    - target: {fileID: 4195535969837648465, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 13.735293
+      objectReference: {fileID: 0}
+    - target: {fileID: 4195535969837648465, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4195535969837648465, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4195535969837648465, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4195535969837648465, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4195535969837648465, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4195535969837648465, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4195535969837648465, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4902313336816358631, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      propertyPath: m_Name
+      value: EnemySpider
+      objectReference: {fileID: 0}
+    - target: {fileID: 4902313336816358631, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4902313336816358631, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 115091285}
+  m_SourcePrefab: {fileID: 100100000, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
 --- !u!1 &1564449375
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,7 +605,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!64 &1564449376
 MeshCollider:
@@ -670,3 +753,4 @@ SceneRoots:
   - {fileID: 388908866}
   - {fileID: 397985502}
   - {fileID: 1671924584}
+  - {fileID: 1462853372}

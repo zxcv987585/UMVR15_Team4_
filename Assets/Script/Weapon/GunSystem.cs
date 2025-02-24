@@ -52,12 +52,16 @@ public class GunSystem : MonoBehaviour
     //射擊程式碼
     private void Shoot()
     {
+        if (!readyToShot) return;
+
         readyToShot = false;
 
         float x = Random.Range(-spread, spread);
         float y = Random.Range(-spread, spread);
 
         Vector3 direction = camera.transform.forward + new Vector3(x,y,0);
+
+        Debug.DrawLine(camera.transform.position, camera.transform.position + direction * range, Color.red, 2f);
 
         //射線判定
         if (Physics.Raycast(camera.transform.position, direction, out rayHit, range, Enemy) )
@@ -77,15 +81,17 @@ public class GunSystem : MonoBehaviour
         bulletLeft--;
         bulletShot--;
 
+        if(bulletShot > 0 &&  bulletLeft > 0)
+        {
+            Invoke("Shoot", TimeBetweenShoting);
+        }
         Invoke("ResetShot", TimeBetweenShoting);
-        if(bulletShot > 0 && bulletLeft > 0)
-        Invoke("Shoot", TimeBetweenShoting);
+      
     }
 
     private void ResetShot()
     {
         readyToShot = true;
-
     }
 
     //換彈程式碼（用於冷卻系統）
