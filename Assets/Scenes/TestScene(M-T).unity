@@ -243,6 +243,10 @@ PrefabInstance:
       propertyPath: DashDuration
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 3831638619911089666, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: WeaponPrefabs.Array.data[2].prefab
+      value: 
+      objectReference: {fileID: 690605372435058100, guid: 8080eb9cdb3038c4596d86d5c250e1f4, type: 3}
     - target: {fileID: 8211211446584772470, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: m_Name
       value: Player
@@ -322,8 +326,8 @@ MonoBehaviour:
   SprintSpeedModifier: 1.5
   RotateSpeed: 5
   Gravity: 40
-  DashSpeed: 10
-  DashDuration: 0.4
+  DashSpeed: 20
+  DashDuration: 0.2
   DashCoolTime: 1
   HitCoolTime: 0.5
   Velocity: {x: 0, y: 0, z: 0}
@@ -339,10 +343,6 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1671924584}
-    - target: {fileID: 1468929069838653373, guid: 22eca212736e34f669a7308846a42048, type: 3}
-      propertyPath: SmoothTime
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1468929069838653373, guid: 22eca212736e34f669a7308846a42048, type: 3}
       propertyPath: playerTransfrom
       value: 
@@ -391,8 +391,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7817739407194875670, guid: 22eca212736e34f669a7308846a42048, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
