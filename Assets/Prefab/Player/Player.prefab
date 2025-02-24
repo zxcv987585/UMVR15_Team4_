@@ -506,6 +506,9 @@ PrefabInstance:
       addedObject: {fileID: 3831638619911089666}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 5841202809388031429}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 3825294987410653912}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       insertIndex: -1
@@ -566,8 +569,30 @@ MonoBehaviour:
   - type: 1
     prefab: {fileID: 5340698424252958170, guid: 25e6b6f7c050943e7879ce56913bba61, type: 3}
   - type: 2
-    prefab: {fileID: 4304192020116798517, guid: 765d390cb26e86f4fa96ff4973ae5ab7, type: 3}
+    prefab: {fileID: 690605372435058100, guid: 8080eb9cdb3038c4596d86d5c250e1f4, type: 3}
   defualtWeapon: 1
+--- !u!114 &5841202809388031429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8211211446584772470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f26bd75859719034ca06004d219d4a48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 0}
+  MoveSpeed: 2.5
+  SprintSpeedModifier: 1.5
+  RotateSpeed: 5
+  Gravity: 40
+  DashSpeed: 20
+  DashDuration: 0.2
+  DashCoolTime: 1
+  HitCoolTime: 0.5
+  Velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &3825294987410653912
 MonoBehaviour:
   m_ObjectHideFlags: 0
