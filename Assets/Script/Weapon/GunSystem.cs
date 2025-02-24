@@ -3,10 +3,10 @@
 public class GunSystem : MonoBehaviour
 {
     //槍械參數
-    private int Damage = 15;
+    public int Damage;
     public float TimeBetweenShoting, spread, range,reloadingTime, timeBetweenShots;
     public int magazineSize, bulletsPerTap;
-    private bool allowButtonHold;
+    public bool allowButtonHold;
     private int bulletLeft, bulletShot;
 
     //射擊判定
@@ -19,13 +19,16 @@ public class GunSystem : MonoBehaviour
     public LayerMask Enemy;
     public LayerMask Wall;
 
+    //特效
+    public GameObject muzzleFlash;
+
     private void Awake()
     {
         bulletLeft = magazineSize;
         camera = Camera.main;
         if (camera == null)
         {
-            Debug.LogError("找不到 MainCamera，請確認場景中有標記為 'MainCamera' 的攝影機！");
+            Debug.LogError("找不到攝影機！");
         }
         readyToShot = true;
     }
@@ -36,8 +39,8 @@ public class GunSystem : MonoBehaviour
     //輸入判定
     private void MyInput()
     {
-        if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
-        else shooting = Input.GetKeyDown(KeyCode.Mouse0);
+        if (allowButtonHold) shooting = Input.GetMouseButton(0);
+        else shooting = Input.GetMouseButtonDown(0);
 
         if (bulletLeft < magazineSize && !reloading) Reload();
 
@@ -78,6 +81,10 @@ public class GunSystem : MonoBehaviour
                 Debug.Log($"你打中了牆壁!");
 
         }
+
+        if(muzzleFlash != null)
+            Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+
         bulletLeft--;
         bulletShot--;
 
