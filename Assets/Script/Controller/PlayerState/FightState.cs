@@ -12,6 +12,8 @@ public class FightState : PlayerState
     public float attackTimer = 0;
     //連擊重置的最久等候時間
     public float attackResetTime = 0.8f;
+    //攻擊範圍
+    private float attackRadius = 1.5f;
     //預估動畫播放所需的時間
     private float attackAnimationTime = 0.45f;
     //確認是否可以攻擊
@@ -24,6 +26,8 @@ public class FightState : PlayerState
     private bool isInAttackAnimation = false;
     //取得敵人layer層
     private LayerMask Enemy;
+    //攻擊判定點
+    private Transform attackPoint;
 
     public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) { }
 
@@ -33,6 +37,10 @@ public class FightState : PlayerState
         isInAttackAnimation = true;
         isAttacking.Invoke(true);
         Enemy = LayerMask.NameToLayer("Enemy");
+        if(attackPoint == null)
+        {
+           
+        }
 }
 
     public override void Update()
@@ -100,10 +108,11 @@ public class FightState : PlayerState
 
     void AttackDamage()
     {
-        if(Physics.Raycast(player.transform.position, player.transform.forward, out RaycastHit hit, 5f, Enemy))
+        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRadius, Enemy);
+        foreach(Collider enemy in hitEnemies)
         {
-            Debug.Log(hit.collider.name);
-            hit.collider.GetComponent<Health>().TakeDamage(attackDamage);
+            Debug.Log($"擊中 {enemy.name}");
+            enemy.GetComponent<Health>().TakeDamage(attackDamage);
         }
     }
 
