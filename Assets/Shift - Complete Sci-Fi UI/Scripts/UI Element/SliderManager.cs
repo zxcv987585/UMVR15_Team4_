@@ -48,21 +48,21 @@ namespace Michsky.UI.Shift
 
         void Update()
         {
-            if (useRoundValue == true)
-            {
-                if (usePercent == true)
-                    valueText.text = Mathf.Round(mainSlider.value * 1.0f).ToString() + "%";
-                else
-                    valueText.text = Mathf.Round(mainSlider.value * 1.0f).ToString();
-            }
+            //if (useRoundValue == true)
+            //{
+            //    if (usePercent == true)
+            //        valueText.text = Mathf.Round(mainSlider.value * 1.0f).ToString() + "%";
+            //    else
+            //        valueText.text = Mathf.Round(mainSlider.value * 1.0f).ToString();
+            //}
 
-            else
-            {
-                if (usePercent == true)
-                    valueText.text = mainSlider.value.ToString("F1") + "%";
-                else
-                    valueText.text = mainSlider.value.ToString("F1");
-            }
+            //else
+            //{
+            //    if (usePercent == true)
+            //        valueText.text = mainSlider.value.ToString("F1") + "%";
+            //    else
+            //        valueText.text = mainSlider.value.ToString("F1");
+            //}
         }
     }
 }
