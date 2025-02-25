@@ -81,9 +81,7 @@ public class GunSystem : MonoBehaviour
         if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Enemy) )
         {
             Debug.Log(rayHit.collider.name);
-
-            if (rayHit.collider.CompareTag("Enemy"))
-                rayHit.collider.GetComponent<Health>().TakeDamage(Damage);
+            rayHit.collider.GetComponent<Health>().TakeDamage(Damage);
         }
 
         if(muzzleFlash != null)
