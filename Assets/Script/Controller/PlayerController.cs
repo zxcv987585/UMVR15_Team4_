@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public DashState dashState;
     public AimState aimState;
     public CharacterController controller;
+    private Health health;
 
     [Header("移動參數")]
     [Tooltip("移動速度")]
@@ -46,6 +47,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+        health = GetComponent<Health>();
         stateMachine = gameObject.AddComponent<PlayerStateMachine>();
         fightState = new FightState(stateMachine, this);
         idleState = new IdleState(stateMachine, this);
@@ -59,6 +61,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         stateMachine.Initialize(new IdleState(stateMachine, this));
+        health.PlayerOnDamage += GetHit;
         GameInput.Instance.OnSprintAction += SetIsRun;
         GameInput.Instance.OnAimAction += SetIsAiming;
         GameInput.Instance.OnAttackAction += SetIsAttack;
