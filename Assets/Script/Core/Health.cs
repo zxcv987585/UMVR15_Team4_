@@ -18,6 +18,12 @@ public class Health : MonoBehaviour
 
     void Start()
     {
+        //CurrentHealth = MaxHealth;
+    }
+
+    public void SetMaxHealth(float maxHealth)
+    {
+        this.MaxHealth = maxHealth;
         CurrentHealth = MaxHealth;
     }
 

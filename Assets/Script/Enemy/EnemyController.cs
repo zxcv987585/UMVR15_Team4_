@@ -10,20 +10,24 @@ public class EnemyController : MonoBehaviour
 	[SerializeField] private EnemyAnimatorController enemyAnimatorController;
 	[SerializeField] private EnemyAttackHandler enemyAttackHandler;
 
-	private int hp;
+	//private int hp;
 	private bool isAttack = false;
 	private bool isDamage = false;
 	private EnemyState enemyState;
 	private Rigidbody rb;
+	private Health health;
 	private NavMeshAgent navMeshAgent;
 	private Transform playerTransform;
 	
 	private void Start()
 	{
-		hp = enemyDataSO.maxHP;
+		//hp = enemyDataSO.maxHP;
 		rb = GetComponent<Rigidbody>();
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		playerTransform = FindObjectOfType<PlayerController>()?.transform;
+
+		health = GetComponent<Health>();
+		health.SetMaxHealth(enemyDataSO.maxHP);
 
 		navMeshAgent.stoppingDistance = enemyDataSO.attackRange;
 		navMeshAgent.speed = enemyDataSO.moveSpeed;
@@ -144,10 +148,11 @@ public class EnemyController : MonoBehaviour
 	{
 		if(enemyState == EnemyState.Dead) return;
 
-		hp -= damage;
-		if(hp <= 0)
+		//hp -= damage;
+		health.TakeDamage(damage);
+		if(health.GetCurrentHealth() <= 0)
 		{
-			hp = 0;
+			//hp = 0;
 			AudioManager.Instance.PlaySound(enemyDataSO.SfxDeadKey, transform.position);
 			ChangeEnemyState(EnemyState.Dead);
 		}

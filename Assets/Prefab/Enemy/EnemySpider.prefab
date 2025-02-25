@@ -112,6 +112,7 @@ GameObject:
   - component: {fileID: 8235079440944767876}
   - component: {fileID: 3987218191405196165}
   - component: {fileID: 5862541159048862003}
+  - component: {fileID: 4873726445259431504}
   m_Layer: 7
   m_Name: EnemySpider
   m_TagString: Untagged
@@ -221,6 +222,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4873726445259431504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4902313336816358631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b9ff7337c0e49c891fa4da7672a04a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 100
+  CurrentHealth: 0
 --- !u!1 &6390525951348803597
 GameObject:
   m_ObjectHideFlags: 0
