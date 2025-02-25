@@ -64,6 +64,7 @@ public class FightState : PlayerState
 
         attackTimer = 0;
         CanAttack = false;
+        AttackDamage();
 
         // 播放對應的攻擊動畫
         switch (currentComboStep)
@@ -87,6 +88,19 @@ public class FightState : PlayerState
         }
 
         player.StartCoroutine(AttackCoolDown());
+    }
+
+    void AttackDamage()
+    {
+        if(Physics.Raycast(player.transform.position, player.transform.forward, out RaycastHit hit, 5f))
+        {
+            Debug.Log(hit.collider.name);
+
+            if(hit.collider != null)
+            {
+                hit.collider.GetComponent<Health>().TakeDamage(attackDamage);
+            }
+        }
     }
 
     private void ResetCombo()
