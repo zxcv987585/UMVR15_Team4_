@@ -112,4 +112,9 @@ public class EnemyAnimatorController : MonoBehaviour
 		
 		OnDead?.Invoke();
 	}
+
+	public void ShowDissolve()
+	{
+		material.SetFloat(DISSOLVE_AMOUNT, 0f);
+	}
 }

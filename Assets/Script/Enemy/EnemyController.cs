@@ -47,6 +47,8 @@ public class EnemyController : MonoBehaviour
 	{
 		enemyState = EnemyState.Idle;
 		health.SetMaxHealth(enemyDataSO.maxHP);
+		navMeshAgent.isStopped = true;
+		enemyAnimatorController.ShowDissolve();
 	}
 
 	private void Update()
@@ -242,6 +244,8 @@ public class EnemyController : MonoBehaviour
 	
 	public void DestroySelf()
 	{
-		Destroy(gameObject);
+		//Destroy(gameObject);
+
+		EnemyManager.Instance.RecycleEnemy(gameObject);
 	}
 }
