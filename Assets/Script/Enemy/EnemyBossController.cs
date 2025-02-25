@@ -7,35 +7,75 @@ using UnityEngine.AI;
 public class EnemyBossController : MonoBehaviour
 {
     [SerializeField] private EnemyDataSO enemyDataSO;
-	[SerializeField] private EnemyAnimatorController enemyAnimatorController;
+	[SerializeField] private Animator animator;
+
+	[SerializeField] private float attackCooldownTime;
 
 	private int hp;
-	private bool isAttack = false;
-	private bool isDamage = false;
-	private EnemyState enemyState;
-	private Rigidbody rb;
+	private bool isIdle = true;
+	private bool isAttackCooldown = false;
 	private Transform playerTransform;
+	private AnimatorStateInfo animatorStateInfo;
+	
+
+	private BossState state;
+
+	private enum BossState
+	{
+		Idle,
+		RunAttack,
+		ShootAttack,
+		FloorAttack,
+		Dead
+	}
 	
 	private void Start()
 	{
 		hp = enemyDataSO.maxHP;
-		rb = GetComponent<Rigidbody>();
 		playerTransform = FindObjectOfType<PlayerController>()?.transform;
 		
-		enemyAnimatorController.OnAttackChange += SetIsAttack;
-		enemyAnimatorController.OnDamageChange += SetIsDamage;
-		enemyAnimatorController.OnDead += DestroySelf;
-		//enemyAttackHandler.OnAttackHit += Attack;
-		
-		ChangeEnemyState(EnemyState.Idle);
+		ChangeEnemyState(BossState.Idle);
 	}
 
 	private void Update()
 	{
-		if(!isAttack && !isDamage)
+		CheckAnimationIsIdle();
+
+		if(isIdle)
 		{
 			CheckPlayerDistance();
 		}
+	}
+
+	private void CheckAnimationIsIdle()
+	{
+		animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+		bool isPlayIdle = animatorStateInfo.IsName(BossState.Idle.ToString());
+		
+		if(isIdle == isPlayIdle) return;
+		
+		if(!isPlayIdle)
+		{
+			isIdle = false;
+		}
+		else
+		{
+			if(!isAttackCooldown)
+			{
+				StartCoroutine(StartAttackCoolDown());
+			}
+		}
+	}
+
+	private IEnumerator StartAttackCoolDown()
+	{
+		isAttackCooldown = true;
+
+		yield return new WaitForSeconds(attackCooldownTime);
+
+		//isIdle = true;
+		ChangeEnemyState(BossState.Idle);
+		isAttackCooldown = false;
 	}
 	
 	private void CheckPlayerDistance()
@@ -46,42 +86,42 @@ public class EnemyBossController : MonoBehaviour
 
 			if (distance <= enemyDataSO.attackRange)
 			{
-				ChangeEnemyState(EnemyState.Attack);
+				ChangeEnemyState(BossState.FloorAttack);
 			}
 			else
 			{
-				ChangeEnemyState(EnemyState.Walk);
+				ChangeEnemyState(BossState.ShootAttack);
 			}
 		}
 	}
 	
-	private void ChangeEnemyState(EnemyState newState)
+	private void ChangeEnemyState(BossState newState)
 	{
-		if(enemyState == EnemyState.Dead) return;
+		if(state == BossState.Dead || state == newState) return;
 		
-		enemyState = newState;
+		state = newState;
 
-		switch (enemyState)
-		{
-			case EnemyState.Idle:
-				enemyAnimatorController?.SetEnemyState(enemyState);
-				break;
-			case EnemyState.Walk:
-				enemyAnimatorController?.SetEnemyState(enemyState);
-				break;
-			case EnemyState.Attack:
-				StartCoroutine(TryAttackAfterTurn(playerTransform.position));
-				break;
-			case EnemyState.Damage:
-				enemyAnimatorController?.SetEnemyState(enemyState);
-				break;
-			case EnemyState.Dead:
-				enemyAnimatorController?.SetEnemyState(enemyState);
-				break;
-		}
-	}
+        switch (state)
+        {
+            case BossState.Idle:
+				isIdle = true;
+                break;
+            case BossState.RunAttack:
+				animator.SetTrigger(state.ToString());
+                break;
+            case BossState.ShootAttack:
+				animator.SetTrigger(state.ToString());
+                break;
+            case BossState.FloorAttack:
+				animator.SetTrigger(state.ToString());
+                break;
+            case BossState.Dead:
+                break;
+        }
+    }
 
-	private IEnumerator TryAttackAfterTurn(Vector3 targetPosition)
+	/*
+    private IEnumerator TryAttackAfterTurn(Vector3 targetPosition)
 	{
 		while (true)
 		{
@@ -116,49 +156,22 @@ public class EnemyBossController : MonoBehaviour
 			enemyAnimatorController.SetEnemyState(EnemyState.Attack);
 		}
 	}
-
-	//抓取玩家周圍 360度的隨機座標
-	private Vector3 GetRandomPositionAroundPlayer()
-	{
-		float randomAngle = UnityEngine.Random.Range(0f, MathF.PI * 2f);
-		Vector3 offset = new Vector3(Mathf.Cos(randomAngle), 0, Mathf.Sin(randomAngle)) * enemyDataSO.attackRange;
-
-		return playerTransform.position + offset;
-	}
+	*/
 
 	//如果需要 Enemy 受傷, 呼叫該函數
 	public void TakeDamage(int damage)
 	{
-		if(enemyState == EnemyState.Dead) return;
+		if(state == BossState.Dead) return;
 
 		hp -= damage;
 		if(hp <= 0)
 		{
 			hp = 0;
 			AudioManager.Instance.PlaySound(enemyDataSO.SfxDeadKey, transform.position);
-			ChangeEnemyState(EnemyState.Dead);
+			ChangeEnemyState(BossState.Dead);
 		}
 
 		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, damage);
-	}
-	
-	public void SetIsAttack(bool isAttack)
-	{
-		this.isAttack = isAttack;
-		
-		if(!isAttack)
-		{
-			//enemyAttackHandler.ResetAttackHandler();
-		}
-		else
-		{
-			AudioManager.Instance.PlaySound(enemyDataSO.SfxAttackKey, transform.position);
-		}
-	}
-	
-	public void SetIsDamage(bool isDamage)
-	{
-		this.isDamage = isDamage;
 	}
 	
 	public void DestroySelf()
