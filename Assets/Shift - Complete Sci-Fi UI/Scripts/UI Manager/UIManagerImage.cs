@@ -23,7 +23,7 @@ namespace Michsky.UI.Shift
             Secondary,
             PrimaryReversed,
             Negative,
-            Background
+            Background,
         }
 
         void OnEnable()
