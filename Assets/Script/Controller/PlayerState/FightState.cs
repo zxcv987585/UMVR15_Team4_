@@ -22,6 +22,8 @@ public class FightState : PlayerState
     public Action<bool> isAttacking;
     //追蹤是否處在動畫播放狀態
     private bool isInAttackAnimation = false;
+    //取得敵人layer層
+    private LayerMask Enemy;
 
     public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) { }
 
@@ -30,7 +32,8 @@ public class FightState : PlayerState
         currentComboStep = 0;
         isInAttackAnimation = true;
         isAttacking.Invoke(true);
-    }
+        Enemy = LayerMask.NameToLayer("Enemy");
+}
 
     public override void Update()
     {
@@ -92,14 +95,10 @@ public class FightState : PlayerState
 
     void AttackDamage()
     {
-        if(Physics.Raycast(player.transform.position, player.transform.forward, out RaycastHit hit, 5f))
+        if(Physics.Raycast(player.transform.position, player.transform.forward, out RaycastHit hit, 5f, Enemy))
         {
             Debug.Log(hit.collider.name);
-
-            if(hit.collider != null)
-            {
-                hit.collider.GetComponent<Health>().TakeDamage(attackDamage);
-            }
+            hit.collider.GetComponent<Health>().TakeDamage(attackDamage);
         }
     }
 
