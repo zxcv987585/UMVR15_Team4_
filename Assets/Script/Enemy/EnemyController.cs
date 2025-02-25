@@ -28,6 +28,8 @@ public class EnemyController : MonoBehaviour
 
 		health = GetComponent<Health>();
 		health.SetMaxHealth(enemyDataSO.maxHP);
+		health.PlayerOnDamage += DamageEvent;
+		health.PlayerOnDead += DeadEvent;
 
 		navMeshAgent.stoppingDistance = enemyDataSO.attackRange;
 		navMeshAgent.speed = enemyDataSO.moveSpeed;
@@ -150,6 +152,7 @@ public class EnemyController : MonoBehaviour
 
 		//hp -= damage;
 		health.TakeDamage(damage);
+
 		if(health.GetCurrentHealth() <= 0)
 		{
 			//hp = 0;
@@ -163,6 +166,18 @@ public class EnemyController : MonoBehaviour
 		}
 
 		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, damage);
+	}
+
+	private void DamageEvent()
+	{
+		AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
+		ChangeEnemyState(EnemyState.Damage);
+	}
+
+	private void DeadEvent()
+	{
+		AudioManager.Instance.PlaySound(enemyDataSO.SfxDeadKey, transform.position);
+		ChangeEnemyState(EnemyState.Dead);
 	}
 
 	/// <summary>
