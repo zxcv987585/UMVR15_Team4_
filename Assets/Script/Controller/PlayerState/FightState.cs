@@ -125,7 +125,7 @@ public class FightState : PlayerState
 
     bool QuitState()
     {
-        if (CanAttack && player.isAttack)
+        if (CanAttack && !player.isAttack)
         {
             attackTimer += Time.deltaTime;
             if (attackTimer >= attackResetTime)

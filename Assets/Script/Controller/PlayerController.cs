@@ -108,10 +108,11 @@ public class PlayerController : MonoBehaviour
     }
 
     //攻擊模式的核心邏輯
-    private void SetIsAttack()
+    private void SetIsAttack(bool Attack)
     {
         if (stateMachine.GetState<AimState>() != null) return;
-        isAttack = true;
+        if (stateMachine.GetState<DashState>() != null) return;
+        isAttack = Attack;
     }
     public void StartPlayerCoroutine(IEnumerator coroutine)
     {
