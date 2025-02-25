@@ -35,9 +35,14 @@ public class EnemyManager : MonoBehaviour
     {
         Instantiate(spawnGameObject,spawnTransform.position, Quaternion.identity);
 
-        // if(enemyObjectPool.TryGetValue(spawnGameObject, out Queue<GameObject> enemyprefabQueue) != null)
-        // {
-
-        // }
+        if(enemyObjectPool.TryGetValue(spawnGameObject, out Queue<GameObject> enemyprefabQueue))
+        {
+            if(enemyprefabQueue.Count > 0)
+            {
+                GameObject enemy = enemyprefabQueue.Dequeue();
+                enemy.transform.position = spawnTransform.position;
+                
+            }
+        }
     }
 }

@@ -24,7 +24,7 @@ public class GameInput : MonoBehaviour
 		Skill4
 	}
 
-	public event Action OnAttackAction;
+	public event Action<bool> OnAttackAction;
 	public event Action<bool> OnAimAction;
 	public event Action OnDashkAction;
 	public event Action<bool> OnSprintAction;
@@ -44,8 +44,8 @@ public class GameInput : MonoBehaviour
 		LoadRebind();
 		playerInputAction.Player.Enable();
 
-		playerInputAction.Player.Attack.performed += Attack_Performed;
-		playerInputAction.Player.Attack.canceled += ctx => isAttackClick=false;
+		playerInputAction.Player.Attack.performed += AttackPress_Performed;
+		playerInputAction.Player.Attack.canceled += AttackRelease_Performed;
 		//playerInputAction.Player.Attack.performed += ctx => OnAttackAction?.Invoke(this, EventArgs.Empty);
 		playerInputAction.Player.Aim.performed += AimPress_performed;
 		playerInputAction.Player.Aim.canceled += AimRelease_Performed;
@@ -58,12 +58,19 @@ public class GameInput : MonoBehaviour
 		playerInputAction.Player.Skill4.performed += Skill4_performed;
 	}
 
-	private void Attack_Performed(InputAction.CallbackContext context)
+    private void AttackRelease_Performed(InputAction.CallbackContext context)
+    {
+        if(canInput)
+		{
+			OnAttackAction?.Invoke(true);
+		}
+    }
+
+    private void AttackPress_Performed(InputAction.CallbackContext context)
 	{
 		if(canInput)
 		{
-			OnAttackAction?.Invoke();
-			isAttackClick = true;
+			OnAttackAction?.Invoke(false);
 		}
 	}
 

@@ -13,7 +13,6 @@ public class EnemyAnimatorController : MonoBehaviour
 	private Material material;
 	private bool isAttack = false;
 	private bool isDamage = false;
-	private float dissolveAmount;
 	private AnimatorStateInfo animatorStateInfo;
 	
 	public Action<bool> OnAttackChange;
@@ -101,7 +100,7 @@ public class EnemyAnimatorController : MonoBehaviour
 	
 	private IEnumerator DeadDissolveCoroutine()
 	{
-		dissolveAmount = 0f;
+		float dissolveAmount = 0f;
 		
 		while(dissolveAmount < 1f)
 		{
