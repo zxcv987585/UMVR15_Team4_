@@ -43,7 +43,7 @@ public class FightState : PlayerState
             StateMachine.ChangeState(player.idleState);
         }
 
-        if (CanAttack && Input.GetMouseButtonDown(0))
+        if (CanAttack && player.isAttack)
         {
             Attack();
         }
@@ -74,19 +74,24 @@ public class FightState : PlayerState
         {
             case 0:
                 AttackCombo.Invoke("Attack1");
+                player.isAttack = false;
                 break;
             case 1:
                 AttackCombo.Invoke("Attack2");
+                player.isAttack = false;
                 break;
             case 2:
                 AttackCombo.Invoke("Attack3");
+                player.isAttack = false;
                 break;
             case 3:
                 AttackCombo.Invoke("Attack4");
+                player.isAttack = false;
                 break;
             case 4:
                 ResetCombo();
                 AttackCombo.Invoke("Attack1");
+                player.isAttack = false;
                 break;
         }
 
@@ -120,7 +125,7 @@ public class FightState : PlayerState
 
     bool QuitState()
     {
-        if (CanAttack && !Input.GetMouseButton(0))
+        if (CanAttack && player.isAttack)
         {
             attackTimer += Time.deltaTime;
             if (attackTimer >= attackResetTime)

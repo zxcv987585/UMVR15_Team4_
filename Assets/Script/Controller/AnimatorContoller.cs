@@ -21,6 +21,7 @@ public class AnimatorContoller : MonoBehaviour
             playerController.moveState.IsMoving += Walk;
             playerController.moveState.IsRun += Sprint;
             playerController.dashState.Dash += Dash;
+            playerController.dashState.ForceIdle += Idle;
             playerController.dashState.DashReset += Dashreset;
             playerController.aimState.OnAim += Aim;
             playerController.aimState.OnAimMove += AimMove;
@@ -91,6 +92,7 @@ public class AnimatorContoller : MonoBehaviour
             animator.ResetTrigger("Attack1");
             animator.ResetTrigger("Attack2");
             animator.ResetTrigger("Attack3");
+            animator.ResetTrigger("Attack4");
         }
     }
 
@@ -101,6 +103,7 @@ public class AnimatorContoller : MonoBehaviour
             animator.ResetTrigger("Attack1");
             animator.ResetTrigger("Attack2");
             animator.ResetTrigger("Attack3");
+            animator.ResetTrigger("Attack4");
         }
     }
 
