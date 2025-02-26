@@ -8,7 +8,19 @@ public class EnemyAttackHandler : MonoBehaviour
 	public Action OnAttackHit;
 	private bool hasAttack = false;
 
-	private void OnTriggerEnter(Collider other)
+	[SerializeField] private Collider attackCollider;
+
+    private void OnEnable()
+	{
+		attackCollider.enabled = true;
+	}
+
+    private void OnDisable()
+    {
+        attackCollider.enabled = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
 	{
 		if(!hasAttack && other.TryGetComponent(out Health health))
 		{

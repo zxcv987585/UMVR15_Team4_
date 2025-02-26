@@ -172,7 +172,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyDataSO: {fileID: 11400000, guid: 00338b2c902a81144b9f916cc0597ab7, type: 2}
   enemyAnimatorController: {fileID: 280234885771259577}
-  enemyAttackHandler: {fileID: 3717284114435207252}
+  enemyAttackHandler: {fileID: 597593559272414011}
   dissolveRenderer: {fileID: 7125434475003762138}
 --- !u!195 &3987218191405196165
 NavMeshAgent:
@@ -1111,17 +1111,17 @@ PrefabInstance:
       addedObject: {fileID: 280234885771259577}
     - targetCorrespondingSourceObject: {fileID: 990280741194299761, guid: 3af956640595c6e4cb9436f0f4545ffd, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3174033413097470033}
+      addedObject: {fileID: 7605480094205399345}
     - targetCorrespondingSourceObject: {fileID: 990280741194299761, guid: 3af956640595c6e4cb9436f0f4545ffd, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3717284114435207252}
+      addedObject: {fileID: 597593559272414011}
   m_SourcePrefab: {fileID: 100100000, guid: 3af956640595c6e4cb9436f0f4545ffd, type: 3}
 --- !u!1 &3442480709944477243 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 990280741194299761, guid: 3af956640595c6e4cb9436f0f4545ffd, type: 3}
   m_PrefabInstance: {fileID: 2483747156661108554}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &3174033413097470033
+--- !u!65 &7605480094205399345
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1138,11 +1138,11 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.001, y: 0.001, z: 0.001}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3717284114435207252
+  m_Size: {x: 0.020921497, y: 0.008967297, z: 0.01}
+  m_Center: {x: -0.0054607494, y: 0.00051634724, z: -3.983126e-10}
+--- !u!114 &597593559272414011
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1154,6 +1154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cb8cee7c4b384e44aeaf2d14c1a7661, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackCollider: {fileID: 7605480094205399345}
 --- !u!1 &3878846260933222689 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1705849404070370923, guid: 3af956640595c6e4cb9436f0f4545ffd, type: 3}

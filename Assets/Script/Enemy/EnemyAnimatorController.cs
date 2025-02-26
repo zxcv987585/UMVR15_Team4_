@@ -15,6 +15,7 @@ public class EnemyAnimatorController : MonoBehaviour
 	
 	public Action<bool> OnAttackChange;
 	public Action<bool> OnDamageChange;
+	public Action<bool> OnStartAttackCheck;
 	public Action OnDead;
 	
 	private const string ATTACK = "Attack";
@@ -92,5 +93,15 @@ public class EnemyAnimatorController : MonoBehaviour
 	public void OnDeadTrigger()
 	{
 		OnDead?.Invoke();
+	}
+
+	public void StartAttackCheckTrigger()
+	{
+		OnStartAttackCheck?.Invoke(true);
+	}
+
+	public void EndAttackCheckTrigger()
+	{
+		OnStartAttackCheck?.Invoke(false);
 	}
 }

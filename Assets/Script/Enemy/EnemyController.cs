@@ -41,6 +41,7 @@ public class EnemyController : MonoBehaviour
 		
 		enemyAnimatorController.OnAttackChange += SetIsAttack;
 		enemyAnimatorController.OnDamageChange += SetIsDamage;
+		enemyAnimatorController.OnStartAttackCheck += EnableAttackCollider;
 		enemyAnimatorController.OnDead += StartDestory;
 		enemyAttackHandler.OnAttackHit += Attack;
 		
@@ -168,29 +169,6 @@ public class EnemyController : MonoBehaviour
 		return playerTransform.position + offset;
 	}
 
-	//如果需要 Enemy 受傷, 呼叫該函數
-	public void TakeDamage(int damage)
-	{
-		if(enemyState == EnemyState.Dead) return;
-
-		//hp -= damage;
-		health.TakeDamage(damage);
-
-		if(health.GetCurrentHealth() <= 0)
-		{
-			//hp = 0;
-			AudioManager.Instance.PlaySound(enemyDataSO.SfxDeadKey, transform.position);
-			ChangeEnemyState(EnemyState.Dead);
-		}
-		else
-		{
-			AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
-			ChangeEnemyState(EnemyState.Damage);
-		}
-
-		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, damage);
-	}
-
 	private void DamageEvent()
 	{
 		AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
@@ -291,5 +269,10 @@ public class EnemyController : MonoBehaviour
 	public void ShowDissolve()
 	{
 		material.SetFloat(DISSOLVE_AMOUNT, 0f);
+	}
+
+	private void EnableAttackCollider(bool isEnable)
+	{
+		enemyAttackHandler.enabled = isEnable;
 	}
 }
