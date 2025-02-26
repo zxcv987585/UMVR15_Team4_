@@ -1,4 +1,4 @@
-Shader "Custom/DissolveStandard"
+Shader "Custom/DissolveGlow"
 {
     Properties
     {
@@ -7,11 +7,13 @@ Shader "Custom/DissolveStandard"
         _MetallicGlossMap ("Metallic", 2D) = "black" {}
         _DissolveTex ("Dissolve Texture", 2D) = "white" {}
         _DissolveAmount ("Dissolve Amount", Range(0,1)) = 0.0
-        _EmissionColor ("Emission Color", Color) = (0, 0, 0, 1) // 預設不發光
+        _EmissionColor ("Emission Color", Color) = (0, 0, 0, 1)
+        _RimColor ("Rim Color", Color) = (0, 0, 1, 1) // 預設藍色邊緣光
+        _RimPower ("Rim Power", Range(0.1, 8)) = 2.0
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Transparent" }
         CGPROGRAM
         #pragma surface surf Standard fullforwardshadows
 
@@ -20,11 +22,14 @@ Shader "Custom/DissolveStandard"
         sampler2D _MetallicGlossMap;
         sampler2D _DissolveTex;
         float _DissolveAmount;
-        fixed4 _EmissionColor; // 由程式控制發光
+        fixed4 _EmissionColor;
+        fixed4 _RimColor;
+        float _RimPower;
 
         struct Input
         {
             float2 uv_MainTex;
+            float3 viewDir;
         };
 
         void surf (Input IN, inout SurfaceOutputStandard o)
@@ -37,8 +42,13 @@ Shader "Custom/DissolveStandard"
             o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_MainTex));
             o.Metallic = tex2D(_MetallicGlossMap, IN.uv_MainTex).r;
 
-            // 加入發光效果 (可由程式碼控制)
+            // **發光效果**
             o.Emission = _EmissionColor.rgb;
+
+            // **邊緣光 (Rim Light)**
+            float rim = 1.0 - saturate(dot(normalize(IN.viewDir), o.Normal));
+            rim = pow(rim, _RimPower);
+            o.Emission += _RimColor.rgb * rim;
         }
         ENDCG
     }

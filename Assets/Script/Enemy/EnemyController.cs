@@ -11,7 +11,8 @@ public class EnemyController : MonoBehaviour
 	[SerializeField] private EnemyAnimatorController enemyAnimatorController;
 	[SerializeField] private EnemyAttackHandler enemyAttackHandler;
 
-	[SerializeField] Renderer dissolveRenderer;
+	[SerializeField] private Renderer dissolveRenderer;
+	[SerializeField] private ParticleSystem deadParticle;
 	private Material material;
 	private const string DISSOLVE_AMOUNT = "_DissolveAmount";
 
@@ -214,12 +215,14 @@ public class EnemyController : MonoBehaviour
 		rb.isKinematic = true;
 	}
 
+	//攻擊玩家
 	public void Attack()
 	{
 		if(isAttack)
 			playerTransform.GetComponent<Health>().TakeDamage(enemyDataSO.attackPower);
 	}
 	
+	//設定當前是否正在攻擊
 	public void SetIsAttack(bool isAttack)
 	{
 		this.isAttack = isAttack;
@@ -234,6 +237,7 @@ public class EnemyController : MonoBehaviour
 		}
 	}
 	
+	//設定當前是否正被攻擊
 	public void SetIsDamage(bool isDamage)
 	{
 		this.isDamage = isDamage;
@@ -251,13 +255,18 @@ public class EnemyController : MonoBehaviour
 		EnemyManager.Instance.RecycleEnemy(gameObject);
 	}
 
+	//死亡時的消融動畫效果
 	private IEnumerator DeadDissolveCoroutine()
 	{
+		material.SetColor("_EmissionColor", Color.blue * 3f); // 設定發光 (藍色加強亮度)
+		material.SetColor("_RimColor", Color.cyan);
+
+		deadParticle.Play();
+
 		float dissolveAmount = 0f;
-		
 		while(dissolveAmount < 1f)
 		{
-			dissolveAmount += Time.deltaTime * 0.5f;
+			dissolveAmount += Time.deltaTime * 1f;
 			material.SetFloat(DISSOLVE_AMOUNT, dissolveAmount);
 			
 			yield return null;
