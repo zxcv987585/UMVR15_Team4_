@@ -58,6 +58,10 @@ public class FightState : PlayerState
         {
             StateMachine.ChangeState(player.deadState);
         }
+        else if (player.isHit)
+        {
+            ResetCombo();
+        }
     }
 
     public override void Move() { }
