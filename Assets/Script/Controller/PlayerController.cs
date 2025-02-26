@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
     public CharacterController controller;
     private Health health;
 
-    //攻擊判定點
-    //public  Transform attackPoint;
     //取得武器管理系統
     private WeaponManager weaponManager;
 
@@ -50,6 +48,7 @@ public class PlayerController : MonoBehaviour
     public bool isDash { get; set; } = false;
 
     public Action<string> OnHit;
+    public Action<bool> isDead;
 
     private void Awake()
     {
@@ -65,23 +64,13 @@ public class PlayerController : MonoBehaviour
         stateMachine.Initialize(idleState);
 
         weaponManager = GetComponent<WeaponManager>();
-        //Enemy = LayerMask.NameToLayer("Enemy");
-
-        //attackPoint = weaponManager.attackPoint;
-        //if (attackPoint == null)
-        //{
-        //    Debug.Log("找不到武器傷害點");
-        //}
-        //if (attackPoint != null)
-        //{
-        //    Debug.Log("已找到武器傷害點");
-        //}
     }
 
     private void Start()
     {
         stateMachine.Initialize(new IdleState(stateMachine, this));
         health.OnDamage += GetHit;
+        health.OnDead += Died;
         GameInput.Instance.OnSprintAction += SetIsRun;
         GameInput.Instance.OnAimAction += SetIsAiming;
         GameInput.Instance.OnAttackAction += SetIsAttack;
@@ -160,6 +149,12 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(HitCoolTime);
         isHit = false;
+    }
+    
+    //玩家死亡邏輯
+    public void Died()
+    {
+        //isDead.Invoke(true);
     }
 
     //Dash狀態機的核心邏輯

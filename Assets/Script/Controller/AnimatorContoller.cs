@@ -26,6 +26,15 @@ public class AnimatorContoller : MonoBehaviour
             playerController.aimState.OnAim += Aim;
             playerController.aimState.OnAimMove += AimMove;
             playerController.OnHit += Hit;
+            playerController.isDead += Dead;
+        }
+    }
+
+    private void Dead(bool Died)
+    {
+        if(Died)
+        {
+            animator.SetBool("Dead", true);
         }
     }
 
