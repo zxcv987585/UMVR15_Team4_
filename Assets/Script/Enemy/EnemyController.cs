@@ -29,8 +29,8 @@ public class EnemyController : MonoBehaviour
 
 		health = GetComponent<Health>();
 		health.SetMaxHealth(enemyDataSO.maxHP);
-		health.PlayerOnDamage += DamageEvent;
-		health.PlayerOnDead += DeadEvent;
+		health.OnDamage += DamageEvent;
+		health.OnDead += DeadEvent;
 
 		navMeshAgent.stoppingDistance = enemyDataSO.attackRange;
 		navMeshAgent.speed = enemyDataSO.moveSpeed;

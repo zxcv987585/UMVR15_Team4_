@@ -9,10 +9,10 @@ public class Health : MonoBehaviour
     [SerializeField] float CurrentHealth;
 
     //受到攻擊時要觸發的委派事件
-    public event Action PlayerOnDamage;
+    public event Action OnDamage;
 
     //人物死亡時要觸發的委派事件
-    public event Action PlayerOnDead;
+    public event Action OnDead;
 
     private bool Isdead = false;
 
@@ -56,13 +56,13 @@ public class Health : MonoBehaviour
     {
         if (Isdead) return;
 
-        Debug.Log($"Player受到共{damage}傷害！剩餘血量：{CurrentHealth}");
+        Debug.Log($"受到共{damage}傷害！剩餘血量：{CurrentHealth}");
         CurrentHealth -= damage;
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
 
         if (CurrentHealth > 0)
         {
-            PlayerOnDamage?.Invoke();
+            OnDamage?.Invoke();
         }
 
         if (CurrentHealth <= 0)
@@ -79,7 +79,7 @@ public class Health : MonoBehaviour
         if (CurrentHealth <= 0)
         {
             Isdead = true;
-            PlayerOnDead?.Invoke();
+            OnDead?.Invoke();
         }
     }
 

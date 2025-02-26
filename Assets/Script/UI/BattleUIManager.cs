@@ -31,7 +31,7 @@ public class BattleUIManager : MonoBehaviour
     private void Start()
     {
         damageTextQuene = new Queue<DamageText>();
-        health.PlayerOnDamage += ChangeHPStatus;
+        health.OnDamage += ChangeHPStatus;
 
         currentHPText.text = health.GetMaxHealth().ToString();
         maxHPText.text = health.GetMaxHealth().ToString();

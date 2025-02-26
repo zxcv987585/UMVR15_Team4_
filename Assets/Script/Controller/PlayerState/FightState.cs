@@ -6,8 +6,6 @@ public class FightState : PlayerState
 {
     //追蹤連擊次數
     private int currentComboStep = 0;
-    //每次傷害量（可能會換地方傳入傷害）
-    public float attackDamage = 25f;
     //追蹤可以執行連擊的時間
     public float attackTimer = 0;
     //連擊重置的最久等候時間
@@ -22,18 +20,17 @@ public class FightState : PlayerState
     public Action<bool> isAttacking;
     //追蹤是否處在動畫播放狀態
     private bool isInAttackAnimation = false;
-    //取得敵人layer層
-    private LayerMask Enemy;
 
-    public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) { }
+
+    public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) {}
 
     public override void Enter()
     {
         currentComboStep = 0;
+        
         isInAttackAnimation = true;
         isAttacking.Invoke(true);
-        Enemy = LayerMask.NameToLayer("Enemy");
-}
+    }
 
     public override void Update()
     {
@@ -67,7 +64,6 @@ public class FightState : PlayerState
 
         attackTimer = 0;
         CanAttack = false;
-        AttackDamage();
 
         // 播放對應的攻擊動畫
         switch (currentComboStep)
@@ -96,15 +92,6 @@ public class FightState : PlayerState
         }
 
         player.StartCoroutine(AttackCoolDown());
-    }
-
-    void AttackDamage()
-    {
-        if(Physics.Raycast(player.transform.position, player.transform.forward, out RaycastHit hit, 5f, Enemy))
-        {
-            Debug.Log(hit.collider.name);
-            hit.collider.GetComponent<Health>().TakeDamage(attackDamage);
-        }
     }
 
     private void ResetCombo()

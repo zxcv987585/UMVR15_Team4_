@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,6 +13,12 @@ public class PlayerController : MonoBehaviour
     public AimState aimState;
     public CharacterController controller;
     private Health health;
+
+    //攻擊判定點
+    //public  Transform attackPoint;
+    //取得武器管理系統
+    private WeaponManager weaponManager;
+
 
     [Header("移動參數")]
     [Tooltip("移動速度")]
@@ -56,12 +63,25 @@ public class PlayerController : MonoBehaviour
         aimState = new AimState(stateMachine, this);
 
         stateMachine.Initialize(idleState);
+
+        weaponManager = GetComponent<WeaponManager>();
+        //Enemy = LayerMask.NameToLayer("Enemy");
+
+        //attackPoint = weaponManager.attackPoint;
+        //if (attackPoint == null)
+        //{
+        //    Debug.Log("找不到武器傷害點");
+        //}
+        //if (attackPoint != null)
+        //{
+        //    Debug.Log("已找到武器傷害點");
+        //}
     }
 
     private void Start()
     {
         stateMachine.Initialize(new IdleState(stateMachine, this));
-        health.PlayerOnDamage += GetHit;
+        health.OnDamage += GetHit;
         GameInput.Instance.OnSprintAction += SetIsRun;
         GameInput.Instance.OnAimAction += SetIsAiming;
         GameInput.Instance.OnAttackAction += SetIsAttack;
