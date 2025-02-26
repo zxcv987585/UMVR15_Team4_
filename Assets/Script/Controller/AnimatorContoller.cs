@@ -7,11 +7,15 @@ public class AnimatorContoller : MonoBehaviour
 {
     Animator animator;
     PlayerController playerController;
+    Health health;
+
+    private bool isDead;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         playerController = GetComponent<PlayerController>();
+        health = GetComponent<Health>();
 
         if (playerController != null)
         {
@@ -26,16 +30,19 @@ public class AnimatorContoller : MonoBehaviour
             playerController.aimState.OnAim += Aim;
             playerController.aimState.OnAimMove += AimMove;
             playerController.OnHit += Hit;
-            playerController.isDead += Dead;
+            health.OnDead += Dead;
         }
     }
 
-    private void Dead(bool Died)
+    private void Dead()
     {
-        if(Died)
-        {
-            animator.SetBool("Dead", true);
-        }
+        if (isDead) return;
+        isDead = true;
+        animator.SetBool("Dead", true);
+        Debug.Log("¨¤¦â¦º¤`");
+        //animator.speed = 0;
+
+        health.OnDead -= Dead;
     }
 
     private void AimMove(float moveX, float moveY)

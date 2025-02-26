@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -81,6 +82,10 @@ public class CameraController : MonoBehaviour
             TargetPosition += target.right * AimOffset.x;
             TargetPosition += target.up * AimOffset.y;
             CameraToTargetDistance = AimOffset.z;
+        }
+        else if (playerController.IsDie)
+        {
+            CameraToTargetDistance = 3.5f;
         }
         else
         {

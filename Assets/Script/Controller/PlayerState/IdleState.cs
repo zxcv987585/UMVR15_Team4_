@@ -38,6 +38,11 @@ public class IdleState : PlayerState
             StateMachine.ChangeState(player.aimState);
             IsIdle?.Invoke(false);
         }
+        else if (player.IsDie)
+        {
+            StateMachine.ChangeState(player.deadState);
+            IsIdle?.Invoke(false);
+        }
         else
         {
             idleTimer = 0f;

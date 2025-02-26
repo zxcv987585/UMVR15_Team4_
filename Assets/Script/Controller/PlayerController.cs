@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public MoveState moveState;
     public DashState dashState;
     public AimState aimState;
+    public DeadState deadState;
     public CharacterController controller;
     private Health health;
 
@@ -36,6 +37,10 @@ public class PlayerController : MonoBehaviour
     public float DashCoolTime = 1.5f;
     [Tooltip("受傷狀態的持續時間")]
     public float HitCoolTime = 1f;
+    [Tooltip("玩家最大血量")]
+    public float MaxHealth = 150f;
+    //角色死亡狀態
+    public bool IsDie = false;
 
     private float lastDashTime = -Mathf.Infinity;
 
@@ -60,9 +65,10 @@ public class PlayerController : MonoBehaviour
         moveState = new MoveState(stateMachine, this);
         dashState = new DashState(stateMachine, this);
         aimState = new AimState(stateMachine, this);
+        deadState = new DeadState(stateMachine, this);
 
         stateMachine.Initialize(idleState);
-
+        health.SetMaxHealth(MaxHealth);
         weaponManager = GetComponent<WeaponManager>();
     }
 
@@ -108,17 +114,20 @@ public class PlayerController : MonoBehaviour
     //Walk、Run狀態機的核心邏輯
     public void MoveCharacter(Vector3 targetDirection, float currentSpeed)
     {
+        if (IsDie) return;
         controller.Move(targetDirection * currentSpeed * Time.deltaTime);
         SmoothRotation(targetDirection);
     }
     private void SetIsRun(bool isRun)
     {
+        if (IsDie) return;
         this.isRun = isRun;
     }
 
     //攻擊模式的核心邏輯
     private void SetIsAttack(bool Attack)
     {
+        if (IsDie) return;
         if (stateMachine.GetState<AimState>() != null) return;
         if (stateMachine.GetState<DashState>() != null) return;
         isAttack = Attack;
@@ -131,6 +140,7 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
+        if (IsDie) return;
         isAiming = isAim;
     }
     public void MoveWithOutRotation(Vector3 direction, float speed)
@@ -141,6 +151,7 @@ public class PlayerController : MonoBehaviour
     //玩家受傷邏輯（無狀態機，屬於隨時都可能進入狀態
     public void GetHit()
     {
+        if (IsDie) return;
         OnHit?.Invoke("Hit");
         isHit = true;
         StartCoroutine(HitCoolDown());
@@ -154,12 +165,13 @@ public class PlayerController : MonoBehaviour
     //玩家死亡邏輯
     public void Died()
     {
-        //isDead.Invoke(true);
+        IsDie = true;
     }
 
     //Dash狀態機的核心邏輯
     private void Dash()
     {
+        if (IsDie) return;
         if (stateMachine.GetState<IdleState>() != null || stateMachine.GetState<AimState>() != null)
         {
             return;

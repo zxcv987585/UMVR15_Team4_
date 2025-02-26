@@ -54,6 +54,10 @@ public class FightState : PlayerState
             StateMachine.ChangeState(player.aimState);
             ResetCombo();
         }
+        else if (player.IsDie)
+        {
+            StateMachine.ChangeState(player.deadState);
+        }
     }
 
     public override void Move() { }
