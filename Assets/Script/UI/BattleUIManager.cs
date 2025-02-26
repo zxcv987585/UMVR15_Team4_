@@ -32,6 +32,7 @@ public class BattleUIManager : MonoBehaviour
     {
         damageTextQuene = new Queue<DamageText>();
         health.OnDamage += ChangeHPStatus;
+        health.OnDead += ChangeHPStatus;
 
         currentHPText.text = health.GetMaxHealth().ToString();
         maxHPText.text = health.GetMaxHealth().ToString();
@@ -42,7 +43,7 @@ public class BattleUIManager : MonoBehaviour
     /// </summary>
     /// <param name="showPosition">顯示的位置</param>
     /// <param name="damage">傷害的數字</param>
-    public void ShowDamageText(Vector3 showPosition, int damage)
+    public void ShowDamageText(Vector3 showPosition, float damage)
     {
         if(damageTextQuene.Count > 0)
         {

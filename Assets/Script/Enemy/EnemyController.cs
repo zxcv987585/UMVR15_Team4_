@@ -11,6 +11,10 @@ public class EnemyController : MonoBehaviour
 	[SerializeField] private EnemyAnimatorController enemyAnimatorController;
 	[SerializeField] private EnemyAttackHandler enemyAttackHandler;
 
+	[SerializeField] Renderer dissolveRenderer;
+	private Material material;
+	private const string DISSOLVE_AMOUNT = "_DissolveAmount";
+
 	//private int hp;
 	private bool isAttack = false;
 	private bool isDamage = false;
@@ -22,10 +26,10 @@ public class EnemyController : MonoBehaviour
 	
 	private void Start()
 	{
-		//hp = enemyDataSO.maxHP;
 		rb = GetComponent<Rigidbody>();
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		playerTransform = FindObjectOfType<PlayerController>()?.transform;
+		material = dissolveRenderer.material;
 
 		health = GetComponent<Health>();
 		health.SetMaxHealth(enemyDataSO.maxHP);
@@ -37,18 +41,26 @@ public class EnemyController : MonoBehaviour
 		
 		enemyAnimatorController.OnAttackChange += SetIsAttack;
 		enemyAnimatorController.OnDamageChange += SetIsDamage;
-		enemyAnimatorController.OnDead += DestroySelf;
+		enemyAnimatorController.OnDead += StartDestory;
 		enemyAttackHandler.OnAttackHit += Attack;
 		
 		ChangeEnemyState(EnemyState.Idle);
+		StartCoroutine(DelayEnableNavMeshAgent());
 	}
 
 	public void Init()
 	{
+		gameObject.SetActive(true);
 		enemyState = EnemyState.Idle;
 		health.SetMaxHealth(enemyDataSO.maxHP);
 		navMeshAgent.isStopped = true;
-		enemyAnimatorController.ShowDissolve();
+		ShowDissolve();
+	}
+
+	private IEnumerator DelayEnableNavMeshAgent()
+	{
+		yield return null;
+		navMeshAgent.enabled = true;
 	}
 
 	private void Update()
@@ -78,7 +90,7 @@ public class EnemyController : MonoBehaviour
 	
 	private void ChangeEnemyState(EnemyState newState)
 	{
-		if(enemyState == EnemyState.Dead) return;
+		if(enemyState == EnemyState.Dead || !navMeshAgent.enabled) return;
 		
 		enemyState = newState;
 
@@ -95,8 +107,8 @@ public class EnemyController : MonoBehaviour
 				enemyAnimatorController?.SetEnemyState(enemyState);
 				break;
 			case EnemyState.Attack:
-				StartCoroutine(TryAttackAfterTurn(playerTransform.position));
 				navMeshAgent.isStopped = true;
+				StartCoroutine(TryAttackAfterTurn(playerTransform.position));
 				break;
 			case EnemyState.Damage:
 				navMeshAgent.isStopped = true;
@@ -113,6 +125,8 @@ public class EnemyController : MonoBehaviour
 	{
 		while (true)
 		{
+			if(enemyState == EnemyState.Dead) break;
+
 			// 檢查玩家是否仍在攻擊範圍內
 			float distance = Vector3.Distance(transform.position, targetPosition);
 			if (distance > enemyDataSO.attackRange)
@@ -181,12 +195,16 @@ public class EnemyController : MonoBehaviour
 	{
 		AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
 		ChangeEnemyState(EnemyState.Damage);
+
+		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, health.LastDamage);
 	}
 
 	private void DeadEvent()
 	{
 		AudioManager.Instance.PlaySound(enemyDataSO.SfxDeadKey, transform.position);
 		ChangeEnemyState(EnemyState.Dead);
+
+		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, health.LastDamage);
 	}
 
 	/// <summary>
@@ -220,7 +238,8 @@ public class EnemyController : MonoBehaviour
 
 	public void Attack()
 	{
-		playerTransform.GetComponent<Health>().TakeDamage(enemyDataSO.attackPower);
+		if(isAttack)
+			playerTransform.GetComponent<Health>().TakeDamage(enemyDataSO.attackPower);
 	}
 	
 	public void SetIsAttack(bool isAttack)
@@ -241,11 +260,36 @@ public class EnemyController : MonoBehaviour
 	{
 		this.isDamage = isDamage;
 	}
+
+	private void StartDestory()
+	{
+		StartCoroutine(DeadDissolveCoroutine());
+	}
 	
 	public void DestroySelf()
 	{
 		//Destroy(gameObject);
-
+		gameObject.SetActive(false);
 		EnemyManager.Instance.RecycleEnemy(gameObject);
+	}
+
+	private IEnumerator DeadDissolveCoroutine()
+	{
+		float dissolveAmount = 0f;
+		
+		while(dissolveAmount < 1f)
+		{
+			dissolveAmount += Time.deltaTime * 0.5f;
+			material.SetFloat(DISSOLVE_AMOUNT, dissolveAmount);
+			
+			yield return null;
+		}
+
+		DestroySelf();
+	}
+
+	public void ShowDissolve()
+	{
+		material.SetFloat(DISSOLVE_AMOUNT, 0f);
 	}
 }

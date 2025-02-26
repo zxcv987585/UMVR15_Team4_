@@ -8,6 +8,7 @@ public abstract class BaseSkill : MonoBehaviour
 	[SerializeField] protected ParticleSystem skillParticleSystem;
 	
 	public bool canUse = true;
+	public const string ENEMY = "Enemy";
 
 	public virtual void Use()
 	{

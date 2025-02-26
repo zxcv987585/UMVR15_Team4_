@@ -9,7 +9,7 @@ public class DamageText : MonoBehaviour
     [SerializeField] private float showTime;
     [SerializeField] private TextMeshProUGUI damageText;
 
-    public void Show(int damage)
+    public void Show(float damage)
     {
         gameObject.SetActive(true);
         damageText.text = damage.ToString();

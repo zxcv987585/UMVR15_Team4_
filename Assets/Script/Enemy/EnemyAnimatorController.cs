@@ -7,10 +7,8 @@ using UnityEngine;
 public class EnemyAnimatorController : MonoBehaviour
 {
 	[SerializeField] Animator animator;
-	[SerializeField] Renderer dissolveRenderer;
 	
 	private EnemyState currentState;
-	private Material material;
 	private bool isAttack = false;
 	private bool isDamage = false;
 	private AnimatorStateInfo animatorStateInfo;
@@ -25,13 +23,11 @@ public class EnemyAnimatorController : MonoBehaviour
 	private const string IS_ATTACK = "isAttack";
 	private const string IS_DEAD = "isDead";
 	private const string IS_DAMAGE = "isDamage";
-	private const string DISSOLVE_AMOUNT = "_DissolveAmount";
 	
 	private void Start()
 	{
 		currentState = EnemyState.Idle;
 		animator = GetComponent<Animator>();
-		material = dissolveRenderer.material;
 	}
 
 	private void Update()
@@ -95,26 +91,6 @@ public class EnemyAnimatorController : MonoBehaviour
 	
 	public void OnDeadTrigger()
 	{
-		StartCoroutine(DeadDissolveCoroutine());
-	}
-	
-	private IEnumerator DeadDissolveCoroutine()
-	{
-		float dissolveAmount = 0f;
-		
-		while(dissolveAmount < 1f)
-		{
-			dissolveAmount += Time.deltaTime * 0.5f;
-			material.SetFloat(DISSOLVE_AMOUNT, dissolveAmount);
-			
-			yield return null;
-		}
-		
 		OnDead?.Invoke();
-	}
-
-	public void ShowDissolve()
-	{
-		material.SetFloat(DISSOLVE_AMOUNT, 0f);
 	}
 }

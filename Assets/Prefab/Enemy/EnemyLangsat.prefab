@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 314055311740652304}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -2.78}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -83,7 +83,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 16
   m_CollisionDetection: 0
 --- !u!195 &370769775926644706
 NavMeshAgent:
@@ -92,7 +92,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 314055311740652304}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
@@ -122,6 +122,7 @@ MonoBehaviour:
   enemyDataSO: {fileID: 11400000, guid: 1a4ef45df0f90024bbead2a3e6e1ce1d, type: 2}
   enemyAnimatorController: {fileID: 546935821883317118}
   enemyAttackHandler: {fileID: 3656083383996439404}
+  dissolveRenderer: {fileID: 5159522540130991874}
 --- !u!114 &-172366246604400439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,7 +395,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 5159522540135186882}
-  dissolveRenderer: {fileID: 5159522540130991874}
 --- !u!1 &5159522540144587362 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100032, guid: 2d53cfb1f51104109841f2863b9d11e9, type: 3}
@@ -419,8 +419,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.054619677
-  m_Center: {x: 0.00000009126961, y: 0.00000012852252, z: -0.000000033527613}
+  m_Radius: 0.15
+  m_Center: {x: -0.15308084, y: -0.060000025, z: 0.09}
 --- !u!114 &3656083383996439404
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,6 +14,14 @@ public class Health : MonoBehaviour
     //人物死亡時要觸發的委派事件
     public event Action OnDead;
 
+    private float lastDamage;
+    public float LastDamage
+    {
+        get { return lastDamage; }
+        private set { lastDamage = value; }
+    }
+    
+
     private bool Isdead = false;
 
     void Start()
@@ -59,6 +67,8 @@ public class Health : MonoBehaviour
         Debug.Log($"受到共{damage}傷害！剩餘血量：{CurrentHealth}");
         CurrentHealth -= damage;
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
+
+        lastDamage = damage;
 
         if (CurrentHealth > 0)
         {

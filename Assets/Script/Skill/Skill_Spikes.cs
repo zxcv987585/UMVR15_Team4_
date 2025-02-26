@@ -12,13 +12,13 @@ public class Skill_Spikes : BaseSkill
         transform.position = FindObjectOfType<PlayerController>()?.transform.position ?? Vector3.zero;
         skillParticleSystem.Play();
 
-        Collider[] hitColliderArray = Physics.OverlapSphere(transform.position, radius);
+        Collider[] hitColliderArray = Physics.OverlapSphere(transform.position, radius, LayerMask.GetMask(ENEMY));
         foreach (Collider hit in hitColliderArray)
         {
             if (hit.TryGetComponent(out EnemyController enemy))
             {
-                enemy.TakeDamage(GetSkillDataSO().damage);
                 enemy.HitFly(hitFlyPower);
+                enemy.gameObject.GetComponent<Health>().TakeDamage(GetSkillDataSO().damage);
             }
         }
     }

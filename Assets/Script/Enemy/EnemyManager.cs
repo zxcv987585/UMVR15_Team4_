@@ -7,7 +7,7 @@ public class EnemyManager : MonoBehaviour
     public static EnemyManager Instance {get; private set;}
 
     [SerializeField] private List<GameObject> enemyPrefabList;
-    private Dictionary<GameObject, Queue<GameObject>> enemyObjectPool;
+    private Dictionary<int, Queue<GameObject>> enemyObjectPool;
 
     private void Awake()
     {
@@ -23,35 +23,40 @@ public class EnemyManager : MonoBehaviour
 
     private void Start()
     {
-        enemyObjectPool = new Dictionary<GameObject, Queue<GameObject>>();
+        enemyObjectPool = new Dictionary<int, Queue<GameObject>>();
 
         foreach(GameObject enemyPrefab in enemyPrefabList)
         {
-            enemyObjectPool.Add(enemyPrefab, new Queue<GameObject>());
+            int enemyPrefabKey = enemyPrefab.GetInstanceID();
+            enemyObjectPool.Add(enemyPrefabKey, new Queue<GameObject>());
         }
     }
 
     /// <summary>
     /// 生成 Enemy 物件
     /// </summary>
-    /// <param name="spawnGameObject"> 生成的物件 Prefab </param>
+    /// <param name="spawnPrefab"> 生成的物件 Prefab </param>
     /// <param name="spawnTransform"> 生成的物件 Transform 位置 </param>
-    public void SpawnEnemy(GameObject spawnGameObject, Transform spawnTransform)
+    public void SpawnEnemy(GameObject spawnPrefab, Transform spawnTransform)
     {
-        Instantiate(spawnGameObject,spawnTransform.position, Quaternion.identity);
+        int spawnPrefabKey = spawnPrefab.GetInstanceID();
 
-        if(enemyObjectPool.TryGetValue(spawnGameObject, out Queue<GameObject> enemyprefabQueue))
+        if(enemyObjectPool.TryGetValue(spawnPrefabKey, out Queue<GameObject> enemyprefabQueue))
         {
             if(enemyprefabQueue.Count > 0)
             {
                 GameObject enemy = enemyprefabQueue.Dequeue();
                 enemy.transform.position = spawnTransform.position;
                 enemy.GetComponent<EnemyController>().Init();
+
+                Debug.Log("對應 Enemy 物件池足夠, 取出並放置");
             }
             else
             {
-                GameObject enemy = Instantiate(spawnGameObject);
+                GameObject enemy = Instantiate(spawnPrefab);
                 enemy.transform.position = spawnTransform.position;
+
+                Debug.Log("對應 Enemy 物件池不足, 產生新物件");
             }
         }
         else
@@ -63,16 +68,20 @@ public class EnemyManager : MonoBehaviour
     /// <summary>
     /// 回收怪物物件
     /// </summary>
-    /// <param name="enemy"> 物件的 GameObject </param>
-    public void RecycleEnemy(GameObject enemy)
+    /// <param name="enemyPrefab"> 物件的 GameObject </param>
+    public void RecycleEnemy(GameObject enemyPrefab)
     {
-        if(enemyObjectPool.TryGetValue(enemy, out Queue<GameObject> enemyPrefabQueue))
+        int enemyPrefabKey = enemyPrefab.GetInstanceID();
+
+        if(enemyObjectPool.TryGetValue(enemyPrefabKey, out Queue<GameObject> enemyPrefabQueue))
         {
-            enemyPrefabQueue.Enqueue(enemy);
+            enemyPrefabQueue.Enqueue(enemyPrefab);
         }
         else
         {
-            Debug.Log(" EnemyManager/RecycleEnemy 找不到對應的物件池");
+            Debug.Log(" EnemyManager/RecycleEnemy 找不到對應的物件池, 生成新的對應物件池");
+            
+            enemyObjectPool.Add(enemyPrefabKey, new Queue<GameObject>());
         }
     }
 }

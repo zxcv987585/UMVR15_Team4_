@@ -26,6 +26,7 @@ public class EnemySpawnTirgger : MonoBehaviour
             }
 
             hasSpawn = true;
+            gameObject.SetActive(false);
         }
     }
 }
