@@ -17,7 +17,7 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private Health health;
     [SerializeField] private TextMeshProUGUI currentHPText;
     [SerializeField] private TextMeshProUGUI maxHPText;
-    [SerializeField] private Image HPImage;
+    [SerializeField] private Slider HPSlider;
     [SerializeField] private Image costHPImage;
 
     private float fadeTime = 1f;
@@ -70,20 +70,20 @@ public class BattleUIManager : MonoBehaviour
     {
         currentHPText.text = health.GetCurrentHealth().ToString();
         
-        costHPImage.fillAmount = HPImage.fillAmount;
-        if(costAnimationCoroutine != null)
-        {
-            StopCoroutine(costAnimationCoroutine);
-        }
-        costAnimationCoroutine = StartCoroutine(CostAnimationCoroutine());
+        //costHPImage.fillAmount = HPImage.fillAmount;
+        // if(costAnimationCoroutine != null)
+        // {
+        //     StopCoroutine(costAnimationCoroutine);
+        // }
+        // costAnimationCoroutine = StartCoroutine(CostAnimationCoroutine());
 
-        HPImage.fillAmount = health.GetHealthRatio();
+        HPSlider.value = health.GetHealthRatio();
     }
 
     //HP 傷害紅條淡出動畫
     private IEnumerator CostAnimationCoroutine()
     {
-        costHPImage.fillAmount = HPImage.fillAmount;
+        //costHPImage.fillAmount = HPImage.fillAmount;
 
         float timer = 0f;
         Color color = costHPImage.color;
