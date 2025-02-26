@@ -48,6 +48,11 @@ public class MoveState : PlayerState
             IsMoving?.Invoke(false);
             IsRun?.Invoke(false);
         }
+        else if (player.isHit)
+        {
+            IsMoving?.Invoke(false);
+            IsRun?.Invoke(false);
+        }
         else
         {
             Move();
