@@ -25,7 +25,7 @@ public class WeaponManager : MonoBehaviour
     //每次傷害量（可能會換地方傳入傷害）
     public float attackDamage = 25f;
     //攻擊範圍
-    private float attackRadius = 1.5f;
+    private float attackRadius = 0.5f;
 
     public List<WeaponData> WeaponPrefabs;
     public WeaponType defualtWeapon = WeaponType.Katana;
@@ -46,10 +46,6 @@ public class WeaponManager : MonoBehaviour
         if (attackPoint == null)
         {
             Debug.Log("這裡是weaponManager，找不到武器");
-        }
-        if (playerController.isAttack)
-        {
-            Invoke("Attack", 0.45f);
         }
     }
 

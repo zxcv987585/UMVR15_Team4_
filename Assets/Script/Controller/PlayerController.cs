@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         stateMachine.Initialize(new IdleState(stateMachine, this));
-        health.PlayerOnDamage += GetHit;
+        health.OnDamage += GetHit;
         GameInput.Instance.OnSprintAction += SetIsRun;
         GameInput.Instance.OnAimAction += SetIsAiming;
         GameInput.Instance.OnAttackAction += SetIsAttack;
