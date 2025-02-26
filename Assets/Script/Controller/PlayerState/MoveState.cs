@@ -30,6 +30,12 @@ public class MoveState : PlayerState
             IsMoving?.Invoke(false);
             IsRun?.Invoke(false);
         }
+        else if (player.IsDie)
+        {
+            StateMachine.ChangeState(player.deadState);
+            IsMoving?.Invoke(false);
+            IsRun?.Invoke(false);
+        }
         else if (player.isAttack)
         {
             StateMachine.ChangeState(player.fightState);

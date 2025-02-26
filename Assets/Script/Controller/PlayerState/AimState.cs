@@ -36,6 +36,11 @@ public class AimState : PlayerState
             StateMachine.ChangeState(player.idleState);
             OnAim?.Invoke(false);
         }
+        else if (player.IsDie)
+        {
+            StateMachine.ChangeState(player.deadState);
+            OnAim?.Invoke(false);
+        }
         else
         {
             RotateToCamera();
