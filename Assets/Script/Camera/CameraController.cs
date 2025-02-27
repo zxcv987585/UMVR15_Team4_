@@ -26,8 +26,10 @@ public class CameraController : MonoBehaviour
     [Header("攝影機的延遲跟隨時間")]
     [SerializeField] float SmoothTime = 0.01f;
 
+    //最小與最大攝影機仰角程度
     float MinVerticalAngle = -10;
     float MaxVerticalAngle = 30;
+    //攝影機與玩家的距離
     float CameraToTargetDistance = 3.5f;
     float Mouse_x = 0;
     float Mouse_y = 30;

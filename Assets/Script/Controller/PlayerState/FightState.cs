@@ -38,29 +38,35 @@ public class FightState : PlayerState
         {
             ResetCombo();
             StateMachine.ChangeState(player.idleState);
+            return;
         }
 
         if (CanAttack && player.isAttack)
         {
             Attack();
+            return;
         }
-        else if (player.isDash)
+        if (player.isDash)
         {
             StateMachine.ChangeState(player.dashState);
             ResetCombo();
+            return;
         }
-        else if (player.isAiming)
+        if (player.isAiming)
         {
             StateMachine.ChangeState(player.aimState);
             ResetCombo();
+            return;
         }
-        else if (player.IsDie)
+        if (player.IsDie)
         {
             StateMachine.ChangeState(player.deadState);
+            return;
         }
-        else if (player.isHit)
+        if (player.isHit)
         {
             ResetCombo();
+            return;
         }
     }
 

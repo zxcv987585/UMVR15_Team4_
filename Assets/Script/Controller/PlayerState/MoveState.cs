@@ -23,40 +23,44 @@ public class MoveState : PlayerState
             StateMachine.ChangeState(player.idleState);
             IsMoving?.Invoke(false);
             IsRun?.Invoke(false);
+            return;
         }
-        else if (player.isAiming)
+        if (player.isAiming)
         {
             StateMachine.ChangeState(player.aimState);
             IsMoving?.Invoke(false);
             IsRun?.Invoke(false);
+            return;
         }
-        else if (player.IsDie)
+        if (player.IsDie)
         {
             StateMachine.ChangeState(player.deadState);
             IsMoving?.Invoke(false);
             IsRun?.Invoke(false);
+            return;
         }
-        else if (player.isAttack)
+        if (player.isAttack)
         {
             StateMachine.ChangeState(player.fightState);
             IsMoving?.Invoke(false);
             IsRun?.Invoke(false);
+            return;
         }
-        else if (player.isDash)
+        if (player.isDash)
         {
             StateMachine.ChangeState(player.dashState);
             IsMoving?.Invoke(false);
             IsRun?.Invoke(false);
+            return;
         }
-        else if (player.isHit)
+        if (player.isHit)
         {
             IsMoving?.Invoke(false);
             IsRun?.Invoke(false);
+            return;
         }
-        else
-        {
-            Move();
-        }
+
+        Move();
     }
 
     public override void Move()

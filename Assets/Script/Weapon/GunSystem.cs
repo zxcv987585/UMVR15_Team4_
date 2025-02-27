@@ -1,23 +1,23 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GunSystem : MonoBehaviour
 {
     //槍械參數
     public int Damage;
-    public float TimeBetweenShoting, spread, range,reloadingTime, timeBetweenShots;
+    public float TimeBetweenShooting, spread, range, reloadingTime, timeBetweenShots;
     public int magazineSize, bulletsPerTap;
     public bool allowButtonHold;
     private int bulletLeft, bulletShot;
 
     //射擊判定
-    private bool shooting, readyToShot, reloading;
+    private bool shooting, readyToShoot, reloading;
 
     //參照物（用於射擊與瞄準）
     public Camera camera;
     public Transform attackPoint;
     public RaycastHit rayHit;
     public LayerMask Enemy;
-    public LayerMask Wall;
 
     //特效
     public GameObject muzzleFlash;
@@ -30,7 +30,7 @@ public class GunSystem : MonoBehaviour
         {
             Debug.LogError("找不到攝影機！");
         }
-        readyToShot = true;
+        readyToShoot = true;
     }
     private void Update()
     {
@@ -39,13 +39,13 @@ public class GunSystem : MonoBehaviour
     //輸入判定
     private void MyInput()
     {
-        if (allowButtonHold) shooting = Input.GetMouseButton(0);
-        else shooting = Input.GetMouseButtonDown(0);
+        if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
+        else shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
         if (bulletLeft < magazineSize && !reloading) Reload();
 
         //射擊
-        if(readyToShot && shooting && !reloading && bulletLeft > 0)
+        if(readyToShoot && shooting && !reloading && bulletLeft > 0)
         {
             bulletShot = bulletsPerTap;
             Shoot();
@@ -55,9 +55,7 @@ public class GunSystem : MonoBehaviour
     //射擊程式碼
     private void Shoot()
     {
-        if (!readyToShot) return;
-
-        readyToShot = false;
+        readyToShoot = false;
 
         Ray cameraRay = camera.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
         Vector3 targetPoint;
@@ -90,17 +88,17 @@ public class GunSystem : MonoBehaviour
         bulletLeft--;
         bulletShot--;
 
-        if(bulletShot > 0 &&  bulletLeft > 0)
+        Invoke("ResetShot", TimeBetweenShooting);
+
+        if (bulletShot > 0 &&  bulletLeft > 0)
         {
-            Invoke("Shoot", TimeBetweenShoting);
+            Invoke("Shoot", timeBetweenShots);
         }
-        Invoke("ResetShot", TimeBetweenShoting);
-      
     }
 
     private void ResetShot()
     {
-        readyToShot = true;
+        readyToShoot = true;
     }
 
     //換彈程式碼（用於冷卻系統）

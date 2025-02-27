@@ -40,15 +40,14 @@ public class DashState : PlayerState
         {
             dashTimer -= Time.deltaTime;
             player.controller.SimpleMove(player.Velocity);
+            return;
         }
-        else
-        {
-            player.isDash = false;
-            StateMachine.ChangeState(player.idleState);
-            ForceIdle?.Invoke(true);
-            player.Velocity = Vector3.zero;
-            DashReset?.Invoke(true);
-        }
+
+        player.isDash = false;
+        StateMachine.ChangeState(player.idleState);
+        ForceIdle?.Invoke(true);
+        player.Velocity = Vector3.zero;
+        DashReset?.Invoke(true);  
     }
 
     public override void Move() { }
