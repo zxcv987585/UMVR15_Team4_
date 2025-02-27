@@ -205,23 +205,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 379669c31fa5756438803937a7db3aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 8
-  TimeBetweenShoting: 0.05
-  spread: 0
+  Damage: 12
+  TimeBetweenShooting: 0.5
+  spread: 0.02
   range: 100
   reloadingTime: 1
-  timeBetweenShots: 0
+  timeBetweenShots: 0.08
   magazineSize: 30
-  bulletsPerTap: 1
+  bulletsPerTap: 3
   allowButtonHold: 1
   camera: {fileID: 0}
   attackPoint: {fileID: 3882832088892587953}
   Enemy:
     serializedVersion: 2
     m_Bits: 128
-  Wall:
-    serializedVersion: 2
-    m_Bits: 64
   muzzleFlash: {fileID: 3229388960242003107, guid: a2942ced125e1314fa208f2a717e6db9, type: 3}
 --- !u!1 &6098403349532309850
 GameObject:
