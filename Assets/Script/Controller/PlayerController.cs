@@ -122,13 +122,13 @@ public class PlayerController : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, targetRotation, Time.deltaTime * CameraSpeed);
         }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            LockOnTarget();
-        }
     }
 
+    private void FixedUpdate()
+    {
+        LockOnTarget();
+        GetClosestEnemy();
+    }
     //共用重力邏輯
     private void ApplyGravity()
     {
@@ -273,13 +273,6 @@ public class PlayerController : MonoBehaviour
         {
             LockTarget = null;
         }
-
-        if (LockTarget != null) 
-        { 
-            Vector3 directionToTarget = LockTarget.position - transform.position;
-            directionToTarget.y = 0;
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(directionToTarget), Time.deltaTime * RotateSpeed);
-        }
     }
     //偵測距離玩家最近的敵方單位
     private Transform GetClosestEnemy()
@@ -306,7 +299,6 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("附近沒有敵人");
         }
-        //回傳Target給攝影機
         return Target;
     }
 
