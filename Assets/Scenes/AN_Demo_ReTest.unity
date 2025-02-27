@@ -849,6 +849,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 623627934974267840, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: m_Effectors.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 623627934974267840, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: m_Effectors.Array.data[0].m_Visible
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 623627934974267840, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: m_Effectors.Array.data[0].m_Transform
+      value: 
+      objectReference: {fileID: 1355333780}
+    - target: {fileID: 623627934974267840, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: m_Effectors.Array.data[0].m_Style.size
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 623627934974267840, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: m_Effectors.Array.data[0].m_Style.shape
+      value: 
+      objectReference: {fileID: 4300000, guid: c6793350c150f456688e39a81f97364a, type: 2}
+    - target: {fileID: 623627934974267840, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: m_Effectors.Array.data[0].m_Style.color.a
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 623627934974267840, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: m_Effectors.Array.data[0].m_Style.color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3538476031198503613, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: DashSpeed
       value: 10
@@ -865,6 +893,10 @@ PrefabInstance:
       propertyPath: WeaponPrefabs.Array.data[2].prefab
       value: 
       objectReference: {fileID: 690605372435058100, guid: 8080eb9cdb3038c4596d86d5c250e1f4, type: 3}
+    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: EnemyLayer.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 8211211446584772470, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: m_Name
       value: Player

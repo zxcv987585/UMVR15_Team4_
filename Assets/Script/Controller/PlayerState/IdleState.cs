@@ -32,29 +32,34 @@ public class IdleState : PlayerState
                 StateMachine.ChangeState(player.moveState);
                 IsIdle?.Invoke(false);
             }
+            return;
         }
-        else if (player.isAiming)
+        if (player.isAiming)
         {
             StateMachine.ChangeState(player.aimState);
             IsIdle?.Invoke(false);
+            return;
         }
-        else if (player.IsDie)
+        if (player.IsDie)
         {
             StateMachine.ChangeState(player.deadState);
             IsIdle?.Invoke(false);
+            return;
         }
-        else if (player.isHit)
+        if (player.isHit)
         {
             IsIdle?.Invoke(false);
-        }
-        else
-        {
-            idleTimer = 0f;
+            return;
         }
         if (player.isAttack)
         {
             StateMachine.ChangeState(player.fightState);
             IsIdle?.Invoke(false);
+            return;
+        }
+        else
+        {
+            idleTimer = 0f;
         }
     }
 

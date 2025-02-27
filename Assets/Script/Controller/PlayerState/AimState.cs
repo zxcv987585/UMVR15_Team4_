@@ -30,16 +30,19 @@ public class AimState : PlayerState
         {
             StateMachine.ChangeState(player.moveState);
             OnAim?.Invoke(false);
+            return;
         }
-        else if (!player.isAiming && player.GetMoveInput().sqrMagnitude < 0.01f)
+        if (!player.isAiming && player.GetMoveInput().sqrMagnitude < 0.01f)
         {
             StateMachine.ChangeState(player.idleState);
             OnAim?.Invoke(false);
+            return;
         }
-        else if (player.IsDie)
+        if (player.IsDie)
         {
             StateMachine.ChangeState(player.deadState);
             OnAim?.Invoke(false);
+            return;
         }
         else
         {
