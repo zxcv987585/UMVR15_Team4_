@@ -18,8 +18,6 @@ public class FightState : PlayerState
     public Action<string> AttackCombo;
     //傳送重置Trigger的指令給動畫控制器
     public Action<bool> isAttacking;
-    //追蹤是否處在動畫播放狀態
-    private bool isInAttackAnimation = false;
 
 
     public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) {}
@@ -27,14 +25,12 @@ public class FightState : PlayerState
     public override void Enter()
     {
         currentComboStep = 0;
-        
-        isInAttackAnimation = true;
         isAttacking.Invoke(true);
     }
 
     public override void Update()
     {
-        if (QuitState() && !isInAttackAnimation)
+        if (QuitState())
         {
             ResetCombo();
             StateMachine.ChangeState(player.idleState);
@@ -74,6 +70,12 @@ public class FightState : PlayerState
 
     private void Attack()
     {
+        if (player.LockTarget != null) 
+        {
+            Vector3 direction = (player.LockTarget.position - player.transform.position).normalized;
+            direction.y = 0;
+            player.transform.rotation = Quaternion.LookRotation(direction);
+        }
         if (!CanAttack) return;
 
         attackTimer = 0;
@@ -112,7 +114,6 @@ public class FightState : PlayerState
     {
         currentComboStep = 0;
         isAttacking.Invoke(false);
-        isInAttackAnimation = false;
     }
 
     IEnumerator AttackCoolDown()

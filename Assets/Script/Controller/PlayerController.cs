@@ -53,8 +53,14 @@ public class PlayerController : MonoBehaviour
     public float attackDamage = 25f;
     [Tooltip("玩家的攻擊範圍")]
     public float attackRadius = 0.5f;
+
+    [Header("鎖定時的攝影機邏輯")]
+    [Tooltip("鎖定狀態下的攝影機中心點")]
+    [SerializeField] Transform cameraPivot;
+    [SerializeField] float CameraSpeed = 5f;
+
     //取得距離玩家最近的敵方單位
-    private Transform LockTarget;
+    public Transform LockTarget;
     //用來記錄最後一次Dash的時間
     private float lastDashTime = -Mathf.Infinity;
 
@@ -109,6 +115,20 @@ public class PlayerController : MonoBehaviour
         ApplyGravity();
         //檢測狀態機更新邏輯
         stateMachine.Update();
+        //鎖定時控制攝影機
+        if(LockTarget != null)
+        {
+            Vector3 direction = LockTarget.position - cameraPivot.position;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, targetRotation, Time.deltaTime * CameraSpeed);
+
+            //if(LockTarget.GetComponent<>)
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            LockOnTarget();
+        }
     }
 
     //共用重力邏輯
@@ -255,23 +275,24 @@ public class PlayerController : MonoBehaviour
         {
             LockTarget = null;
         }
+
+        if (LockTarget != null) 
+        { 
+            Vector3 directionToTarget = LockTarget.position - transform.position;
+            directionToTarget.y = 0;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(directionToTarget), Time.deltaTime * RotateSpeed);
+        }
     }
     //偵測距離玩家最近的敵方單位
     private Transform GetClosestEnemy()
     {
-        //建立偵測範圍，從玩家位置往外畫圓，檢測是否有單位屬於EnemyLayer
         Collider[] enemies = Physics.OverlapSphere(transform.position, LockRange, EnemyLayer);
-        //預設目標都是null，總不可能明明沒敵人在周圍還能有東西吧
         Transform Target = null;
-        //宣告一個最近的距離我們不設限
         float CloseDistance = Mathf.Infinity;
 
-        //跑回圈檢查圓環內是否有敵方單位
         foreach (Collider enemy in enemies) 
         { 
-            //宣告一個距離式如果有偵測到，那就是我們跟敵人之間的距離
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
-            //如果偵測到了就把Target設為最近的敵人
             if(distance < CloseDistance)
             {
                 CloseDistance = distance;
