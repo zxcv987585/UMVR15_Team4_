@@ -40,6 +40,7 @@ public class DashState : PlayerState
         {
             dashTimer -= Time.deltaTime;
             player.controller.SimpleMove(player.Velocity);
+            return;
         }
         else
         {

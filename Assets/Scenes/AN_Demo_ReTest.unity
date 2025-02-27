@@ -893,6 +893,10 @@ PrefabInstance:
       propertyPath: WeaponPrefabs.Array.data[2].prefab
       value: 
       objectReference: {fileID: 690605372435058100, guid: 8080eb9cdb3038c4596d86d5c250e1f4, type: 3}
+    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: EnemyLayer.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 8211211446584772470, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: m_Name
       value: Player

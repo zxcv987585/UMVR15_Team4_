@@ -18,14 +18,7 @@ public class WeaponManager : MonoBehaviour
 
     public Transform weaponHolder;
     private GameObject currentWeapon;
-    public Transform attackPoint;
-
-    //取得敵人layer層
-    public LayerMask Enemy;
-    //每次傷害量（可能會換地方傳入傷害）
-    public float attackDamage = 25f;
-    //攻擊範圍
-    private float attackRadius = 0.5f;
+    private Transform attackPoint;
 
     public List<WeaponData> WeaponPrefabs;
     public WeaponType defualtWeapon = WeaponType.Katana;
@@ -51,11 +44,11 @@ public class WeaponManager : MonoBehaviour
 
     public void Attack()
     {
-        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRadius, Enemy);
+        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, playerController.attackRadius, playerController.EnemyLayer);
         foreach (Collider enemy in hitEnemies)
         {
             Debug.Log($"擊中 {enemy.name}");
-            enemy.GetComponent<Health>().TakeDamage(attackDamage);
+            enemy.GetComponent<Health>().TakeDamage(playerController.attackDamage);
         }
     }
 
