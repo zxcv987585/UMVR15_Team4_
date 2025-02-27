@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(HitCoolTime);
         isHit = false;
-        stateMachine.Initialize(idleState);
+        stateMachine.ChangeState(idleState);
     }
     
     //玩家死亡邏輯
