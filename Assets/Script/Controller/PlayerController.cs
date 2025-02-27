@@ -121,8 +121,6 @@ public class PlayerController : MonoBehaviour
             Vector3 direction = LockTarget.position - cameraPivot.position;
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, targetRotation, Time.deltaTime * CameraSpeed);
-
-            //if(LockTarget.GetComponent<>)
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -298,6 +296,15 @@ public class PlayerController : MonoBehaviour
                 CloseDistance = distance;
                 Target = enemy.transform;
             }
+        }
+
+        if (Target != null)
+        {
+            Debug.Log($"正在鎖定敵人: {Target.name}");
+        }
+        else
+        {
+            Debug.Log("附近沒有敵人");
         }
         //回傳Target給攝影機
         return Target;
