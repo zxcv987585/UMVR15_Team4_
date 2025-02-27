@@ -44,11 +44,9 @@ public class AimState : PlayerState
             OnAim?.Invoke(false);
             return;
         }
-        else
-        {
-            RotateToCamera();
-            Move();
-        }
+
+        RotateToCamera();
+        Move();
     }
 
     private void RotateToCamera()

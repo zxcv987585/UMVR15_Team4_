@@ -57,10 +57,8 @@ public class IdleState : PlayerState
             IsIdle?.Invoke(false);
             return;
         }
-        else
-        {
-            idleTimer = 0f;
-        }
+
+        idleTimer = 0f;
     }
 
     public override void Move() { }

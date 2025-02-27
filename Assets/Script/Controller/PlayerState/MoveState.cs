@@ -59,10 +59,8 @@ public class MoveState : PlayerState
             IsRun?.Invoke(false);
             return;
         }
-        else
-        {
-            Move();
-        }
+
+        Move();
     }
 
     public override void Move()
