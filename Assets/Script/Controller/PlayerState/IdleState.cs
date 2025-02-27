@@ -34,6 +34,12 @@ public class IdleState : PlayerState
             }
             return;
         }
+        if (player.isDash)
+        {
+            StateMachine.ChangeState(player.dashState);
+            IsIdle?.Invoke(false);
+            return;
+        }
         if (player.isAiming)
         {
             StateMachine.ChangeState(player.aimState);

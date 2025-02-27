@@ -140,6 +140,7 @@ public class PlayerController : MonoBehaviour
     {
         //死亡就不要移動
         if (IsDie) return;
+        if (isDash) return;
         //將MoveState計算完的數值傳入Controller進行移動
         controller.Move(targetDirection * currentSpeed * Time.deltaTime);
         //玩家如果轉向人物也必須跟著旋轉
@@ -221,7 +222,7 @@ public class PlayerController : MonoBehaviour
         //死亡就不會Dash
         if (IsDie) return;
         //如果玩家在Idle跟瞄準狀態就不能Dash
-        if (stateMachine.GetState<IdleState>() != null || stateMachine.GetState<AimState>() != null)
+        if (stateMachine.GetState<AimState>() != null)
         {
             return;
         }

@@ -26,8 +26,15 @@ public class DashState : PlayerState
         Vector3 cameraForward = player.GetCurrentCameraForward();
         Vector3 cameraRight = player.GetCurrentCameraRight();
 
-        //計算Dash方向，讓他與相機角度對齊
-        dashDirection = (cameraForward * inputDirection.z + cameraRight * inputDirection.x).normalized;
+        if (inputDirection == Vector3.zero) 
+        { 
+            dashDirection = player.transform.forward;
+        }
+        else
+        {
+            //計算Dash方向，讓他與相機角度對齊
+            dashDirection = (cameraForward * inputDirection.z + cameraRight * inputDirection.x).normalized;
+        }
 
         player.SetRotation(dashDirection);
 
@@ -42,7 +49,6 @@ public class DashState : PlayerState
             player.controller.SimpleMove(player.Velocity);
             return;
         }
-
         player.isDash = false;
         StateMachine.ChangeState(player.idleState);
         ForceIdle?.Invoke(true);

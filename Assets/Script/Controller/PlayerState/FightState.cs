@@ -9,9 +9,9 @@ public class FightState : PlayerState
     //追蹤可以執行連擊的時間
     public float attackTimer = 0;
     //連擊重置的最久等候時間
-    public float attackResetTime = 0.8f;
+    public float attackResetTime = 0.6f;
     //預估動畫播放所需的時間
-    private float attackAnimationTime = 0.45f;
+    private float attackAnimationTime = 0.4f;
     //確認是否可以攻擊
     public bool CanAttack = true;
     //傳送目前攻擊Trigger給動畫控制器
