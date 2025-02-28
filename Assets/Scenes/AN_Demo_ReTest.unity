@@ -894,6 +894,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 690605372435058100, guid: 8080eb9cdb3038c4596d86d5c250e1f4, type: 3}
     - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: cameraPivot
+      value: 
+      objectReference: {fileID: 205045440}
+    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: EnemyLayer.m_Bits
       value: 128
       objectReference: {fileID: 0}
@@ -1791,6 +1795,11 @@ RectTransform:
   m_AnchoredPosition: {x: 40, y: 0}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!4 &205045440 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8598548793236373654, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+  m_PrefabInstance: {fileID: 69650493}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &226696002
 PrefabInstance:
   m_ObjectHideFlags: 0

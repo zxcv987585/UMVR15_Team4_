@@ -83,8 +83,11 @@ public class GunSystem : MonoBehaviour
         }
 
         if(muzzleFlash != null)
-            Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
-
+        {
+            GameObject GunFire = Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+            GunFire.transform.rotation = attackPoint.rotation;
+        }
+            
         bulletLeft--;
         bulletShot--;
 
