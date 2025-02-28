@@ -16,6 +16,7 @@ public class InventoryManager : MonoBehaviour
         RefreshUI(); 
     }
 
+    //道具被撿取後，從ItemTake那呼叫的方法
     public void AddItem(Item newItem)
     {
         //檢查背包內是否已經有這個道具
