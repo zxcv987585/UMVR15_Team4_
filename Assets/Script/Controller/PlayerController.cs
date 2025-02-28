@@ -62,6 +62,10 @@ public class PlayerController : MonoBehaviour
 
     //取得距離玩家最近的敵方單位
     public Transform LockTarget;
+    //紀錄每次檢查周遭敵人的時間
+    private float NextCheckTime = 0f;
+    //多久檢查一次附近敵人
+    private float CheckInterval = 0.2f;
     //用來記錄最後一次Dash的時間
     private float lastDashTime = -Mathf.Infinity;
 
@@ -116,29 +120,24 @@ public class PlayerController : MonoBehaviour
         ApplyGravity();
         //檢測狀態機更新邏輯
         stateMachine.Update();
-        //鎖定時控制攝影機
-        if(LockTarget != null)
-        {
-            Vector3 direction = LockTarget.position - cameraPivot.position;
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, targetRotation, Time.deltaTime * CameraSpeed);
-        }
-    }
-
-    private void FixedUpdate()
-    {
+        //按下按鍵進行鎖定敵人
         if (Input.GetKeyDown(KeyCode.C))
         {
             LockOnTarget();
         }
-        GetClosestEnemy();
+        //時刻檢查周遭是否存在敵人
+        if (Time.time >= NextCheckTime)
+        {
+            NextCheckTime = Time.time + CheckInterval;
+            GetClosestEnemy();
+        }
     }
+
     //共用重力邏輯
     private void ApplyGravity()
     {
-        //Dash期間不要生效重力，以防重力影響速度
         if (isDash) return;
-        //玩家如果在地面就計算Y軸不超過一定數值，如果不在地面加上重力數值讓玩家採地板
+
         if (controller.isGrounded)
         {
             Velocity.y = -0.05f;
@@ -147,7 +146,7 @@ public class PlayerController : MonoBehaviour
         {
             Velocity.y -= Gravity * Time.deltaTime;
         }
-        //計算完後丟回controller進行Y軸移動
+
         controller.Move(Velocity * Time.deltaTime);
     }
 
@@ -160,12 +159,9 @@ public class PlayerController : MonoBehaviour
     //Walk、Run狀態機的核心邏輯
     public void MoveCharacter(Vector3 targetDirection, float currentSpeed)
     {
-        //死亡就不要移動
-        if (IsDie) return;
-        if (isDash) return;
-        //將MoveState計算完的數值傳入Controller進行移動
+        if (IsDie || isDash) return;
+
         controller.Move(targetDirection * currentSpeed * Time.deltaTime);
-        //玩家如果轉向人物也必須跟著旋轉
         SmoothRotation(targetDirection);
     }
     private void SetIsRun(bool isRun)
@@ -179,12 +175,8 @@ public class PlayerController : MonoBehaviour
     //攻擊模式的核心邏輯
     private void SetIsAttack(bool Attack)
     {
-        //死亡就不要砍人
-        if (IsDie) return;
-        //如果是瞄準跟Dash狀態就不要執行攻擊，否則會邏輯打架
-        if (stateMachine.GetState<AimState>() != null) return;
-        if (stateMachine.GetState<DashState>() != null) return;
-        //透過涵式更改PlayerController的攻擊bool狀態
+        if (IsDie || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+
         isAttack = Attack;
     }
 
@@ -197,9 +189,8 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        //死亡就不要舉槍
         if (IsDie) return;
-        //透過涵式更改PlayerController的瞄準bool狀態
+
         isAiming = isAim;
     }
     //瞄準時讓角色時刻透過滑鼠旋轉瞄準
@@ -211,49 +202,36 @@ public class PlayerController : MonoBehaviour
     //玩家受傷邏輯（無狀態機，屬於隨時都可能進入狀態
     public void GetHit()
     {
-        //死亡就不會受傷
         if (IsDie) return;
-        //通知已經訂閱的系統玩家受到傷害
+
         OnHit?.Invoke("Hit");
-        //透過涵式更改PlayerController的受傷bool狀態
         isHit = true;
-        //啟動協程，進入玩家受傷的硬質時間
+
         StartCoroutine(HitCoolDown());
     }
     //計算玩家受傷時的硬質協程
     IEnumerator HitCoolDown()
     {
-        //讓玩家必須等待硬質時間結束才能接著移動
         yield return new WaitForSeconds(HitCoolTime);
-        //透過涵式更改PlayerController的受傷bool狀態
+
         isHit = false;
-        //硬質結束直接回到idle狀態
         stateMachine.ChangeState(idleState);
     }
     
     //玩家死亡邏輯
     public void Died()
     {
-        //透過涵式更改PlayerController的死亡bool狀態
         IsDie = true;
     }
 
     //Dash狀態機的核心邏輯
     private void Dash()
     {
-        //死亡就不會Dash
-        if (IsDie) return;
-        //如果玩家在Idle跟瞄準狀態就不能Dash
-        if (stateMachine.GetState<AimState>() != null)
-        {
-            return;
-        }
-        //冷卻時間結束就准許Dash
+        if (IsDie || stateMachine.GetState<AimState>() != null) return;
+
         if (Time.time >= lastDashTime + DashCoolTime)
         {
-            //透過涵式更改PlayerController的Dash bool狀態
             isDash = true;
-            //紀錄最後一次Dash的時間，以確保冷卻時間生效
             lastDashTime = Time.time;
         }
     }
