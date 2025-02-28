@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
+using static UnityEngine.GraphicsBuffer;
 
 public class PlayerController : MonoBehaviour
 {
@@ -126,7 +127,10 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        LockOnTarget();
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            LockOnTarget();
+        }
         GetClosestEnemy();
     }
     //共用重力邏輯
@@ -273,6 +277,16 @@ public class PlayerController : MonoBehaviour
         {
             LockTarget = null;
         }
+
+
+        if (LockTarget != null)
+        {
+            Debug.Log($"正在鎖定敵人");
+        }
+        else
+        {
+            Debug.Log("附近沒有敵人");
+        }
     }
     //偵測距離玩家最近的敵方單位
     private Transform GetClosestEnemy()
@@ -289,15 +303,6 @@ public class PlayerController : MonoBehaviour
                 CloseDistance = distance;
                 Target = enemy.transform;
             }
-        }
-
-        if (Target != null)
-        {
-            Debug.Log($"正在鎖定敵人: {Target.name}");
-        }
-        else
-        {
-            Debug.Log("附近沒有敵人");
         }
         return Target;
     }

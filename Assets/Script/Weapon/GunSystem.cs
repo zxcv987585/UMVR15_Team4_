@@ -18,9 +18,10 @@ public class GunSystem : MonoBehaviour
     public Transform attackPoint;
     public RaycastHit rayHit;
     public LayerMask Enemy;
+    public LayerMask Wall;
 
     //特效
-    public GameObject muzzleFlash;
+    public GameObject muzzleFlash, bulletHole;
 
     private void Awake()
     {
@@ -80,6 +81,11 @@ public class GunSystem : MonoBehaviour
         {
             Debug.Log(rayHit.collider.name);
             rayHit.collider.GetComponent<Health>().TakeDamage(Damage);
+
+            if (bulletHole != null)
+            {
+                Instantiate(bulletHole, rayHit.point, Quaternion.Euler(0, 180, 0));
+            }
         }
 
         if(muzzleFlash != null)
@@ -87,8 +93,18 @@ public class GunSystem : MonoBehaviour
             GameObject GunFire = Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
             GunFire.transform.rotation = attackPoint.rotation;
         }
-            
-        bulletLeft--;
+
+        if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Wall))
+        {
+            Debug.Log(rayHit.collider.name);
+
+            if (bulletHole != null)
+            {
+                Instantiate(bulletHole, rayHit.point, Quaternion.Euler(0, 180, 0));
+            }
+        }
+
+            bulletLeft--;
         bulletShot--;
 
         Invoke("ResetShot", TimeBetweenShooting);
