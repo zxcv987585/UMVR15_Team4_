@@ -22,6 +22,7 @@ public class GunSystem : MonoBehaviour
 
     //特效
     public GameObject muzzleFlash, bulletHole;
+    public TrailRenderer tracerEffect;
 
     private void Awake()
     {
@@ -76,6 +77,9 @@ public class GunSystem : MonoBehaviour
         float y = Random.Range(-spread, spread);
         direction += new Vector3(x, y, 0);
 
+        var tracer = Instantiate(tracerEffect, attackPoint.position, Quaternion.identity);
+        tracer.AddPosition(attackPoint.position);
+
         //射線判定
         if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Enemy) )
         {
@@ -86,6 +90,8 @@ public class GunSystem : MonoBehaviour
             {
                 Instantiate(bulletHole, rayHit.point, Quaternion.Euler(0, 180, 0));
             }
+
+            tracer.transform.position = rayHit.point;
         }
 
         if(muzzleFlash != null)
@@ -102,9 +108,11 @@ public class GunSystem : MonoBehaviour
             {
                 Instantiate(bulletHole, rayHit.point, Quaternion.Euler(0, 180, 0));
             }
+
+            tracer.transform.position = rayHit.point;
         }
 
-            bulletLeft--;
+        bulletLeft--;
         bulletShot--;
 
         Invoke("ResetShot", TimeBetweenShooting);
