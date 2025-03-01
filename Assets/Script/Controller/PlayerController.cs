@@ -55,12 +55,8 @@ public class PlayerController : MonoBehaviour
     [Tooltip("玩家的攻擊範圍")]
     public float attackRadius = 0.5f;
 
-    [Header("鎖定時的攝影機邏輯")]
-    [Tooltip("鎖定狀態下的攝影機中心點")]
-    [SerializeField] Transform cameraPivot;
-    [SerializeField] float CameraSpeed = 5f;
-
-    //取得距離玩家最近的敵方單位
+    [Header("鎖定邏輯")]
+    [Tooltip("動態存放鎖定的敵方單位")]
     public Transform LockTarget;
     //紀錄每次檢查周遭敵人的時間
     private float NextCheckTime = 0f;

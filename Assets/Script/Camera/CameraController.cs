@@ -10,6 +10,9 @@ public class CameraController : MonoBehaviour
     [Header("玩家瞄準模式時要跟隨的對象")]
     [SerializeField] Transform playerTransfrom;
 
+    [Header("玩家瞄準模式時要跟隨的對象")]
+    [SerializeField] Transform LockTransfrom;
+
     [Header("水平靈敏度")]
     [SerializeField] float sensitivity_x = 2;
 
@@ -72,6 +75,14 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (playerController.LockTarget != null)
+        {
+            LockTransfrom = playerController.LockTarget;
+        }
+        else
+        {
+            LockTransfrom = null;
+        }
         //處裡滑鼠輸入來旋轉攝影機
         Mouse_x += input.GetMouseXAxis() * sensitivity_x;
         Mouse_y -= input.GetMouseYAxis() * sensitivity_y;
