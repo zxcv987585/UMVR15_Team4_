@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 //此Script放在場景中要被撿取的道具
-public class ItemTake : MonoBehaviour
+public class ItemGet : MonoBehaviour
 {
     //宣告被撿取的道具並指向其ScriptableObject屬性
     public Item thisItem;
