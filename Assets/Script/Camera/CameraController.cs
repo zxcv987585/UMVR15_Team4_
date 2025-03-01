@@ -47,6 +47,7 @@ public class CameraController : MonoBehaviour
     InputController input;
 
     private bool isAiming = false;
+    private bool isLocked = false;
     private PlayerController playerController;
 
     private void Awake()
@@ -75,14 +76,6 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (playerController.LockTarget != null)
-        {
-            LockTransfrom = playerController.LockTarget;
-        }
-        else
-        {
-            LockTransfrom = null;
-        }
         //處裡滑鼠輸入來旋轉攝影機
         Mouse_x += input.GetMouseXAxis() * sensitivity_x;
         Mouse_y -= input.GetMouseYAxis() * sensitivity_y;
@@ -112,6 +105,20 @@ public class CameraController : MonoBehaviour
         else
         {
             CameraToTargetDistance = 3.5f;
+        }
+
+        if (playerController.LockTarget != null)
+        {
+            LockTransfrom = playerController.LockTarget;
+            Vector3 Targetdirection = LockTransfrom.position - transform.position;
+            Targetdirection.y = 0f;
+
+            Quaternion LookRotation = Quaternion.LookRotation(Targetdirection);
+            transform.rotation = Quaternion.Lerp(transform.rotation, LookRotation, Time.deltaTime * 5f);
+        }
+        else
+        {
+            LockTransfrom = null;
         }
 
         Vector3 desiredCameraPos = TargetPosition + rotation * new Vector3(0, 0, -CameraToTargetDistance);
