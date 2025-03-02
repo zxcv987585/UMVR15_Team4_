@@ -4,26 +4,37 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+//代表背包內的一個slot 負責顯示myBag itemlist內對應的道具
+//執行RefreshUI時，每個slot會更新UI
 public class Slot : MonoBehaviour
-{
-    public Item slotItem;
+{   
+    //slot在 myBag item list 對應的索引
+    public int slotIndex;
+    private Item slotItem;
     public Image itemImage;
     public TextMeshProUGUI itemNumText;
     public TextMeshProUGUI itemName;
 
-    public void SetItem(Item newItem)
+    public void SetSlotIndex(int index)
     {
-        slotItem = newItem;
-        UpdateSlot();
+        //設定該slot對應myBag item List的哪一格
+        slotIndex = index;
     }
 
+    //更新slot的道具名稱、數量等
     public void UpdateSlot()
     {
-        if (slotItem != null)
+        InventoryManager inventoryManager = InventoryManager.instance;
+
+        //確保 myBag 內有這個索引
+        if (inventoryManager.myBag.itemList.Count > slotIndex)
         {
+            //抓取 mybag item list 的數值
+            slotItem = inventoryManager.myBag.itemList[slotIndex];
+
             itemImage.sprite = slotItem.itemIcon;
             itemImage.enabled = true;
-            itemName.text = slotItem.name;
+            itemName.text = slotItem.itemName;
 
             //判斷道具是否為可堆疊，設定為可堆疊物件才顯示數量
             if (slotItem.isStack && slotItem.itemNum >= 0)

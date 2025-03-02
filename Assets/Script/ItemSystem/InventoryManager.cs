@@ -5,10 +5,24 @@ using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
+//負責將道具加進itemlist
+//並用RefreshUI負責將itemlist內的道具顯示在slot上
 public class InventoryManager : MonoBehaviour
 {
-    public List<Slot> slots = new List<Slot>();
+    public static InventoryManager instance;
+
     public Inventory myBag;
+    public Slot[] slots;
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(this);
+            return;
+        }
+        instance = this;
+    }
 
     private void Start()
     {
@@ -16,45 +30,43 @@ public class InventoryManager : MonoBehaviour
         RefreshUI(); 
     }
 
-    //道具被撿取後，從ItemTake那呼叫的方法
+    //道具被撿取後，從ItemGet那呼叫的方法
     public void AddItem(Item newItem)
     {
-        //檢查背包內是否已經有這個道具
-        foreach (Slot slot in slots)
+        //檢查myBag itemlist看看這個道具是否已存在
+        for (int i = 0; i < myBag.itemList.Count; i++)
         {
-            //判斷Slot不是空的，而是有道具的
             //判斷Slot內的道具ID是否與撿取道具的ID一致
             //判斷道具是否可以推疊
-            if (slot.slotItem != null && slot.slotItem.itemID == newItem.itemID && newItem.isStack)
+            if (myBag.itemList[i].itemID == newItem.itemID && newItem.isStack)
             {
-                slot.slotItem.itemNum += 1;
-                slot.UpdateSlot();
+                myBag.itemList[i].itemNum += 1;
+                RefreshUI();
                 return;
             }
         }
 
-        //找第一個空的Slot，將道具放進去
-        foreach (Slot slot in slots)
+        //如果myBag itemList裡沒有這個道具或者不可堆疊
+        //且背包沒有滿就新增道具
+        if (myBag.itemList.Count < slots.Length)
         {
-            //確保Slot是空的
-            if (slot.slotItem == null) 
-            {
-                slot.SetItem(newItem);
-                myBag.itemList.Add(newItem);
-                slot.slotItem.itemNum += 1;
-                slot.UpdateSlot();
-                return;
-            }
+            myBag.itemList.Add(newItem);
+            newItem.itemNum = 1;
+            RefreshUI();
         }
-        Debug.Log("背包滿了");
+        else
+        {
+            Debug.Log("背包已滿");
+        }
     }
 
     public void RefreshUI()
     {
-        foreach (Slot slot in slots)
+        for (int i = 0; i < slots.Length; i++)
         {
-            // 讓所有Slot更新UI
-            slot.UpdateSlot(); 
+            //讓每格slot呼叫方法SetSlotIndex抓取索引並讀取資料更新UI
+            slots[i].SetSlotIndex(i);
+            slots[i].UpdateSlot();
         }
     }
 }
