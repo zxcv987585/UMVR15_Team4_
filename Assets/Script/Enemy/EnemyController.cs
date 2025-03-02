@@ -15,7 +15,6 @@ public class EnemyController : MonoBehaviour
 	private Material material;
 	private const string DISSOLVE_AMOUNT = "_DissolveAmount";
 
-	//private int hp;
 	private bool isAttack = false;
 	private bool isDamage = false;
 	private EnemyState enemyState;

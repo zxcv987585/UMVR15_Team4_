@@ -6,7 +6,7 @@ using UnityEngine;
 public class AnimatorContoller : MonoBehaviour
 {
     Animator animator;
-    PlayerController playerController;
+    PlayerController player;
     Health health;
 
     private bool isDead;
@@ -14,22 +14,22 @@ public class AnimatorContoller : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        playerController = GetComponent<PlayerController>();
+        player = GetComponent<PlayerController>();
         health = GetComponent<Health>();
 
-        if (playerController != null)
+        if (player != null)
         {
-            playerController.fightState.AttackCombo += AttackCombo;
-            playerController.fightState.isAttacking += AttackReset;
-            playerController.idleState.IsIdle += Idle;
-            playerController.moveState.IsMoving += Walk;
-            playerController.moveState.IsRun += Sprint;
-            playerController.dashState.Dash += Dash;
-            playerController.dashState.ForceIdle += Idle;
-            playerController.dashState.DashReset += Dashreset;
-            playerController.aimState.OnAim += Aim;
-            playerController.aimState.OnAimMove += AimMove;
-            playerController.OnHit += Hit;
+            player.fightState.AttackCombo += AttackCombo;
+            player.fightState.isAttacking += AttackReset;
+            player.idleState.IsIdle += Idle;
+            player.moveState.IsMoving += Walk;
+            player.moveState.IsRun += Sprint;
+            player.dashState.Dash += Dash;
+            player.dashState.ForceIdle += Idle;
+            player.dashState.DashReset += Dashreset;
+            player.aimState.OnAim += Aim;
+            player.aimState.OnAimMove += AimMove;
+            player.OnHit += Hit;
             health.OnDead += Dead;
         }
     }

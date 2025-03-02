@@ -3,8 +3,9 @@ using UnityEngine.InputSystem;
 
 public class GunSystem : MonoBehaviour
 {
+    PlayerController player;
+
     //槍械參數
-    public int Damage;
     public float TimeBetweenShooting, spread, range, reloadingTime, timeBetweenShots;
     public int magazineSize, bulletsPerTap;
     public bool allowButtonHold;
@@ -26,6 +27,7 @@ public class GunSystem : MonoBehaviour
 
     private void Awake()
     {
+        player =  GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         bulletLeft = magazineSize;
         camera = Camera.main;
         if (camera == null)
@@ -84,7 +86,7 @@ public class GunSystem : MonoBehaviour
         if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Enemy) )
         {
             Debug.Log(rayHit.collider.name);
-            rayHit.collider.GetComponent<Health>().TakeDamage(Damage);
+            rayHit.collider.GetComponent<Health>().TakeDamage(player.playerData.GunDamage);
 
             if (bulletHole != null)
             {

@@ -29,6 +29,8 @@ public class PlayerData : ScriptableObject
     public float attackDamage = 25f;
     [Tooltip("玩家的攻擊範圍")]
     public float attackRadius = 0.5f;
+    [Tooltip("玩家的槍械傷害量")]
+    public float GunDamage = 12f;
 
     [Header("鎖定系統")]
     [Tooltip("玩家鎖定視角的最大距離")]
