@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     //取得武器管理系統
     private WeaponManager weaponManager;
 
-    [Header("玩家數值設定")]
+    [Header("玩家Data")]
     public PlayerData playerData;
 
     [Tooltip("玩家的位移Vector3")]
@@ -220,6 +220,14 @@ public class PlayerController : MonoBehaviour
         if(LockTarget == null)
         {
             LockTarget = GetClosestEnemy();
+            if (LockTarget != null)
+            {
+                Health enemyHealth = LockTarget.GetComponent<Health>();
+                if (enemyHealth != null) 
+                {
+                    enemyHealth.EnemyDead += EnemyDead;
+                }
+            }
         }
         else
         {
@@ -235,6 +243,27 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("附近沒有敵人");
         }
+    }
+    //檢查敵人是否死亡
+    private void EnemyDead(Transform Enemytransform)
+    {
+        if(LockTarget == Enemytransform)
+        {
+            AutoUnlockEnemy();
+        }
+    }
+    private void AutoUnlockEnemy()
+    {
+        if (LockTarget != null)
+        {
+            Health enemyHealth = LockTarget.GetComponent<Health>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.EnemyDead -= EnemyDead;
+            }
+        }
+        LockTarget = null;
+        Debug.Log("敵人死亡，已解除鎖定！");
     }
     //偵測距離玩家最近的敵方單位
     private Transform GetClosestEnemy()
