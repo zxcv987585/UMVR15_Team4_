@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewPlayerData", menuName = "ScriptableObject/PlayerData")]
-public class PlayerData : ScriptableObject
+[CreateAssetMenu(fileName = "NewPlayerDataSO", menuName = "ScriptableObject/PlayerDataSO")]
+public class PlayerDataSO : ScriptableObject
 {
     [Header("移動參數")]
     [Tooltip("移動速度")]

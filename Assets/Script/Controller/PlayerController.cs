@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
-using static UnityEngine.GraphicsBuffer;
 
 public class PlayerController : MonoBehaviour
 {
@@ -24,7 +22,7 @@ public class PlayerController : MonoBehaviour
     private WeaponManager weaponManager;
 
     [Header("玩家Data")]
-    public PlayerData playerData;
+    public PlayerDataSO playerData;
 
     [Tooltip("玩家的位移Vector3")]
     public Vector3 Velocity;

@@ -19,6 +19,7 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI maxHPText;
     [SerializeField] private Slider HPSlider;
     [SerializeField] private Image costHPImage;
+    [SerializeField] private LevelSystem levelSystem;
 
     private float fadeTime = 1f;
     private Coroutine costAnimationCoroutine;
@@ -33,6 +34,7 @@ public class BattleUIManager : MonoBehaviour
         damageTextQuene = new Queue<DamageText>();
         health.OnDamage += ChangeHPStatus;
         health.OnDead += ChangeHPStatus;
+        levelSystem.PlayerLevelup += playerMaxHealthupdate;
 
         currentHPText.text = health.GetMaxHealth().ToString();
         maxHPText.text = health.GetMaxHealth().ToString();
@@ -78,6 +80,12 @@ public class BattleUIManager : MonoBehaviour
         // costAnimationCoroutine = StartCoroutine(CostAnimationCoroutine());
 
         HPSlider.value = health.GetHealthRatio();
+    }
+    private void playerMaxHealthupdate()
+    {
+        float newMaxHealth = health.GetMaxHealth();
+        Debug.Log($"玩家升級！新最大血量: {newMaxHealth}");
+        maxHPText.text = newMaxHealth.ToString();
     }
 
     //HP 傷害紅條淡出動畫
