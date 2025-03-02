@@ -14,7 +14,7 @@ public class WeaponManager : MonoBehaviour
 {
     public enum WeaponType { None, Katana, Gun };
 
-    private PlayerController playerController;
+    private PlayerController player;
 
     public Transform weaponHolder;
     private GameObject currentWeapon;
@@ -30,7 +30,7 @@ public class WeaponManager : MonoBehaviour
     private void Awake()
     {
         EquipWeapon(defualtWeapon);
-        playerController = GetComponent<PlayerController>();
+        player = GetComponent<PlayerController>();
     }
 
     private void Update()
@@ -44,11 +44,11 @@ public class WeaponManager : MonoBehaviour
 
     public void Attack()
     {
-        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, playerController.attackRadius, playerController.EnemyLayer);
+        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, player.playerData.EnemyLayer);
         foreach (Collider enemy in hitEnemies)
         {
             Debug.Log($"擊中 {enemy.name}");
-            enemy.GetComponent<Health>().TakeDamage(playerController.attackDamage);
+            enemy.GetComponent<Health>().TakeDamage(player.playerData.attackDamage);
         }
     }
 

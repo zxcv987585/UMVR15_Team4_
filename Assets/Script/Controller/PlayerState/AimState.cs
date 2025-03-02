@@ -66,7 +66,7 @@ public class AimState : PlayerState
         //根據相機方向調整角色的移動方向
         Vector3 targetDirection = cameraForward * moveDirection.z + cameraRight * moveDirection.x;
 
-        float currentSpeed = player.MoveSpeed * AimSpeedModifier;
+        float currentSpeed = player.playerData.MoveSpeed * AimSpeedModifier;
         player.MoveWithOutRotation(targetDirection, currentSpeed);
 
         //計算AnimatorBlendTree的參數

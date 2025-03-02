@@ -76,7 +76,7 @@ public class MoveState : PlayerState
 
         bool isSprinting = player.isRun;
         // 根據玩家是否正在跑步來調整速度
-        float currentSpeed = player.isRun ? player.MoveSpeed * player.SprintSpeedModifier : player.MoveSpeed;
+        float currentSpeed = player.isRun ? player.playerData.MoveSpeed * player.playerData.SprintSpeedModifier : player.playerData.MoveSpeed;
 
         IsRun?.Invoke(isSprinting);
         IsMoving?.Invoke(!isSprinting);

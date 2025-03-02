@@ -3,8 +3,9 @@ using UnityEngine.InputSystem;
 
 public class GunSystem : MonoBehaviour
 {
+    PlayerController player;
+
     //槍械參數
-    public int Damage;
     public float TimeBetweenShooting, spread, range, reloadingTime, timeBetweenShots;
     public int magazineSize, bulletsPerTap;
     public bool allowButtonHold;
@@ -18,12 +19,15 @@ public class GunSystem : MonoBehaviour
     public Transform attackPoint;
     public RaycastHit rayHit;
     public LayerMask Enemy;
+    public LayerMask Wall;
 
     //特效
-    public GameObject muzzleFlash;
+    public GameObject muzzleFlash, bulletHole;
+    public TrailRenderer tracerEffect;
 
     private void Awake()
     {
+        player =  GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         bulletLeft = magazineSize;
         camera = Camera.main;
         if (camera == null)
@@ -75,11 +79,21 @@ public class GunSystem : MonoBehaviour
         float y = Random.Range(-spread, spread);
         direction += new Vector3(x, y, 0);
 
+        var tracer = Instantiate(tracerEffect, attackPoint.position, Quaternion.identity);
+        tracer.AddPosition(attackPoint.position);
+
         //射線判定
         if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Enemy) )
         {
             Debug.Log(rayHit.collider.name);
-            rayHit.collider.GetComponent<Health>().TakeDamage(Damage);
+            rayHit.collider.GetComponent<Health>().TakeDamage(player.playerData.GunDamage);
+
+            if (bulletHole != null)
+            {
+                Instantiate(bulletHole, rayHit.point, Quaternion.Euler(0, 180, 0));
+            }
+
+            tracer.transform.position = rayHit.point;
         }
 
         if(muzzleFlash != null)
@@ -87,7 +101,19 @@ public class GunSystem : MonoBehaviour
             GameObject GunFire = Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
             GunFire.transform.rotation = attackPoint.rotation;
         }
-            
+
+        if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Wall))
+        {
+            Debug.Log(rayHit.collider.name);
+
+            if (bulletHole != null)
+            {
+                Instantiate(bulletHole, rayHit.point, Quaternion.Euler(0, 180, 0));
+            }
+
+            tracer.transform.position = rayHit.point;
+        }
+
         bulletLeft--;
         bulletShot--;
 

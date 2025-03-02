@@ -18,6 +18,7 @@ public class GameInput : MonoBehaviour
 		Aim,
 		Dash,
 		Sprint,
+		LockOn,
 		Skill1,
 		Skill2,
 		Skill3,
@@ -27,7 +28,8 @@ public class GameInput : MonoBehaviour
 	public event Action<bool> OnAttackAction;
 	public event Action<bool> OnAimAction;
 	public event Action OnDashkAction;
-	public event Action<bool> OnSprintAction;
+    public event Action OnLockAction;
+    public event Action<bool> OnSprintAction;
 	public event Action<Bind> OnSkillAction;
 	
 	public bool isAttackClick = false;
@@ -52,6 +54,7 @@ public class GameInput : MonoBehaviour
 		playerInputAction.Player.Dash.performed += Dash_performed;
 		playerInputAction.Player.Sprint.performed += SprintPress_performed;
 		playerInputAction.Player.Sprint.canceled += SprintRelease_performed;
+		//playerInputAction.Player.LockOn.preformed += 
 		playerInputAction.Player.Skill1.performed += Skill1_performed;
 		playerInputAction.Player.Skill2.performed += Skill2_performed;
 		playerInputAction.Player.Skill3.performed += Skill3_performed;
@@ -102,6 +105,12 @@ public class GameInput : MonoBehaviour
 	{
 		if(canInput)
 			OnSprintAction?.Invoke(false);
+	}
+
+	private void LockOn_performed(InputAction.CallbackContext context)
+	{
+		if(canInput)
+			OnLockAction?.Invoke();
 	}
 
 	private void Skill1_performed(InputAction.CallbackContext context)

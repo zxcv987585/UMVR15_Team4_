@@ -6,10 +6,12 @@ public class CameraController : MonoBehaviour
 {
     [Header("攝影機跟隨的目標")]
     [SerializeField] Transform target;
-    private Transform originalTarget;
 
     [Header("玩家瞄準模式時要跟隨的對象")]
     [SerializeField] Transform playerTransfrom;
+
+    [Header("玩家瞄準模式時要跟隨的對象")]
+    [SerializeField] Transform LockTransfrom;
 
     [Header("水平靈敏度")]
     [SerializeField] float sensitivity_x = 2;
@@ -26,9 +28,16 @@ public class CameraController : MonoBehaviour
     [Header("攝影機的延遲跟隨時間")]
     [SerializeField] float SmoothTime = 0.01f;
 
+    [Header("瞄準狀態下角色上半身的跟隨物")]
+    [SerializeField] Transform AimTarget;
+
+    private Vector3 aimTargetPosition;
+    //原本的跟隨目標
+    private Transform originalTarget;
+
     //最小與最大攝影機仰角程度
-    float MinVerticalAngle = -10;
-    float MaxVerticalAngle = 30;
+    float MinVerticalAngle = -15;
+    float MaxVerticalAngle = 35;
     //攝影機與玩家的距離
     float CameraToTargetDistance = 3.5f;
     float Mouse_x = 0;
@@ -38,6 +47,7 @@ public class CameraController : MonoBehaviour
     InputController input;
 
     private bool isAiming = false;
+    private bool isLocked = false;
     private PlayerController playerController;
 
     private void Awake()
@@ -84,14 +94,31 @@ public class CameraController : MonoBehaviour
             TargetPosition += target.right * AimOffset.x;
             TargetPosition += target.up * AimOffset.y;
             CameraToTargetDistance = AimOffset.z;
-        }
-        else if (playerController.IsDie)
-        {
-            CameraToTargetDistance = 3.5f;
+
+            if (AimTarget != null)
+            {
+                Vector3 cameraForward = Camera.main.transform.forward;
+                Vector3 cameraRight = Camera.main.transform.right;
+                AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
+            }
         }
         else
         {
             CameraToTargetDistance = 3.5f;
+        }
+
+        if (playerController.LockTarget != null)
+        {
+            LockTransfrom = playerController.LockTarget;
+            Vector3 Targetdirection = LockTransfrom.position - transform.position;
+            Targetdirection.y = 0f;
+
+            Quaternion LookRotation = Quaternion.LookRotation(Targetdirection);
+            transform.rotation = Quaternion.Lerp(transform.rotation, LookRotation, Time.deltaTime * 5f);
+        }
+        else
+        {
+            LockTransfrom = null;
         }
 
         Vector3 desiredCameraPos = TargetPosition + rotation * new Vector3(0, 0, -CameraToTargetDistance);

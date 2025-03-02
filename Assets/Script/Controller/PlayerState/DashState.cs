@@ -18,7 +18,7 @@ public class DashState : PlayerState
     {
         DashReset?.Invoke(false);
         Dash?.Invoke("Dash");
-        dashTimer = player.DashDuration;
+        dashTimer = player.playerData.DashDuration;
 
         Vector3 inputDirection = player.GetMoveInput().normalized;
 
@@ -38,7 +38,7 @@ public class DashState : PlayerState
 
         player.SetRotation(dashDirection);
 
-        player.Velocity = dashDirection * player.DashSpeed;
+        player.Velocity = dashDirection * player.playerData.DashSpeed;
     }
 
     public override void Update()

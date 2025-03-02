@@ -4,15 +4,18 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [Header("最大血量")]
-    [SerializeField] float MaxHealth = 100f;
+    [SerializeField] float MaxHealth;
     [Header("當前血量")]
     [SerializeField] float CurrentHealth;
 
     //受到攻擊時要觸發的委派事件
     public event Action OnDamage;
 
-    //人物死亡時要觸發的委派事件
+    //玩家死亡時要觸發的委派事件
     public event Action OnDead;
+
+    //敵人死亡時要觸發的委派事件
+    public event Action<Transform> EnemyDead;
 
     private float lastDamage;
     public float LastDamage
@@ -26,7 +29,7 @@ public class Health : MonoBehaviour
 
     void Start()
     {
-        //CurrentHealth = MaxHealth;
+        
     }
 
     public void SetMaxHealth(float maxHealth)
@@ -90,6 +93,7 @@ public class Health : MonoBehaviour
         {
             Isdead = true;
             OnDead?.Invoke();
+            EnemyDead?.Invoke(transform);
         }
     }
 
