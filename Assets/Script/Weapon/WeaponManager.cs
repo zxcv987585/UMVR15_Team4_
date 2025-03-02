@@ -44,11 +44,11 @@ public class WeaponManager : MonoBehaviour
 
     public void Attack()
     {
-        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, playerController.attackRadius, playerController.EnemyLayer);
+        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, playerController.playerData.attackRadius, playerController.playerData.EnemyLayer);
         foreach (Collider enemy in hitEnemies)
         {
             Debug.Log($"擊中 {enemy.name}");
-            enemy.GetComponent<Health>().TakeDamage(playerController.attackDamage);
+            enemy.GetComponent<Health>().TakeDamage(playerController.playerData.attackDamage);
         }
     }
 

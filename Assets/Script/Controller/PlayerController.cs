@@ -23,37 +23,11 @@ public class PlayerController : MonoBehaviour
     //取得武器管理系統
     private WeaponManager weaponManager;
 
+    [Header("玩家數值設定")]
+    public PlayerData playerData;
 
-    [Header("移動參數")]
-    [Tooltip("移動速度")]
-    public float MoveSpeed = 5;
-    [Tooltip("奔跑加速")]
-    [Range(1, 3)]
-    public float SprintSpeedModifier = 2;
-    [Tooltip("角色旋轉速度")]
-    public float RotateSpeed = 5f;
-    [Tooltip("賦予角色重力")]
-    public float Gravity = 40f;
-    [Tooltip("Dash的瞬間速度")]
-    public float DashSpeed = 100f;
-    [Tooltip("Dash持續時間")]
-    public float DashDuration = 1f;
-    [Tooltip("Dash冷卻時間")]
-    public float DashCoolTime = 1.5f;
-    [Tooltip("受傷狀態的持續時間")]
-    public float HitCoolTime = 1f;
-    [Tooltip("玩家最大血量")]
-    public float MaxHealth = 150f;
-    [Tooltip("玩家鎖定視角的最大距離")]
-    public float LockRange = 10f;
-    [Tooltip("可以被鎖定的Layer層")]
-    public LayerMask EnemyLayer;
     [Tooltip("玩家的位移Vector3")]
     public Vector3 Velocity;
-    [Tooltip("玩家的傷害量")]
-    public float attackDamage = 25f;
-    [Tooltip("玩家的攻擊範圍")]
-    public float attackRadius = 0.5f;
 
     [Header("鎖定邏輯")]
     [Tooltip("動態存放鎖定的敵方單位")]
@@ -95,7 +69,7 @@ public class PlayerController : MonoBehaviour
         //初始化後預設進入Idle模式
         stateMachine.Initialize(idleState);
         //從Data資料庫初始化玩家最大血量
-        health.SetMaxHealth(MaxHealth);
+        health.SetMaxHealth(playerData.MaxHealth);
     }
 
     private void Start()
@@ -140,7 +114,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Velocity.y -= Gravity * Time.deltaTime;
+            Velocity.y -= playerData.Gravity * Time.deltaTime;
         }
 
         controller.Move(Velocity * Time.deltaTime);
@@ -208,7 +182,7 @@ public class PlayerController : MonoBehaviour
     //計算玩家受傷時的硬質協程
     IEnumerator HitCoolDown()
     {
-        yield return new WaitForSeconds(HitCoolTime);
+        yield return new WaitForSeconds(playerData.HitCoolTime);
 
         isHit = false;
         stateMachine.ChangeState(idleState);
@@ -225,7 +199,7 @@ public class PlayerController : MonoBehaviour
     {
         if (IsDie || stateMachine.GetState<AimState>() != null) return;
 
-        if (Time.time >= lastDashTime + DashCoolTime)
+        if (Time.time >= lastDashTime + playerData.DashCoolTime)
         {
             isDash = true;
             lastDashTime = Time.time;
@@ -265,7 +239,7 @@ public class PlayerController : MonoBehaviour
     //偵測距離玩家最近的敵方單位
     private Transform GetClosestEnemy()
     {
-        Collider[] enemies = Physics.OverlapSphere(transform.position, LockRange, EnemyLayer);
+        Collider[] enemies = Physics.OverlapSphere(transform.position, playerData.LockRange, playerData.EnemyLayer);
         Transform Target = null;
         float CloseDistance = Mathf.Infinity;
 
@@ -285,7 +259,7 @@ public class PlayerController : MonoBehaviour
     private void SmoothRotation(Vector3 targetMovement)
     {
         if (targetMovement.sqrMagnitude > 0.01f)
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(targetMovement, Vector3.up), RotateSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(targetMovement, Vector3.up), playerData.RotateSpeed * Time.deltaTime);
     }
 
     //取得相機正方方向
