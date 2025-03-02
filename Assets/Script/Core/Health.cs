@@ -7,6 +7,7 @@ public class Health : MonoBehaviour
     [SerializeField] float MaxHealth;
     [Header("當前血量")]
     [SerializeField] float CurrentHealth;
+    [SerializeField] LevelSystem levelSystem;
 
     //受到攻擊時要觸發的委派事件
     public event Action OnDamage;
@@ -27,9 +28,15 @@ public class Health : MonoBehaviour
 
     private bool Isdead = false;
 
-    void Start()
+    private void Awake()
     {
-        
+        levelSystem = GetComponent<LevelSystem>();
+        levelSystem.PlayerLevelup += NewMaxHealth;
+    }
+
+    private void NewMaxHealth()
+    {
+        this.MaxHealth += 10;
     }
 
     public void SetMaxHealth(float maxHealth)

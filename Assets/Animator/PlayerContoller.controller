@@ -94,8 +94,8 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GhostSamurai_APose_SPAttack06_Inplace
-  m_Speed: 1
+  m_Name: GetCloseAttack
+  m_Speed: 2
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -1086,7 +1086,7 @@ AnimatorStateMachine:
     m_Position: {x: 1070, y: 550, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8663083846846831288}
-    m_Position: {x: 1291.9642, y: 382.89825, z: 0}
+    m_Position: {x: 880, y: -210, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 8615999970085453024}
