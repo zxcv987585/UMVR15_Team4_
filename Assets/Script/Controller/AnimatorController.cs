@@ -7,7 +7,7 @@ public class AnimatorController : MonoBehaviour
 {
     Animator animator;
     PlayerController player;
-    Health health;
+    PlayerHealth health;
 
     private bool isDead;
 
@@ -15,7 +15,7 @@ public class AnimatorController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         player = GetComponent<PlayerController>();
-        health = GetComponent<Health>();
+        health = GetComponent<PlayerHealth>();
 
         if (player != null)
         {

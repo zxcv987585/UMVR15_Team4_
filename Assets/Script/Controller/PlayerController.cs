@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     //宣告CC
     public CharacterController controller;
     //宣告血量系統
-    private Health health;
+    private PlayerHealth health;
     //取得動畫控制器（用來開關RootMotion）
     private Animator animator;
     //取得武器管理系統
@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour
     {
         //初始化玩家身上掛載的CC、Health、WeaponManager、Animator
         controller = GetComponent<CharacterController>();
-        health = GetComponent<Health>();
+        health = GetComponent<PlayerHealth>();
         weaponManager = GetComponent<WeaponManager>();
         animator = GetComponent<Animator>();
         //初始化時建立玩家狀態機

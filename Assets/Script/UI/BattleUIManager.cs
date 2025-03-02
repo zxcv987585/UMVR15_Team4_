@@ -14,7 +14,7 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private DamageText damageTextPrefab;
     //-----------------------------------------------------------------
 
-    [SerializeField] private Health health;
+    [SerializeField] private PlayerHealth health;
     [SerializeField] private TextMeshProUGUI currentHPText;
     [SerializeField] private TextMeshProUGUI maxHPText;
     [SerializeField] private Slider HPSlider;

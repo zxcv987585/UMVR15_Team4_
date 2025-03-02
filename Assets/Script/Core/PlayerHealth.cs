@@ -1,12 +1,15 @@
-using System;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour
+public class PlayerHealth : MonoBehaviour
 {
     [Header("最大血量")]
     [SerializeField] float MaxHealth;
     [Header("當前血量")]
     [SerializeField] float CurrentHealth;
+    [SerializeField] LevelSystem levelSystem;
 
     //受到攻擊時要觸發的委派事件
     public event Action OnDamage;
@@ -23,8 +26,20 @@ public class Health : MonoBehaviour
         get { return lastDamage; }
         private set { lastDamage = value; }
     }
-    
+
+
     private bool Isdead = false;
+
+    private void Awake()
+    {
+        levelSystem = GetComponent<LevelSystem>();
+        levelSystem.PlayerLevelup += NewMaxHealth;
+    }
+
+    private void NewMaxHealth()
+    {
+        this.MaxHealth += 10;
+    }
 
     public void SetMaxHealth(float maxHealth)
     {
