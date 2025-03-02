@@ -851,8 +851,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: stopRootMotionDistance
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5871569899984167375, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: levelSystem
+      value: 
+      objectReference: {fileID: 1355333801}
     - target: {fileID: 8211211446584772470, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: m_Name
       value: Player

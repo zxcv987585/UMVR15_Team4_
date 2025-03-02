@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour
             NextCheckTime = Time.time + CheckInterval;
             GetClosestEnemy();
         }
-        if (CloseEnemy)
+        if (LockTarget != null && CloseEnemy)
         {
             DisableRootMotion();
         }
@@ -315,11 +315,11 @@ public class PlayerController : MonoBehaviour
     private void EnableRootMotion()
     {
         animator.applyRootMotion = true;
-        Debug.Log("已開啟動畫的RootMotion");
     }
     private void DisableRootMotion()
     {
         animator.applyRootMotion = false;
+        Debug.Log("已關閉動畫的RootMotion");
     }
 
     //平滑旋轉角度

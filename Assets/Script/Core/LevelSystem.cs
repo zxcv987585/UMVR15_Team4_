@@ -7,7 +7,6 @@ public class LevelSystem : MonoBehaviour
 {
     public PlayerDataSO playerData;
 
-    //通知全域管理器玩家已升級（如果有需要的話）
     public event Action PlayerLevelup;
 
     private void LateUpdate()
@@ -22,7 +21,7 @@ public class LevelSystem : MonoBehaviour
             playerData.attackDamage += 3;
             playerData.MaxHealth += 10;
             playerData.GunDamage += 2;
-            PlayerLevelup?.Invoke();
+            PlayerLevelup.Invoke();
             Debug.Log("玩家已升級!");
         }
     }
