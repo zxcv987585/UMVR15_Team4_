@@ -10,7 +10,7 @@ public class Slot : MonoBehaviour
 {   
     //slot在 myBag item list 對應的索引
     public int slotIndex;
-    public Item slotItem;
+    public ItemData slotItem;
     public Image itemImage;
     public TextMeshProUGUI itemNumText;
     public TextMeshProUGUI itemName;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,6 +13,7 @@ public class ItemDragger : MonoBehaviour, IBeginDragHandler, IEndDragHandler, ID
     private Image dragImage = null;
     //紀錄原slot
     private Slot originSlot;
+    private HotbarSlot originHotbarSlot;
 
     public Transform GetOriginalParent()
     {
@@ -31,12 +33,14 @@ public class ItemDragger : MonoBehaviour, IBeginDragHandler, IEndDragHandler, ID
         dragImage = GetComponent<Image>();
         //取得當前的slot
         originSlot = GetComponentInParent<Slot>();
+        originHotbarSlot = GetComponentInParent<HotbarSlot>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //道具欄為空時不允許拖曳
-        if (originSlot == null || originSlot.slotItem == null) return;
+        //道具欄為空且Tag不是item時不允許拖曳
+        if ((originSlot == null || originSlot.slotItem == null) && (originHotbarSlot == null || originHotbarSlot.slotItem == null)) return;
+        if (!transform.CompareTag("Item")) return;
 
         //將拖曳物件的Image raycastTarget關閉，避免射線被此物件遮擋
         //從而無法觸發Dropper判斷
@@ -54,6 +58,10 @@ public class ItemDragger : MonoBehaviour, IBeginDragHandler, IEndDragHandler, ID
 
     public void OnDrag(PointerEventData eventData)
     {
+        //道具欄為空且Tag不是item時不允許拖曳
+        if ((originSlot == null || originSlot.slotItem == null) && (originHotbarSlot == null || originHotbarSlot.slotItem == null)) return;
+        if (!transform.CompareTag("Item")) return;
+
         //如果是ScreenSpaceCamera的情況，老師寫的(X
         if (mainCanvas.renderMode == RenderMode.ScreenSpaceCamera && mainCanvas.worldCamera != null)
         {
@@ -70,6 +78,10 @@ public class ItemDragger : MonoBehaviour, IBeginDragHandler, IEndDragHandler, ID
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        //道具欄為空且Tag不是item時不允許拖曳
+        if ((originSlot == null || originSlot.slotItem == null) && (originHotbarSlot == null)) return;
+        if (!transform.CompareTag("Item")) return;
+
         transform.SetParent(dragOriginParent);
         transform.localPosition = Vector3.zero;
         transform.localScale = Vector3.one;
@@ -87,8 +99,15 @@ public class ItemDragger : MonoBehaviour, IBeginDragHandler, IEndDragHandler, ID
         return originSlot;
     }
 
-    public Item GetItem()
+    public ItemData GetItem()
     {
-        return originSlot?.slotItem;
+        if (originSlot != null)
+        { 
+            return originSlot?.slotItem;
+        }
+        else
+        {
+            return originHotbarSlot?.slotItem;
+        }
     }
 }

@@ -19,9 +19,14 @@ public class ItemDropper : MonoBehaviour, IDropHandler
         ItemDragger dragger = eventData.pointerDrag.GetComponent<ItemDragger>();
         if (dragger == null) return;
 
-        if (transform.CompareTag("HotbarSlots"))
+        //判斷拖曳目標是否為快捷欄且物件是否為Item
+        if (transform.CompareTag("HotbarSlots") && dragger.gameObject.CompareTag("Item"))
         {
             int slotIndex = transform.GetSiblingIndex();
+            if(transform.parent.name == "slot_groupR")
+            {
+                slotIndex += 3;
+            }
             HotbarManager.instance.AssignItemToHotbar(dragger.GetItem(), slotIndex);
         }
         else
@@ -29,27 +34,5 @@ public class ItemDropper : MonoBehaviour, IDropHandler
             Slot targetSlot = GetComponent<Slot>();
             InventoryManager.instance.SwapItems(dragger.GetOriginSlot(), targetSlot);
         }
-
-        ////取得拖曳物品的slot並確保slot存在
-        //Slot originSlot = dragger.GetOriginSlot(); 
-        //if (originSlot == null || targetSlot == null) return;
-
-        ////交換 mybag itemlist 內的數據
-        //InventoryManager inventoryManager = InventoryManager.instance;
-        //if (inventoryManager == null) return;
-
-        //int originIndex = originSlot.slotIndex;
-        //int targetIndex = targetSlot.slotIndex;
-
-        //if (inventoryManager.myBag.itemList.Count > originIndex && inventoryManager.myBag.itemList.Count > targetIndex)
-        //{
-        //    // 交換 mybag itemlist 內的 itemData
-        //    Item tempItem = inventoryManager.myBag.itemList[originIndex];
-        //    inventoryManager.myBag.itemList[originIndex] = inventoryManager.myBag.itemList[targetIndex];
-        //    inventoryManager.myBag.itemList[targetIndex] = tempItem;
-
-        //    //更新UI
-        //    inventoryManager.RefreshUI();
-        //}
     }
 }

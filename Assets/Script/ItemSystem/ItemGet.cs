@@ -7,7 +7,7 @@ using UnityEngine;
 public class ItemGet : MonoBehaviour
 {
     //宣告被撿取的道具並指向其ScriptableObject屬性
-    public Item thisItem;
+    public ItemData thisItem;
     public Inventory playerInventory;
     public InventoryManager inventoryManager;
 

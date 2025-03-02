@@ -10,7 +10,6 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager instance;
-
     public Inventory myBag;
     public Slot[] slots;
 
@@ -31,7 +30,7 @@ public class InventoryManager : MonoBehaviour
     }
 
     //道具被撿取後，從ItemGet那呼叫的方法
-    public void AddItem(Item newItem)
+    public void AddItem(ItemData newItem)
     {
         //檢查myBag itemlist看看這個道具是否已存在
         for (int i = 0; i < myBag.itemList.Count; i++)
@@ -68,6 +67,8 @@ public class InventoryManager : MonoBehaviour
             slots[i].SetSlotIndex(i);
             slots[i].UpdateSlot();
         }
+        //刷新Hotbar的UI
+        HotbarManager.instance.RefreshHotbarUI();
     }
 
     public void SwapItems(Slot slotA, Slot slotB)
@@ -80,7 +81,7 @@ public class InventoryManager : MonoBehaviour
         if (indexA >= myBag.itemList.Count || indexB >= myBag.itemList.Count) return;
        
         // 交換 mybag itemlist 內的 itemData
-        Item temp = myBag.itemList[indexA];
+        ItemData temp = myBag.itemList[indexA];
         myBag.itemList[indexA] = myBag.itemList[indexB];
         myBag.itemList[indexB] = temp;
 
