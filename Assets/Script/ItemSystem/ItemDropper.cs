@@ -5,46 +5,51 @@ using UnityEngine.EventSystems;
 
 public class ItemDropper : MonoBehaviour, IDropHandler
 {
+    private Slot targetSlot;
+
+    void Awake()
+    {
+        //眔赣Dropperslot
+        targetSlot = GetComponent<Slot>(); 
+    }
+
     public void OnDrop(PointerEventData eventData)
     {
-        if (eventData == null) { return; }
-        PointerEventData pointerData = eventData;
-        GameObject dragTarget = pointerData.pointerDrag;
-        if (dragTarget == null) { return; }
-        if (!dragTarget.CompareTag("Item"))
+        //絋玂╈Σ珇
+        ItemDragger dragger = eventData.pointerDrag.GetComponent<ItemDragger>();
+        if (dragger == null) return;
+
+        if (transform.CompareTag("HotbarSlots"))
         {
-            return;
+            int slotIndex = transform.GetSiblingIndex();
+            HotbarManager.instance.AssignItemToHotbar(dragger.GetItem(), slotIndex);
+        }
+        else
+        {
+            Slot targetSlot = GetComponent<Slot>();
+            InventoryManager.instance.SwapItems(dragger.GetOriginSlot(), targetSlot);
         }
 
-        //т碝slotず琌Τ本ItemDraggerン
-        Transform currentChild = null;
-        foreach (Transform child in transform)
-        {
-            if (child.GetComponent<ItemDragger>() != null)
-            {
-                currentChild = child;
-                break;
-            }
-        }
+        ////眔╈Σ珇slot絋玂slot
+        //Slot originSlot = dragger.GetOriginSlot(); 
+        //if (originSlot == null || targetSlot == null) return;
 
-        //////---狦slotΤン---
-        ////狡籠
-        //if (currentChild != null)
+        ////ユ传 mybag itemlist ず计沮
+        //InventoryManager inventoryManager = InventoryManager.instance;
+        //if (inventoryManager == null) return;
+
+        //int originIndex = originSlot.slotIndex;
+        //int targetIndex = targetSlot.slotIndex;
+
+        //if (inventoryManager.myBag.itemList.Count > originIndex && inventoryManager.myBag.itemList.Count > targetIndex)
         //{
-        //    Destroy(currentChild.gameObject);
+        //    // ユ传 mybag itemlist ず itemData
+        //    Item tempItem = inventoryManager.myBag.itemList[originIndex];
+        //    inventoryManager.myBag.itemList[originIndex] = inventoryManager.myBag.itemList[targetIndex];
+        //    inventoryManager.myBag.itemList[targetIndex] = tempItem;
+
+        //    //穝UI
+        //    inventoryManager.RefreshUI();
         //}
-
-        //が传
-        if (currentChild != null)
-        {
-            Transform originalParent = dragTarget.GetComponent<ItemDragger>().GetOriginalParent();
-            currentChild.SetParent(originalParent);
-            currentChild.transform.localPosition = Vector3.zero;
-            currentChild.transform.localScale = Vector3.one;
-        }
-
-        dragTarget.transform.SetParent(transform);
-        dragTarget.transform.localPosition = Vector3.zero;
-        dragTarget.transform.localScale = Vector3.one;
     }
 }

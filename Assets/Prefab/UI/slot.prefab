@@ -239,6 +239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotIndex: 0
+  slotItem: {fileID: 0}
   itemImage: {fileID: 0}
   itemNumText: {fileID: 0}
   itemName: {fileID: 0}
@@ -253,6 +254,7 @@ GameObject:
   - component: {fileID: 9068430012240130888}
   - component: {fileID: 2925562350638351405}
   - component: {fileID: 8633660777944565514}
+  - component: {fileID: 9164014434139589006}
   m_Layer: 5
   m_Name: itemImage
   m_TagString: Untagged
@@ -318,3 +320,15 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9164014434139589006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6590944142088888757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae479ec7d3650cd41bf496377b1ed064, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

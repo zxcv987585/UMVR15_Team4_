@@ -69,5 +69,22 @@ public class InventoryManager : MonoBehaviour
             slots[i].UpdateSlot();
         }
     }
+
+    public void SwapItems(Slot slotA, Slot slotB)
+    {
+        if (slotA == null || slotB == null) return;
+
+        int indexA = slotA.slotIndex;
+        int indexB = slotB.slotIndex;
+
+        if (indexA >= myBag.itemList.Count || indexB >= myBag.itemList.Count) return;
+       
+        // ¥æ´« mybag itemlist ¤ºªº itemData
+        Item temp = myBag.itemList[indexA];
+        myBag.itemList[indexA] = myBag.itemList[indexB];
+        myBag.itemList[indexB] = temp;
+
+        RefreshUI();
+    }
 }
 
