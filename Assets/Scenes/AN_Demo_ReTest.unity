@@ -849,6 +849,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: stopRootMotionDistance
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8211211446584772470, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: m_Name
       value: Player
@@ -892,6 +896,10 @@ PrefabInstance:
     - target: {fileID: 8845005771188919756, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028586903552194858, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

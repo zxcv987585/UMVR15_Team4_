@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimatorContoller : MonoBehaviour
+public class AnimatorController : MonoBehaviour
 {
     Animator animator;
     PlayerController player;
@@ -39,7 +39,7 @@ public class AnimatorContoller : MonoBehaviour
         if (isDead) return;
         isDead = true;
         animator.SetBool("Dead", true);
-        Debug.Log("¨¤¦â¦º¤`");
+        Debug.Log("Šß‰Æ›ßŽ€–S");
         //animator.speed = 0;
 
         health.OnDead -= Dead;
