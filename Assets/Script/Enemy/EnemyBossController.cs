@@ -8,6 +8,8 @@ public class EnemyBossController : MonoBehaviour
 {
     [SerializeField] private EnemyDataSO enemyDataSO;
 	[SerializeField] private Animator animator;
+	[SerializeField] private GameObject shootAttackPrefab;
+	[SerializeField] private GameObject floorAttackPrefab;
 
 	[SerializeField] private float attackCooldownTime;
 
@@ -111,14 +113,34 @@ public class EnemyBossController : MonoBehaviour
                 break;
             case BossState.ShootAttack:
 				animator.SetTrigger(state.ToString());
+				StartCoroutine(DelayShootAttackCoroutine());
                 break;
             case BossState.FloorAttack:
 				animator.SetTrigger(state.ToString());
+				StartCoroutine(DelayFloorAttackCoroutine());
                 break;
             case BossState.Dead:
                 break;
         }
     }
+
+	private IEnumerator DelayShootAttackCoroutine()
+	{
+		shootAttackPrefab.SetActive(false);
+
+		yield return new WaitForSeconds(1.7f);
+
+		shootAttackPrefab.SetActive(true);
+	}
+
+	private IEnumerator DelayFloorAttackCoroutine()
+	{
+		floorAttackPrefab.SetActive(false);
+
+		yield return new WaitForSeconds(0.8f);
+
+		floorAttackPrefab.SetActive(true);
+	}
 
 	/*
     private IEnumerator TryAttackAfterTurn(Vector3 targetPosition)
