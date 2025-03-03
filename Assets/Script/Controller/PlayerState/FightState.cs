@@ -82,8 +82,9 @@ public class FightState : PlayerState
         CanAttack = false;
 
         float distanceToEnemy = player.LockTarget != null ? Vector3.Distance(player.transform.position, player.LockTarget.position) : 0;
+        float MinDashDistance = 3f;
 
-        if (player.LockTarget != null && !player.CloseEnemy) 
+        if (player.LockTarget != null && distanceToEnemy > MinDashDistance) 
         {
             player.StartPlayerCoroutine(DashAttack());
         }
@@ -95,7 +96,9 @@ public class FightState : PlayerState
 
     private IEnumerator DashAttack()
     {
-        float dashDuration = 0.2f;
+        //突進攻擊持續時間
+        float dashAttackDuration = 0.2f;
+        //突進攻擊瞬間速度
         float dashspeed = 30f;
 
         Vector3 startPos = player.transform.position;
@@ -103,10 +106,10 @@ public class FightState : PlayerState
 
         AttackCombo?.Invoke("DashAttack");
 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.25f);
 
         float elapsedTime = 0f;
-        while (elapsedTime < dashDuration) 
+        while (elapsedTime < dashAttackDuration) 
         {
             player.controller.Move((TargetPos - startPos).normalized * dashspeed * Time.deltaTime);
             elapsedTime += Time.deltaTime;
@@ -150,10 +153,24 @@ public class FightState : PlayerState
         player.StartPlayerCoroutine(AttackCoolDown());
     }
 
+    private void SpawnSlashEffect(GameObject effectPrefab)
+    {
+        player.StartPlayerCoroutine(SwordSlshSpawmTime());
+        //if (effectPrefab != null && player.SwordSlashSpawnPoint != null)
+        //{
+        //    GameObject slashEffect = GameObject.Instantiate(effectPrefab, player.SwordSlashSpawnPoint.position, player.SwordSlashSpawnPoint.rotation * effectPrefab.transform.rotation);
+        //}
+    }
+
     private void ResetCombo()
     {
         currentComboStep = 0;
         isAttacking.Invoke(false);
+    }
+
+    IEnumerator SwordSlshSpawmTime()
+    {
+        yield return new WaitForSeconds(0.6f);
     }
 
     IEnumerator AttackCoolDown()

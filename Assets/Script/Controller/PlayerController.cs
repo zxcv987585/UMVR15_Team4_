@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     
     [Tooltip("玩家奔跑時的特效")]
     [SerializeField] GameObject Sprint;
+    [Tooltip("玩家揮劍時的特效")]
+    public GameObject SwordSlash;
 
     [Header("鎖定邏輯")]
     [Tooltip("動態存放鎖定的敵方單位")]
@@ -51,7 +53,8 @@ public class PlayerController : MonoBehaviour
     public bool isRolling { get; set; } = false;
     public bool isDash { get; set; } = false;
     public bool IsDie { get; set; } = false;
-    public bool CloseEnemy = false;
+    public bool CloseEnemy { get; set; } = false;
+    public bool Invincible { get; set; } = false;
 
     //玩家受傷與死亡的Delegate事件
     public Action<string> OnHit;
@@ -111,6 +114,14 @@ public class PlayerController : MonoBehaviour
         else
         {
             EnableRootMotion();
+        }
+        if (LockTarget != null)
+        {
+            float Targetdistance = Vector3.Distance(transform.position, LockTarget.transform.position);
+            if (Targetdistance > playerData.LockRange)
+            {
+                AutoUnlockEnemy();
+            }
         }
     }
 
@@ -280,7 +291,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         LockTarget = null;
-        Debug.Log("敵人死亡，已解除鎖定！");
+        Debug.Log("敵人已解除鎖定！");
     }
     //偵測距離玩家最近的敵方單位
     private Transform GetClosestEnemy()
