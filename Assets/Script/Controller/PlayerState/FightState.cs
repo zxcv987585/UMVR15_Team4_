@@ -70,17 +70,53 @@ public class FightState : PlayerState
 
     private void Attack()
     {
+        if (!CanAttack) return;
         if (player.LockTarget != null) 
         {
             Vector3 direction = (player.LockTarget.position - player.transform.position).normalized;
             direction.y = 0;
             player.transform.rotation = Quaternion.LookRotation(direction);
         }
-        if (!CanAttack) return;
 
         attackTimer = 0;
         CanAttack = false;
 
+        float distanceToEnemy = player.LockTarget != null ? Vector3.Distance(player.transform.position, player.LockTarget.position) : 0;
+
+        if (player.LockTarget != null && !player.CloseEnemy) 
+        {
+            player.StartPlayerCoroutine(DashAttack());
+        }
+        else
+        {
+            PerformAttack();
+        }
+    }
+
+    private IEnumerator DashAttack()
+    {
+        float dashDuration = 0.2f;
+        float dashspeed = 20f;
+        Vector3 startPos = player.transform.position;
+        Vector3 TargetPos = player.LockTarget.position;
+
+        float elapsedTime = 0f;
+        AttackCombo?.Invoke("DashAttack");
+        while (elapsedTime < dashDuration) 
+        {
+            player.controller.Move((TargetPos - startPos).normalized * dashspeed * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        player.controller.Move((TargetPos - player.transform.position).normalized * 0.1f);
+        yield return new WaitForSeconds(0.4f);
+
+        PerformAttack();
+    }
+
+    private void PerformAttack()
+    {
         // 播放對應的攻擊動畫
         switch (currentComboStep)
         {
@@ -107,7 +143,7 @@ public class FightState : PlayerState
                 break;
         }
 
-        player.StartCoroutine(AttackCoolDown());
+        player.StartPlayerCoroutine(AttackCoolDown());
     }
 
     private void ResetCombo()

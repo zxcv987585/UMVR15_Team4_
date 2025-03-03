@@ -9,6 +9,9 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] float MaxHealth;
     [Header("當前血量")]
     [SerializeField] float CurrentHealth;
+    [Header("玩家特效")]
+    [Tooltip("玩家治療時的特效")]
+    [SerializeField] GameObject HealEffect;
     [SerializeField] LevelSystem levelSystem;
 
     //受到攻擊時要觸發的委派事件
@@ -111,5 +114,15 @@ public class PlayerHealth : MonoBehaviour
     {
         CurrentHealth += amount;
         CurrentHealth = Mathf.Min(CurrentHealth, MaxHealth);
+
+        if (HealEffect != null)
+        {
+            GameObject healEffect = Instantiate(HealEffect, transform.position + Vector3.up * 1f, Quaternion.identity);
+            healEffect.transform.SetParent(transform);
+        }
+        else
+        {
+            Debug.Log("沒有治癒特效可用");
+        }
     }
 }

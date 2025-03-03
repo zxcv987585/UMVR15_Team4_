@@ -27,13 +27,9 @@ public class PlayerController : MonoBehaviour
 
     [Tooltip("玩家的位移Vector3")]
     public Vector3 Velocity;
-
-    [Header("玩家特效")]
-    [Tooltip("玩家治療時的特效")]
-    [SerializeField] GameObject Heal;
+    
     [Tooltip("玩家奔跑時的特效")]
     [SerializeField] GameObject Sprint;
-
 
     [Header("鎖定邏輯")]
     [Tooltip("動態存放鎖定的敵方單位")]
@@ -55,7 +51,7 @@ public class PlayerController : MonoBehaviour
     public bool isRolling { get; set; } = false;
     public bool isDash { get; set; } = false;
     public bool IsDie { get; set; } = false;
-    private bool CloseEnemy = false;
+    public bool CloseEnemy = false;
 
     //玩家受傷與死亡的Delegate事件
     public Action<string> OnHit;
@@ -90,6 +86,7 @@ public class PlayerController : MonoBehaviour
         GameInput.Instance.OnAimAction += SetIsAiming;
         GameInput.Instance.OnAttackAction += SetIsAttack;
         GameInput.Instance.OnDashkAction += Dash;
+        GameInput.Instance.OnLockAction += LockOn;
         //Delegate訂閱事件
         health.OnDamage += GetHit;
         health.OnDead += Died;
@@ -101,11 +98,6 @@ public class PlayerController : MonoBehaviour
         ApplyGravity();
         //檢測狀態機更新邏輯
         stateMachine.Update();
-        //按下按鍵進行鎖定敵人
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            LockOnTarget();
-        }
         //時刻檢查周遭是否存在敵人
         if (Time.time >= NextCheckTime)
         {
@@ -234,6 +226,10 @@ public class PlayerController : MonoBehaviour
     }
 
     //玩家鎖定敵人
+    private void LockOn()
+    {
+        LockOnTarget();
+    }
     private void LockOnTarget()
     {
         if(LockTarget == null)
@@ -280,6 +276,7 @@ public class PlayerController : MonoBehaviour
             if (enemyHealth != null)
             {
                 enemyHealth.EnemyDead -= EnemyDead;
+                CloseEnemy = false; 
             }
         }
         LockTarget = null;

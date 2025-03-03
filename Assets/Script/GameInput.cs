@@ -21,8 +21,6 @@ public class GameInput : MonoBehaviour
 		LockOn,
 		Skill1,
 		Skill2,
-		Skill3,
-		Skill4
 	}
 
 	public event Action<bool> OnAttackAction;
@@ -54,11 +52,9 @@ public class GameInput : MonoBehaviour
 		playerInputAction.Player.Dash.performed += Dash_performed;
 		playerInputAction.Player.Sprint.performed += SprintPress_performed;
 		playerInputAction.Player.Sprint.canceled += SprintRelease_performed;
-		//playerInputAction.Player.LockOn.preformed += 
-		playerInputAction.Player.Skill1.performed += Skill1_performed;
+		playerInputAction.Player.LockOn.performed += LockOn_performed;
+        playerInputAction.Player.Skill1.performed += Skill1_performed;
 		playerInputAction.Player.Skill2.performed += Skill2_performed;
-		playerInputAction.Player.Skill3.performed += Skill3_performed;
-		playerInputAction.Player.Skill4.performed += Skill4_performed;
 	}
 
     private void AttackRelease_Performed(InputAction.CallbackContext context)
@@ -123,18 +119,6 @@ public class GameInput : MonoBehaviour
 	{
 		if(canInput)
 			OnSkillAction?.Invoke(Bind.Skill2);
-	}
-
-	private void Skill3_performed(InputAction.CallbackContext context)
-	{
-		if(canInput)
-			OnSkillAction?.Invoke(Bind.Skill3);
-	}
-
-	private void Skill4_performed(InputAction.CallbackContext context)
-	{
-		if(canInput)
-			OnSkillAction?.Invoke(Bind.Skill4);
 	}
 
 	private void SaveRebind()
@@ -211,10 +195,6 @@ public class GameInput : MonoBehaviour
 				return playerInputAction.Player.Skill1.bindings[0].ToDisplayString();;
 			case Bind.Skill2:
 				return playerInputAction.Player.Skill2.bindings[0].ToDisplayString();;
-			case Bind.Skill3:
-				return playerInputAction.Player.Skill3.bindings[0].ToDisplayString();;
-			case Bind.Skill4:
-				return playerInputAction.Player.Skill4.bindings[0].ToDisplayString();;
 		}
 	}
 
@@ -271,14 +251,6 @@ public class GameInput : MonoBehaviour
 				break;
 			case Bind.Skill2:
 				inputAction = playerInputAction.Player.Skill2;
-				bindIndex = 0;
-				break;
-			case Bind.Skill3:
-				inputAction = playerInputAction.Player.Skill3;
-				bindIndex = 0;
-				break;
-			case Bind.Skill4:
-				inputAction = playerInputAction.Player.Skill4;
 				bindIndex = 0;
 				break;
 			default:

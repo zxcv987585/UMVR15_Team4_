@@ -218,7 +218,7 @@ public class EnemyController : MonoBehaviour
 	public void Attack()
 	{
 		if(isAttack)
-			playerTransform.GetComponent<Health>().TakeDamage(enemyDataSO.attackPower);
+			playerTransform.GetComponent<PlayerHealth>().TakeDamage(enemyDataSO.attackPower);
 	}
 	
 	//設定當前是否正在攻擊

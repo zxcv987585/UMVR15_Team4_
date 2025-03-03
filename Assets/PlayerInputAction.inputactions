@@ -69,24 +69,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Skill3",
-                    "type": "Button",
-                    "id": "631261ad-49d1-4bb7-bdcb-fa5e3f91fb03",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Skill4",
-                    "type": "Button",
-                    "id": "df75507f-79da-40ff-a155-8329d914274a",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "MouseMove",
                     "type": "Value",
                     "id": "920cd542-16db-45bb-a577-99f32ad428bb",
@@ -94,6 +76,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "LockOn",
+                    "type": "Button",
+                    "id": "be3e2b84-482e-4120-9ddc-2cddbf794fd9",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -254,7 +245,7 @@
                 {
                     "name": "",
                     "id": "be7087c1-0645-4797-8374-fd34f6ee813a",
-                    "path": "<Keyboard>/1",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -265,33 +256,11 @@
                 {
                     "name": "",
                     "id": "2435b617-709b-419e-aa34-1f303fd7b55b",
-                    "path": "<Keyboard>/2",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Skill2",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "54fc728b-dae0-4744-917f-ff0201436ac9",
-                    "path": "<Keyboard>/3",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Skill3",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "342205b8-b230-46ed-b9f6-29b0a2f6ec9d",
-                    "path": "<Keyboard>/4",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Skill4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -303,6 +272,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "MouseMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4feb43ec-45ed-4638-8299-924f6b3b6217",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LockOn",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

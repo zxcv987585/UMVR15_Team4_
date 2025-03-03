@@ -91,24 +91,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Skill3"",
-                    ""type"": ""Button"",
-                    ""id"": ""631261ad-49d1-4bb7-bdcb-fa5e3f91fb03"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Skill4"",
-                    ""type"": ""Button"",
-                    ""id"": ""df75507f-79da-40ff-a155-8329d914274a"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""MouseMove"",
                     ""type"": ""Value"",
                     ""id"": ""920cd542-16db-45bb-a577-99f32ad428bb"",
@@ -116,6 +98,15 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""LockOn"",
+                    ""type"": ""Button"",
+                    ""id"": ""be3e2b84-482e-4120-9ddc-2cddbf794fd9"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -276,7 +267,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""be7087c1-0645-4797-8374-fd34f6ee813a"",
-                    ""path"": ""<Keyboard>/1"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -287,33 +278,11 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2435b617-709b-419e-aa34-1f303fd7b55b"",
-                    ""path"": ""<Keyboard>/2"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Skill2"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""54fc728b-dae0-4744-917f-ff0201436ac9"",
-                    ""path"": ""<Keyboard>/3"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Skill3"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""342205b8-b230-46ed-b9f6-29b0a2f6ec9d"",
-                    ""path"": ""<Keyboard>/4"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Skill4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -325,6 +294,17 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""MouseMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4feb43ec-45ed-4638-8299-924f6b3b6217"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LockOn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -403,9 +383,8 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Skill1 = m_Player.FindAction("Skill1", throwIfNotFound: true);
         m_Player_Skill2 = m_Player.FindAction("Skill2", throwIfNotFound: true);
-        m_Player_Skill3 = m_Player.FindAction("Skill3", throwIfNotFound: true);
-        m_Player_Skill4 = m_Player.FindAction("Skill4", throwIfNotFound: true);
         m_Player_MouseMove = m_Player.FindAction("MouseMove", throwIfNotFound: true);
+        m_Player_LockOn = m_Player.FindAction("LockOn", throwIfNotFound: true);
     }
 
     ~@PlayerInputAction()
@@ -479,9 +458,8 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Skill1;
     private readonly InputAction m_Player_Skill2;
-    private readonly InputAction m_Player_Skill3;
-    private readonly InputAction m_Player_Skill4;
     private readonly InputAction m_Player_MouseMove;
+    private readonly InputAction m_Player_LockOn;
     public struct PlayerActions
     {
         private @PlayerInputAction m_Wrapper;
@@ -493,9 +471,8 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         public InputAction @Skill1 => m_Wrapper.m_Player_Skill1;
         public InputAction @Skill2 => m_Wrapper.m_Player_Skill2;
-        public InputAction @Skill3 => m_Wrapper.m_Player_Skill3;
-        public InputAction @Skill4 => m_Wrapper.m_Player_Skill4;
         public InputAction @MouseMove => m_Wrapper.m_Player_MouseMove;
+        public InputAction @LockOn => m_Wrapper.m_Player_LockOn;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -526,15 +503,12 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Skill2.started += instance.OnSkill2;
             @Skill2.performed += instance.OnSkill2;
             @Skill2.canceled += instance.OnSkill2;
-            @Skill3.started += instance.OnSkill3;
-            @Skill3.performed += instance.OnSkill3;
-            @Skill3.canceled += instance.OnSkill3;
-            @Skill4.started += instance.OnSkill4;
-            @Skill4.performed += instance.OnSkill4;
-            @Skill4.canceled += instance.OnSkill4;
             @MouseMove.started += instance.OnMouseMove;
             @MouseMove.performed += instance.OnMouseMove;
             @MouseMove.canceled += instance.OnMouseMove;
+            @LockOn.started += instance.OnLockOn;
+            @LockOn.performed += instance.OnLockOn;
+            @LockOn.canceled += instance.OnLockOn;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -560,15 +534,12 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Skill2.started -= instance.OnSkill2;
             @Skill2.performed -= instance.OnSkill2;
             @Skill2.canceled -= instance.OnSkill2;
-            @Skill3.started -= instance.OnSkill3;
-            @Skill3.performed -= instance.OnSkill3;
-            @Skill3.canceled -= instance.OnSkill3;
-            @Skill4.started -= instance.OnSkill4;
-            @Skill4.performed -= instance.OnSkill4;
-            @Skill4.canceled -= instance.OnSkill4;
             @MouseMove.started -= instance.OnMouseMove;
             @MouseMove.performed -= instance.OnMouseMove;
             @MouseMove.canceled -= instance.OnMouseMove;
+            @LockOn.started -= instance.OnLockOn;
+            @LockOn.performed -= instance.OnLockOn;
+            @LockOn.canceled -= instance.OnLockOn;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -640,8 +611,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         void OnSprint(InputAction.CallbackContext context);
         void OnSkill1(InputAction.CallbackContext context);
         void OnSkill2(InputAction.CallbackContext context);
-        void OnSkill3(InputAction.CallbackContext context);
-        void OnSkill4(InputAction.CallbackContext context);
         void OnMouseMove(InputAction.CallbackContext context);
+        void OnLockOn(InputAction.CallbackContext context);
     }
 }
