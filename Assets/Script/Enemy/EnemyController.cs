@@ -26,7 +26,9 @@ public class EnemyController : MonoBehaviour
 	
 	private void Start()
 	{
-		rb = GetComponent<Rigidbody>();
+		deadParticle.gameObject.SetActive(false);
+        deadParticle.Stop();
+        rb = GetComponent<Rigidbody>();
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		playerTransform = FindObjectOfType<PlayerController>()?.transform;
 		material = dissolveRenderer.material;
@@ -260,7 +262,8 @@ public class EnemyController : MonoBehaviour
 		material.SetColor("_EmissionColor", Color.blue * 3f); // 設定發光 (藍色加強亮度)
 		material.SetColor("_RimColor", Color.cyan);
 
-		deadParticle.Play();
+        deadParticle.gameObject.SetActive(true);
+        deadParticle.Play();
 
 		float dissolveAmount = 0f;
 		while(dissolveAmount < 1f)
