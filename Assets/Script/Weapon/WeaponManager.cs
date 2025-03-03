@@ -32,6 +32,7 @@ public class WeaponManager : MonoBehaviour
     {
         EquipWeapon(defualtWeapon);
         player = GetComponent<PlayerController>();
+        player.fightState.SwordSlash += SpawnSwordSlash;
     }
 
     private void Update()
@@ -40,10 +41,6 @@ public class WeaponManager : MonoBehaviour
         if (attackPoint == null)
         {
             Debug.Log("這裡是weaponManager，找不到武器");
-        }
-        if (player.isAttack)
-        {
-            SpawnSwordSlash();
         }
     }
 

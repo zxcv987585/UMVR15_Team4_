@@ -18,6 +18,8 @@ public class FightState : PlayerState
     public Action<string> AttackCombo;
     //傳送重置Trigger的指令給動畫控制器
     public Action<bool> isAttacking;
+    //傳送劍氣生成指令給WeaponManager
+    public event Action SwordSlash;
 
 
     public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) {}
@@ -129,23 +131,28 @@ public class FightState : PlayerState
         {
             case 0:
                 AttackCombo.Invoke("Attack1");
+                SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
             case 1:
                 AttackCombo.Invoke("Attack2");
+                SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
             case 2:
                 AttackCombo.Invoke("Attack3");
+                SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
             case 3:
                 AttackCombo.Invoke("Attack4");
+                SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
             case 4:
                 ResetCombo();
                 AttackCombo.Invoke("Attack1");
+                SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
         }
