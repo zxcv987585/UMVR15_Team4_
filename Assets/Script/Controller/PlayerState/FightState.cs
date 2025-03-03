@@ -96,12 +96,16 @@ public class FightState : PlayerState
     private IEnumerator DashAttack()
     {
         float dashDuration = 0.2f;
-        float dashspeed = 20f;
+        float dashspeed = 30f;
+
         Vector3 startPos = player.transform.position;
         Vector3 TargetPos = player.LockTarget.position;
 
-        float elapsedTime = 0f;
         AttackCombo?.Invoke("DashAttack");
+
+        yield return new WaitForSeconds(0.2f);
+
+        float elapsedTime = 0f;
         while (elapsedTime < dashDuration) 
         {
             player.controller.Move((TargetPos - startPos).normalized * dashspeed * Time.deltaTime);
@@ -110,7 +114,7 @@ public class FightState : PlayerState
         }
 
         player.controller.Move((TargetPos - player.transform.position).normalized * 0.1f);
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.3f);
 
         PerformAttack();
     }
