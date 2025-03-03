@@ -849,38 +849,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2158587563107018330, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-      propertyPath: m_Enabled
-      value: 0
+    - target: {fileID: 6410183367800597023, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: m_RigLayers.Array.data[0].m_Rig
+      value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 3831638619911089666, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-      propertyPath: SwordSlash
-      value: 
-      objectReference: {fileID: 5580501102851957539, guid: b6b7104c7730da0428a7a1509c22c309, type: 3}
-    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-      propertyPath: SwordSlash
-      value: 
-      objectReference: {fileID: 5580501102851957539, guid: b6b7104c7730da0428a7a1509c22c309, type: 3}
-    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-      propertyPath: SwordSlash1
-      value: 
-      objectReference: {fileID: 5580501102851957539, guid: 56aceeffb625f1c46831f34f2e04bb43, type: 3}
-    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-      propertyPath: SwordSlash2
-      value: 
-      objectReference: {fileID: 5580501102851957539, guid: 3af4f2ece2e2b18488ceae3e8a08c7d6, type: 3}
-    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-      propertyPath: SwordSlash3
-      value: 
-      objectReference: {fileID: 5580501102851957539, guid: 381dd925cbff129459ff6a75938ba647, type: 3}
-    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-      propertyPath: SwordSlash4
-      value: 
-      objectReference: {fileID: 5580501102851957539, guid: b6b7104c7730da0428a7a1509c22c309, type: 3}
-    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-      propertyPath: SwordSlashSpawnPoint
-      value: 
-      objectReference: {fileID: 758268963}
     - target: {fileID: 8211211446584772470, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: m_Name
       value: Player
@@ -927,10 +899,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 8845005771188919756, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 758268963}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
 --- !u!1001 &89811401
@@ -1774,11 +1743,6 @@ RectTransform:
   m_AnchoredPosition: {x: 40, y: 0}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!4 &207351314 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8942332368711184735, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-  m_PrefabInstance: {fileID: 69650493}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &226696002
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4732,37 +4696,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1999706283}
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
---- !u!1 &758268962
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 758268963}
-  m_Layer: 3
-  m_Name: SlashPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &758268963
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 758268962}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.089, z: 0.397}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1355333780}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &778090078
 GameObject:
   m_ObjectHideFlags: 0
@@ -10730,7 +10663,7 @@ PrefabInstance:
     - target: {fileID: 1468929069838653373, guid: 22eca212736e34f669a7308846a42048, type: 3}
       propertyPath: AimTarget
       value: 
-      objectReference: {fileID: 207351314}
+      objectReference: {fileID: 0}
     - target: {fileID: 1468929069838653373, guid: 22eca212736e34f669a7308846a42048, type: 3}
       propertyPath: SmoothTime
       value: 0

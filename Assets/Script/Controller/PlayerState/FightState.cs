@@ -153,24 +153,10 @@ public class FightState : PlayerState
         player.StartPlayerCoroutine(AttackCoolDown());
     }
 
-    private void SpawnSlashEffect(GameObject effectPrefab)
-    {
-        player.StartPlayerCoroutine(SwordSlshSpawmTime());
-        //if (effectPrefab != null && player.SwordSlashSpawnPoint != null)
-        //{
-        //    GameObject slashEffect = GameObject.Instantiate(effectPrefab, player.SwordSlashSpawnPoint.position, player.SwordSlashSpawnPoint.rotation * effectPrefab.transform.rotation);
-        //}
-    }
-
     private void ResetCombo()
     {
         currentComboStep = 0;
         isAttacking.Invoke(false);
-    }
-
-    IEnumerator SwordSlshSpawmTime()
-    {
-        yield return new WaitForSeconds(0.6f);
     }
 
     IEnumerator AttackCoolDown()

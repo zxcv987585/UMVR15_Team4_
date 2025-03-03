@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -40,6 +41,25 @@ public class WeaponManager : MonoBehaviour
         {
             Debug.Log("這裡是weaponManager，找不到武器");
         }
+        if (player.isAttack)
+        {
+            SpawnSwordSlash();
+        }
+    }
+
+    private void SpawnSwordSlash()
+    {
+        if (player.SwordSlash != null && attackPoint != null)
+        {
+            StartCoroutine(SwordSlshSpawmTime());
+            GameObject SwordEffect = GameObject.Instantiate(player.SwordSlash, attackPoint.position, attackPoint.rotation);
+        
+            SwordEffect.transform.position = player.transform.position;
+        }
+    }
+    IEnumerator SwordSlshSpawmTime()
+    {
+        yield return new WaitForSeconds(0.2f);
     }
 
     public void Attack()
