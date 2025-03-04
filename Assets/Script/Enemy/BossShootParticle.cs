@@ -5,6 +5,7 @@ using UnityEngine;
 public class BossShootParticle : MonoBehaviour
 {
     [SerializeField] private ParticleSystem shootParticle; // 指派你的粒子特效
+    [SerializeField] private GameObject acitSplashPrefab;
     [SerializeField] private Transform playerTransform;     // 玩家目標位置
     [SerializeField] private float flightTime = 1.5f;       // 粒子飛行時間
 
@@ -12,56 +13,17 @@ public class BossShootParticle : MonoBehaviour
 
     private void OnEnable()
     {
-        //ShootAtPlayer();
-
-        LaunchParticleToTarget(
-        shootParticle,      // 特效
-        transform.position,      // 發射點
-        playerTransform.position, // 目標位置
-        2.0f);                    // 飛行時間 (秒)
+        PalabolaParticleToTarget(shootParticle, transform.position, playerTransform.position, 2.0f);
     }
 
-    public void ShootAtPlayer()
-    {
-        Vector3 startPosition = shootParticle.transform.position;
-        Vector3 targetPosition = playerTransform.position;
-
-        Debug.Log("startPosition = " + startPosition);
-        Debug.Log("targetPosition = " + targetPosition);
-
-        float gravity = Mathf.Abs(Physics.gravity.y);
-        
-
-        Vector3 horizontalDisplacement = new Vector3(
-            targetPosition.x - startPosition.x,
-            0f,
-            targetPosition.z - startPosition.z
-        );
-
-        Vector3 horizontalVelocity = horizontalDisplacement / flightTime;
-
-        float verticalDisplacement = targetPosition.y - startPosition.y;
-        if (verticalDisplacement < -100f) verticalDisplacement = -100f; // 避免太誇張的高度差
-        //float verticalVelocity = (verticalDisplacement - 0.5f * gravity * flightTime * flightTime) / flightTime;
-        float verticalVelocity = (verticalDisplacement / flightTime) + (0.5f * gravity * flightTime);
-
-
-        var main = shootParticle.main;
-        main.simulationSpace = ParticleSystemSimulationSpace.World;
-        main.startLifetime = flightTime + 0.5f;
-        main.gravityModifier = 1f; // 使用場景重力
-
-        var velocityOverLifetime = shootParticle.velocityOverLifetime;
-        velocityOverLifetime.enabled = true;
-        velocityOverLifetime.space = ParticleSystemSimulationSpace.World;
-        velocityOverLifetime.x = new ParticleSystem.MinMaxCurve(horizontalVelocity.x);
-        velocityOverLifetime.y = new ParticleSystem.MinMaxCurve(verticalVelocity);
-        velocityOverLifetime.z = new ParticleSystem.MinMaxCurve(horizontalVelocity.z);
-
-        shootParticle.Play();
-    }
-
-    public void LaunchParticleToTarget(ParticleSystem particleSystem, Vector3 startPosition, Vector3 targetPosition, float flightTime)
+    /// <summary>
+    /// 將粒子特效以拋射物的方式扔到指定地點
+    /// </summary>
+    /// <param name="particleSystem"> 要被拋射的粒子特效 </param>
+    /// <param name="startPosition"> 拋射的起點 </param>
+    /// <param name="targetPosition"> 拋射的終點 </param>
+    /// <param name="flightTime"> 從起點到終點需要飛行的時間 </param>
+    private void PalabolaParticleToTarget(ParticleSystem particleSystem, Vector3 startPosition, Vector3 targetPosition, float flightTime)
     {
         var main = particleSystem.main;
         main.simulationSpace = ParticleSystemSimulationSpace.World;
@@ -100,5 +62,20 @@ public class BossShootParticle : MonoBehaviour
 
         // 播放特效
         particleSystem.Play();
+
+        // 設置酸液地板的位置並啟用
+        acitSplashPrefab.transform.position = targetPosition;
+        StartCoroutine(ShowAcitSplash());
+    }
+
+    // 顯示飛彈落地的酸液地板
+    private IEnumerator ShowAcitSplash()
+    {
+        acitSplashPrefab.SetActive(false);
+
+        yield return new WaitForSeconds(flightTime);
+
+
+        acitSplashPrefab.SetActive(true);
     }
 }

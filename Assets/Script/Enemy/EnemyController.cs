@@ -20,6 +20,7 @@ public class EnemyController : MonoBehaviour
 	private bool isDamage = false;
 	private EnemyState enemyState;
 	private Rigidbody rb;
+	private Collider bodyCollider;
 	private Health health;
 	private NavMeshAgent navMeshAgent;
 	private Transform playerTransform;
@@ -27,6 +28,7 @@ public class EnemyController : MonoBehaviour
 	private void Start()
 	{
 		rb = GetComponent<Rigidbody>();
+		bodyCollider = GetComponent<Collider>();
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		playerTransform = FindObjectOfType<PlayerController>()?.transform;
 		material = dissolveRenderer.material;
@@ -52,6 +54,7 @@ public class EnemyController : MonoBehaviour
 	public void Init()
 	{
 		gameObject.SetActive(true);
+		bodyCollider.enabled = true;
 		enemyState = EnemyState.Idle;
 		health.SetMaxHealth(enemyDataSO.maxHP);
 		navMeshAgent.isStopped = true;
@@ -179,6 +182,8 @@ public class EnemyController : MonoBehaviour
 
 	private void DeadEvent()
 	{
+		bodyCollider.enabled = false;
+
 		AudioManager.Instance.PlaySound(enemyDataSO.SfxDeadKey, transform.position);
 		ChangeEnemyState(EnemyState.Dead);
 
