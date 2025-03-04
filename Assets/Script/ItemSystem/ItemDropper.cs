@@ -15,6 +15,7 @@ public class ItemDropper : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
+        Debug.Log("123");
         //確保拖曳物品存在
         ItemDragger dragger = eventData.pointerDrag.GetComponent<ItemDragger>();
         if (dragger == null) return;
