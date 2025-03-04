@@ -138,11 +138,14 @@ public class CameraController : MonoBehaviour
         LockTransfrom = player.LockTarget;
         if (LockTransfrom == null) return;
 
-        Vector3 targetPoition = CameraPivotTransform.position;
+        Vector3 targetPoition = CameraPivotTransform.position + Vector3.up * 0.5f;
         Vector3 desiredCameraPos = targetPoition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
 
         int WallLayer = LayerMask.GetMask("Wall");
-        if (Physics.Raycast(targetPoition, (desiredCameraPos - targetPoition).normalized, out RaycastHit hit, CameraToTargetDistance, WallLayer)) ;
+        if (Physics.Raycast(targetPoition, (desiredCameraPos - targetPoition).normalized, out RaycastHit hit, CameraToTargetDistance, WallLayer)) 
+        {
+            CameraToTargetDistance = hit.distance - 0.2f;
+        }
 
         Vector3 finalPosition = targetPoition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
         transform.position = Vector3.SmoothDamp(transform.position, finalPosition, ref smoothVelocity, SmoothTime);
