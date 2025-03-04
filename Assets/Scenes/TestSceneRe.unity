@@ -179,11 +179,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c61db88f6c56456286a86f74af86899, type: 3}
---- !u!4 &434635919 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8845005771188919756, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-  m_PrefabInstance: {fileID: 971633334}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &438626495
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,10 +285,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyBOSS
       objectReference: {fileID: 0}
-    - target: {fileID: 4610626214386979904, guid: 6e0d028128147ae44974f460ef7d3f4f, type: 3}
-      propertyPath: playerTransform
-      value: 
-      objectReference: {fileID: 434635919}
     - target: {fileID: 8521581647542653216, guid: 6e0d028128147ae44974f460ef7d3f4f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -353,7 +344,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8845005771188919756, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.2
+      value: -7.1
       objectReference: {fileID: 0}
     - target: {fileID: 8845005771188919756, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: m_LocalPosition.y
@@ -549,7 +540,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 209333a619292ec4cb20c0f776d5bc56, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
