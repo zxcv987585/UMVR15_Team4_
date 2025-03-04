@@ -9,4 +9,5 @@ public class SkillDataSO : ScriptableObject
 	public Sprite skillIcon;
 	public int cooldownTime;
 	public int damage;
+	public bool isUnlocked;
 }
