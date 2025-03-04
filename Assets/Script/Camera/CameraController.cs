@@ -57,7 +57,7 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
-        input = GameManagerSingleton.Instance.inputControl;
+        input = GameManagerSingleton.Instance.InputControl;
     }
 
     private void Start()
@@ -88,7 +88,7 @@ public class CameraController : MonoBehaviour
         {
             HandleAimMode();
         }
-        else if (isLocked)
+        else if (isLocked && !isAiming)
         {
             HandleLockMode();
         }
@@ -101,7 +101,7 @@ public class CameraController : MonoBehaviour
     //攝影機輸入邏輯
     private void HandleCameraRotation()
     {
-        if (isLocked) return;
+        if (isLocked && !isAiming) return;
         //處裡滑鼠輸入來旋轉攝影機
         Mouse_x += input.GetMouseXAxis() * sensitivity_x;
         Mouse_y -= input.GetMouseYAxis() * sensitivity_y;
@@ -136,7 +136,7 @@ public class CameraController : MonoBehaviour
     private void HandleLockMode()
     {
         LockTransfrom = player.LockTarget;
-        if (LockTransfrom == null) return;
+        if (LockTransfrom == null || isAiming) return;
 
         Vector3 targetPoition = CameraPivotTransform.position + Vector3.up * 0.03f;
         Vector3 desiredCameraPos = targetPoition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
