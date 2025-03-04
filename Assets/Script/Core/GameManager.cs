@@ -17,6 +17,7 @@ public class GameManagerSingleton
                 m_Instance = new GameManagerSingleton();
                 m_Instance.gameObject = new GameObject("Gamemanager");
                 m_Instance.gameObject.AddComponent<InputController>();
+                m_Instance.m_Inputcontrol = m_Instance.gameObject.GetComponent<InputController>();
             }
             return m_Instance;
         }

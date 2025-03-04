@@ -44,7 +44,7 @@ public class CameraController : MonoBehaviour
     float MinVerticalAngle = -15;
     float MaxVerticalAngle = 35;
     //攝影機與玩家的距離
-    float CameraToTargetDistance = 3.5f;
+    float CameraToTargetDistance = 4.5f;
     float Mouse_x = 0;
     float Mouse_y = 30;
     Vector3 smoothVelocity = Vector3.zero;
@@ -138,7 +138,7 @@ public class CameraController : MonoBehaviour
         LockTransfrom = player.LockTarget;
         if (LockTransfrom == null) return;
 
-        Vector3 targetPoition = CameraPivotTransform.position + Vector3.up * 0.5f;
+        Vector3 targetPoition = CameraPivotTransform.position + Vector3.up * 0.03f;
         Vector3 desiredCameraPos = targetPoition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
 
         int WallLayer = LayerMask.GetMask("Wall");
