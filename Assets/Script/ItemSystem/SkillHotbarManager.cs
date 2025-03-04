@@ -25,10 +25,10 @@ public class SkillHotbarManager : MonoBehaviour
         SkillSlot previousSlot = null;
         for (int i = 0; i < hotbarSlots.Count; i++)
         {
-            if (hotbarSlots[i].skillData == skill) 
+            if (hotbarSlots[i].skillData == skill)
             {
                 //記錄這個HotbarSlot
-                previousSlot = hotbarSlots[i]; 
+                previousSlot = hotbarSlots[i];
                 break;
             }
         }
@@ -36,7 +36,7 @@ public class SkillHotbarManager : MonoBehaviour
         if (previousSlot != null)
         {
             //清除原本快捷欄內的道具
-            previousSlot.skillData=null;
+            previousSlot.skillData = null;
             previousSlot.UpdateSlot();
         }
 
