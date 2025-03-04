@@ -35,28 +35,4 @@ public class GameDataManager : MonoBehaviour
             gameData = new GameData();
         }
     }
-
-    //---------
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab)) // 按 ESC 切換模式
-        {
-            ToggleCursorMode();
-        }
-    }
-
-    void ToggleCursorMode()
-    {
-        if (Cursor.lockState == CursorLockMode.Locked)
-        {
-            Cursor.lockState = CursorLockMode.None; // 解除鎖定
-            Cursor.visible = true; // 顯示游標
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
-            Cursor.visible = false; // 隱藏游標
-        }
-    }
 }
