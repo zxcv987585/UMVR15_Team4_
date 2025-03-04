@@ -5,14 +5,17 @@ using UnityEngine;
 public class BossShootParticle : MonoBehaviour
 {
     [SerializeField] private ParticleSystem shootParticle; // 指派你的粒子特效
-    [SerializeField] private GameObject acitSplashPrefab;
-    [SerializeField] private Transform playerTransform;     // 玩家目標位置
+    [SerializeField] private GameObject acitSplashPrefab; // 酸液的 Prefab
     [SerializeField] private float flightTime = 1.5f;       // 粒子飛行時間
+    [SerializeField] private float acitSplashLifeTime = 4f;
+
+    private Transform playerTransform;     // 玩家目標位置
 
     private float gravity = 9.81f;
 
     private void OnEnable()
     {
+        playerTransform = FindObjectOfType<PlayerController>()?.transform;
         PalabolaParticleToTarget(shootParticle, transform.position, playerTransform.position, 2.0f);
     }
 
@@ -25,7 +28,7 @@ public class BossShootParticle : MonoBehaviour
     /// <param name="flightTime"> 從起點到終點需要飛行的時間 </param>
     private void PalabolaParticleToTarget(ParticleSystem particleSystem, Vector3 startPosition, Vector3 targetPosition, float flightTime)
     {
-        var main = particleSystem.main;
+        ParticleSystem.MainModule main = particleSystem.main;
         main.simulationSpace = ParticleSystemSimulationSpace.World;
         main.startLifetime = flightTime + 0.5f; // 壽命多留一點
         main.startSpeed = 0f; // 交給 VelocityOverLifetime 控制速度
@@ -50,7 +53,7 @@ public class BossShootParticle : MonoBehaviour
         Vector3 velocity = horizontalDirection * horizontalSpeed + Vector3.up * verticalSpeed;
 
         // 套用速度到 VelocityOverLifetime
-        var velocityOverLifetime = particleSystem.velocityOverLifetime;
+        ParticleSystem.VelocityOverLifetimeModule velocityOverLifetime = particleSystem.velocityOverLifetime;
         velocityOverLifetime.enabled = true;
         velocityOverLifetime.space = ParticleSystemSimulationSpace.World;
         velocityOverLifetime.x = new ParticleSystem.MinMaxCurve(velocity.x);
@@ -64,18 +67,14 @@ public class BossShootParticle : MonoBehaviour
         particleSystem.Play();
 
         // 設置酸液地板的位置並啟用
-        acitSplashPrefab.transform.position = targetPosition;
-        StartCoroutine(ShowAcitSplash());
+        StartCoroutine(InstantiateAcitSplash(targetPosition));
     }
 
     // 顯示飛彈落地的酸液地板
-    private IEnumerator ShowAcitSplash()
+    private IEnumerator InstantiateAcitSplash(Vector3 targetPosition)
     {
-        acitSplashPrefab.SetActive(false);
-
         yield return new WaitForSeconds(flightTime);
 
-
-        acitSplashPrefab.SetActive(true);
+        Destroy(Instantiate(acitSplashPrefab, targetPosition, Quaternion.identity).gameObject, acitSplashLifeTime);
     }
 }
