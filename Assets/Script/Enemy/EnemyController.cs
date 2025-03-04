@@ -20,15 +20,15 @@ public class EnemyController : MonoBehaviour
 	private bool isDamage = false;
 	private EnemyState enemyState;
 	private Rigidbody rb;
+	private Collider bodyCollider;
 	private Health health;
 	private NavMeshAgent navMeshAgent;
 	private Transform playerTransform;
 	
 	private void Start()
 	{
-		deadParticle.gameObject.SetActive(false);
-        deadParticle.Stop();
-        rb = GetComponent<Rigidbody>();
+		rb = GetComponent<Rigidbody>();
+		bodyCollider = GetComponent<Collider>();
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		playerTransform = FindObjectOfType<PlayerController>()?.transform;
 		material = dissolveRenderer.material;
@@ -54,6 +54,7 @@ public class EnemyController : MonoBehaviour
 	public void Init()
 	{
 		gameObject.SetActive(true);
+		bodyCollider.enabled = true;
 		enemyState = EnemyState.Idle;
 		health.SetMaxHealth(enemyDataSO.maxHP);
 		navMeshAgent.isStopped = true;
@@ -181,6 +182,8 @@ public class EnemyController : MonoBehaviour
 
 	private void DeadEvent()
 	{
+		bodyCollider.enabled = false;
+
 		AudioManager.Instance.PlaySound(enemyDataSO.SfxDeadKey, transform.position);
 		ChangeEnemyState(EnemyState.Dead);
 
@@ -220,7 +223,7 @@ public class EnemyController : MonoBehaviour
 	public void Attack()
 	{
 		if(isAttack)
-			playerTransform.GetComponent<Health>().TakeDamage(enemyDataSO.attackPower);
+			playerTransform.GetComponent<PlayerHealth>().TakeDamage(enemyDataSO.attackPower);
 	}
 	
 	//設定當前是否正在攻擊
@@ -262,8 +265,7 @@ public class EnemyController : MonoBehaviour
 		material.SetColor("_EmissionColor", Color.blue * 3f); // 設定發光 (藍色加強亮度)
 		material.SetColor("_RimColor", Color.cyan);
 
-        deadParticle.gameObject.SetActive(true);
-        deadParticle.Play();
+		deadParticle.Play();
 
 		float dissolveAmount = 0f;
 		while(dissolveAmount < 1f)

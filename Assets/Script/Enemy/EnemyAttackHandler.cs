@@ -22,7 +22,7 @@ public class EnemyAttackHandler : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
 	{
-		if(!hasAttack && other.TryGetComponent(out Health health))
+		if(!hasAttack && other.TryGetComponent(out PlayerHealth health))
 		{
 			hasAttack = true;
 			OnAttackHit?.Invoke();

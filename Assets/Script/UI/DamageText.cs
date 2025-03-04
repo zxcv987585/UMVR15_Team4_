@@ -13,9 +13,11 @@ public class DamageText : MonoBehaviour
     {
         gameObject.SetActive(true);
         damageText.text = damage.ToString();
+
         StartCoroutine(ShowAnimationCoroutine());
     }
 
+    //傷害數字 上浮+淡出的特效
     private IEnumerator ShowAnimationCoroutine()
     {
         float timer = 0f;

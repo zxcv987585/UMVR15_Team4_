@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using TMPro;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -10,8 +11,11 @@ public class CameraController : MonoBehaviour
     [Header("玩家瞄準模式時要跟隨的對象")]
     [SerializeField] Transform playerTransfrom;
 
-    [Header("玩家瞄準模式時要跟隨的對象")]
+    [Header("玩家鎖定模式時要看向的目標")]
     [SerializeField] Transform LockTransfrom;
+
+    [Header("玩家鎖定模式時要跟隨的對象")]
+    [SerializeField] Transform CameraPivotTransform;
 
     [Header("水平靈敏度")]
     [SerializeField] float sensitivity_x = 2;
@@ -31,6 +35,9 @@ public class CameraController : MonoBehaviour
     [Header("瞄準狀態下角色上半身的跟隨物")]
     [SerializeField] Transform AimTarget;
 
+    [Header("鎖定狀態攝影機的移動速度")]
+    [SerializeField] float LockOnTargetFollowSpeed;
+
     private Vector3 aimTargetPosition;
     //原本的跟隨目標
     private Transform originalTarget;
@@ -44,11 +51,10 @@ public class CameraController : MonoBehaviour
     float Mouse_y = 30;
     Vector3 smoothVelocity = Vector3.zero;
 
-    InputController input;
+    private InputController input;
+    private PlayerController player;
 
     private bool isAiming = false;
-    private bool isLocked = false;
-    private PlayerController playerController;
 
     private void Awake()
     {
@@ -57,29 +63,19 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
-        playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         GameInput.Instance.OnAimAction += SetAim;
 
         originalTarget = target;
-        if (playerController != null)
+        if (player != null)
         {
-            playerTransfrom = playerController.transform;
+            playerTransfrom = player.transform;
         }
-    }
-
-    private void SetAim(bool isAiming)
-    {
-        this.isAiming = isAiming;
-
-        target = isAiming ? playerTransfrom : originalTarget;
     }
 
     private void LateUpdate()
     {
-        //處裡滑鼠輸入來旋轉攝影機
-        Mouse_x += input.GetMouseXAxis() * sensitivity_x;
-        Mouse_y -= input.GetMouseYAxis() * sensitivity_y;
-        Mouse_y = Math.Clamp(Mouse_y, MinVerticalAngle, MaxVerticalAngle);
+        HandleCameraRotation();
 
         //計算選轉角度
         float aimAngleoffset = isAiming ? 15f : 0f;
@@ -91,40 +87,75 @@ public class CameraController : MonoBehaviour
         //進入瞄準模式調整攝影機位置
         if (isAiming)
         {
-            TargetPosition += target.right * AimOffset.x;
-            TargetPosition += target.up * AimOffset.y;
-            CameraToTargetDistance = AimOffset.z;
-
-            if (AimTarget != null)
-            {
-                Vector3 cameraForward = Camera.main.transform.forward;
-                Vector3 cameraRight = Camera.main.transform.right;
-                AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
-            }
+            HandleAimMode();
         }
         else
         {
-            CameraToTargetDistance = 3.5f;
+            HandleNormalFollow();
         }
 
-        if (playerController.LockTarget != null)
+        //if (player.LockTarget != null)
+        //{
+        //    LockTransfrom = player.LockTarget;
+        //    Vector3 rotationDirection = LockTransfrom.transform.position - transform.position;
+        //    rotationDirection.Normalize();
+        //    rotationDirection.y = 0f;
+        //    Quaternion targetRotation = Quaternion.LookRotation(rotationDirection);
+        //    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, LockOnTargetFollowSpeed);
+
+        //    rotationDirection = LockTransfrom.position - CameraPivotTransform.position;
+        //    rotationDirection.Normalize();
+
+        //    targetRotation = Quaternion.LookRotation(rotationDirection);
+        //    CameraPivotTransform.transform.rotation = Quaternion.Slerp(CameraPivotTransform.rotation, targetRotation, LockOnTargetFollowSpeed);
+        //}
+        //else
+        //{
+        //    LockTransfrom = null;
+        //}
+
+       
+    }
+
+    //攝影機輸入邏輯
+    private void HandleCameraRotation()
+    {
+        //處裡滑鼠輸入來旋轉攝影機
+        Mouse_x += input.GetMouseXAxis() * sensitivity_x;
+        Mouse_y -= input.GetMouseYAxis() * sensitivity_y;
+        Mouse_y = Math.Clamp(Mouse_y, MinVerticalAngle, MaxVerticalAngle);
+    }
+    
+    //平常的攝影機跟隨狀態
+    private void HandleNormalFollow() 
+    {
+        CameraToTargetDistance = 3.5f;
+        UpdateCameraPostion(target.position + Vector3.up * offset.y, Quaternion.Euler(Mouse_y, Mouse_x, 0));
+    }
+
+    private void HandleAimMode()
+    {
+        Vector3 TargetPosition = playerTransfrom.position;
+        TargetPosition += playerTransfrom.right * AimOffset.x;
+        TargetPosition += playerTransfrom.up * AimOffset.y;
+        CameraToTargetDistance = AimOffset.z;
+
+        if (AimTarget != null)
         {
-            LockTransfrom = playerController.LockTarget;
-            Vector3 Targetdirection = LockTransfrom.position - transform.position;
-            Targetdirection.y = 0f;
-
-            Quaternion LookRotation = Quaternion.LookRotation(Targetdirection);
-            transform.rotation = Quaternion.Lerp(transform.rotation, LookRotation, Time.deltaTime * 5f);
-        }
-        else
-        {
-            LockTransfrom = null;
+            Vector3 cameraForward = Camera.main.transform.forward;
+            AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
         }
 
-        Vector3 desiredCameraPos = TargetPosition + rotation * new Vector3(0, 0, -CameraToTargetDistance);
+        UpdateCameraPostion(TargetPosition, Quaternion.Euler(Mouse_y, Mouse_x + 15f, 0));
+    }
+
+    //更新攝影機的位置
+    private void UpdateCameraPostion(Vector3 targetPosition, Quaternion rotation)
+    {
+        Vector3 desiredCameraPos = targetPosition + rotation * new Vector3(0, 0, -CameraToTargetDistance);
 
         //設置RayCast來檢測碰撞
-        Vector3 direction = (desiredCameraPos - TargetPosition).normalized;
+        Vector3 direction = (desiredCameraPos - targetPosition).normalized;
         float distance = CameraToTargetDistance;
         int WallLayer = LayerMask.GetMask("Wall");
 
@@ -133,10 +164,18 @@ public class CameraController : MonoBehaviour
             distance = hit.distance - 0.5f;
         }
 
-        Vector3 finalPosition = TargetPosition + rotation * new Vector3(0, 0, -distance);
+        Vector3 finalPosition = targetPosition + rotation * new Vector3(0, 0, -distance);
 
         //設置攝影機位置
         transform.position = Vector3.SmoothDamp(transform.position, finalPosition, ref smoothVelocity, SmoothTime);
         transform.rotation = rotation;
+    }
+
+    //獲取瞄準輸入
+    private void SetAim(bool isAiming)
+    {
+        this.isAiming = isAiming;
+
+        target = isAiming ? playerTransfrom : originalTarget;
     }
 }
