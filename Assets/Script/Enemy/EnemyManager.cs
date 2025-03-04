@@ -28,6 +28,7 @@ public class EnemyManager : MonoBehaviour
         foreach(GameObject enemyPrefab in enemyPrefabList)
         {
             int enemyPrefabKey = enemyPrefab.GetInstanceID();
+            Debug.Log(" EnemyManager/Start Prefab key = " + enemyPrefabKey);
             enemyObjectPool.Add(enemyPrefabKey, new Queue<GameObject>());
         }
     }
@@ -40,6 +41,7 @@ public class EnemyManager : MonoBehaviour
     public void SpawnEnemy(GameObject spawnPrefab, Transform spawnTransform)
     {
         int spawnPrefabKey = spawnPrefab.GetInstanceID();
+        Debug.Log(" EnemyManager/SpawnEnemy Prefab key = " + spawnPrefabKey);
 
         if(enemyObjectPool.TryGetValue(spawnPrefabKey, out Queue<GameObject> enemyprefabQueue))
         {
@@ -72,6 +74,7 @@ public class EnemyManager : MonoBehaviour
     public void RecycleEnemy(GameObject enemyPrefab)
     {
         int enemyPrefabKey = enemyPrefab.GetInstanceID();
+        Debug.Log(" EnemyManager/RecycleEnemy Prefab key = " + enemyPrefabKey);
 
         if(enemyObjectPool.TryGetValue(enemyPrefabKey, out Queue<GameObject> enemyPrefabQueue))
         {

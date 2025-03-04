@@ -254,7 +254,6 @@ public class EnemyController : MonoBehaviour
 	
 	public void DestroySelf()
 	{
-		//Destroy(gameObject);
 		gameObject.SetActive(false);
 		EnemyManager.Instance.RecycleEnemy(gameObject);
 	}
@@ -265,6 +264,7 @@ public class EnemyController : MonoBehaviour
 		material.SetColor("_EmissionColor", Color.blue * 3f); // 設定發光 (藍色加強亮度)
 		material.SetColor("_RimColor", Color.cyan);
 
+		deadParticle.gameObject.SetActive(true);
 		deadParticle.Play();
 
 		float dissolveAmount = 0f;
