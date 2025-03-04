@@ -271,7 +271,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.Log("附近沒有敵人");
+            Debug.Log("解除鎖定敵人");
         }
     }
     //檢查敵人是否死亡

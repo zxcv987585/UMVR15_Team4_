@@ -10,8 +10,11 @@ public class CameraController : MonoBehaviour
     [Header("玩家瞄準模式時要跟隨的對象")]
     [SerializeField] Transform playerTransfrom;
 
-    [Header("玩家鎖定模式時要跟隨的對象")]
+    [Header("玩家鎖定模式時要看向的目標")]
     [SerializeField] Transform LockTransfrom;
+
+    [Header("玩家鎖定模式時要跟隨的對象")]
+    [SerializeField] Transform CameraPivotTransform;
 
     [Header("水平靈敏度")]
     [SerializeField] float sensitivity_x = 2;
@@ -31,6 +34,9 @@ public class CameraController : MonoBehaviour
     [Header("瞄準狀態下角色上半身的跟隨物")]
     [SerializeField] Transform AimTarget;
 
+    [Header("鎖定狀態攝影機的移動速度")]
+    [SerializeField] float LockOnTargetFollowSpeed;
+
     private Vector3 aimTargetPosition;
     //原本的跟隨目標
     private Transform originalTarget;
@@ -44,11 +50,10 @@ public class CameraController : MonoBehaviour
     float Mouse_y = 30;
     Vector3 smoothVelocity = Vector3.zero;
 
-    InputController input;
+    private InputController input;
+    private PlayerController player;
 
     private bool isAiming = false;
-    private bool isLocked = false;
-    private PlayerController playerController;
 
     private void Awake()
     {
@@ -57,13 +62,13 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
-        playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         GameInput.Instance.OnAimAction += SetAim;
 
         originalTarget = target;
-        if (playerController != null)
+        if (player != null)
         {
-            playerTransfrom = playerController.transform;
+            playerTransfrom = player.transform;
         }
     }
 
@@ -98,7 +103,6 @@ public class CameraController : MonoBehaviour
             if (AimTarget != null)
             {
                 Vector3 cameraForward = Camera.main.transform.forward;
-                //Vector3 cameraRight = Camera.main.transform.right;
                 AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
             }
         }
@@ -107,15 +111,20 @@ public class CameraController : MonoBehaviour
             CameraToTargetDistance = 3.5f;
         }
 
-        if (playerController.LockTarget != null)
+        if (player.LockTarget != null)
         {
-            LockTransfrom = playerController.LockTarget;
-            Vector3 Targetdirection = LockTransfrom.position - transform.position;
-            Targetdirection.y = 0f;
+            LockTransfrom = player.LockTarget;
+            Vector3 rotationDirection = LockTransfrom.transform.position - transform.position;
+            rotationDirection.Normalize();
+            rotationDirection.y = 0f;
+            Quaternion targetRotation = Quaternion.LookRotation(rotationDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, LockOnTargetFollowSpeed);
 
+            rotationDirection = LockTransfrom.position - CameraPivotTransform.position;
+            rotationDirection.Normalize();
 
-            Quaternion LookRotation = Quaternion.LookRotation(Targetdirection);
-            transform.rotation = Quaternion.Lerp(transform.rotation, LookRotation, Time.deltaTime * 5f);
+            targetRotation = Quaternion.LookRotation(rotationDirection);
+            CameraPivotTransform.transform.rotation = Quaternion.Slerp(CameraPivotTransform.rotation, targetRotation, LockOnTargetFollowSpeed);
         }
         else
         {
