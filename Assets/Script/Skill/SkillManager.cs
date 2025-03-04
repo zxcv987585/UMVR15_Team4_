@@ -42,8 +42,6 @@ public class SkillManager : MonoBehaviour
 	{
 		skillBind.Add(GameInput.Bind.Skill1, (default , skillSingleUIList[0]));
 		skillBind.Add(GameInput.Bind.Skill2, (default , skillSingleUIList[1]));
-		skillBind.Add(GameInput.Bind.Skill3, (default , skillSingleUIList[2]));
-		skillBind.Add(GameInput.Bind.Skill4, (default , skillSingleUIList[3]));
 	}
 
     public void SetSkillBind(GameInput.Bind bind, BaseSkill baseSkill)

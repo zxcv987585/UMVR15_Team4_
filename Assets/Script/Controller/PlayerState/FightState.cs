@@ -18,6 +18,8 @@ public class FightState : PlayerState
     public Action<string> AttackCombo;
     //傳送重置Trigger的指令給動畫控制器
     public Action<bool> isAttacking;
+    //傳送劍氣生成指令給WeaponManager
+    public event Action SwordSlash;
 
 
     public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) {}
@@ -70,44 +72,92 @@ public class FightState : PlayerState
 
     private void Attack()
     {
+        if (!CanAttack) return;
         if (player.LockTarget != null) 
         {
             Vector3 direction = (player.LockTarget.position - player.transform.position).normalized;
             direction.y = 0;
             player.transform.rotation = Quaternion.LookRotation(direction);
         }
-        if (!CanAttack) return;
 
         attackTimer = 0;
         CanAttack = false;
 
+        float distanceToEnemy = player.LockTarget != null ? Vector3.Distance(player.transform.position, player.LockTarget.position) : 0;
+        float MinDashDistance = 3f;
+
+        if (player.LockTarget != null && distanceToEnemy > MinDashDistance) 
+        {
+            player.StartPlayerCoroutine(DashAttack());
+        }
+        else
+        {
+            PerformAttack();
+        }
+    }
+
+    private IEnumerator DashAttack()
+    {
+        //突進攻擊持續時間
+        float dashAttackDuration = 0.2f;
+        //突進攻擊瞬間速度
+        float dashspeed = 30f;
+
+        Vector3 startPos = player.transform.position;
+        Vector3 TargetPos = player.LockTarget.position;
+
+        AttackCombo?.Invoke("DashAttack");
+
+        yield return new WaitForSeconds(0.25f);
+
+        float elapsedTime = 0f;
+        while (elapsedTime < dashAttackDuration) 
+        {
+            player.controller.Move((TargetPos - startPos).normalized * dashspeed * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        player.controller.Move((TargetPos - player.transform.position).normalized * 0.1f);
+        yield return new WaitForSeconds(0.3f);
+
+        PerformAttack();
+    }
+
+    private void PerformAttack()
+    {
         // 播放對應的攻擊動畫
         switch (currentComboStep)
         {
             case 0:
                 AttackCombo.Invoke("Attack1");
+                //SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
             case 1:
                 AttackCombo.Invoke("Attack2");
+                //SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
             case 2:
                 AttackCombo.Invoke("Attack3");
+                //SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
             case 3:
                 AttackCombo.Invoke("Attack4");
+                //SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
             case 4:
                 ResetCombo();
                 AttackCombo.Invoke("Attack1");
+                //SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
         }
 
-        player.StartCoroutine(AttackCoolDown());
+        player.StartPlayerCoroutine(AttackCoolDown());
     }
 
     private void ResetCombo()
