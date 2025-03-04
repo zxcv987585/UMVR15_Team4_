@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
-using static UnityEngine.GraphicsBuffer;
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,16 +16,24 @@ public class PlayerController : MonoBehaviour
     //宣告CC
     public CharacterController controller;
     //宣告血量系統
-    private Health health;
-
+    private PlayerHealth health;
+    //取得動畫控制器（用來開關RootMotion）
+    private Animator animator;
     //取得武器管理系統
     private WeaponManager weaponManager;
 
     [Header("玩家Data")]
-    public PlayerData playerData;
+    public PlayerDataSO playerData;
 
     [Tooltip("玩家的位移Vector3")]
     public Vector3 Velocity;
+
+    [Header("玩家特效")]
+    [Tooltip("玩家治療時的特效")]
+    [SerializeField] GameObject Heal;
+    [Tooltip("玩家奔跑時的特效")]
+    [SerializeField] GameObject Sprint;
+
 
     [Header("鎖定邏輯")]
     [Tooltip("動態存放鎖定的敵方單位")]
@@ -36,6 +42,9 @@ public class PlayerController : MonoBehaviour
     private float NextCheckTime = 0f;
     //多久檢查一次附近敵人
     private float CheckInterval = 0.2f;
+    //檢查玩家與敵人的距離
+    [SerializeField] float stopRootMotionDistance = 0.5f;
+
     //用來記錄最後一次Dash的時間
     private float lastDashTime = -Mathf.Infinity;
 
@@ -46,6 +55,7 @@ public class PlayerController : MonoBehaviour
     public bool isRolling { get; set; } = false;
     public bool isDash { get; set; } = false;
     public bool IsDie { get; set; } = false;
+    private bool CloseEnemy = false;
 
     //玩家受傷與死亡的Delegate事件
     public Action<string> OnHit;
@@ -53,10 +63,11 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        //初始化玩家身上掛載的CC、Health、WeaponManager
+        //初始化玩家身上掛載的CC、Health、WeaponManager、Animator
         controller = GetComponent<CharacterController>();
-        health = GetComponent<Health>();
+        health = GetComponent<PlayerHealth>();
         weaponManager = GetComponent<WeaponManager>();
+        animator = GetComponent<Animator>();
         //初始化時建立玩家狀態機
         stateMachine = gameObject.AddComponent<PlayerStateMachine>();
         //初始化所有狀態，讓狀態成為單例
@@ -100,6 +111,14 @@ public class PlayerController : MonoBehaviour
         {
             NextCheckTime = Time.time + CheckInterval;
             GetClosestEnemy();
+        }
+        if (LockTarget != null && CloseEnemy)
+        {
+            DisableRootMotion();
+        }
+        else
+        {
+            EnableRootMotion();
         }
     }
 
@@ -252,6 +271,7 @@ public class PlayerController : MonoBehaviour
             AutoUnlockEnemy();
         }
     }
+    //敵人死亡自動解除鎖定
     private void AutoUnlockEnemy()
     {
         if (LockTarget != null)
@@ -280,8 +300,26 @@ public class PlayerController : MonoBehaviour
                 CloseDistance = distance;
                 Target = enemy.transform;
             }
+            if(distance <= stopRootMotionDistance)
+            { 
+                CloseEnemy = true;
+            }
+            else
+            {
+                CloseEnemy = false;
+            }
         }
         return Target;
+    }
+    //檢查敵人與玩家距離是否需要開關RootMotion
+    private void EnableRootMotion()
+    {
+        animator.applyRootMotion = true;
+    }
+    private void DisableRootMotion()
+    {
+        animator.applyRootMotion = false;
+        Debug.Log("已關閉動畫的RootMotion");
     }
 
     //平滑旋轉角度

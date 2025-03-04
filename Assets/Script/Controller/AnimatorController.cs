@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimatorContoller : MonoBehaviour
+public class AnimatorController : MonoBehaviour
 {
     Animator animator;
     PlayerController player;
-    Health health;
+    PlayerHealth health;
 
     private bool isDead;
 
@@ -15,7 +15,7 @@ public class AnimatorContoller : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         player = GetComponent<PlayerController>();
-        health = GetComponent<Health>();
+        health = GetComponent<PlayerHealth>();
 
         if (player != null)
         {
@@ -39,7 +39,7 @@ public class AnimatorContoller : MonoBehaviour
         if (isDead) return;
         isDead = true;
         animator.SetBool("Dead", true);
-        Debug.Log("¨¤¦â¦º¤`");
+        Debug.Log("Šß‰Æ›ßŽ€–S");
         //animator.speed = 0;
 
         health.OnDead -= Dead;
