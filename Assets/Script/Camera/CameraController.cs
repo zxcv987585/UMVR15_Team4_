@@ -10,7 +10,7 @@ public class CameraController : MonoBehaviour
     [Header("玩家瞄準模式時要跟隨的對象")]
     [SerializeField] Transform playerTransfrom;
 
-    [Header("玩家瞄準模式時要跟隨的對象")]
+    [Header("玩家鎖定模式時要跟隨的對象")]
     [SerializeField] Transform LockTransfrom;
 
     [Header("水平靈敏度")]
@@ -98,7 +98,7 @@ public class CameraController : MonoBehaviour
             if (AimTarget != null)
             {
                 Vector3 cameraForward = Camera.main.transform.forward;
-                Vector3 cameraRight = Camera.main.transform.right;
+                //Vector3 cameraRight = Camera.main.transform.right;
                 AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
             }
         }
@@ -112,6 +112,7 @@ public class CameraController : MonoBehaviour
             LockTransfrom = playerController.LockTarget;
             Vector3 Targetdirection = LockTransfrom.position - transform.position;
             Targetdirection.y = 0f;
+
 
             Quaternion LookRotation = Quaternion.LookRotation(Targetdirection);
             transform.rotation = Quaternion.Lerp(transform.rotation, LookRotation, Time.deltaTime * 5f);

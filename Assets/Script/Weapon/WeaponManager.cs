@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -31,6 +32,7 @@ public class WeaponManager : MonoBehaviour
     {
         EquipWeapon(defualtWeapon);
         player = GetComponent<PlayerController>();
+        //player.fightState.SwordSlash += SpawnSwordSlash;
     }
 
     private void Update()
@@ -42,6 +44,21 @@ public class WeaponManager : MonoBehaviour
         }
     }
 
+    private void SpawnSwordSlash()
+    {
+        if (player.SwordSlash != null && attackPoint != null)
+        {
+            StartCoroutine(SwordSlshSpawmTime());
+            GameObject SwordEffect = GameObject.Instantiate(player.SwordSlash, attackPoint.position, attackPoint.rotation);
+        
+            SwordEffect.transform.position = attackPoint.transform.position;
+        }
+    }
+    IEnumerator SwordSlshSpawmTime()
+    {
+        yield return new WaitForSeconds(0.2f);
+    }
+
     public void Attack()
     {
         Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, player.playerData.EnemyLayer);
@@ -49,6 +66,10 @@ public class WeaponManager : MonoBehaviour
         {
             Debug.Log($"擊中 {enemy.name}");
             enemy.GetComponent<Health>().TakeDamage(player.playerData.attackDamage);
+            if(player.HitEffect != null)
+            {
+                GameObject hitEffect = GameObject.Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
+            }
         }
     }
 

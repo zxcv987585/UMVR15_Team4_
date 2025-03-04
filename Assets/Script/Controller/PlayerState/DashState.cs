@@ -16,6 +16,7 @@ public class DashState : PlayerState
 
     public override void Enter()
     {
+        player.Invincible = true;
         DashReset?.Invoke(false);
         Dash?.Invoke("Dash");
         dashTimer = player.playerData.DashDuration;
@@ -50,6 +51,7 @@ public class DashState : PlayerState
             return;
         }
         player.isDash = false;
+        player.Invincible = false;
         StateMachine.ChangeState(player.idleState);
         ForceIdle?.Invoke(true);
         player.Velocity = Vector3.zero;

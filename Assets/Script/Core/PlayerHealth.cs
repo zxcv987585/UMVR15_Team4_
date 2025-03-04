@@ -9,7 +9,12 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] float MaxHealth;
     [Header("當前血量")]
     [SerializeField] float CurrentHealth;
+    [Header("玩家特效")]
+    [Tooltip("玩家治療時的特效")]
+    [SerializeField] GameObject HealEffect;
     [SerializeField] LevelSystem levelSystem;
+
+    private PlayerController player;
 
     //受到攻擊時要觸發的委派事件
     public event Action OnDamage;
@@ -32,6 +37,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Awake()
     {
+        player = GetComponent<PlayerController>();
         levelSystem = GetComponent<LevelSystem>();
         levelSystem.PlayerLevelup += NewMaxHealth;
     }
@@ -74,7 +80,7 @@ public class PlayerHealth : MonoBehaviour
     //受傷函式，用於傳入傷害
     public void TakeDamage(float damage)
     {
-        if (Isdead) return;
+        if (Isdead || player.Invincible) return;
 
         Debug.Log($"受到共{damage}傷害！剩餘血量：{CurrentHealth}");
         CurrentHealth -= damage;
@@ -111,5 +117,15 @@ public class PlayerHealth : MonoBehaviour
     {
         CurrentHealth += amount;
         CurrentHealth = Mathf.Min(CurrentHealth, MaxHealth);
+
+        if (HealEffect != null)
+        {
+            GameObject healEffect = Instantiate(HealEffect, transform.position + Vector3.up * 1f, Quaternion.identity);
+            healEffect.transform.SetParent(transform);
+        }
+        else
+        {
+            Debug.Log("沒有治癒特效可用");
+        }
     }
 }
