@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject Sprint;
     [Tooltip("玩家揮劍時的特效")]
     public GameObject SwordSlash;
+    [Tooltip("玩家擊中時的特效")]
+    public GameObject HitEffect;
 
     [Header("鎖定邏輯")]
     [Tooltip("動態存放鎖定的敵方單位")]
@@ -55,6 +57,7 @@ public class PlayerController : MonoBehaviour
     public bool IsDie { get; set; } = false;
     public bool CloseEnemy { get; set; } = false;
     public bool Invincible { get; set; } = false;
+    public bool InItemMenu { get; set; } = false;
 
     //玩家受傷與死亡的Delegate事件
     public Action<string> OnHit;
@@ -90,6 +93,7 @@ public class PlayerController : MonoBehaviour
         GameInput.Instance.OnAttackAction += SetIsAttack;
         GameInput.Instance.OnDashkAction += Dash;
         GameInput.Instance.OnLockAction += LockOn;
+        GameInput.Instance.OnItemMenu += ItemMenu;
         //Delegate訂閱事件
         health.OnDamage += GetHit;
         health.OnDead += Died;
@@ -167,7 +171,7 @@ public class PlayerController : MonoBehaviour
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
-        if (IsDie || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+        if (IsDie || InItemMenu ||stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
 
         isAttack = Attack;
     }
@@ -181,7 +185,7 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (IsDie) return;
+        if (IsDie || InItemMenu || stateMachine.GetState<DashState>() != null) return;
 
         isAiming = isAim;
     }
@@ -328,6 +332,13 @@ public class PlayerController : MonoBehaviour
     {
         animator.applyRootMotion = false;
         Debug.Log("已關閉動畫的RootMotion");
+    }
+
+    //進入道具系統的邏輯
+    private void ItemMenu()
+    {
+        if(InItemMenu == false) InItemMenu = true;
+        if(InItemMenu == true ) InItemMenu = false;
     }
 
     //平滑旋轉角度

@@ -21,12 +21,14 @@ public class GameInput : MonoBehaviour
 		LockOn,
 		Skill1,
 		Skill2,
+		ItemMenu
 	}
 
 	public event Action<bool> OnAttackAction;
 	public event Action<bool> OnAimAction;
 	public event Action OnDashkAction;
     public event Action OnLockAction;
+    public event Action OnItemMenu;
     public event Action<bool> OnSprintAction;
 	public event Action<Bind> OnSkillAction;
 	
@@ -55,6 +57,7 @@ public class GameInput : MonoBehaviour
 		playerInputAction.Player.LockOn.performed += LockOn_performed;
         playerInputAction.Player.Skill1.performed += Skill1_performed;
 		playerInputAction.Player.Skill2.performed += Skill2_performed;
+		playerInputAction.Player.ItemMenu.performed += ItemMenu_performed;
 	}
 
     private void AttackRelease_Performed(InputAction.CallbackContext context)
@@ -120,8 +123,16 @@ public class GameInput : MonoBehaviour
 		if(canInput)
 			OnSkillAction?.Invoke(Bind.Skill2);
 	}
+    private void ItemMenu_performed(InputAction.CallbackContext context)
+    {
+		if (canInput)
+		{
+			OnItemMenu?.Invoke();
+		}
+    }
 
-	private void SaveRebind()
+
+    private void SaveRebind()
 	{
 		string rebind = playerInputAction.SaveBindingOverridesAsJson();
 		PlayerPrefs.SetString(REBIND, rebind);

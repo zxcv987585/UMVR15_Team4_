@@ -131,28 +131,28 @@ public class FightState : PlayerState
         {
             case 0:
                 AttackCombo.Invoke("Attack1");
-                SwordSlash.Invoke();
+                //SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
             case 1:
                 AttackCombo.Invoke("Attack2");
-                SwordSlash.Invoke();
+                //SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
             case 2:
                 AttackCombo.Invoke("Attack3");
-                SwordSlash.Invoke();
+                //SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
             case 3:
                 AttackCombo.Invoke("Attack4");
-                SwordSlash.Invoke();
+                //SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
             case 4:
                 ResetCombo();
                 AttackCombo.Invoke("Attack1");
-                SwordSlash.Invoke();
+                //SwordSlash.Invoke();
                 player.isAttack = false;
                 break;
         }

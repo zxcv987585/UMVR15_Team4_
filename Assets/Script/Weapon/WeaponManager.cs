@@ -32,7 +32,7 @@ public class WeaponManager : MonoBehaviour
     {
         EquipWeapon(defualtWeapon);
         player = GetComponent<PlayerController>();
-        player.fightState.SwordSlash += SpawnSwordSlash;
+        //player.fightState.SwordSlash += SpawnSwordSlash;
     }
 
     private void Update()
@@ -51,7 +51,7 @@ public class WeaponManager : MonoBehaviour
             StartCoroutine(SwordSlshSpawmTime());
             GameObject SwordEffect = GameObject.Instantiate(player.SwordSlash, attackPoint.position, attackPoint.rotation);
         
-            SwordEffect.transform.position = player.transform.position;
+            SwordEffect.transform.position = attackPoint.transform.position;
         }
     }
     IEnumerator SwordSlshSpawmTime()
@@ -66,6 +66,10 @@ public class WeaponManager : MonoBehaviour
         {
             Debug.Log($"擊中 {enemy.name}");
             enemy.GetComponent<Health>().TakeDamage(player.playerData.attackDamage);
+            if(player.HitEffect != null)
+            {
+                GameObject hitEffect = GameObject.Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
+            }
         }
     }
 
