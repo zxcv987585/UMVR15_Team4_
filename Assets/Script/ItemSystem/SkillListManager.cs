@@ -42,10 +42,8 @@ public class SkillListManager : MonoBehaviour
             {
                 skillSlots[i].skillData = null;
             }
-            skillSlots[i].UpdateSlot();
+            skillSlots[i].UpdateSkillListSlot();
         }
-
-        SkillHotbarManager.instance.RefreshHotbarUI();
     }
 
     public void UnlockSkill(int index)

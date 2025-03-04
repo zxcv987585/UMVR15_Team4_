@@ -17,7 +17,8 @@ public class SkillSlot : MonoBehaviour
         slotIndex = index;
     }
 
-    public void UpdateSlot()
+    //更新技能列表UI
+    public void UpdateSkillListSlot()
     {
         SkillListManager skillListManager = SkillListManager.instance;
 
@@ -34,6 +35,21 @@ public class SkillSlot : MonoBehaviour
             skillImage.sprite = null;
             skillImage.enabled = false;
             skillNameText.text = "-";
+        }
+    }
+
+    //更新技能快捷欄UI
+    public void UpdateHotbarSlot()
+    {
+        if (skillData != null)
+        {
+            skillImage.sprite = skillData.skillIcon;
+            skillImage.enabled = true;
+        }
+        else
+        {
+            skillImage.sprite = null;
+            skillImage.enabled = false;
         }
     }
 }

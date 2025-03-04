@@ -17,6 +17,15 @@ public class SkillHotbarManager : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        //確保每個hotbar slot有正確的index
+        for (int i = 0; i < hotbarSlots.Count; i++)
+        {
+            hotbarSlots[i].SetSlotIndex(i);
+        }
+    }
+
     public void AssignSkillToHotbar(SkillDataSO skill, int slotIndex)
     {
         if (slotIndex < 0 || slotIndex >= hotbarSlots.Count) return;
@@ -37,17 +46,17 @@ public class SkillHotbarManager : MonoBehaviour
         {
             //清除原本快捷欄內的道具
             previousSlot.skillData = null;
-            previousSlot.UpdateSlot();
+            previousSlot.UpdateHotbarSlot();
         }
 
         hotbarSlots[slotIndex].skillData = skill;
-        hotbarSlots[slotIndex].UpdateSlot();
+        hotbarSlots[slotIndex].UpdateHotbarSlot();
     }
     public void RefreshHotbarUI()
     {
-        foreach (SkillSlot slot in hotbarSlots)
+        for (int i = 0; i < hotbarSlots.Count; i++)
         {
-            slot.UpdateSlot();
+            hotbarSlots[i].UpdateHotbarSlot(); 
         }
     }
 }
