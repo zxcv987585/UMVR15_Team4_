@@ -37,8 +37,6 @@ public class CameraController : MonoBehaviour
 
     [Header("鎖定狀態攝影機的移動速度")]
     [SerializeField] float LockOnTargetFollowSpeed;
-
-    private Vector3 aimTargetPosition;
     //原本的跟隨目標
     private Transform originalTarget;
 
@@ -55,6 +53,7 @@ public class CameraController : MonoBehaviour
     private PlayerController player;
 
     private bool isAiming = false;
+    private bool isLocked => player?.LockTarget != null;
 
     private void Awake()
     {
@@ -89,37 +88,20 @@ public class CameraController : MonoBehaviour
         {
             HandleAimMode();
         }
+        else if (isLocked)
+        {
+            HandleLockMode();
+        }
         else
         {
             HandleNormalFollow();
         }
-
-        //if (player.LockTarget != null)
-        //{
-        //    LockTransfrom = player.LockTarget;
-        //    Vector3 rotationDirection = LockTransfrom.transform.position - transform.position;
-        //    rotationDirection.Normalize();
-        //    rotationDirection.y = 0f;
-        //    Quaternion targetRotation = Quaternion.LookRotation(rotationDirection);
-        //    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, LockOnTargetFollowSpeed);
-
-        //    rotationDirection = LockTransfrom.position - CameraPivotTransform.position;
-        //    rotationDirection.Normalize();
-
-        //    targetRotation = Quaternion.LookRotation(rotationDirection);
-        //    CameraPivotTransform.transform.rotation = Quaternion.Slerp(CameraPivotTransform.rotation, targetRotation, LockOnTargetFollowSpeed);
-        //}
-        //else
-        //{
-        //    LockTransfrom = null;
-        //}
-
-       
     }
 
     //攝影機輸入邏輯
     private void HandleCameraRotation()
     {
+        if (isLocked) return;
         //處裡滑鼠輸入來旋轉攝影機
         Mouse_x += input.GetMouseXAxis() * sensitivity_x;
         Mouse_y -= input.GetMouseYAxis() * sensitivity_y;
@@ -133,6 +115,7 @@ public class CameraController : MonoBehaviour
         UpdateCameraPostion(target.position + Vector3.up * offset.y, Quaternion.Euler(Mouse_y, Mouse_x, 0));
     }
 
+    //瞄準模式下的攝影機邏輯
     private void HandleAimMode()
     {
         Vector3 TargetPosition = playerTransfrom.position;
@@ -147,6 +130,35 @@ public class CameraController : MonoBehaviour
         }
 
         UpdateCameraPostion(TargetPosition, Quaternion.Euler(Mouse_y, Mouse_x + 15f, 0));
+    }
+
+    //鎖定模式下的攝影機邏輯
+    private void HandleLockMode()
+    {
+        LockTransfrom = player.LockTarget;
+        if (LockTransfrom == null) return;
+
+        Vector3 targetPoition = CameraPivotTransform.position;
+        Vector3 desiredCameraPos = targetPoition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
+
+        int WallLayer = LayerMask.GetMask("Wall");
+        if (Physics.Raycast(targetPoition, (desiredCameraPos - targetPoition).normalized, out RaycastHit hit, CameraToTargetDistance, WallLayer)) ;
+
+        Vector3 finalPosition = targetPoition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
+        transform.position = Vector3.SmoothDamp(transform.position, finalPosition, ref smoothVelocity, SmoothTime);
+
+        Vector3 rotationDirection = LockTransfrom.transform.position - transform.position;
+        rotationDirection.Normalize();
+        rotationDirection.y = 0f;
+
+        Quaternion targetRotation = Quaternion.LookRotation(rotationDirection);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, LockOnTargetFollowSpeed);
+
+        rotationDirection = LockTransfrom.position - CameraPivotTransform.position;
+        rotationDirection.Normalize();
+
+        targetRotation = Quaternion.LookRotation(rotationDirection);
+        CameraPivotTransform.transform.rotation = Quaternion.Slerp(CameraPivotTransform.rotation, targetRotation, LockOnTargetFollowSpeed);
     }
 
     //更新攝影機的位置
