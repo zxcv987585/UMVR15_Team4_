@@ -10,4 +10,5 @@ public class SkillDataSO : ScriptableObject
 	public int cooldownTime;
 	public int damage;
 	public bool isUnlocked;
+	public string weapon;
 }
