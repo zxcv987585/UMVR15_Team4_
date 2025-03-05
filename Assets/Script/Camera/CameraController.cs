@@ -37,7 +37,9 @@ public class CameraController : MonoBehaviour
 
     [Header("鎖定狀態攝影機的移動速度")]
     [SerializeField] float LockOnTargetFollowSpeed;
-    
+
+    //攝影機切換前的位置
+    private Vector3 OriginCameraPosition;
     //原本的跟隨目標
     private Transform originalTarget;
     //攝影機預設的距離
@@ -60,13 +62,9 @@ public class CameraController : MonoBehaviour
     private bool isAiming = false;
     private bool isLocked => player?.LockTarget != null;
 
-    private void Awake()
-    {
-        input = GameManagerSingleton.Instance.InputControl;
-    }
-
     private void Start()
     {
+        input = GameManagerSingleton.Instance.InputControl;
         player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         GameInput.Instance.OnAimAction += SetAim;
 
@@ -114,9 +112,9 @@ public class CameraController : MonoBehaviour
         Mouse_y -= input.GetMouseYAxis() * sensitivity_y;
         Mouse_y = Math.Clamp(Mouse_y, MinVerticalAngle, MaxVerticalAngle);
     }
-    
+
     //平常的攝影機跟隨狀態
-    private void HandleNormalFollow() 
+    private void HandleNormalFollow()
     {
         CameraToTargetDistance = 3.5f;
         UpdateCameraPostion(target.position + Vector3.up * offset.y, Quaternion.Euler(Mouse_y, Mouse_x, 0));
@@ -145,12 +143,12 @@ public class CameraController : MonoBehaviour
         LockTransfrom = player.LockTarget;
         if (LockTransfrom == null || isAiming) return;
 
-        Vector3 targetPoition = CameraPivotTransform.position + Vector3.up * 0.03f;
+        Vector3 targetPoition = CameraPivotTransform.position + Vector3.up * 1.3f;
         Vector3 desiredCameraPos = targetPoition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
 
         int WallLayer = LayerMask.GetMask("Wall");
         float targetDistance = DefaultCameraToTargetDistance;
-        if (Physics.Raycast(targetPoition, (desiredCameraPos - targetPoition).normalized, out RaycastHit hit, CameraToTargetDistance, WallLayer)) 
+        if (Physics.Raycast(targetPoition, (desiredCameraPos - targetPoition).normalized, out RaycastHit hit, CameraToTargetDistance, WallLayer))
         {
             targetDistance = Mathf.Lerp(PreviousCameraToTargetDistance, hit.distance - 0.2f, Time.deltaTime * 10f);
         }
