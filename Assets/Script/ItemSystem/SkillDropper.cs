@@ -20,17 +20,29 @@ public class SkillDropper : MonoBehaviour, IDropHandler
 
         
 
-        //¥u¤¹³\§Þ¯à©ì¦²¨ìSkillHotbar
+        //ï¿½uï¿½ï¿½ï¿½\ï¿½Þ¯ï¿½ì¦²ï¿½ï¿½SkillHotbar
         if (transform.CompareTag("SkillHotbar") && dragger.gameObject.CompareTag("SkillList"))
         {
-            //¥Î¦¹¤èªk¬d¯Á¤Þ­È¡AÁ×§KHierarchy±Æ³\³y¦¨¯Á¤Þ­È¿ù¶Ãªº°ÝÃD¡I¡I¡I
+            //ï¿½Î¦ï¿½ï¿½ï¿½kï¿½dï¿½ï¿½ï¿½Þ­È¡Aï¿½×§KHierarchyï¿½Æ³\ï¿½yï¿½ï¿½ï¿½ï¿½ï¿½Þ­È¿ï¿½ï¿½Ãªï¿½ï¿½ï¿½ï¿½Dï¿½Iï¿½Iï¿½I
             int slotIndex = SkillHotbarManager.instance.hotbarSlots.IndexOf(GetComponent<SkillSlot>());
 
-            //¨ú±o§Þ¯àªºweapon¦WºÙ
+            //ï¿½ï¿½ï¿½oï¿½Þ¯àªºweaponï¿½Wï¿½ï¿½
             Debug.Log(dragger.GetOriginSlot().GetComponent<SkillSlot>().skillData.weapon);
             SkillHotbarManager.instance.AssignSkillToHotbar(dragger.GetSkill(), slotIndex);
             SkillHotbarManager.instance.RefreshHotbarUI();
-
+            
+            switch(targetSlot.slotIndex)
+            {
+                case 0:
+                    SkillManager.Instance.SetSkillBind(GameInput.Bind.Skill1, dragger.GetSkill());
+                    break;
+                case 1:
+                    SkillManager.Instance.SetSkillBind(GameInput.Bind.Skill2, dragger.GetSkill());
+                    break;
+                default:
+                    Debug.Log(" SkillDropper ï¿½b switch targetSlot.slotIndex ï¿½Xï¿½{ï¿½ï¿½ï¿½~");
+                    break;
+            }
         }
     }
 }

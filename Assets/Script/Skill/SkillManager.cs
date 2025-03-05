@@ -6,50 +6,46 @@ using UnityEngine;
 
 public class SkillManager : MonoBehaviour
 {
-	[SerializeField] private List<SkillSingleUI> skillSingleUIList;
-	[SerializeField] private List<BaseSkill> baseSkillList;
+	public static SkillManager Instance {get; private set;}
 	
-	private Dictionary<GameInput.Bind, (BaseSkill skill, SkillSingleUI ui)> skillBind;
+	[SerializeField] private SkillDataLibrarySO skillDataLibrarySO;
 	
-	private void Start()
+	private Dictionary<GameInput.Bind, BaseSkill> skillBind;
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    private void Start()
 	{
-		skillBind = new Dictionary<GameInput.Bind, (BaseSkill skill, SkillSingleUI ui)>();
+		skillBind = new Dictionary<GameInput.Bind, BaseSkill>();
 		
 		GameInput.Instance.OnSkillAction += UseSkill;
-		InitSkillBind();
-
-		SetSkillBind(GameInput.Bind.Skill1, baseSkillList[0]);
-		SetSkillBind(GameInput.Bind.Skill2, baseSkillList[1]);
 	}
 
 	private void UseSkill(GameInput.Bind bind)
 	{
-		if(skillBind.TryGetValue(bind, out var data))
+		if(skillBind.TryGetValue(bind, out BaseSkill baseSkill))
 		{
-			if(data.skill != null)
+			if(baseSkill.canUse)
 			{
-				if(data.skill.canUse)
-				{
-					data.skill.Use();
-
-            		data.ui.StarCoolDown(data.skill.GetSkillDataSO().cooldownTime);
-				}
+				baseSkill.Use();
 			}
-        }
+		}
     }
 
-	private void InitSkillBind()
+	// 綁定 Skill 對應的技能
+    public void SetSkillBind(GameInput.Bind bind, SkillDataSO skillDataSO)
 	{
-		skillBind.Add(GameInput.Bind.Skill1, (default , skillSingleUIList[0]));
-		skillBind.Add(GameInput.Bind.Skill2, (default , skillSingleUIList[1]));
-	}
+		// 如果目前該按鍵已有綁定, 則先清除元件
+		if(skillBind.TryGetValue(bind, out BaseSkill baseSkill))
+		{
+			Destroy(baseSkill.gameObject);
+		}
 
-    public void SetSkillBind(GameInput.Bind bind, BaseSkill baseSkill)
-	{
-		BaseSkill newSkill = Instantiate(baseSkill,transform);
-		SkillSingleUI skillSingleUI = skillBind[bind].ui;
-		skillSingleUI.UpdateVisual(newSkill.GetSkillDataSO(), bind);
-
-		skillBind[bind] = (newSkill, skillSingleUI);
+		GameObject baseSkillPrefab = Instantiate(skillDataLibrarySO.GetSkillPrefab(skillDataSO), transform);
+		skillBind[bind] = baseSkillPrefab.GetComponent<BaseSkill>();
 	}
 }
