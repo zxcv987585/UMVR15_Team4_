@@ -14,11 +14,15 @@ public class Skill_FlySword : BaseSkill
     public override void SkillAbility()
     {
         Transform playerTransform = FindObjectOfType<PlayerController>()?.transform;
-        transform.position = playerTransform.position;
-        transform.forward = playerTransform.forward;
-        skillParticleSystem.Play();
 
-        StartCoroutine(AttackCheckCoroutine());
+        if(playerTransform != null)
+        {
+            transform.position = playerTransform.position;
+            transform.forward = playerTransform.forward;
+            skillParticleSystem.Play();
+
+            StartCoroutine(AttackCheckCoroutine());
+        }
     }
 
     private IEnumerator AttackCheckCoroutine()

@@ -9,13 +9,13 @@ public class SkillDataLibrarySO : ScriptableObject
     public class SkillData
     {
         public SkillDataSO skillDataSO;
-        public BaseSkill skillPrefab;
+        public GameObject skillPrefab;
     }
     
     [SerializeField] private List<SkillData> skillDataList;
     
     // 傳入 SkillDataSO, 取得對應的 Prefab
-    public BaseSkill GetSkillPrefab(SkillDataSO skillDataSO)
+    public GameObject GetSkillPrefab(SkillDataSO skillDataSO)
     {
         foreach(SkillData skillData in skillDataList)
         {
