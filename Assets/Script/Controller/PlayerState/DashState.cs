@@ -9,7 +9,6 @@ public class DashState : PlayerState
     private Vector3 dashDirection;
 
     public Action<String> Dash;
-    public Action<bool> DashReset;
     public Action<bool> ForceIdle;
 
     public DashState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) { }
@@ -17,7 +16,6 @@ public class DashState : PlayerState
     public override void Enter()
     {
         player.Invincible = true;
-        DashReset?.Invoke(false);
         Dash?.Invoke("Dash");
         dashTimer = player.playerData.DashDuration;
 
@@ -55,7 +53,6 @@ public class DashState : PlayerState
         StateMachine.ChangeState(player.idleState);
         ForceIdle?.Invoke(true);
         player.Velocity = Vector3.zero;
-        DashReset?.Invoke(true);  
     }
 
     public override void Move() { }

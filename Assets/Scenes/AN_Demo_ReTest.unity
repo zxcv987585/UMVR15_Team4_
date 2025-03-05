@@ -9256,7 +9256,7 @@ PrefabInstance:
     - target: {fileID: 1468929069838653373, guid: 22eca212736e34f669a7308846a42048, type: 3}
       propertyPath: playerTransfrom
       value: 
-      objectReference: {fileID: 1355333780}
+      objectReference: {fileID: 2068853391}
     - target: {fileID: 1468929069838653373, guid: 22eca212736e34f669a7308846a42048, type: 3}
       propertyPath: CameraPivotTransform
       value: 
@@ -10941,7 +10941,6 @@ MonoBehaviour:
   Player: {fileID: 1355333780}
   DistanceToTarget: 0.1
   StartHight: 0
-  SmoothTime: 0.13
 --- !u!4 &2068853391
 Transform:
   m_ObjectHideFlags: 0
