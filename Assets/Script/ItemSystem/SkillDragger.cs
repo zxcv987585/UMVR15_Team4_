@@ -42,6 +42,7 @@ public class SkillDragger : MonoBehaviour, IBeginDragHandler,IDragHandler ,IEndD
         dragOriginParent = transform.parent;
         transform.SetParent(mainCanvas.transform);
         transform.localScale = transform.localScale * 1.2f;
+        dragImage.color = new Color(dragImage.color.r * 0.75f, dragImage.color.g * 0.75f, dragImage.color.b * 0.75f, dragImage.color.a);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -68,6 +69,7 @@ public class SkillDragger : MonoBehaviour, IBeginDragHandler,IDragHandler ,IEndD
         transform.SetParent(dragOriginParent);
         transform.localPosition = Vector3.zero;
         transform.localScale = Vector3.one;
+        dragImage.color = Color.white;
 
         if (dragImage != null)
         {

@@ -10,6 +10,7 @@ public class SkillSlot : MonoBehaviour
     public int slotIndex;
     public SkillDataSO skillData;
     public Image skillImage;
+    public Image slotImage;
     public TextMeshProUGUI skillNameText;
 
     public void SetSlotIndex(int index)
@@ -25,7 +26,8 @@ public class SkillSlot : MonoBehaviour
         if (skillListManager.mySkill.skillList.Count > slotIndex)
         {
             skillData = skillListManager.mySkill.skillList[slotIndex];
-           
+
+            slotImage.sprite = skillData.skillIcon;
             skillImage.sprite = skillData.skillIcon;
             skillImage.enabled = true;
             skillNameText.text = skillData.skillName;

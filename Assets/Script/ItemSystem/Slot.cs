@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 
 //代表背包內的一個slot 負責顯示myBag itemlist內對應的道具
@@ -12,9 +13,15 @@ public class Slot : MonoBehaviour
     public int slotIndex;
     public ItemData slotItem;
     public Image itemImage;
+    public Image slotImage;
+    public Sprite nullImage;
     public TextMeshProUGUI itemNumText;
     public TextMeshProUGUI itemName;
 
+    private void Awake()
+    {
+        nullImage = GetComponent<Image>().sprite;
+    }
     public void SetSlotIndex(int index)
     {
         //設定該slot對應myBag item List的哪一格
@@ -32,6 +39,7 @@ public class Slot : MonoBehaviour
             //抓取 mybag item list 的數值
             slotItem = inventoryManager.myBag.itemList[slotIndex];
 
+            slotImage.sprite = slotItem.itemIcon;
             itemImage.sprite = slotItem.itemIcon;
             itemImage.enabled = true;
             itemName.text = slotItem.itemName;
@@ -50,6 +58,7 @@ public class Slot : MonoBehaviour
         else
         {
             //清空Slot的UI
+            slotImage.sprite = nullImage;
             itemImage.sprite = null;
             itemImage.enabled = false;
             itemNumText.text = "";

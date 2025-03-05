@@ -9,13 +9,20 @@ using UnityEngine.UI;
 public class HotbarSlot : MonoBehaviour
 {
     public ItemData slotItem;
+    public Image ItemImage;
     public Image slotImage;
+    public Sprite nullImage;
     public TextMeshProUGUI slotNumtText;
+
+    private void Awake()
+    {
+        nullImage = GetComponent<Image>().sprite;
+    }
 
     public void SetItem(ItemData newItem)
     {
         slotItem = newItem;
-        slotImage.sprite = newItem != null ? newItem.itemIcon : null;
+        ItemImage.sprite = newItem != null ? newItem.itemIcon : null;
         slotNumtText.text = (newItem != null && newItem.isStack) ? newItem.itemNum.ToString() : "";
     }
 
@@ -24,20 +31,22 @@ public class HotbarSlot : MonoBehaviour
         if (slotItem != null)
         {
             slotImage.sprite = slotItem.itemIcon;
-            slotImage.enabled = true;
+            ItemImage.sprite = slotItem.itemIcon;
+            ItemImage.enabled = true;
             slotNumtText.text = slotItem.isStack ? slotItem.itemNum.ToString() : "";
         }
         else
         {
-            slotImage.sprite = null;
-            slotImage.enabled = false;
+            slotImage.sprite = nullImage;
+            ItemImage.sprite = null;
+            ItemImage.enabled = false;
             slotNumtText.text = "";
         }
     }
     public void ClearSlot()
     {
         slotItem = null;
-        slotImage.sprite = null;
+        ItemImage.sprite = null;
         slotNumtText.text = "";
     }
 }
