@@ -6,8 +6,12 @@ using UnityEngine;
 public class AnimatorController : MonoBehaviour
 {
     Animator animator;
+    RuntimeAnimatorController DefaultController;
     PlayerController player;
     PlayerHealth health;
+
+    public SkillManager skillQ;
+    public SkillManager skillE;
 
     private bool isDead;
 
@@ -16,6 +20,8 @@ public class AnimatorController : MonoBehaviour
         animator = GetComponent<Animator>();
         player = GetComponent<PlayerController>();
         health = GetComponent<PlayerHealth>();
+
+        DefaultController = animator.runtimeAnimatorController;
 
         if (player != null)
         {
@@ -39,7 +45,7 @@ public class AnimatorController : MonoBehaviour
         if (isDead) return;
         isDead = true;
         animator.SetBool("Dead", true);
-        Debug.Log("Šß‰Æ›ßŽ€–S");
+        Debug.Log("ª±®a¦º¤`");
         //animator.speed = 0;
 
         health.OnDead -= Dead;
@@ -87,7 +93,7 @@ public class AnimatorController : MonoBehaviour
 
     private void Dash(string isDash)
     {
-        animator.SetTrigger(isDash);
+        animator.CrossFade("SlideDash", 0f);
     }
 
     private void Sprint(bool sprint)
