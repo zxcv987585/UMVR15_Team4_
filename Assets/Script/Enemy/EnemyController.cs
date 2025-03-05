@@ -9,7 +9,8 @@ public class EnemyController : MonoBehaviour
 {
 	[SerializeField] private EnemyDataSO enemyDataSO;
 	[SerializeField] private EnemyAnimatorController enemyAnimatorController;
-	[SerializeField] private EnemyAttackHandler enemyAttackHandler;
+	[SerializeField] private MonoBehaviour enemyAttackMonoBehaviour;
+	private IEnemyAttack enemyAttack;
 
 	[SerializeField] private Renderer dissolveRenderer;
 	[SerializeField] private ParticleSystem deadParticle;
@@ -27,45 +28,51 @@ public class EnemyController : MonoBehaviour
 	
 	private void Start()
 	{
+		//抓取起始元件
 		rb = GetComponent<Rigidbody>();
 		bodyCollider = GetComponent<Collider>();
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		playerTransform = FindObjectOfType<PlayerController>()?.transform;
 		material = dissolveRenderer.material;
+		enemyAttack = (IEnemyAttack)enemyAttackMonoBehaviour;
 
+		//設定 血量
 		health = GetComponent<Health>();
 		health.SetMaxHealth(enemyDataSO.maxHP);
 		health.OnDamage += DamageEvent;
 		health.OnDead += DeadEvent;
 
+		//設定 NavMeshAgent
 		navMeshAgent.stoppingDistance = enemyDataSO.attackRange;
 		navMeshAgent.speed = enemyDataSO.moveSpeed;
 		
+		//訂閱其他 Enemy 相關事件
 		enemyAnimatorController.OnAttackChange += SetIsAttack;
 		enemyAnimatorController.OnDamageChange += SetIsDamage;
-		enemyAnimatorController.OnStartAttackCheck += EnableAttackCollider;
+		enemyAnimatorController.OnStartAttackCheck += AttackIsColliderCheck;
 		enemyAnimatorController.OnDead += StartDestory;
-		enemyAttackHandler.OnAttackHit += Attack;
+		enemyAttack.OnAttackHit += Attack;
 		
+		//預設怪物狀態機以 Idle 開始
 		ChangeEnemyState(EnemyState.Idle);
+		
+		//如果 NavMeshAgent 預設啟用, 會因為 NavMeshAgent 只允許物件放置在 NavMeshPath 上, 導致物件無法正常設定 transform.position, 因此延遲啟動
 		StartCoroutine(DelayEnableNavMeshAgent());
 	}
 
-	public void Init()
+    //從物件池抓出時的初始化
+    public void Init()
 	{
 		gameObject.SetActive(true);
 		bodyCollider.enabled = true;
 		enemyState = EnemyState.Idle;
 		health.SetMaxHealth(enemyDataSO.maxHP);
 		navMeshAgent.isStopped = true;
-		ShowDissolve();
-	}
-	
-	public EnemyState GetEnemyNowState()
-	{
-	    return enemyState;
+		
+		material.SetFloat(DISSOLVE_AMOUNT, 0f);
 	}
 
+	//延遲啟用 NavMeshAgent
 	private IEnumerator DelayEnableNavMeshAgent()
 	{
 		yield return null;
@@ -74,12 +81,14 @@ public class EnemyController : MonoBehaviour
 
 	private void Update()
 	{
+		//如果目前怪物狀態不是在攻擊或被打中, 則檢查玩家位置
 		if(!isAttack && !isDamage)
 		{
 			CheckPlayerDistance();
 		}
 	}
 	
+	// 檢測玩家位置來判斷要進行 攻擊或是追擊
 	private void CheckPlayerDistance()
 	{
 		if(playerTransform != null && navMeshAgent.isOnNavMesh)
@@ -97,8 +106,10 @@ public class EnemyController : MonoBehaviour
 		}
 	}
 	
+	// 切換怪物狀態機狀態
 	private void ChangeEnemyState(EnemyState newState)
 	{
+		// 如果怪物狀態為死去 或是 不在地上, 則不允許變更狀態
 		if(enemyState == EnemyState.Dead || !navMeshAgent.enabled) return;
 		
 		enemyState = newState;
@@ -130,6 +141,7 @@ public class EnemyController : MonoBehaviour
 		}
 	}
 
+	// 將怪物轉向玩家位置後, 在進行攻擊行為
 	private IEnumerator TryAttackAfterTurn(Vector3 targetPosition)
 	{
 		while (true)
@@ -177,6 +189,7 @@ public class EnemyController : MonoBehaviour
 		return playerTransform.position + offset;
 	}
 
+	// 怪物受傷時的事件, 訂閱在 <Health> 的 OnDamage
 	private void DamageEvent()
 	{
 		AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
@@ -185,6 +198,7 @@ public class EnemyController : MonoBehaviour
 		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, health.LastDamage);
 	}
 
+	// 怪物死亡時呼叫該事件, 訂閱在 <Health> 的 OnDead
 	private void DeadEvent()
 	{
 		bodyCollider.enabled = false;
@@ -211,6 +225,7 @@ public class EnemyController : MonoBehaviour
 		StartCoroutine(EnableNavMeshDelay(1f));
 	}
 
+	// 判斷怪物是否已落地
 	private IEnumerator EnableNavMeshDelay(float delayTime)
 	{
 		yield return new WaitForSeconds(delayTime);
@@ -223,6 +238,19 @@ public class EnemyController : MonoBehaviour
 		navMeshAgent.enabled = true;
 		rb.isKinematic = true;
 	}
+	
+	// 如果 EnemyAnimatorController 有回傳 開關攻擊事件, 則去呼叫 EnemyAttack 對應的 攻擊/結束 函式
+	private void AttackIsColliderCheck(bool isStartAttack)
+    {
+        if(isStartAttack)
+        {
+			enemyAttack.StartAttack();
+        }
+        else
+        {
+            enemyAttack.ResetHasAttack();
+        }
+    }
 
 	//攻擊玩家
 	public void Attack()
@@ -231,14 +259,14 @@ public class EnemyController : MonoBehaviour
 			playerTransform.GetComponent<PlayerHealth>().TakeDamage(enemyDataSO.attackPower);
 	}
 	
-	//設定當前是否正在攻擊
+	// 設定當前是否正在攻擊
 	public void SetIsAttack(bool isAttack)
 	{
 		this.isAttack = isAttack;
 		
 		if(!isAttack)
 		{
-			enemyAttackHandler.ResetAttackHandler();
+			enemyAttack.ResetHasAttack();
 		}
 		else
 		{
@@ -246,17 +274,19 @@ public class EnemyController : MonoBehaviour
 		}
 	}
 	
-	//設定當前是否正被攻擊
+	// 設定當前是否正被攻擊
 	public void SetIsDamage(bool isDamage)
 	{
 		this.isDamage = isDamage;
 	}
 
+	// 啟動播放死亡動畫的協程
 	private void StartDestory()
 	{
 		StartCoroutine(DeadDissolveCoroutine());
 	}
-	
+
+	// 隱藏該物件, 及物件池回收	
 	public void DestroySelf()
 	{
 		gameObject.SetActive(false);
@@ -282,15 +312,5 @@ public class EnemyController : MonoBehaviour
 		}
 
 		DestroySelf();
-	}
-
-	public void ShowDissolve()
-	{
-		material.SetFloat(DISSOLVE_AMOUNT, 0f);
-	}
-
-	public void EnableAttackCollider(bool isEnable)
-	{
-		enemyAttackHandler.enabled = isEnable;
 	}
 }

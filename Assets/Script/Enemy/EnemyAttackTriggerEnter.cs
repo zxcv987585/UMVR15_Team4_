@@ -3,21 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAttackHandler : MonoBehaviour
+public class EnemyAttacTriggerEnter : MonoBehaviour, IEnemyAttack
 {
-	public Action OnAttackHit;
+	public event Action OnAttackHit;
 	private bool hasAttack = false;
 
 	[SerializeField] private Collider attackCollider;
 
-    private void OnEnable()
-	{
-		attackCollider.enabled = true;
-	}
-
-    private void OnDisable()
+    public void StartAttack()
     {
-        attackCollider.enabled = false;
+        attackCollider.enabled = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -25,12 +20,14 @@ public class EnemyAttackHandler : MonoBehaviour
 		if(!hasAttack && other.TryGetComponent(out PlayerHealth health))
 		{
 			hasAttack = true;
+			
 			OnAttackHit?.Invoke();
 		}
 	}
-	
-	public void ResetAttackHandler()
-	{
-		hasAttack = false;
-	}
+
+    public void ResetHasAttack()
+    {
+        hasAttack = false;
+        attackCollider.enabled = false;
+    }
 }

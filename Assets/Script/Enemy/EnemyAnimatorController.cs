@@ -37,7 +37,7 @@ public class EnemyAnimatorController : MonoBehaviour
 		CheckAnimationIsDamage();
 	}
 	
-	//檢查當前動畫是否是 Animation Attack
+	// 檢查當前動畫是否是 Animation Attack
 	private void CheckAnimationIsAttack()
 	{
 		animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -50,6 +50,7 @@ public class EnemyAnimatorController : MonoBehaviour
 		OnAttackChange?.Invoke(isAttack);
 	}
 	
+	// 檢查當前動畫是否是 Animation Damage
 	private void CheckAnimationIsDamage()
 	{
 		animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
