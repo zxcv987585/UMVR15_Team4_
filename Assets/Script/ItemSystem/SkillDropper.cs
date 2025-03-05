@@ -30,7 +30,21 @@ public class SkillDropper : MonoBehaviour, IDropHandler
             Debug.Log(dragger.GetOriginSlot().GetComponent<SkillSlot>().skillData.weapon);
             SkillHotbarManager.instance.AssignSkillToHotbar(dragger.GetSkill(), slotIndex);
             SkillHotbarManager.instance.RefreshHotbarUI();
-
+            
+            /*
+            switch(targetSlot.slotIndex)
+            {
+                case 0:
+                    SkillManager.Instance.SetSkillBind(GameInput.Bind.Skill1, default);
+                    break;
+                case 1:
+                    SkillManager.Instance.SetSkillBind(GameInput.Bind.Skill2, default);
+                    break;
+                default:
+                    Debug.Log(" SkillDropper ¦b switch targetSlot.slotIndex ¥X²{¿ù»~");
+                    break;
+            }
+            */
         }
     }
 }

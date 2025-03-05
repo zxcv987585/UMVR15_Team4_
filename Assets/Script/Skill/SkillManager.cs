@@ -6,20 +6,29 @@ using UnityEngine;
 
 public class SkillManager : MonoBehaviour
 {
-	[SerializeField] private List<SkillSingleUI> skillSingleUIList;
-	[SerializeField] private List<BaseSkill> baseSkillList;
+	public static SkillManager Instance {get; private set;}
+	
+	[SerializeField] private SkillDataLibrarySO skillDataLibrarySO;
 	
 	private Dictionary<GameInput.Bind, (BaseSkill skill, SkillSingleUI ui)> skillBind;
-	
-	private void Start()
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    private void Start()
 	{
 		skillBind = new Dictionary<GameInput.Bind, (BaseSkill skill, SkillSingleUI ui)>();
 		
 		GameInput.Instance.OnSkillAction += UseSkill;
+		/*
 		InitSkillBind();
 
 		SetSkillBind(GameInput.Bind.Skill1, baseSkillList[0]);
 		SetSkillBind(GameInput.Bind.Skill2, baseSkillList[1]);
+		*/
 	}
 
 	private void UseSkill(GameInput.Bind bind)
@@ -38,6 +47,7 @@ public class SkillManager : MonoBehaviour
         }
     }
 
+	/*
 	private void InitSkillBind()
 	{
 		skillBind.Add(GameInput.Bind.Skill1, (default , skillSingleUIList[0]));
@@ -52,4 +62,5 @@ public class SkillManager : MonoBehaviour
 
 		skillBind[bind] = (newSkill, skillSingleUI);
 	}
+	*/
 }
