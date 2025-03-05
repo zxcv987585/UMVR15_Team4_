@@ -23,12 +23,6 @@ public class SkillManager : MonoBehaviour
 		skillBind = new Dictionary<GameInput.Bind, BaseSkill>();
 		
 		GameInput.Instance.OnSkillAction += UseSkill;
-		//InitSkillBind();
-
-		/*
-		SetSkillBind(GameInput.Bind.Skill1, baseSkillList[0]);
-		SetSkillBind(GameInput.Bind.Skill2, baseSkillList[1]);
-		*/
 	}
 
 	private void UseSkill(GameInput.Bind bind)
@@ -41,12 +35,6 @@ public class SkillManager : MonoBehaviour
 			}
 		}
     }
-
-	private void InitSkillBind()
-	{
-		skillBind.Add(GameInput.Bind.Skill1, default);
-		skillBind.Add(GameInput.Bind.Skill2, default);
-	}
 
 	// 綁定 Skill 對應的技能
     public void SetSkillBind(GameInput.Bind bind, SkillDataSO skillDataSO)
