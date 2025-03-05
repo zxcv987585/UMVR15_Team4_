@@ -6,7 +6,7 @@ using UnityEngine;
 public class InputController : MonoBehaviour
 {
     bool canInput = true;
-    private void Awake()
+    private void Start()
     {
         if (GameInput.Instance != null)
         {

@@ -37,8 +37,13 @@ public class CameraController : MonoBehaviour
 
     [Header("鎖定狀態攝影機的移動速度")]
     [SerializeField] float LockOnTargetFollowSpeed;
+    
     //原本的跟隨目標
     private Transform originalTarget;
+    //攝影機預設的距離
+    private float DefaultCameraToTargetDistance;
+    //攝影機上一幀的距離
+    private float PreviousCameraToTargetDistance;
 
     //最小與最大攝影機仰角程度
     float MinVerticalAngle = -15;
@@ -57,7 +62,7 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
-        input = GameManagerSingleton.Instance.inputControl;
+        input = GameManagerSingleton.Instance.InputControl;
     }
 
     private void Start()
@@ -70,6 +75,8 @@ public class CameraController : MonoBehaviour
         {
             playerTransfrom = player.transform;
         }
+
+        DefaultCameraToTargetDistance = CameraToTargetDistance;
     }
 
     private void LateUpdate()
@@ -88,7 +95,7 @@ public class CameraController : MonoBehaviour
         {
             HandleAimMode();
         }
-        else if (isLocked)
+        else if (isLocked && !isAiming)
         {
             HandleLockMode();
         }
@@ -101,7 +108,7 @@ public class CameraController : MonoBehaviour
     //攝影機輸入邏輯
     private void HandleCameraRotation()
     {
-        if (isLocked) return;
+        if (isLocked && !isAiming) return;
         //處裡滑鼠輸入來旋轉攝影機
         Mouse_x += input.GetMouseXAxis() * sensitivity_x;
         Mouse_y -= input.GetMouseYAxis() * sensitivity_y;
@@ -136,16 +143,24 @@ public class CameraController : MonoBehaviour
     private void HandleLockMode()
     {
         LockTransfrom = player.LockTarget;
-        if (LockTransfrom == null) return;
+        if (LockTransfrom == null || isAiming) return;
 
         Vector3 targetPoition = CameraPivotTransform.position + Vector3.up * 0.03f;
         Vector3 desiredCameraPos = targetPoition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
 
         int WallLayer = LayerMask.GetMask("Wall");
+        float targetDistance = DefaultCameraToTargetDistance;
         if (Physics.Raycast(targetPoition, (desiredCameraPos - targetPoition).normalized, out RaycastHit hit, CameraToTargetDistance, WallLayer)) 
         {
-            CameraToTargetDistance = hit.distance - 0.2f;
+            targetDistance = Mathf.Lerp(PreviousCameraToTargetDistance, hit.distance - 0.2f, Time.deltaTime * 10f);
         }
+        else
+        {
+            targetDistance = Mathf.Lerp(PreviousCameraToTargetDistance, DefaultCameraToTargetDistance, Time.deltaTime * 3f);
+        }
+
+        CameraToTargetDistance = targetDistance;
+        PreviousCameraToTargetDistance = CameraToTargetDistance;
 
         Vector3 finalPosition = targetPoition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
         transform.position = Vector3.SmoothDamp(transform.position, finalPosition, ref smoothVelocity, SmoothTime);

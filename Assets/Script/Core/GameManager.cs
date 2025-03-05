@@ -5,9 +5,7 @@ public class GameManagerSingleton
 {
     private GameObject gameObject;
 
-    //šd—á
     private static GameManagerSingleton m_Instance;
-    //ÚŒû
     public static GameManagerSingleton Instance
     {
         get
@@ -22,10 +20,8 @@ public class GameManagerSingleton
             return m_Instance;
         }
     }
-    //šd—á
     private InputController m_Inputcontrol;
-    //ÚŒû
-    public InputController inputControl
+    public InputController InputControl
     {
         get
         {
