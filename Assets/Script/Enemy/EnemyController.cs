@@ -60,6 +60,11 @@ public class EnemyController : MonoBehaviour
 		navMeshAgent.isStopped = true;
 		ShowDissolve();
 	}
+	
+	public EnemyState GetEnemyNowState()
+	{
+	    return enemyState;
+	}
 
 	private IEnumerator DelayEnableNavMeshAgent()
 	{
@@ -284,7 +289,7 @@ public class EnemyController : MonoBehaviour
 		material.SetFloat(DISSOLVE_AMOUNT, 0f);
 	}
 
-	private void EnableAttackCollider(bool isEnable)
+	public void EnableAttackCollider(bool isEnable)
 	{
 		enemyAttackHandler.enabled = isEnable;
 	}
