@@ -183,6 +183,10 @@ public class CameraController : MonoBehaviour
         rotationDirection = LockTransfrom.position - target.position;
         rotationDirection.Normalize();
 
+        Vector3 currentEuler = transform.rotation.eulerAngles;
+        Mouse_x = currentEuler.y;
+        Mouse_y = currentEuler.x;
+
         OriginCameraPosition = transform.eulerAngles;
     }
 

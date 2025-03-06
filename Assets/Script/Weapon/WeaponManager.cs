@@ -61,7 +61,8 @@ public class WeaponManager : MonoBehaviour
     public void StartAttackWindow()
     {
         isAttackWindowActive = true;
-        attackedEnemies.Clear();  // 每次攻擊開始時清空之前記錄
+        // 每次攻擊開始時清空之前記錄
+        attackedEnemies.Clear();
     }
 
     // 在動畫事件中呼叫：結束攻擊視窗
@@ -73,7 +74,6 @@ public class WeaponManager : MonoBehaviour
     // 攻擊檢查：在攻擊視窗內持續檢查並對新進入的敵人施加傷害
     public void Attack()
     {
-        // 如果攻擊點不存在則返回
         if (attackPoint == null) return;
 
         Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, player.playerData.EnemyLayer);
