@@ -83,6 +83,8 @@ public class PlayerController : MonoBehaviour
         stateMachine.Initialize(idleState);
         //從Data資料庫初始化玩家最大血量
         health.SetMaxHealth(playerData.MaxHealth);
+        //從Data資料庫初始化玩家最大PP值
+        health.SetMaxPP(playerData.MaxPP);
     }
 
     private void Start()

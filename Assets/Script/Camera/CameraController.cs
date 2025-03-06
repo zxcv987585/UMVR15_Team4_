@@ -8,9 +8,6 @@ public class CameraController : MonoBehaviour
     [Header("攝影機跟隨的目標")]
     [SerializeField] Transform target;
 
-    [Header("攝影機跟隨的目標")]
-    [SerializeField] Transform playertransform;
-
     [Header("玩家鎖定模式時要看向的目標")]
     [SerializeField] Transform LockTransfrom;
 
@@ -46,7 +43,7 @@ public class CameraController : MonoBehaviour
     float MinVerticalAngle = -15;
     float MaxVerticalAngle = 35;
     //攝影機與玩家的距離
-    float CameraToTargetDistance = 3.5f;
+    float CameraToTargetDistance = 4f;
     float Mouse_x = 0;
     float Mouse_y = 30;
     Vector3 smoothVelocity = Vector3.zero;
@@ -62,11 +59,6 @@ public class CameraController : MonoBehaviour
         input = GameManagerSingleton.Instance.InputControl;
         player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         GameInput.Instance.OnAimAction += SetAim;
-
-        if(player != null)
-        {
-            playertransform = player.transform;
-        }
 
         DefaultCameraToTargetDistance = CameraToTargetDistance;
     }
@@ -110,16 +102,16 @@ public class CameraController : MonoBehaviour
     //平常的攝影機跟隨狀態
     private void HandleNormalFollow()
     {
-        CameraToTargetDistance = 3.5f;
+        CameraToTargetDistance = 4f;
         UpdateCameraPostion(target.position + Vector3.up * offset.y, Quaternion.Euler(Mouse_y, Mouse_x, 0));
     }
 
     //瞄準模式下的攝影機邏輯
     private void HandleAimMode()
     {
-        Vector3 TargetPosition = playertransform.position;
-        TargetPosition += playertransform.right * AimOffset.x;
-        TargetPosition += playertransform.up * AimOffset.y;
+        Vector3 TargetPosition = target.position;
+        TargetPosition += target.right * AimOffset.x;
+        TargetPosition += target.up * AimOffset.y;
         CameraToTargetDistance = AimOffset.z;
 
         if (AimTarget != null)
