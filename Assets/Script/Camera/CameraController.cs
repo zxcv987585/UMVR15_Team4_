@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using TMPro;
 using UnityEngine;
 
@@ -37,17 +36,17 @@ public class CameraController : MonoBehaviour
     [Header("轉換速度")]
     [SerializeField] float transitionSpeed = 10f;
 
-    //攝影機切換前的位置
+    // 攝影機切換前的位置
     private Vector3 OriginCameraPosition;
-    //攝影機預設的距離
+    // 攝影機預設的距離
     private float DefaultCameraToTargetDistance;
-    //攝影機上一幀的距離
+    // 攝影機上一幀的距離
     private float PreviousCameraToTargetDistance;
 
-    //最小與最大攝影機仰角程度
+    // 最小與最大攝影機仰角程度
     float MinVerticalAngle = -15;
     float MaxVerticalAngle = 35;
-    //攝影機與玩家的距離
+    // 攝影機與玩家的距離
     float CameraToTargetDistance = 4f;
     float Mouse_x = 0;
     float Mouse_y = 30;
@@ -58,6 +57,11 @@ public class CameraController : MonoBehaviour
 
     private bool isAiming = false;
     private bool isLocked => player?.LockTarget != null;
+
+    [Header("碰撞檢測")]
+    [SerializeField] LayerMask collisionLayers;
+    [SerializeField] float collisionRadius = 0.2f;
+    [SerializeField] float collisionOffset = 0.2f;
 
     private void Start()
     {
@@ -100,7 +104,7 @@ public class CameraController : MonoBehaviour
                 AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
             }
 
-            // 最後更新攝影機位置
+            // 最後更新攝影機位置，加入碰撞檢測邏輯
             UpdateCameraPosition(blendedPosition, blendedRotation, blendedDistance);
         }
 
@@ -110,29 +114,40 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    //攝影機輸入邏輯
+    // 攝影機輸入邏輯
     private void HandleCameraRotation()
     {
         if (isLocked && !isAiming) return;
-        //處裡滑鼠輸入來旋轉攝影機
+        // 處理滑鼠輸入來旋轉攝影機
         Mouse_x += input.GetMouseXAxis() * sensitivity_x;
         Mouse_y -= input.GetMouseYAxis() * sensitivity_y;
         Mouse_y = Math.Clamp(Mouse_y, MinVerticalAngle, MaxVerticalAngle);
     }
 
-    // 更新攝影機位置的方法，這裡加入距離參數
+    // 更新攝影機位置的方法
     private void UpdateCameraPosition(Vector3 targetPosition, Quaternion rotation, float distance)
     {
         // 期望的攝影機位置：從目標位置向後一定距離
         Vector3 desiredCameraPos = targetPosition + rotation * new Vector3(0, 0, -distance);
 
-        Vector3 finalPosition = Vector3.SmoothDamp(transform.position, desiredCameraPos, ref smoothVelocity, SmoothTime);
+        // 碰撞檢測：從 targetPosition 發射一個球形射線
+        Vector3 direction = (desiredCameraPos - targetPosition).normalized;
+        float adjustedDistance = distance;
+        RaycastHit hit;
+        if (Physics.SphereCast(targetPosition, collisionRadius, direction, out hit, distance, collisionLayers))
+        {
+            // 碰撞到障礙物時，將攝影機距離調整為碰撞點距離，並留下一些間隙
+            adjustedDistance = hit.distance - collisionOffset;
+            adjustedDistance = Mathf.Clamp(adjustedDistance, 0.1f, distance);
+            desiredCameraPos = targetPosition + rotation * new Vector3(0, 0, -adjustedDistance);
+        }
 
+        Vector3 finalPosition = Vector3.SmoothDamp(transform.position, desiredCameraPos, ref smoothVelocity, SmoothTime);
         transform.position = finalPosition;
         transform.rotation = rotation;
     }
 
-    //鎖定模式下的攝影機邏輯
+    // 鎖定模式下的攝影機邏輯
     private void HandleLockMode()
     {
         LockTransfrom = player.LockTarget;
@@ -171,7 +186,7 @@ public class CameraController : MonoBehaviour
         OriginCameraPosition = transform.eulerAngles;
     }
 
-    //獲取瞄準輸入
+    // 獲取瞄準輸入
     private void SetAim(bool isAiming)
     {
         this.isAiming = isAiming;
