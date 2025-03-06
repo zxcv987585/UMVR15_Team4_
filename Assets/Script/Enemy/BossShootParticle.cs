@@ -7,7 +7,7 @@ public class BossShootParticle : MonoBehaviour
     [SerializeField] private ParticleSystem shootParticle; // 指派你的粒子特效
     [SerializeField] private GameObject acitSplashPrefab; // 酸液的 Prefab
     [SerializeField] private float flightTime = 1.5f;       // 粒子飛行時間
-    [SerializeField] private float acitSplashLifeTime = 4f;
+    //[SerializeField] private float acitSplashLifeTime = 4f;
 
     private Transform playerTransform;     // 玩家目標位置
 
@@ -75,6 +75,6 @@ public class BossShootParticle : MonoBehaviour
     {
         yield return new WaitForSeconds(flightTime);
 
-        Destroy(Instantiate(acitSplashPrefab, targetPosition, Quaternion.identity).gameObject, acitSplashLifeTime);
+        Instantiate(acitSplashPrefab, targetPosition, Quaternion.identity);
     }
 }
