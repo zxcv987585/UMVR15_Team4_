@@ -32,6 +32,11 @@ public class CameraController : MonoBehaviour
     [Header("鎖定狀態攝影機的移動速度")]
     [SerializeField] float LockOnTargetFollowSpeed;
 
+    // 用來控制普通與瞄準模式之間的平滑過渡
+    private float transitionValue = 0f;
+    [Header("轉換速度")]
+    [SerializeField] float transitionSpeed = 10f;
+
     //攝影機切換前的位置
     private Vector3 OriginCameraPosition;
     //攝影機預設的距離
@@ -67,18 +72,41 @@ public class CameraController : MonoBehaviour
     {
         HandleCameraRotation();
 
-        //進入瞄準模式調整攝影機位置
-        if (isAiming)
+        if (!isLocked)
         {
-            HandleAimMode();
+            // 計算轉換參數，根據是否瞄準，目標值分別為1或0
+            float targetTransition = isAiming ? 1f : 0f;
+            transitionValue = Mathf.Lerp(transitionValue, targetTransition, Time.deltaTime * transitionSpeed);
+
+            // 普通模式下的參數
+            Vector3 normalPosition = target.position + Vector3.up * offset.y;
+            Quaternion normalRotation = Quaternion.Euler(Mouse_y, Mouse_x, 0);
+            float normalCamDistance = CameraToTargetDistance;
+
+            // 瞄準模式下的參數（根據你的程式邏輯計算）
+            Vector3 aimPosition = target.position + target.right * AimOffset.x + target.up * AimOffset.y;
+            // 旋轉上加個偏移，例如額外偏移15度（依需求調整）
+            Quaternion aimRotation = Quaternion.Euler(Mouse_y, Mouse_x + 15f, 0);
+            float aimCamDistance = AimOffset.z;
+
+            // 混合參數：位置、旋轉與攝影機距離都使用過渡參數進行插值
+            Vector3 blendedPosition = Vector3.Lerp(normalPosition, aimPosition, transitionValue);
+            Quaternion blendedRotation = Quaternion.Slerp(normalRotation, aimRotation, transitionValue);
+            float blendedDistance = Mathf.Lerp(normalCamDistance, aimCamDistance, transitionValue);
+
+            if (isAiming && AimTarget != null)
+            {
+                Vector3 cameraForward = Camera.main.transform.forward;
+                AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
+            }
+
+            // 最後更新攝影機位置
+            UpdateCameraPosition(blendedPosition, blendedRotation, blendedDistance);
         }
-        else if (isLocked && !isAiming)
+
+        if (isLocked && !isAiming)
         {
             HandleLockMode();
-        }
-        else
-        {
-            HandleNormalFollow();
         }
     }
 
@@ -92,28 +120,16 @@ public class CameraController : MonoBehaviour
         Mouse_y = Math.Clamp(Mouse_y, MinVerticalAngle, MaxVerticalAngle);
     }
 
-    //平常的攝影機跟隨狀態
-    private void HandleNormalFollow()
+    // 更新攝影機位置的方法，這裡加入距離參數
+    private void UpdateCameraPosition(Vector3 targetPosition, Quaternion rotation, float distance)
     {
-        CameraToTargetDistance = 4f;
-        UpdateCameraPostion(target.position + Vector3.up * offset.y, Quaternion.Euler(Mouse_y, Mouse_x, 0));
-    }
+        // 期望的攝影機位置：從目標位置向後一定距離
+        Vector3 desiredCameraPos = targetPosition + rotation * new Vector3(0, 0, -distance);
 
-    //瞄準模式下的攝影機邏輯
-    private void HandleAimMode()
-    {
-        Vector3 TargetPosition = target.position;
-        TargetPosition += target.right * AimOffset.x;
-        TargetPosition += target.up * AimOffset.y;
-        CameraToTargetDistance = AimOffset.z;
+        Vector3 finalPosition = Vector3.SmoothDamp(transform.position, desiredCameraPos, ref smoothVelocity, SmoothTime);
 
-        if (AimTarget != null)
-        {
-            Vector3 cameraForward = Camera.main.transform.forward;
-            AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
-        }
-
-        UpdateCameraPostion(TargetPosition, Quaternion.Euler(Mouse_y, Mouse_x + 15f, 0));
+        transform.position = finalPosition;
+        transform.rotation = rotation;
     }
 
     //鎖定模式下的攝影機邏輯
@@ -151,28 +167,8 @@ public class CameraController : MonoBehaviour
 
         rotationDirection = LockTransfrom.position - target.position;
         rotationDirection.Normalize();
-    }
 
-    //更新攝影機的位置
-    private void UpdateCameraPostion(Vector3 targetPosition, Quaternion rotation)
-    {
-        Vector3 desiredCameraPos = targetPosition + rotation * new Vector3(0, 0, -CameraToTargetDistance);
-
-        //設置RayCast來檢測碰撞
-        Vector3 direction = (desiredCameraPos - targetPosition).normalized;
-        float distance = CameraToTargetDistance;
-        int WallLayer = LayerMask.GetMask("Wall");
-
-        if (Physics.Raycast(target.position, direction, out RaycastHit hit, CameraToTargetDistance, WallLayer))
-        {
-            distance = hit.distance - 0.5f;
-        }
-
-        Vector3 finalPosition = targetPosition + rotation * new Vector3(0, 0, -distance);
-
-        //設置攝影機位置
-        transform.position = Vector3.SmoothDamp(transform.position, finalPosition, ref smoothVelocity, SmoothTime);
-        transform.rotation = rotation;
+        OriginCameraPosition = transform.eulerAngles;
     }
 
     //獲取瞄準輸入
