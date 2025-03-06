@@ -199,7 +199,7 @@ public class EnemyController : MonoBehaviour
 	}
 
 	// 怪物死亡時呼叫該事件, 訂閱在 <Health> 的 OnDead
-	private void DeadEvent()
+	public void DeadEvent()
 	{
 		bodyCollider.enabled = false;
 
@@ -256,7 +256,9 @@ public class EnemyController : MonoBehaviour
 	public void Attack()
 	{
 		if(isAttack)
+		{
 			playerTransform.GetComponent<PlayerHealth>().TakeDamage(enemyDataSO.attackPower);
+		}
 	}
 	
 	// 設定當前是否正在攻擊

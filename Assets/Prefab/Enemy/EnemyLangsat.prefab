@@ -35,7 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5159522540145077794}
-  - {fileID: 1451359171727327215}
+  - {fileID: 7838434475761284662}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &3391703943725414141
@@ -124,7 +124,7 @@ MonoBehaviour:
   enemyAnimatorController: {fileID: 546935821883317118}
   enemyAttackMonoBehaviour: {fileID: 3656083383996439404}
   dissolveRenderer: {fileID: 5159522540130991874}
-  deadParticle: {fileID: 1451359171745675951}
+  deadParticle: {fileID: 7838434475775439734}
 --- !u!114 &-172366246604400439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +139,73 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 100
   CurrentHealth: 0
+--- !u!1001 &1348252409116324006
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1872981782462129970}
+    m_Modifications:
+    - target: {fileID: 9111418440100076208, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+      propertyPath: m_Name
+      value: CFXR4 Firework 1 Cyan-Purple (HDR)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111418440100103824, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111418440100103824, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111418440100103824, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111418440100103824, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111418440100103824, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111418440100103824, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111418440100103824, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111418440100103824, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111418440100103824, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111418440100103824, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+--- !u!4 &7838434475761284662 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9111418440100103824, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+  m_PrefabInstance: {fileID: 1348252409116324006}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &7838434475775439734 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 9111418440118453200, guid: 76f59b71892b8004088ed3c46d774d8f, type: 3}
+  m_PrefabInstance: {fileID: 1348252409116324006}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5159522540144686242
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -440,71 +507,4 @@ MonoBehaviour:
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 2d53cfb1f51104109841f2863b9d11e9, type: 3}
   m_PrefabInstance: {fileID: 5159522540144686242}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &7937173662726586214
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1872981782462129970}
-    m_Modifications:
-    - target: {fileID: 8791802859087233161, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8791802859087233161, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8791802859087233161, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8791802859087233161, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8791802859087233161, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8791802859087233161, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8791802859087233161, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8791802859087233161, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8791802859087233161, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8791802859087233161, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8791802859087666345, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-      propertyPath: m_Name
-      value: CFXR4 Firework 1 Cyan-Purple (HDR)
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
---- !u!4 &1451359171727327215 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8791802859087233161, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-  m_PrefabInstance: {fileID: 7937173662726586214}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &1451359171745675951 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 8791802859067835849, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
-  m_PrefabInstance: {fileID: 7937173662726586214}
   m_PrefabAsset: {fileID: 0}
