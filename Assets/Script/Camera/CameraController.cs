@@ -206,4 +206,12 @@ public class CameraController : MonoBehaviour
 
         target = isAiming ? playerTransfrom : originalTarget;
     }
+
+    //--------------------------------
+    //進boss scene傳送門後的角度修正
+    public void SetCameraRotation(float yaw, float pitch)
+    {
+        Mouse_x = yaw;
+        Mouse_y = Mathf.Clamp(pitch, MinVerticalAngle, MaxVerticalAngle);
+    }
 }
