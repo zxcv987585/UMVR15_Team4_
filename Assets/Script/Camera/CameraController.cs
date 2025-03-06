@@ -67,13 +67,6 @@ public class CameraController : MonoBehaviour
     {
         HandleCameraRotation();
 
-        //計算選轉角度
-        float aimAngleoffset = isAiming ? 15f : 0f;
-        Quaternion rotation = Quaternion.Euler(Mouse_y, Mouse_x + aimAngleoffset, 0);
-
-        //計算目標位置
-        Vector3 TargetPosition = target.position + Vector3.up * offset.y;
-
         //進入瞄準模式調整攝影機位置
         if (isAiming)
         {
@@ -158,9 +151,6 @@ public class CameraController : MonoBehaviour
 
         rotationDirection = LockTransfrom.position - target.position;
         rotationDirection.Normalize();
-
-        targetRotation = Quaternion.LookRotation(rotationDirection);
-        target.transform.rotation = Quaternion.Slerp(target.rotation, targetRotation, LockOnTargetFollowSpeed);
     }
 
     //更新攝影機的位置

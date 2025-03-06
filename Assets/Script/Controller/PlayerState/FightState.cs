@@ -21,7 +21,6 @@ public class FightState : PlayerState
     //傳送劍氣生成指令給WeaponManager
     public event Action SwordSlash;
 
-
     public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) {}
 
     public override void Enter()
