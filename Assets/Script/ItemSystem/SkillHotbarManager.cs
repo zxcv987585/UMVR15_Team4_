@@ -38,16 +38,33 @@ public class SkillHotbarManager : MonoBehaviour
             {
                 //記錄這個HotbarSlot
                 previousSlot = hotbarSlots[i];
+                
+                //清除原本快捷欄內的道具
+                previousSlot.skillData = null;
+                previousSlot.UpdateHotbarSlot();
+                
+                switch(i)
+                {
+                    case 0:
+                        SkillManager.Instance.RemoveSkillBind(GameInput.Bind.Skill1);
+                        break;
+                    case 1:
+                        SkillManager.Instance.RemoveSkillBind(GameInput.Bind.Skill2);
+                        break;
+                }
+                
                 break;
             }
         }
 
+        /*
         if (previousSlot != null)
         {
             //清除原本快捷欄內的道具
             previousSlot.skillData = null;
             previousSlot.UpdateHotbarSlot();
         }
+        */
 
         hotbarSlots[slotIndex].skillData = skill;
         hotbarSlots[slotIndex].UpdateHotbarSlot();

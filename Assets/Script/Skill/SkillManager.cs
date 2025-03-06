@@ -25,6 +25,7 @@ public class SkillManager : MonoBehaviour
 		GameInput.Instance.OnSkillAction += UseSkill;
 	}
 
+	// 當點擊按鍵時, 呼叫該按鍵綁定的技能
 	private void UseSkill(GameInput.Bind bind)
 	{
 		if(skillBind.TryGetValue(bind, out BaseSkill baseSkill))
@@ -47,5 +48,10 @@ public class SkillManager : MonoBehaviour
 
 		GameObject baseSkillPrefab = Instantiate(skillDataLibrarySO.GetSkillPrefab(skillDataSO), transform);
 		skillBind[bind] = baseSkillPrefab.GetComponent<BaseSkill>();
+	}
+	
+	public void RemoveSkillBind(GameInput.Bind bind)
+	{
+		skillBind.Remove(bind);
 	}
 }
