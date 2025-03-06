@@ -58,12 +58,13 @@ public class TeleportToBossArena : MonoBehaviour
         if (animatorController != null) animatorController.enabled = false;
         if (playerStateMachine != null) playerStateMachine.enabled = false;
         animator.SetBool("Run", false);
-        animator.Play("Idle"); // Idle 改成你的待機動畫名稱
+        animator.SetBool("Sprint", false);
 
         //1.=====啟動傳送特效=====
         vfxHyperDriveEffect();
         magicCircleEffect();
-        yield return new WaitForSeconds(1f);  // 等待 1 秒
+        animator.Play("Idle");
+        yield return new WaitForSeconds(1f);
 
         //2.=====特效加強=====
         vfxImplosion.transform.position = new Vector3(playerPos.x, playerPos.y + 1, playerPos.z);
@@ -71,13 +72,12 @@ public class TeleportToBossArena : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         //3.=====傳送=====
-        Debug.Log("進行傳送...");
         whiteScreen.gameObject.SetActive(true);
         if (player != null)
         {
-            //缺少角色暫停的部分！！！
             player.transform.position = targetPos.transform.position;
             player.transform.rotation = Quaternion.Euler(0.8f, 48f, 0f);
+            
         }
         if (mainCamera != null)
         {
@@ -86,11 +86,9 @@ public class TeleportToBossArena : MonoBehaviour
         }
         yield return new WaitForSeconds(0.5f);
         StartCoroutine(ChangeVector4(Color.white, new Vector4(255f, 255f, 255f, 0f), 2f, value => whiteScreen.color = value));
-        yield return new WaitForSeconds(0.5f);  // 等 0.5 秒讓攝影機適應
+        yield return new WaitForSeconds(0.5f);
 
         //4.=====傳送後演出=====
-        Debug.Log("傳送完成！");
-        animator.SetBool("Run", true);
         charController.enabled = true;
         playerController.enabled = true;
         animatorController.enabled = true;
