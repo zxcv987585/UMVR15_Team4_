@@ -12,7 +12,7 @@ public class CameraFollowSmooth : MonoBehaviour
     [Tooltip("起始高度")]
     [SerializeField] float StartHight;
     [Tooltip("平滑的移動時間")]
-    [SerializeField] float SmoothTime;
+    private float SmoothTime = 0.13f;
 
     float Offset_Y;
 
@@ -23,6 +23,23 @@ public class CameraFollowSmooth : MonoBehaviour
     {
         transform.position = Player.position + Vector3.up * StartHight;
         Offset_Y = StartHight;
+    }
+
+    private void Start()
+    {
+        GameInput.Instance.OnAimAction += SetIsAiming;
+    }
+
+    private void SetIsAiming(bool isAim)
+    {
+        if (isAim) 
+        {
+            SmoothTime = 0.08f;
+        }
+        else
+        {
+            SmoothTime = 0.13f;
+        }
     }
 
     private void LateUpdate()

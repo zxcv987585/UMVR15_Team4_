@@ -83,6 +83,8 @@ public class PlayerController : MonoBehaviour
         stateMachine.Initialize(idleState);
         //從Data資料庫初始化玩家最大血量
         health.SetMaxHealth(playerData.MaxHealth);
+        //從Data資料庫初始化玩家最大PP值
+        health.SetMaxPP(playerData.MaxPP);
     }
 
     private void Start()
@@ -171,7 +173,7 @@ public class PlayerController : MonoBehaviour
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
-        if (IsDie || InItemMenu ||stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+        if (IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
 
         isAttack = Attack;
     }
@@ -337,8 +339,14 @@ public class PlayerController : MonoBehaviour
     //進入道具系統的邏輯
     private void ItemMenu()
     {
-        if(InItemMenu == false) InItemMenu = true;
-        if(InItemMenu == true ) InItemMenu = false;
+        if (InItemMenu == false)
+        {
+            InItemMenu = true;
+        }
+        else
+        {
+            InItemMenu = false;
+        }
     }
 
     //平滑旋轉角度

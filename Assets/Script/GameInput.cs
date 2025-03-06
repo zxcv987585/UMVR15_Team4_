@@ -64,7 +64,7 @@ public class GameInput : MonoBehaviour
     {
         if(canInput)
 		{
-			OnAttackAction?.Invoke(true);
+			OnAttackAction?.Invoke(false);
 		}
     }
 
@@ -72,7 +72,7 @@ public class GameInput : MonoBehaviour
 	{
 		if(canInput)
 		{
-			OnAttackAction?.Invoke(false);
+			OnAttackAction?.Invoke(true);
 		}
 	}
 

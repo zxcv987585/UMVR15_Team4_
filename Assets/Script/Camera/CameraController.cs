@@ -8,14 +8,8 @@ public class CameraController : MonoBehaviour
     [Header("攝影機跟隨的目標")]
     [SerializeField] Transform target;
 
-    [Header("玩家瞄準模式時要跟隨的對象")]
-    [SerializeField] Transform playerTransfrom;
-
     [Header("玩家鎖定模式時要看向的目標")]
     [SerializeField] Transform LockTransfrom;
-
-    [Header("玩家鎖定模式時要跟隨的對象")]
-    [SerializeField] Transform CameraPivotTransform;
 
     [Header("水平靈敏度")]
     [SerializeField] float sensitivity_x = 2;
@@ -37,9 +31,9 @@ public class CameraController : MonoBehaviour
 
     [Header("鎖定狀態攝影機的移動速度")]
     [SerializeField] float LockOnTargetFollowSpeed;
-    
-    //原本的跟隨目標
-    private Transform originalTarget;
+
+    //攝影機切換前的位置
+    private Vector3 OriginCameraPosition;
     //攝影機預設的距離
     private float DefaultCameraToTargetDistance;
     //攝影機上一幀的距離
@@ -49,7 +43,7 @@ public class CameraController : MonoBehaviour
     float MinVerticalAngle = -15;
     float MaxVerticalAngle = 35;
     //攝影機與玩家的距離
-    float CameraToTargetDistance = 4.5f;
+    float CameraToTargetDistance = 4f;
     float Mouse_x = 0;
     float Mouse_y = 30;
     Vector3 smoothVelocity = Vector3.zero;
@@ -60,21 +54,11 @@ public class CameraController : MonoBehaviour
     private bool isAiming = false;
     private bool isLocked => player?.LockTarget != null;
 
-    private void Awake()
-    {
-        input = GameManagerSingleton.Instance.InputControl;
-    }
-
     private void Start()
     {
+        input = GameManagerSingleton.Instance.InputControl;
         player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         GameInput.Instance.OnAimAction += SetAim;
-
-        originalTarget = target;
-        if (player != null)
-        {
-            playerTransfrom = player.transform;
-        }
 
         DefaultCameraToTargetDistance = CameraToTargetDistance;
     }
@@ -114,20 +98,20 @@ public class CameraController : MonoBehaviour
         Mouse_y -= input.GetMouseYAxis() * sensitivity_y;
         Mouse_y = Math.Clamp(Mouse_y, MinVerticalAngle, MaxVerticalAngle);
     }
-    
+
     //平常的攝影機跟隨狀態
-    private void HandleNormalFollow() 
+    private void HandleNormalFollow()
     {
-        CameraToTargetDistance = 3.5f;
+        CameraToTargetDistance = 4f;
         UpdateCameraPostion(target.position + Vector3.up * offset.y, Quaternion.Euler(Mouse_y, Mouse_x, 0));
     }
 
     //瞄準模式下的攝影機邏輯
     private void HandleAimMode()
     {
-        Vector3 TargetPosition = playerTransfrom.position;
-        TargetPosition += playerTransfrom.right * AimOffset.x;
-        TargetPosition += playerTransfrom.up * AimOffset.y;
+        Vector3 TargetPosition = target.position;
+        TargetPosition += target.right * AimOffset.x;
+        TargetPosition += target.up * AimOffset.y;
         CameraToTargetDistance = AimOffset.z;
 
         if (AimTarget != null)
@@ -145,12 +129,12 @@ public class CameraController : MonoBehaviour
         LockTransfrom = player.LockTarget;
         if (LockTransfrom == null || isAiming) return;
 
-        Vector3 targetPoition = CameraPivotTransform.position + Vector3.up * 0.03f;
+        Vector3 targetPoition = target.position + Vector3.up * 1.3f;
         Vector3 desiredCameraPos = targetPoition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
 
         int WallLayer = LayerMask.GetMask("Wall");
         float targetDistance = DefaultCameraToTargetDistance;
-        if (Physics.Raycast(targetPoition, (desiredCameraPos - targetPoition).normalized, out RaycastHit hit, CameraToTargetDistance, WallLayer)) 
+        if (Physics.Raycast(targetPoition, (desiredCameraPos - targetPoition).normalized, out RaycastHit hit, CameraToTargetDistance, WallLayer))
         {
             targetDistance = Mathf.Lerp(PreviousCameraToTargetDistance, hit.distance - 0.2f, Time.deltaTime * 10f);
         }
@@ -172,11 +156,11 @@ public class CameraController : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(rotationDirection);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, LockOnTargetFollowSpeed);
 
-        rotationDirection = LockTransfrom.position - CameraPivotTransform.position;
+        rotationDirection = LockTransfrom.position - target.position;
         rotationDirection.Normalize();
 
         targetRotation = Quaternion.LookRotation(rotationDirection);
-        CameraPivotTransform.transform.rotation = Quaternion.Slerp(CameraPivotTransform.rotation, targetRotation, LockOnTargetFollowSpeed);
+        target.transform.rotation = Quaternion.Slerp(target.rotation, targetRotation, LockOnTargetFollowSpeed);
     }
 
     //更新攝影機的位置
@@ -205,7 +189,5 @@ public class CameraController : MonoBehaviour
     private void SetAim(bool isAiming)
     {
         this.isAiming = isAiming;
-
-        target = isAiming ? playerTransfrom : originalTarget;
     }
 }

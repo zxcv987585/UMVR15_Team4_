@@ -26,6 +26,7 @@ public class FightState : PlayerState
 
     public override void Enter()
     {
+        Debug.Log("進入戰鬥狀態");
         currentComboStep = 0;
         isAttacking.Invoke(true);
     }

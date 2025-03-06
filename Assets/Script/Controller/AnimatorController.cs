@@ -6,8 +6,12 @@ using UnityEngine;
 public class AnimatorController : MonoBehaviour
 {
     Animator animator;
+    RuntimeAnimatorController DefaultController;
     PlayerController player;
     PlayerHealth health;
+
+    public SkillManager skillQ;
+    public SkillManager skillE;
 
     private bool isDead;
 
@@ -16,6 +20,8 @@ public class AnimatorController : MonoBehaviour
         animator = GetComponent<Animator>();
         player = GetComponent<PlayerController>();
         health = GetComponent<PlayerHealth>();
+
+        DefaultController = animator.runtimeAnimatorController;
 
         if (player != null)
         {
@@ -26,7 +32,6 @@ public class AnimatorController : MonoBehaviour
             player.moveState.IsRun += Sprint;
             player.dashState.Dash += Dash;
             player.dashState.ForceIdle += Idle;
-            player.dashState.DashReset += Dashreset;
             player.aimState.OnAim += Aim;
             player.aimState.OnAimMove += AimMove;
             player.OnHit += Hit;
@@ -38,9 +43,7 @@ public class AnimatorController : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
-        animator.SetBool("Dead", true);
-        Debug.Log("Šß‰Æ›ßŽ€–S");
-        //animator.speed = 0;
+        animator.CrossFade("Die", 0f, 0);
 
         health.OnDead -= Dead;
     }
@@ -73,21 +76,13 @@ public class AnimatorController : MonoBehaviour
 
     private void Hit(string Hit)
     {
-        animator.ResetTrigger(Hit);
+        animator.CrossFade("Hit", 0f, 0);
         animator.SetTrigger(Hit);
-    }
-
-    private void Dashreset(bool resetDash)
-    {
-        if (resetDash)
-        {
-            animator.ResetTrigger("Dash");
-        }
     }
 
     private void Dash(string isDash)
     {
-        animator.SetTrigger(isDash);
+        animator.CrossFade("SlideDash", 0f);
     }
 
     private void Sprint(bool sprint)
