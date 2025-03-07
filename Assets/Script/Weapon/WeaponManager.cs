@@ -99,7 +99,7 @@ public class WeaponManager : MonoBehaviour
                 CameraController camera = Camera.main.GetComponent<CameraController>();
                 if(camera != null)
                 {
-                    camera.StartCoroutine(camera.ShakeCamera(0.8f, 5f));
+                    camera.StartCoroutine(camera.ShakeCamera(0.3f, 2f));
                 }
             }
         }

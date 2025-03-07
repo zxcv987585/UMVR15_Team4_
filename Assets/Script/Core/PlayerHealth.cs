@@ -53,10 +53,10 @@ public class PlayerHealth : MonoBehaviour
         {
             StartCoroutine(ResetDamageCount());
         }
-        //else if (LastDamageTime)
-        //{
-
-        //}
+        else if(Time.time - LastDamageTime >= ResetDamageTime)
+        {
+            DamageCount = 0;
+        }
     }
 
     //升級時提昇最大血量
@@ -119,6 +119,7 @@ public class PlayerHealth : MonoBehaviour
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
 
         DamageCount++;
+        LastDamageTime += Time.time;
 
         if (CurrentHealth > 0)
         {
