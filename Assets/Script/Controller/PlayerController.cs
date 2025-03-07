@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -191,7 +192,7 @@ public class PlayerController : MonoBehaviour
 
         isAiming = isAim;
 
-        if(LockTarget != null)
+        if (LockTarget != null)
         {
             LockTarget = null;
         }

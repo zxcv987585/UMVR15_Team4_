@@ -42,7 +42,7 @@ public class CameraController : MonoBehaviour
     private float PreviousCameraToTargetDistance;
 
     // 最小與最大攝影機仰角程度
-    float MinVerticalAngle = -35;
+    float MinVerticalAngle = -20;
     float MaxVerticalAngle = 35;
     // 攝影機與玩家的距離
     float CameraToTargetDistance = 4f;

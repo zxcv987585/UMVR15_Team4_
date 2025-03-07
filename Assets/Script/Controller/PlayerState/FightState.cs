@@ -119,7 +119,7 @@ public class FightState : PlayerState
         }
 
         player.controller.Move((TargetPos - player.transform.position).normalized * 0.1f);
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0.25f);
 
         PerformAttack();
     }

@@ -22,7 +22,6 @@ public class LevelSystem : MonoBehaviour
             playerData.MaxHealth += 10;
             playerData.GunDamage += 2;
             PlayerLevelup.Invoke();
-            Debug.Log("äﬂâ∆õﬂè°ãâ!");
         }
     }
 }
