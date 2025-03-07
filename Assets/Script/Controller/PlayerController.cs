@@ -257,7 +257,9 @@ public class PlayerController : MonoBehaviour
     }
     private void LockOnTarget()
     {
-        if(LockTarget == null)
+        if (isAiming || IsDie) return;
+
+        if (LockTarget == null)
         {
             LockTarget = GetClosestEnemy();
             if (LockTarget != null)
