@@ -95,6 +95,12 @@ public class WeaponManager : MonoBehaviour
                 }
 
                 StartCoroutine(HitPauseCoroutine(0.03f, 0.03f));
+
+                CameraController camera = Camera.main.GetComponent<CameraController>();
+                if(camera != null)
+                {
+                    camera.StartCoroutine(camera.ShakeCamera(0.8f, 5f));
+                }
             }
         }
     }

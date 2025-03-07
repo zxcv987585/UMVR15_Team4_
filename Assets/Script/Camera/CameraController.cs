@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -119,7 +119,7 @@ public class CameraController : MonoBehaviour
         // 處理滑鼠輸入來旋轉攝影機
         Mouse_x += input.GetMouseXAxis() * sensitivity_x;
         Mouse_y -= input.GetMouseYAxis() * sensitivity_y;
-        Mouse_y = Math.Clamp(Mouse_y, MinVerticalAngle, MaxVerticalAngle);
+        Mouse_y = Mathf.Clamp(Mouse_y, MinVerticalAngle, MaxVerticalAngle);
     }
 
     // 更新攝影機位置的方法
@@ -198,5 +198,23 @@ public class CameraController : MonoBehaviour
     {
         Mouse_x = yaw;
         Mouse_y = Mathf.Clamp(pitch, MinVerticalAngle, MaxVerticalAngle);
+    }
+
+    public IEnumerator ShakeCamera(float duration, float magnitude)
+    {
+        Vector3 originalPos = transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < duration) 
+        {
+            float offsetX = Random.Range(-1f, 1f) * magnitude;
+            float offsetY = Random.Range(-1f, 1f) * magnitude;
+            transform.position = originalPos + new Vector3(offsetX, offsetY, 0f);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = originalPos;
     }
 }

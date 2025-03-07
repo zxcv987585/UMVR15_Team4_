@@ -416,7 +416,6 @@ public class PlayerController : MonoBehaviour
     private void DisableRootMotion()
     {
         animator.applyRootMotion = false;
-        Debug.Log("已關閉動畫的RootMotion");
     }
 
     //進入道具系統的邏輯
