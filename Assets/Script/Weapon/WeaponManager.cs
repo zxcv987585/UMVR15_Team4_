@@ -93,6 +93,14 @@ public class WeaponManager : MonoBehaviour
                 {
                     Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
                 }
+
+                StartCoroutine(HitPauseCoroutine(0.03f, 0.03f));
+
+                CameraController camera = Camera.main.GetComponent<CameraController>();
+                if(camera != null)
+                {
+                    camera.StartCoroutine(camera.ShakeCamera(0.3f, 2f));
+                }
             }
         }
     }
@@ -127,5 +135,20 @@ public class WeaponManager : MonoBehaviour
     {
         previousWeaponType = currentWeaponType;
         EquipWeapon(weaponType);
+    }
+
+    //打擊停頓效果
+    private IEnumerator HitPauseCoroutine(float duration, float pauseTimeScale)
+    {
+        float originalTimeScale = Time.timeScale;
+        float originalFixedDeltaTime = Time.fixedDeltaTime;
+
+        Time.timeScale = pauseTimeScale;
+        Time.fixedDeltaTime = originalFixedDeltaTime * pauseTimeScale;
+
+        yield return new WaitForSecondsRealtime(duration);
+
+        Time.timeScale = originalTimeScale;
+        Time.fixedDeltaTime = originalFixedDeltaTime;
     }
 }

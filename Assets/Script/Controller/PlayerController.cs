@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour
     public bool CloseEnemy { get; set; } = false;
     public bool Invincible { get; set; } = false;
     public bool InItemMenu { get; set; } = false;
+    public bool isSkilling { get; private set; } = false;
 
     //玩家受傷與死亡的Delegate事件
     public event Action OnHit;
@@ -190,6 +191,25 @@ public class PlayerController : MonoBehaviour
             Instantiate(SwordSlashForword, SlashPoint.position, SlashPoint.rotation * offset);
         }
     }
+
+    //技能系統
+    //public void CastSkill(BaseSkill Skill)
+    //{
+    //    if (isSkilling) return;
+
+    //    isSkilling = true;
+
+    //    StartCoroutine(SkillCastRoutine(Skill.castTime, Skill));
+    //}
+
+    //private IEnumerator SkillCastRoutine(float castTime, BaseSkill Skill)
+    //{
+    //    yield return new WaitForSeconds(castTime);
+
+    //    Skill.Execute();
+
+    //    isSkilling = false;
+    //}
 
     //共用重力邏輯
     private void ApplyGravity()
@@ -416,7 +436,6 @@ public class PlayerController : MonoBehaviour
     private void DisableRootMotion()
     {
         animator.applyRootMotion = false;
-        Debug.Log("已關閉動畫的RootMotion");
     }
 
     //進入道具系統的邏輯
