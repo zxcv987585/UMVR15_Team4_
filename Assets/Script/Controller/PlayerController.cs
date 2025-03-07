@@ -30,7 +30,9 @@ public class PlayerController : MonoBehaviour
     public Vector3 Velocity;
     
     [Tooltip("玩家奔跑時的特效")]
-    [SerializeField] GameObject Sprint;
+    [SerializeField] GameObject SprintEffect;
+    [Tooltip("玩家Dash時的特效")]
+    [SerializeField] GameObject DashEffect;
     [Tooltip("玩家揮劍時的特效")]
     public GameObject SwordSlash;
     [Tooltip("玩家擊中時的特效")]
@@ -231,7 +233,7 @@ public class PlayerController : MonoBehaviour
     //Dash狀態機的核心邏輯
     private void Dash()
     {
-        if (IsDie || stateMachine.GetState<AimState>() != null) return;
+        if (isHit || IsDie || stateMachine.GetState<AimState>() != null) return;
 
         if (Time.time >= lastDashTime + playerData.DashCoolTime)
         {
