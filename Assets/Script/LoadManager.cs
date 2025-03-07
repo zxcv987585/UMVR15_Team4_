@@ -10,7 +10,7 @@ public static class LoadManager
     {
         TitleScene,
         LoadScene,
-        abc
+        Battle01
     }
 
     private static Scene targetScene;

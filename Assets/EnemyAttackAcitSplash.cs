@@ -6,14 +6,15 @@ using UnityEngine;
 public class EnemyAttackAcitSplash : MonoBehaviour, IEnemyAttack
 {
     public event Action OnAttackHit;
-
-    [SerializeField] private float radius = 4f;
     [SerializeField] private ParticleSystem acitParticle;
+    
+    [SerializeField] private float radius = 4f;
+    [SerializeField] private float damage = 5;
     [SerializeField] private float attackCooldown = 0.5f;
 
     private void Start()
     {
-        
+        StartCoroutine(IntervalAttack());
     }
 
     public void ResetHasAttack()
@@ -28,13 +29,24 @@ public class EnemyAttackAcitSplash : MonoBehaviour, IEnemyAttack
     
     private IEnumerator IntervalAttack()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         
         float timer = 0f;
+        float damageTimer = 2.5f;
         
-        while(timer < 3.5f)
+        while(timer < damageTimer)
         {
-            timer += Time.deltaTime;
+            Collider[] colliderArray = Physics.OverlapSphere(transform.position, radius, LayerMask.GetMask("Player"));
+            foreach(Collider collider in colliderArray)
+            {
+                if(collider.TryGetComponent(out PlayerHealth playerHealth))
+                {
+                    playerHealth.TakeDamage(damage);
+                }
+            }
+            
+            yield return new WaitForSeconds(attackCooldown);
+            timer += attackCooldown;
         }
     }
 }
