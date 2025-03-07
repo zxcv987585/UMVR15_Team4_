@@ -21,12 +21,10 @@ public class FightState : PlayerState
     //傳送劍氣生成指令給WeaponManager
     public event Action SwordSlash;
 
-
     public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) {}
 
     public override void Enter()
     {
-        Debug.Log("進入戰鬥狀態");
         currentComboStep = 0;
         isAttacking.Invoke(true);
     }
@@ -109,7 +107,7 @@ public class FightState : PlayerState
 
         AttackCombo?.Invoke("DashAttack");
 
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.35f);
 
         float elapsedTime = 0f;
         while (elapsedTime < dashAttackDuration) 
@@ -120,7 +118,7 @@ public class FightState : PlayerState
         }
 
         player.controller.Move((TargetPos - player.transform.position).normalized * 0.1f);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.25f);
 
         PerformAttack();
     }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -23,52 +22,77 @@ public class WeaponManager : MonoBehaviour
 
     public List<WeaponData> WeaponPrefabs;
     public WeaponType defualtWeapon = WeaponType.Katana;
-    //紀錄切換前的武器
+    // 紀錄切換前的武器
     private WeaponType previousWeaponType;
-    //紀錄當前的武器
+    // 紀錄當前的武器
     private WeaponType currentWeaponType;
+
+    // 攻擊視窗開啟旗標
+    private bool isAttackWindowActive = false;
+    // 記錄在一次攻擊視窗內已經擊中的敵人
+    private HashSet<Collider> attackedEnemies = new HashSet<Collider>();
 
     private void Awake()
     {
         EquipWeapon(defualtWeapon);
         player = GetComponent<PlayerController>();
-        //player.fightState.SwordSlash += SpawnSwordSlash;
     }
 
     private void Update()
     {
-        attackPoint = currentWeapon.transform.Find("AttackPoint");
-        if (attackPoint == null)
+        // 取得攻擊點
+        if (currentWeapon != null)
         {
-            Debug.Log("這裡是weaponManager，找不到武器");
+            attackPoint = currentWeapon.transform.Find("AttackPoint");
+            if (attackPoint == null)
+            {
+                Debug.Log("這裡是WeaponManager，找不到AttackPoint");
+            }
+        }
+
+        // 在攻擊視窗內持續偵測攻擊
+        if (isAttackWindowActive)
+        {
+            Attack();
         }
     }
 
-    private void SpawnSwordSlash()
+    // 在動畫事件中呼叫：開始攻擊視窗
+    public void StartAttackWindow()
     {
-        if (player.SwordSlash != null && attackPoint != null)
-        {
-            StartCoroutine(SwordSlshSpawmTime());
-            GameObject SwordEffect = GameObject.Instantiate(player.SwordSlash, attackPoint.position, attackPoint.rotation);
-        
-            SwordEffect.transform.position = attackPoint.transform.position;
-        }
-    }
-    IEnumerator SwordSlshSpawmTime()
-    {
-        yield return new WaitForSeconds(0.2f);
+        isAttackWindowActive = true;
+        // 每次攻擊開始時清空之前記錄
+        attackedEnemies.Clear();
     }
 
+    // 在動畫事件中呼叫：結束攻擊視窗
+    public void EndAttackWindow()
+    {
+        isAttackWindowActive = false;
+    }
+
+    // 攻擊檢查：在攻擊視窗內持續檢查並對新進入的敵人施加傷害
     public void Attack()
     {
+        if (attackPoint == null) return;
+
         Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, player.playerData.EnemyLayer);
         foreach (Collider enemy in hitEnemies)
         {
-            Debug.Log($"擊中 {enemy.name}");
-            enemy.GetComponent<Health>().TakeDamage(player.playerData.attackDamage);
-            if(player.HitEffect != null)
+            // 如果這次攻擊視窗內還沒擊中該敵人，就處理傷害
+            if (!attackedEnemies.Contains(enemy))
             {
-                GameObject hitEffect = GameObject.Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
+                attackedEnemies.Add(enemy);
+                Debug.Log($"擊中 {enemy.name}");
+                Health enemyHealth = enemy.GetComponent<Health>();
+                if (enemyHealth != null)
+                {
+                    enemyHealth.TakeDamage(player.playerData.attackDamage);
+                }
+                if (player.HitEffect != null)
+                {
+                    Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
+                }
             }
         }
     }
@@ -81,7 +105,7 @@ public class WeaponManager : MonoBehaviour
         WeaponData weaponData = WeaponPrefabs.Find(w => w.type == weaponType);
         if (weaponData == null || weaponData.prefab == null)
         {
-            Debug.Log($"武器{weaponType}位在列表內設定！");
+            Debug.Log($"武器 {weaponType} 沒有正確設定！");
             return;
         }
 
