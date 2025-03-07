@@ -23,6 +23,7 @@ public class EnemyController : MonoBehaviour
 	private Rigidbody rb;
 	private Collider bodyCollider;
 	private Health health;
+	private PlayerHealth playerHealth;
 	private NavMeshAgent navMeshAgent;
 	private Transform playerTransform;
 	
@@ -33,6 +34,7 @@ public class EnemyController : MonoBehaviour
 		bodyCollider = GetComponent<Collider>();
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		playerTransform = FindObjectOfType<PlayerController>()?.transform;
+		playerHealth = playerTransform.GetComponent<PlayerHealth>();
 		material = dissolveRenderer.material;
 		enemyAttack = (IEnemyAttack)enemyAttackMonoBehaviour;
 
@@ -81,6 +83,15 @@ public class EnemyController : MonoBehaviour
 
 	private void Update()
 	{
+		if(playerHealth.IsDead())
+		{
+			if(enemyState != EnemyState.Idle)
+			{
+				ChangeEnemyState(EnemyState.Idle);
+			}
+			return;
+		}
+
 		//如果目前怪物狀態不是在攻擊或被打中, 則檢查玩家位置
 		if(!isAttack && !isDamage)
 		{
@@ -257,7 +268,7 @@ public class EnemyController : MonoBehaviour
 	{
 		if(isAttack)
 		{
-			playerTransform.GetComponent<PlayerHealth>().TakeDamage(enemyDataSO.attackPower);
+			playerHealth.TakeDamage(enemyDataSO.attackPower);
 		}
 	}
 	
