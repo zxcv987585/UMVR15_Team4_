@@ -32,7 +32,7 @@ public class TitleUIManager : MonoBehaviour
 		//加上各按鈕被點擊後的事件
 		startButton.onClick.AddListener(() =>
 		{
-			LoadManager.Load(LoadManager.Scene.abc);
+			LoadManager.Load(LoadManager.Scene.Battle01);
 		});
 		continueButton.onClick.AddListener(() => 
 		{
