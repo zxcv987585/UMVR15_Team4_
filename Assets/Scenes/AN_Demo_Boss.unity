@@ -2116,6 +2116,7 @@ GameObject:
   - component: {fileID: 924851923}
   - component: {fileID: 924851921}
   - component: {fileID: 924851924}
+  - component: {fileID: 924851925}
   m_Layer: 0
   m_Name: Portal
   m_TagString: Untagged
@@ -2195,6 +2196,18 @@ MonoBehaviour:
   magicCircleSparks: {fileID: 118296882}
   vfxImplosion: {fileID: 1560146805}
   whiteScreen: {fileID: 96639346}
+--- !u!114 &924851925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924851919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da3c08c1bf72314196fa276e9073f1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &977933498
 GameObject:
   m_ObjectHideFlags: 0
@@ -4631,7 +4644,6 @@ MonoBehaviour:
   Player: {fileID: 1355333780}
   DistanceToTarget: 0.1
   StartHight: 0
-  SmoothTime: 0.13
 --- !u!4 &2068853391
 Transform:
   m_ObjectHideFlags: 0
