@@ -587,14 +587,21 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.13399576
+      - time: 0.16610585
         functionName: StartAttackWindow
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.36983606
+      - time: 0.2844465
+        functionName: SpawnSlashForword
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.4065333
         functionName: EndAttackWindow
         data: 
         objectReferenceParameter: {instanceID: 0}

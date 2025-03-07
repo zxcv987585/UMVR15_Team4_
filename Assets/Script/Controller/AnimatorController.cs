@@ -74,10 +74,17 @@ public class AnimatorController : MonoBehaviour
         }
     }
 
-    private void Hit(string Hit)
+    private void Hit()
     {
-        animator.CrossFade("Hit", 0f, 0);
-        animator.SetTrigger(Hit);
+        if (player.isAiming)
+        {
+            animator.SetTrigger("Hit");
+        }
+        else
+        {
+            animator.CrossFade("Hit", 0f, 0);
+            animator.SetBool("IsAim", false);
+        }
     }
 
     private void Dash(string isDash)
