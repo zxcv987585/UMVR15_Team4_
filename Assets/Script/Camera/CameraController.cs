@@ -36,15 +36,13 @@ public class CameraController : MonoBehaviour
     [Header("轉換速度")]
     [SerializeField] float transitionSpeed = 10f;
 
-    // 攝影機切換前的位置
-    private Vector3 OriginCameraPosition;
     // 攝影機預設的距離
     private float DefaultCameraToTargetDistance;
     // 攝影機上一幀的距離
     private float PreviousCameraToTargetDistance;
 
     // 最小與最大攝影機仰角程度
-    float MinVerticalAngle = -15;
+    float MinVerticalAngle = -35;
     float MaxVerticalAngle = 35;
     // 攝影機與玩家的距離
     float CameraToTargetDistance = 4f;
@@ -186,8 +184,6 @@ public class CameraController : MonoBehaviour
         Vector3 currentEuler = transform.rotation.eulerAngles;
         Mouse_x = currentEuler.y;
         Mouse_y = currentEuler.x;
-
-        OriginCameraPosition = transform.eulerAngles;
     }
 
     // 獲取瞄準輸入
