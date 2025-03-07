@@ -141,6 +141,11 @@ public class EnemyBossController : MonoBehaviour
 
 		floorAttackPrefab.SetActive(true);
 	}
+	
+	private void CallEnemy()
+	{
+	    //Call 小怪出來
+	}
 
 	/*
     private IEnumerator TryAttackAfterTurn(Vector3 targetPosition)

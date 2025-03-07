@@ -28,6 +28,7 @@ public class EnemyManager : MonoBehaviour
         foreach(GameObject enemyPrefab in enemyPrefabList)
         {
             int enemyPrefabKey = enemyPrefab.GetInstanceID();
+            
             Debug.Log(" EnemyManager/Start Prefab key = " + enemyPrefabKey);
             enemyObjectPool.Add(enemyPrefabKey, new Queue<GameObject>());
         }
