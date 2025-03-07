@@ -9,9 +9,9 @@ public class FightState : PlayerState
     //追蹤可以執行連擊的時間
     public float attackTimer = 0;
     //連擊重置的最久等候時間
-    public float attackResetTime = 0.6f;
+    public float attackResetTime = 0.65f;
     //預估動畫播放所需的時間
-    private float attackAnimationTime = 0.4f;
+    private float attackAnimationTime = 0.45f;
     //確認是否可以攻擊
     public bool CanAttack = true;
     //傳送目前攻擊Trigger給動畫控制器
@@ -20,7 +20,6 @@ public class FightState : PlayerState
     public Action<bool> isAttacking;
     //傳送劍氣生成指令給WeaponManager
     public event Action SwordSlash;
-
 
     public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) {}
 
@@ -109,7 +108,7 @@ public class FightState : PlayerState
 
         AttackCombo?.Invoke("DashAttack");
 
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.35f);
 
         float elapsedTime = 0f;
         while (elapsedTime < dashAttackDuration) 
@@ -120,7 +119,7 @@ public class FightState : PlayerState
         }
 
         player.controller.Move((TargetPos - player.transform.position).normalized * 0.1f);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.25f);
 
         PerformAttack();
     }

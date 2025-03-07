@@ -16,6 +16,8 @@ public class PlayerHealth : MonoBehaviour
     [Header("玩家特效")]
     [Tooltip("玩家治療時的特效")]
     [SerializeField] GameObject HealEffect;
+    [Tooltip("玩家突擊時的特效")]
+    [SerializeField] GameObject Spike;
     [SerializeField] LevelSystem levelSystem;
 
     private PlayerController player;
@@ -131,8 +133,7 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator ResetDamageCount()
     {
-        Debug.Log("短時間內受到大量傷害！進入無敵緩衝時間！");
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         DamageCount = 0;
     }
 

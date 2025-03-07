@@ -36,7 +36,7 @@ public class PlayerDataSO : ScriptableObject
 
     [Header("鎖定系統")]
     [Tooltip("玩家鎖定視角的最大距離")]
-    public float LockRange = 10f;
+    public float LockRange = 15f;
     [Tooltip("可以被鎖定的Layer層")]
     public LayerMask EnemyLayer;
 
