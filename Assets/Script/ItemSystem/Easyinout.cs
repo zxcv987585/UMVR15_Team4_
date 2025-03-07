@@ -29,6 +29,14 @@ public class EasyInOut : MonoBehaviour
             {
                 onUpdate((T)(object)Vector3.Lerp((Vector3)(object)start, (Vector3)(object)end, easedT));
             }
+            else if (typeof(T) == typeof(Vector4))
+            {
+                onUpdate((T)(object)Vector4.Lerp((Vector4)(object)start, (Vector4)(object)end, easedT));
+            }
+            else if (typeof(T) == typeof(Vector2))
+            {
+                onUpdate((T)(object)Vector2.Lerp((Vector2)(object)start, (Vector2)(object)end, easedT));
+            }
             yield return null;
         }
         onUpdate(end);

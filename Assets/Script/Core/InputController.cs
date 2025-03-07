@@ -28,6 +28,9 @@ public class InputController : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
+
+        PauseUI pauseUI = FindAnyObjectByType<PauseUI>();
+        StartCoroutine(pauseUI.RunPauseUI());
     }
 
     private void Update()
