@@ -19,6 +19,7 @@ public class EnemyController : MonoBehaviour
 
 	private bool isAttack = false;
 	private bool isDamage = false;
+	private bool isFly = false;
 	private EnemyState enemyState;
 	private Rigidbody rb;
 	private Collider bodyCollider;
@@ -93,7 +94,7 @@ public class EnemyController : MonoBehaviour
 		}
 
 		//如果目前怪物狀態不是在攻擊或被打中, 則檢查玩家位置
-		if(!isAttack && !isDamage)
+		if(!isAttack && !isDamage && !isFly)
 		{
 			CheckPlayerDistance();
 		}
@@ -226,7 +227,7 @@ public class EnemyController : MonoBehaviour
 	/// <param name="flyPower">擊飛的高度參數</param>
 	public void HitFly(float flyPower)
 	{
-		if (enemyDataSO.isBoss || enemyState == EnemyState.Dead) return;
+		if (enemyState == EnemyState.Dead || isFly) return;
 
 		navMeshAgent.enabled = false;
 		rb.isKinematic = false;
@@ -234,6 +235,8 @@ public class EnemyController : MonoBehaviour
 		rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 		rb.AddForce(Vector3.up * flyPower, ForceMode.Impulse);
 		StartCoroutine(EnableNavMeshDelay(1f));
+
+		//StartCoroutine(HitFlyCoroutine(flyPower, 1f));
 	}
 
 	// 判斷怪物是否已落地
@@ -248,6 +251,43 @@ public class EnemyController : MonoBehaviour
 
 		navMeshAgent.enabled = true;
 		rb.isKinematic = true;
+	}
+
+	private IEnumerator HitFlyCoroutine(float flyPower, float duration)
+	{
+		isFly = true;
+		navMeshAgent.isStopped = true; // 禁用 NavMeshAgent 的自動導航
+		isAttack = false;             // 禁止攻擊
+		isDamage = false;             // 禁止受擊
+		enemyAnimatorController?.SetEnemyState(EnemyState.Damage);
+
+		Vector3 velocity = Vector3.up * flyPower; // 初始上升速度
+		float timer = 0f;
+
+		while (timer < duration)
+		{
+			timer += Time.deltaTime;
+
+			// 更新速度（模擬重力影響）
+			velocity += Physics.gravity * Time.deltaTime;
+
+			// 使用 NavMeshAgent.Move() 來位移
+			navMeshAgent.Move(velocity * Time.deltaTime);
+
+			// 確保不會穿透地面
+			if (transform.position.y <= 0.16f) break;
+
+			yield return null;
+		}
+
+		// 保證敵人落地
+		transform.position = new Vector3(transform.position.x, 0.16f, transform.position.z);
+
+		yield return new WaitForSeconds(0.2f); // 短暫停頓，避免瞬間恢復
+
+		navMeshAgent.isStopped = false; // 恢復導航
+		isFly = false;
+		ChangeEnemyState(EnemyState.Idle); // 切回待機狀態
 	}
 	
 	// 如果 EnemyAnimatorController 有回傳 開關攻擊事件, 則去呼叫 EnemyAttack 對應的 攻擊/結束 函式

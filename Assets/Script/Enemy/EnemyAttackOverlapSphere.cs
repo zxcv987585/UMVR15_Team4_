@@ -63,6 +63,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
     
     private void BombAttack()
     {
+        Debug.Log("BombAttack");
         Collider[] colliderArray = Physics.OverlapSphere(transform.position, 1.5f, LayerMask.GetMask(PLAYER));
         foreach(Collider collider in colliderArray)
         {
@@ -70,8 +71,8 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
             {
                 //OnAttackHit?.Invoke();
                 playerHealth.TakeDamage(damage);
-                bombParticle.Play();
             }
         }
+        bombParticle.Play();
     }
 }
