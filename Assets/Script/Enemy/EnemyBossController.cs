@@ -13,11 +13,14 @@ public class EnemyBossController : MonoBehaviour
 
 	[SerializeField] private float attackCooldownTime;
 
-	private int hp;
 	private bool isIdle = true;
 	private bool isAttackCooldown = false;
+	private Health health;
 	private Transform playerTransform;
 	private AnimatorStateInfo animatorStateInfo;
+
+	private bool hpLessTrigger70 = false;
+	private bool hpLessTrigger35 = false;
 	
 
 	private BossState state;
@@ -33,7 +36,10 @@ public class EnemyBossController : MonoBehaviour
 	
 	private void Start()
 	{
-		hp = enemyDataSO.maxHP;
+		health = GetComponent<Health>();
+		health.SetMaxHealth(enemyDataSO.maxHP);
+		health.OnDamage += TakeDamage;
+
 		playerTransform = FindObjectOfType<PlayerController>()?.transform;
 		
 		ChangeEnemyState(BossState.Idle);
@@ -42,11 +48,21 @@ public class EnemyBossController : MonoBehaviour
 	private void Update()
 	{
 		CheckAnimationIsIdle();
+		LookAtPlayer();
 
 		if(isIdle)
 		{
 			CheckPlayerDistance();
 		}
+	}
+
+	private void LookAtPlayer()
+	{
+		Vector3 direction = (transform.position - playerTransform.position).normalized;
+		direction.y = 0;
+		Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+		transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime);
 	}
 
 	private void CheckAnimationIsIdle()
@@ -186,19 +202,13 @@ public class EnemyBossController : MonoBehaviour
 	*/
 
 	//如果需要 Enemy 受傷, 呼叫該函數
-	public void TakeDamage(int damage)
+	public void TakeDamage()
 	{
 		if(state == BossState.Dead) return;
 
-		hp -= damage;
-		if(hp <= 0)
-		{
-			hp = 0;
-			AudioManager.Instance.PlaySound(enemyDataSO.SfxDeadKey, transform.position);
-			ChangeEnemyState(BossState.Dead);
-		}
+		AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
 
-		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, damage);
+		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, health.LastDamage);
 	}
 	
 	public void DestroySelf()

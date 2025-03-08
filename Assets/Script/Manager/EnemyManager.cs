@@ -50,6 +50,7 @@ public class EnemyManager : MonoBehaviour
             {
                 GameObject enemy = enemyprefabQueue.Dequeue();
                 enemy.transform.position = spawnTransform.position;
+                enemy.transform.rotation = spawnTransform.rotation;
                 enemy.GetComponent<EnemyController>().Init();
 
                 Debug.Log("對應 Enemy 物件池足夠, 取出並放置");
@@ -58,6 +59,7 @@ public class EnemyManager : MonoBehaviour
             {
                 GameObject enemy = Instantiate(spawnPrefab);
                 enemy.transform.position = spawnTransform.position;
+                enemy.transform.rotation = spawnTransform.rotation;
 
                 Debug.Log("對應 Enemy 物件池不足, 產生新物件");
             }
