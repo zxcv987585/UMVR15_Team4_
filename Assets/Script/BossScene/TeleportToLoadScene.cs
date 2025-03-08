@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements.Experimental;
 
-public class TeleportToBossArena : MonoBehaviour
+public class TeleportToLoadScene : MonoBehaviour
 {
     public Collider portal;
     public bool isUseable = false;
-    public Transform targetPos;
     public Transform player;
     public CameraController mainCamera;
 
@@ -20,7 +20,7 @@ public class TeleportToBossArena : MonoBehaviour
     public ParticleSystem magicCircleSparks;
     public ParticleSystem vfxImplosion;
     public Image whiteScreen;
-
+    public Image blackScreen;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -65,6 +65,7 @@ public class TeleportToBossArena : MonoBehaviour
         EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
 
         //1.=====啟動傳送特效=====
+        SceneManager.LoadScene("AN_Demo_Boss");
         vfxHyperDriveEffect();
         magicCircleEffect();
         whiteScreen.gameObject.SetActive(true);
@@ -85,32 +86,28 @@ public class TeleportToBossArena : MonoBehaviour
         yield return new WaitForSeconds(0.75f);
 
         //3.=====傳送=====
-        if (player != null)
-        {
-            player.transform.position = targetPos.transform.position;
-            player.transform.rotation = Quaternion.Euler(0.8f, 48f, 0f);
-            
-        }
-        if (mainCamera != null)
-        {
-            Vector3 playerEuler = player.transform.eulerAngles;
-            mainCamera.SetCameraRotation(playerEuler.y, playerEuler.x);
-        }
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine(ChangeVector4(Color.white, new Vector4(1f, 1f, 1f, 0f), 2f, value => whiteScreen.color = value));
-        yield return new WaitForSeconds(0.5f);
-
-        //4.=====傳送後演出=====
-        charController.enabled = true;
-        playerController.enabled = true;
-        animatorController.enabled = true;
-        playerStateMachine.enabled = true;
         vfxHyperDrive.gameObject.SetActive(false);
         magicCircle.gameObject.SetActive(false);
         magicCircleSide.gameObject.SetActive(false);
         magicCircleSparks.gameObject.SetActive(false);
         vfxImplosion.gameObject.SetActive(false);
+        charController.enabled = true;
+        playerController.enabled = true;
+        animatorController.enabled = true;
+        playerStateMachine.enabled = true;
 
+        yield return new WaitForSeconds(0.25f);
+        blackScreen.gameObject.SetActive(true);
+        StartCoroutine(easyInOut.ChangeValue(
+            new Vector4(0f, 0f, 0f, 0f),
+            new Vector4(0f, 0f, 0f, 1f),
+            0.75f,
+            value => blackScreen.color = value,
+            EasyInOut.EaseOut
+            ));
+        yield return new WaitForSeconds(0.75f);
+
+        LoadManager.Load(LoadManager.Scene.AN_Demo_Boss);
     }
 
     //=====Change Coroutine=====
@@ -180,7 +177,7 @@ public class TeleportToBossArena : MonoBehaviour
 
         StartCoroutine(easyInOut.ChangeValue(
             new Vector3(1.15f, 1.15f, 1.15f), 
-            new Vector3(1.5f, 1.5f, 1.5f), 
+            new Vector3(1.30f, 1.30f, 1.30f), 
             1f,
             value => magicCircle.gameObject.transform.localScale = value,
             EasyInOut.EaseOut
