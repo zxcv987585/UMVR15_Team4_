@@ -947,6 +947,37 @@ MonoBehaviour:
   - {x: 0.99999976, y: 0.99999994, z: 0.9999998}
   - {x: 0.9999998, y: 0.99999994, z: 0.99999994}
   - {x: 1, y: 1, z: 0.99999994}
+--- !u!1 &5167644446150999708
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7120989492775758549}
+  m_Layer: 3
+  m_Name: Slash
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7120989492775758549
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5167644446150999708}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8845005771188919756}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5169932590186186119
 GameObject:
   m_ObjectHideFlags: 0
@@ -2228,6 +2259,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7911020609257685988}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7120989492775758549}
     - targetCorrespondingSourceObject: {fileID: -2916741891282405652, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8305897574942855998}
@@ -2743,6 +2777,7 @@ MonoBehaviour:
   MaxPP: 0
   CurrentPP: 0
   HealEffect: {fileID: 1146074261479283788, guid: fcfd79721f20e944d87bfd6eb9589f5e, type: 3}
+  Spike: {fileID: 7621207173925267941, guid: 1bb1738225bacc04db4fd4b461087400, type: 3}
   levelSystem: {fileID: 0}
 --- !u!114 &3831638619911089666
 MonoBehaviour:
@@ -2757,6 +2792,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponHolder: {fileID: 8305897574942855998}
+  SwordSlash1: {fileID: 5580501102851957539, guid: b6b7104c7730da0428a7a1509c22c309, type: 3}
+  SwordSlash2: {fileID: 5580501102851957539, guid: 20356fe62477f5f49ad5130d7374af16, type: 3}
+  SwordSlash3: {fileID: 5580501102851957539, guid: b194fd79bddab7a419c936c9231a42b3, type: 3}
+  SwordSlash4: {fileID: 5580501102851957539, guid: e0cc194b48ea2ff4db20475089c88ecd, type: 3}
+  SwordSlashForword: {fileID: 5580501102851957539, guid: 84423ce815b79d64eac35a03e4a98222, type: 3}
+  SlashPoint: {fileID: 7120989492775758549}
   WeaponPrefabs:
   - type: 0
     prefab: {fileID: 0}
@@ -2780,8 +2821,7 @@ MonoBehaviour:
   controller: {fileID: 0}
   playerData: {fileID: 11400000, guid: b770376df1dbd7b49b10747a4fbf0014, type: 2}
   Velocity: {x: 0, y: 0, z: 0}
-  Sprint: {fileID: 0}
-  SwordSlash: {fileID: 5580501102851957539, guid: b6b7104c7730da0428a7a1509c22c309, type: 3}
+  SprintEffect: {fileID: 0}
   HitEffect: {fileID: 6465009843436118771, guid: 7b07dfb903a79104e98f12917049f0f9, type: 3}
   LockTarget: {fileID: 0}
   stopRootMotionDistance: 1

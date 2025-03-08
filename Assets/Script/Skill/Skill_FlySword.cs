@@ -10,13 +10,12 @@ public class Skill_FlySword : BaseSkill
     private float attackIntervalTime = 0.5f;
     private Vector3 attackPosition;
     private Collider[] hitColliderArray;
-    public AnimatorOverrideController overrideController;
 
     public override void SkillAbility()
     {
         Transform playerTransform = FindObjectOfType<PlayerController>()?.transform;
 
-        if(playerTransform != null)
+        if (playerTransform != null)
         {
             transform.position = playerTransform.position;
             transform.forward = playerTransform.forward;

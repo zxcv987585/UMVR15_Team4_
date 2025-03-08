@@ -15,10 +15,23 @@ public class WeaponManager : MonoBehaviour
     public enum WeaponType { None, Katana, Gun };
 
     private PlayerController player;
+    private CameraController camera;
 
     public Transform weaponHolder;
     private GameObject currentWeapon;
     private Transform attackPoint;
+    [Tooltip("玩家揮劍時的特效 1")]
+    public GameObject SwordSlash1;
+    [Tooltip("玩家揮劍時的特效 2")]
+    public GameObject SwordSlash2;
+    [Tooltip("玩家揮劍時的特效 3")]
+    public GameObject SwordSlash3;
+    [Tooltip("玩家揮劍時的特效 4")]
+    public GameObject SwordSlash4;
+    [Tooltip("玩家揮劍時的特效 突進")]
+    public GameObject SwordSlashForword;
+    [Tooltip("Slash生成點")]
+    public Transform SlashPoint;
 
     public List<WeaponData> WeaponPrefabs;
     public WeaponType defualtWeapon = WeaponType.Katana;
@@ -31,11 +44,14 @@ public class WeaponManager : MonoBehaviour
     private bool isAttackWindowActive = false;
     // 記錄在一次攻擊視窗內已經擊中的敵人
     private HashSet<Collider> attackedEnemies = new HashSet<Collider>();
+    //擊中慢動作的防呆旗標
+    private bool isHitPauseActive = false;
 
     private void Awake()
     {
         EquipWeapon(defualtWeapon);
         player = GetComponent<PlayerController>();
+        camera = Camera.main.GetComponent<CameraController>();
     }
 
     private void Update()
@@ -93,15 +109,63 @@ public class WeaponManager : MonoBehaviour
                 {
                     Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
                 }
-
-                StartCoroutine(HitPauseCoroutine(0.03f, 0.03f));
-
-                CameraController camera = Camera.main.GetComponent<CameraController>();
+                if (!isHitPauseActive)
+                {
+                    StartCoroutine(HitPauseCoroutine(0.03f, 0.03f));
+                }
                 if(camera != null)
                 {
                     camera.StartCoroutine(camera.ShakeCamera(0.3f, 2f));
                 }
             }
+        }
+    }
+
+
+    //劍氣特效
+    public void SpawnSlash1()
+    {
+        if (SlashPoint != null && SwordSlash1 != null)
+        {
+            Vector3 CurrentEuler = SwordSlash1.transform.eulerAngles;
+            Quaternion offset = Quaternion.Euler(CurrentEuler);
+            Instantiate(SwordSlash1, SlashPoint.position, SlashPoint.rotation * offset);
+        }
+    }
+    public void SpawnSlash2()
+    {
+        if (SlashPoint != null && SwordSlash2 != null)
+        {
+            Vector3 CurrentEuler = SwordSlash2.transform.eulerAngles;
+            Quaternion offset = Quaternion.Euler(CurrentEuler);
+            Instantiate(SwordSlash2, SlashPoint.position, SlashPoint.rotation * offset);
+        }
+    }
+    public void SpawnSlash3()
+    {
+        if (SlashPoint != null && SwordSlash3 != null)
+        {
+            Vector3 CurrentEuler = SwordSlash3.transform.eulerAngles;
+            Quaternion offset = Quaternion.Euler(CurrentEuler);
+            Instantiate(SwordSlash3, SlashPoint.position, SlashPoint.rotation * offset);
+        }
+    }
+    public void SpawnSlash4()
+    {
+        if (SlashPoint != null && SwordSlash4 != null)
+        {
+            Vector3 CurrentEuler = SwordSlash4.transform.eulerAngles;
+            Quaternion offset = Quaternion.Euler(CurrentEuler);
+            Instantiate(SwordSlash4, SlashPoint.position, SlashPoint.rotation * offset);
+        }
+    }
+    public void SpawnSlashForword()
+    {
+        if (SlashPoint != null && SwordSlashForword != null)
+        {
+            Vector3 CurrentEuler = SwordSlashForword.transform.eulerAngles;
+            Quaternion offset = Quaternion.Euler(CurrentEuler);
+            Instantiate(SwordSlashForword, SlashPoint.position, SlashPoint.rotation * offset);
         }
     }
 
@@ -140,6 +204,8 @@ public class WeaponManager : MonoBehaviour
     //打擊停頓效果
     private IEnumerator HitPauseCoroutine(float duration, float pauseTimeScale)
     {
+        isHitPauseActive = true;
+
         float originalTimeScale = Time.timeScale;
         float originalFixedDeltaTime = Time.fixedDeltaTime;
 
@@ -150,5 +216,7 @@ public class WeaponManager : MonoBehaviour
 
         Time.timeScale = originalTimeScale;
         Time.fixedDeltaTime = originalFixedDeltaTime;
+
+        isHitPauseActive = false;
     }
 }
