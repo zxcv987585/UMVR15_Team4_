@@ -33,6 +33,7 @@ public class EnemyBossController : MonoBehaviour
 	{
 		Idle,
 		RunAttack,
+		CallEnemy,
 		ShootAttack,
 		FloorAttack,
 		Dead
@@ -57,16 +58,18 @@ public class EnemyBossController : MonoBehaviour
 
 	private void Update()
 	{
-		if(playerHealth.IsDead() || state == BossState.Dead)
-		{
-			return;
-		}
+		if(playerHealth.IsDead() || state == BossState.Dead) return;
 
 		CheckAnimationIsIdle();
 		LookAtPlayer();
+		
 
 		if(isIdle)
 		{
+			if(CheckHealthEvent())
+			{
+				return;
+			}
 			CheckPlayerDistance();
 		}
 	}
@@ -117,6 +120,7 @@ public class EnemyBossController : MonoBehaviour
 		{
 			float distance = Vector3.Distance(transform.position, playerTransform.position);
 
+
 			if (distance <= enemyDataSO.attackRange)
 			{
 				ChangeEnemyState(BossState.FloorAttack);
@@ -141,6 +145,10 @@ public class EnemyBossController : MonoBehaviour
                 break;
             case BossState.RunAttack:
 				animator.SetTrigger(state.ToString());
+                break;
+			case BossState.CallEnemy:
+				animator.SetTrigger(state.ToString());
+				CallEnemy();
                 break;
             case BossState.ShootAttack:
 				animator.SetTrigger(state.ToString());
@@ -184,44 +192,6 @@ public class EnemyBossController : MonoBehaviour
 		ChangeEnemyState(BossState.Dead);
 	}
 
-	/*
-    private IEnumerator TryAttackAfterTurn(Vector3 targetPosition)
-	{
-		while (true)
-		{
-			// 檢查玩家是否仍在攻擊範圍內
-			float distance = Vector3.Distance(transform.position, targetPosition);
-			if (distance > enemyDataSO.attackRange)
-			{
-				ChangeEnemyState(EnemyState.Walk);
-				yield break;
-			}
-
-			// 計算旋轉方向
-			Vector3 direction = (targetPosition - transform.position).normalized;
-			direction.y = 0;
-			Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-			// 平滑旋轉
-			transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 2f * Time.deltaTime);
-
-			// 檢查是否轉向完成
-			if (Quaternion.Angle(transform.rotation, targetRotation) < 5f)
-			{
-				break;
-			}
-
-			yield return null;
-		}
-
-		// 確保敵人仍在攻擊狀態
-		if (enemyState == EnemyState.Attack)
-		{
-			enemyAnimatorController.SetEnemyState(EnemyState.Attack);
-		}
-	}
-	*/
-
 	//如果需要 Enemy 受傷, 呼叫該函數
 	public void TakeDamage()
 	{
@@ -230,6 +200,37 @@ public class EnemyBossController : MonoBehaviour
 		//AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
 
 		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up * 6, health.LastDamage);
+	}
+
+	// 檢查血量是否低於特定條件, 來觸發事件
+	private bool CheckHealthEvent()
+	{
+		if(!hpLessTrigger70 && health.GetHealthRatio() < 0.7f)
+		{
+			ChangeEnemyState(BossState.CallEnemy);
+
+			animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+			if(animatorStateInfo.IsName(BossState.Idle.ToString()))
+			{
+				hpLessTrigger70 = true;
+			}
+
+			return true;
+		}
+
+		if(!hpLessTrigger35 && health.GetHealthRatio() < 0.35f)
+		{
+			ChangeEnemyState(BossState.CallEnemy);
+
+			animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+			if(animatorStateInfo.IsName(BossState.Idle.ToString()))
+			{
+				hpLessTrigger35 = true;
+			}
+			return true;
+		}
+
+		return false;
 	}
 	
 	public void DestroySelf()
