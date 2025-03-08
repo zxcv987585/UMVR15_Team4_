@@ -33,20 +33,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject SprintEffect;
     [Tooltip("玩家Dash時的特效")]
     [SerializeField] GameObject DashEffect;
-    [Tooltip("玩家揮劍時的特效 1")]
-    public GameObject SwordSlash1;
-    [Tooltip("玩家揮劍時的特效 2")]
-    public GameObject SwordSlash2;
-    [Tooltip("玩家揮劍時的特效 3")]
-    public GameObject SwordSlash3;
-    [Tooltip("玩家揮劍時的特效 4")]
-    public GameObject SwordSlash4;
-    [Tooltip("玩家揮劍時的特效 突進")]
-    public GameObject SwordSlashForword;
     [Tooltip("玩家擊中時的特效")]
     public GameObject HitEffect;
-    [Tooltip("Slash生成點")]
-    public Transform SlashPoint;
 
     [Header("鎖定邏輯")]
     [Tooltip("動態存放鎖定的敵方單位")]
@@ -142,53 +130,6 @@ public class PlayerController : MonoBehaviour
             {
                 AutoUnlockEnemy();
             }
-        }
-    }
-
-    //劍氣特效
-    public void SpawnSlash1()
-    {
-        if (SlashPoint != null && SwordSlash1 != null)
-        {
-            Vector3 CurrentEuler = SwordSlash1.transform.eulerAngles;
-            Quaternion offset = Quaternion.Euler(CurrentEuler);
-            Instantiate(SwordSlash1, SlashPoint.position, SlashPoint.rotation * offset);
-        }
-    }
-    public void SpawnSlash2()
-    {
-        if (SlashPoint != null && SwordSlash2 != null)
-        {
-            Vector3 CurrentEuler = SwordSlash2.transform.eulerAngles;
-            Quaternion offset = Quaternion.Euler(CurrentEuler);
-            Instantiate(SwordSlash2, SlashPoint.position, SlashPoint.rotation * offset);
-        }
-    }
-    public void SpawnSlash3()
-    {
-        if (SlashPoint != null && SwordSlash3 != null)
-        {
-            Vector3 CurrentEuler = SwordSlash3.transform.eulerAngles;
-            Quaternion offset = Quaternion.Euler(CurrentEuler);
-            Instantiate(SwordSlash3, SlashPoint.position, SlashPoint.rotation * offset);
-        }
-    }
-    public void SpawnSlash4()
-    {
-        if (SlashPoint != null && SwordSlash4 != null)
-        {
-            Vector3 CurrentEuler = SwordSlash4.transform.eulerAngles;
-            Quaternion offset = Quaternion.Euler(CurrentEuler);
-            Instantiate(SwordSlash4, SlashPoint.position, SlashPoint.rotation * offset);
-        }
-    }
-    public void SpawnSlashForword()
-    {
-        if (SlashPoint != null && SwordSlashForword != null)
-        {
-            Vector3 CurrentEuler = SwordSlashForword.transform.eulerAngles;
-            Quaternion offset = Quaternion.Euler(CurrentEuler);
-            Instantiate(SwordSlashForword, SlashPoint.position, SlashPoint.rotation * offset);
         }
     }
 

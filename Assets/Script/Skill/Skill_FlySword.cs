@@ -16,7 +16,7 @@ public class Skill_FlySword : BaseSkill
     {
         Transform playerTransform = FindObjectOfType<PlayerController>()?.transform;
 
-        if(playerTransform != null)
+        if (playerTransform != null)
         {
             transform.position = playerTransform.position;
             transform.forward = playerTransform.forward;
