@@ -17,6 +17,7 @@ public class EnemyBossController : MonoBehaviour
 	private bool isAttackCooldown = false;
 	private Health health;
 	private Transform playerTransform;
+	private PlayerHealth playerHealth;
 	private AnimatorStateInfo animatorStateInfo;
 
 	private bool hpLessTrigger70 = false;
@@ -41,12 +42,18 @@ public class EnemyBossController : MonoBehaviour
 		health.OnDamage += TakeDamage;
 
 		playerTransform = FindObjectOfType<PlayerController>()?.transform;
+		playerHealth = playerTransform.GetComponent<PlayerHealth>();
 		
 		ChangeEnemyState(BossState.Idle);
 	}
 
 	private void Update()
 	{
+		if(playerHealth.IsDead())
+		{
+			return;
+		}
+
 		CheckAnimationIsIdle();
 		LookAtPlayer();
 
@@ -58,11 +65,11 @@ public class EnemyBossController : MonoBehaviour
 
 	private void LookAtPlayer()
 	{
-		Vector3 direction = (transform.position - playerTransform.position).normalized;
+		Vector3 direction = (playerTransform.position - transform.position).normalized;
 		direction.y = 0;
 		Quaternion targetRotation = Quaternion.LookRotation(direction);
 
-		transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime);
+		transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 15f * Time.deltaTime);
 	}
 
 	private void CheckAnimationIsIdle()
@@ -206,9 +213,9 @@ public class EnemyBossController : MonoBehaviour
 	{
 		if(state == BossState.Dead) return;
 
-		AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
+		//AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
 
-		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, health.LastDamage);
+		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up * 6, health.LastDamage);
 	}
 	
 	public void DestroySelf()
