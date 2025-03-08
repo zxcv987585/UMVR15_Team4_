@@ -1,8 +1,5 @@
 using Michsky.UI.Shift;
-using NUnit.Framework;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,9 +18,11 @@ public class PauseUI : MonoBehaviour
     public RectTransform[] optionButtons;
 
     public BagPanelManager[] optionList;
+    private Animator closeWindow;
 
     public IEnumerator RunPauseUI()
     {
+        //按下 TAB 開啟的方法
         if (isOpen == false)
         {
             //黑屏
@@ -47,8 +46,20 @@ public class PauseUI : MonoBehaviour
 
             isOpen = true;
         }
+        //按下 TAB 關閉的方法
         else if (isOpen == true)
         {
+            //關閉開啟中的 Options
+            for (int i = 0; i < optionList.Length; i++)
+            {
+                if (optionList[i].isOn == true)
+                {
+                    closeWindow = optionList[i].GetComponent<Animator>();
+                    closeWindow.CrossFade("Window Out", 0.1f);
+                    optionList[i].isOn = false;
+                }
+            }
+
             //黑屏
             StartCoroutine(easyInOut.ChangeValue(
                 blackScreenTargetColor,
@@ -69,14 +80,27 @@ public class PauseUI : MonoBehaviour
                 yield return new WaitForSeconds(0.04f);
             }
 
-            if (optionList[0].isOn == true)
-            {
-                optionList[0].isOn = false;
-                optionList[0].WindowOut();
-            }
-                
-
             isOpen = false;
+        }
+    }
+    public void OpenOption(int index)
+    {
+        for (int i = 0; i < optionList.Length; i++)
+        {
+            if (i != index && optionList[i].isOn)
+            {
+                Animator closeAnim = optionList[i].GetComponent<Animator>();
+                closeAnim.CrossFade("Window Out", 0.1f);
+                optionList[i].isOn = false;
+            }
+        }
+
+        // 開啟選單
+        if (!optionList[index].isOn)
+        {
+            optionList[index].isOn = true;
+            Animator openAnim = optionList[index].GetComponent<Animator>();
+            openAnim.CrossFade("Window In", 0.1f);
         }
     }
 }
