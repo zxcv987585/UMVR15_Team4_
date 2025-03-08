@@ -1807,15 +1807,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 79.69
+      value: 78.83
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0000009536743
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 36.63
+      value: 34.81
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2777,7 +2777,6 @@ MonoBehaviour:
   MaxPP: 0
   CurrentPP: 0
   HealEffect: {fileID: 1146074261479283788, guid: fcfd79721f20e944d87bfd6eb9589f5e, type: 3}
-  Spike: {fileID: 7621207173925267941, guid: 1bb1738225bacc04db4fd4b461087400, type: 3}
   levelSystem: {fileID: 0}
 --- !u!114 &3831638619911089666
 MonoBehaviour:
@@ -2837,8 +2836,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e9c283d5f31e41718bbdd4848f5570d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillQ: {fileID: 0}
-  skillE: {fileID: 0}
 --- !u!95 &9028586903552194858
 Animator:
   serializedVersion: 5
