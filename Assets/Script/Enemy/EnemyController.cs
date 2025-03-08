@@ -11,21 +11,22 @@ public class EnemyController : MonoBehaviour
 	[SerializeField] private EnemyAnimatorController enemyAnimatorController;
 	[SerializeField] private MonoBehaviour enemyAttackMonoBehaviour;
 	private IEnemyAttack enemyAttack;
+	private EnemyState enemyState;
 
 	[SerializeField] private Renderer dissolveRenderer;
 	[SerializeField] private ParticleSystem deadParticle;
+	
 	private Material material;
 	private const string DISSOLVE_AMOUNT = "_DissolveAmount";
 
 	private bool isAttack = false;
 	private bool isDamage = false;
-	private bool isFly = false;
-	private EnemyState enemyState;
+	
 	private Rigidbody rb;
+	private NavMeshAgent navMeshAgent;
 	private Collider bodyCollider;
 	private Health health;
 	private PlayerHealth playerHealth;
-	private NavMeshAgent navMeshAgent;
 	private Transform playerTransform;
 	
 	private void Start()
@@ -79,6 +80,11 @@ public class EnemyController : MonoBehaviour
 	private IEnumerator DelayEnableNavMeshAgent()
 	{
 		yield return null;
+
+		navMeshAgent.updatePosition = false;
+		navMeshAgent.updateRotation = false;
+		navMeshAgent.speed = enemyDataSO.moveSpeed;
+
 		navMeshAgent.enabled = true;
 	}
 
@@ -94,10 +100,30 @@ public class EnemyController : MonoBehaviour
 		}
 
 		//如果目前怪物狀態不是在攻擊或被打中, 則檢查玩家位置
-		if(!isAttack && !isDamage && !isFly)
+		if(!isAttack && !isDamage)
 		{
 			CheckPlayerDistance();
+
+			if(enemyState == EnemyState.Walk)
+			{
+				MoveHandler();
+			}
 		}
+	}
+
+	private void MoveHandler()
+	{
+		Vector3 nextPosition = navMeshAgent.nextPosition;
+        Vector3 direction = (nextPosition - transform.position).normalized;
+        direction.y = 0; // 確保不會影響 Y 軸 (防止怪物漂浮)
+
+		if (direction != Vector3.zero)
+		{
+			Quaternion targetRotation = Quaternion.LookRotation(direction);
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1f * Time.deltaTime);
+		}
+
+        transform.position += direction * enemyDataSO.moveSpeed * Time.deltaTime;
 	}
 	
 	// 檢測玩家位置來判斷要進行 攻擊或是追擊
@@ -227,35 +253,37 @@ public class EnemyController : MonoBehaviour
 	/// <param name="flyPower">擊飛的高度參數</param>
 	public void HitFly(float flyPower)
 	{
-		if (enemyState == EnemyState.Dead || isFly) return;
+		if (enemyState == EnemyState.Dead) return;
 
-		navMeshAgent.enabled = false;
+		//navMeshAgent.enabled = false;
 		rb.isKinematic = false;
 
+		float originalHeight = transform.position.y;
 		rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 		rb.AddForce(Vector3.up * flyPower, ForceMode.Impulse);
-		StartCoroutine(EnableNavMeshDelay(1f));
+		StartCoroutine(EnableNavMeshDelay(1f, originalHeight));
 
 		//StartCoroutine(HitFlyCoroutine(flyPower, 1f));
 	}
 
 	// 判斷怪物是否已落地
-	private IEnumerator EnableNavMeshDelay(float delayTime)
+	private IEnumerator EnableNavMeshDelay(float delayTime, float originalHeight)
 	{
 		yield return new WaitForSeconds(delayTime);
 
 		while(Mathf.Abs(rb.velocity.y) > 0.1f)
 		{
+			if(transform.position.y <= originalHeight) break;
 			yield return null;
 		}
 
-		navMeshAgent.enabled = true;
+		//navMeshAgent.enabled = true;
 		rb.isKinematic = true;
 	}
 
 	private IEnumerator HitFlyCoroutine(float flyPower, float duration)
 	{
-		isFly = true;
+		//isFly = true;
 		navMeshAgent.isStopped = true; // 禁用 NavMeshAgent 的自動導航
 		isAttack = false;             // 禁止攻擊
 		isDamage = false;             // 禁止受擊
@@ -286,7 +314,7 @@ public class EnemyController : MonoBehaviour
 		yield return new WaitForSeconds(0.2f); // 短暫停頓，避免瞬間恢復
 
 		navMeshAgent.isStopped = false; // 恢復導航
-		isFly = false;
+		//isFly = false;
 		ChangeEnemyState(EnemyState.Idle); // 切回待機狀態
 	}
 	

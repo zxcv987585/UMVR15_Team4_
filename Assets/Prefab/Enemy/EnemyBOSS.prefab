@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4288509543236599835}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 135.3, y: 1.2373538, z: 127.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -234,7 +234,6 @@ MonoBehaviour:
   shootParticle: {fileID: 3704323611805342151}
   acitSplashPrefab: {fileID: 1000010671471726, guid: f760942a2ec454c4dafcff53e2d868e9, type: 3}
   flightTime: 1.5
-  acitSplashLifeTime: 4
 --- !u!4 &3591968949447502075 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000011814761294, guid: 254673c9dbad9224bae88e1fdcaf9de2, type: 3}
