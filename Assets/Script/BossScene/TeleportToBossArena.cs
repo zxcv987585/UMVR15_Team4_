@@ -20,7 +20,19 @@ public class TeleportToBossArena : MonoBehaviour
     public ParticleSystem magicCircleSparks;
     public ParticleSystem vfxImplosion;
     public Image whiteScreen;
+    public Image blackScreen;
 
+    private void Awake()
+    {
+        EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
+        StartCoroutine(easyInOut.ChangeValue(
+            new Vector4(0f, 0f, 0f, 1f),
+            new Vector4(0f, 0f, 0f, 0f),
+            1.5f,
+            value => blackScreen.color = value,
+            EasyInOut.EaseIn
+            ));
+    }
 
     private void OnTriggerEnter(Collider other)
     {

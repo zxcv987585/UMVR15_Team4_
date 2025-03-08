@@ -65,7 +65,6 @@ public class TeleportToLoadScene : MonoBehaviour
         EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
 
         //1.=====啟動傳送特效=====
-        SceneManager.LoadScene("AN_Demo_Boss");
         vfxHyperDriveEffect();
         magicCircleEffect();
         whiteScreen.gameObject.SetActive(true);
