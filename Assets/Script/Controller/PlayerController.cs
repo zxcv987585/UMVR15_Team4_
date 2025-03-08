@@ -141,6 +141,13 @@ public class PlayerController : MonoBehaviour
     {
         if (isSkilling || isAiming) return;
 
+        if (LockTarget != null)
+        {
+            Vector3 direction = (LockTarget.position - transform.position).normalized;
+            direction.y = 0f;
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
+
         isSkilling = true;
         animator.Play(skillName);
         StartCoroutine(SkillCastingRoutine(SkillDuration));
