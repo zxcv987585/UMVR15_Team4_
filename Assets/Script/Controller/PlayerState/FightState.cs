@@ -120,6 +120,10 @@ public class FightState : PlayerState
         player.controller.Move((TargetPos - player.transform.position).normalized * 0.1f);
         yield return new WaitForSeconds(0.25f);
 
+        Vector3 direction = (player.LockTarget.position - player.transform.position).normalized;
+        direction.y = 0;
+        player.transform.rotation = Quaternion.LookRotation(direction);
+
         PerformAttack();
     }
 

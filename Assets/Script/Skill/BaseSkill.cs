@@ -11,6 +11,7 @@ public abstract class BaseSkill : MonoBehaviour
 	public const string ENEMY = "Enemy";
 	public string AnimationName;
 	public float CastDurtion;
+	public float PPCost;
 
     public virtual void Use()
 	{

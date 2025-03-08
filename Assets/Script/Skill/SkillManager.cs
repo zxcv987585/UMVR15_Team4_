@@ -12,6 +12,7 @@ public class SkillManager : MonoBehaviour
 	
 	private Dictionary<GameInput.Bind, BaseSkill> skillBind;
 	private PlayerController player;
+	private PlayerHealth playerHealth;
 
 
     private void Awake()
@@ -22,6 +23,7 @@ public class SkillManager : MonoBehaviour
     private void Start()
 	{
         player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        playerHealth = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
 
         skillBind = new Dictionary<GameInput.Bind, BaseSkill>();
 		
@@ -37,8 +39,13 @@ public class SkillManager : MonoBehaviour
 		{
 			if(baseSkill.canUse)
 			{
-				player.CastSkill(baseSkill.AnimationName, baseSkill.CastDurtion);
-				baseSkill.Use();
+				if (!playerHealth.UsePP(baseSkill.PPCost))
+				{
+					Debug.Log("PP不足!");
+					return;
+				}
+                player.CastSkill(baseSkill.AnimationName, baseSkill.CastDurtion);
+                baseSkill.Use();
 			}
 		}
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -42,7 +41,7 @@ public class PlayerController : MonoBehaviour
     //多久檢查一次附近敵人
     private float CheckInterval = 0.2f;
     //檢查玩家與敵人的距離
-    [SerializeField] float stopRootMotionDistance = 0.5f;
+    [SerializeField] float stopRootMotionDistance = 1f;
 
     //用來記錄最後一次Dash的時間
     private float lastDashTime = -Mathf.Infinity;
@@ -141,6 +140,13 @@ public class PlayerController : MonoBehaviour
     {
         if (isSkilling || isAiming) return;
 
+        if (LockTarget != null)
+        {
+            Vector3 direction = (LockTarget.position - transform.position).normalized;
+            direction.y = 0f;
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
+
         isSkilling = true;
         animator.Play(skillName);
         StartCoroutine(SkillCastingRoutine(SkillDuration));
@@ -177,7 +183,7 @@ public class PlayerController : MonoBehaviour
     //Walk、Run狀態機的核心邏輯
     public void MoveCharacter(Vector3 targetDirection, float currentSpeed)
     {
-        if (IsDie || isDash) return;
+        if (IsDie || isDash || isSkilling) return;
 
         controller.Move(targetDirection * currentSpeed * Time.deltaTime);
         SmoothRotation(targetDirection);
@@ -185,7 +191,7 @@ public class PlayerController : MonoBehaviour
     private void SetIsRun(bool isRun)
     {
         //死亡就不要跑步
-        if (IsDie) return;
+        if (isSkilling || IsDie) return;
         //透過涵式更改PlayerController的跑步bool狀態
         this.isRun = isRun;
     }
@@ -193,7 +199,7 @@ public class PlayerController : MonoBehaviour
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
-        if (IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+        if (isSkilling || IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
 
         isAttack = Attack;
     }
@@ -207,7 +213,7 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (IsDie || InItemMenu || stateMachine.GetState<DashState>() != null) return;
+        if (isSkilling || IsDie || InItemMenu || stateMachine.GetState<DashState>() != null) return;
 
         isAiming = isAim;
 
@@ -248,7 +254,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(playerData.HitCoolTime);
 
         isHit = false;
-        animator.SetBool("IsAim", true);
     }
     IEnumerator GunHitCoolDown()
     {
@@ -349,6 +354,8 @@ public class PlayerController : MonoBehaviour
         Transform Target = null;
         float CloseDistance = Mathf.Infinity;
 
+        bool foundCloseEnemy = false;
+
         foreach (Collider enemy in enemies) 
         { 
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
@@ -357,15 +364,13 @@ public class PlayerController : MonoBehaviour
                 CloseDistance = distance;
                 Target = enemy.transform;
             }
-            if(distance <= stopRootMotionDistance)
-            { 
-                CloseEnemy = true;
-            }
-            else
+            if (distance <= stopRootMotionDistance)
             {
-                CloseEnemy = false;
+                foundCloseEnemy = true;
             }
         }
+        CloseEnemy = foundCloseEnemy;
+
         return Target;
     }
     //檢查敵人與玩家距離是否需要開關RootMotion

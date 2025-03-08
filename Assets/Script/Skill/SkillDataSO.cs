@@ -11,4 +11,5 @@ public class SkillDataSO : ScriptableObject
 	public int damage;
 	public bool isUnlocked;
 	public string weapon;
+	public float PPCost;
 }
