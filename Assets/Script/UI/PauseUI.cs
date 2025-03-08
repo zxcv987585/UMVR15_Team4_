@@ -83,10 +83,12 @@ public class PauseUI : MonoBehaviour
             isOpen = false;
         }
     }
+
     public void OpenOption(int index)
     {
         for (int i = 0; i < optionList.Length; i++)
         {
+            //檢查條件，跳過要開啟的選單，只關閉其他的且已開啟的選單
             if (i != index && optionList[i].isOn)
             {
                 Animator closeAnim = optionList[i].GetComponent<Animator>();
@@ -95,7 +97,7 @@ public class PauseUI : MonoBehaviour
             }
         }
 
-        // 開啟選單
+        //檢查選單是否已被開啟，如果沒有就開啟
         if (!optionList[index].isOn)
         {
             optionList[index].isOn = true;
