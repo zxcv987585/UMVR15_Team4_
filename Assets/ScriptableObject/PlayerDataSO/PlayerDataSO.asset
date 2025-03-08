@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerDataSO
   m_EditorClassIdentifier: 
   MoveSpeed: 3
-  SprintSpeedModifier: 1
+  SprintSpeedModifier: 1.2
   RotateSpeed: 5
   Gravity: 40
   DashSpeed: 20
@@ -21,11 +21,11 @@ MonoBehaviour:
   DashCoolTime: 1
   MaxHealth: 100
   MaxPP: 100
-  HitCoolTime: 1
+  HitCoolTime: 0.7
   attackDamage: 15
   attackRadius: 0.5
   GunDamage: 8
-  LockRange: 10
+  LockRange: 12
   EnemyLayer:
     serializedVersion: 2
     m_Bits: 128
