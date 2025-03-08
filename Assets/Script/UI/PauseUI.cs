@@ -1,12 +1,14 @@
 using Michsky.UI.Shift;
+using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PauseUI : MonoBehaviour
 {
-    private bool isOpen = false;
+    public bool isOpen = false;
 
     public EasyInOut easyInOut;
 
@@ -17,6 +19,8 @@ public class PauseUI : MonoBehaviour
     private Vector2 optionBarDefaultPos = new Vector2(0f, 170f);
 
     public RectTransform[] optionButtons;
+
+    public BagPanelManager[] optionList;
 
     public IEnumerator RunPauseUI()
     {
@@ -64,6 +68,13 @@ public class PauseUI : MonoBehaviour
                 EasyInOut.EaseIn));
                 yield return new WaitForSeconds(0.04f);
             }
+
+            if (optionList[0].isOn == true)
+            {
+                optionList[0].isOn = false;
+                optionList[0].WindowOut();
+            }
+                
 
             isOpen = false;
         }

@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
 //負責將道具加進itemlist
