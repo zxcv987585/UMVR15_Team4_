@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.UI;
+using UnityEngine.UIElements.Experimental;
 
 public class TeleportToBossArena : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class TeleportToBossArena : MonoBehaviour
     public ParticleSystem magicCircleSparks;
     public ParticleSystem vfxImplosion;
     public Image whiteScreen;
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -161,8 +163,17 @@ public class TeleportToBossArena : MonoBehaviour
     //=====vfxHyperDrive effect changer=====
     private void magicCircleEffect()
     {
-        StartCoroutine(ChangeVector3(new Vector3(1.15f, 1.15f, 1.15f), new Vector3(1.5f, 1.5f, 1.5f), 0.2f,
-            value => magicCircle.gameObject.transform.localScale = value));
+        EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
+
+        if (easyInOut == null) return;
+
+        StartCoroutine(easyInOut.ChangeValue(
+            new Vector3(1.15f, 1.15f, 1.15f), 
+            new Vector3(1.5f, 1.5f, 1.5f), 
+            1f,
+            value => magicCircle.gameObject.transform.localScale = value,
+            EasyInOut.EaseOut
+            ));
 
         var magicCircleRotationOverLifetime = magicCircle.rotationOverLifetime;
         magicCircleRotationOverLifetime.z = new ParticleSystem.MinMaxCurve(45f * Mathf.Deg2Rad);
