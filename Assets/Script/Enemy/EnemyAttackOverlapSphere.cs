@@ -64,7 +64,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
     private void BombAttack()
     {
         Debug.Log("BombAttack");
-        Collider[] colliderArray = Physics.OverlapSphere(transform.position, 1.5f, LayerMask.GetMask(PLAYER));
+        Collider[] colliderArray = Physics.OverlapSphere(transform.position, 2f, LayerMask.GetMask(PLAYER));
         foreach(Collider collider in colliderArray)
         {
             if(collider.TryGetComponent(out PlayerHealth playerHealth))

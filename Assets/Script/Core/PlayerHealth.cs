@@ -16,8 +16,6 @@ public class PlayerHealth : MonoBehaviour
     [Header("玩家特效")]
     [Tooltip("玩家治療時的特效")]
     [SerializeField] GameObject HealEffect;
-    [Tooltip("玩家突擊時的特效")]
-    [SerializeField] GameObject Spike;
     [SerializeField] LevelSystem levelSystem;
 
     private PlayerController player;

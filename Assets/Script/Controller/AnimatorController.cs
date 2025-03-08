@@ -10,9 +10,6 @@ public class AnimatorController : MonoBehaviour
     PlayerController player;
     PlayerHealth health;
 
-    public SkillManager skillQ;
-    public SkillManager skillE;
-
     private bool isDead;
 
     void Start()
