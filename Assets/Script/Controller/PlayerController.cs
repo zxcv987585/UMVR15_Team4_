@@ -107,14 +107,18 @@ public class PlayerController : MonoBehaviour
     {
         //重力運作邏輯
         ApplyGravity();
-        //檢測狀態機更新邏輯
-        stateMachine.Update();
+        //檢測狀態機更新邏輯，僅限沒有技能施放時使用
+        if (!isSkilling)
+        {
+            stateMachine.Update();
+        }
         //時刻檢查周遭是否存在敵人
         if (Time.time >= NextCheckTime)
         {
             NextCheckTime = Time.time + CheckInterval;
             GetClosestEnemy();
         }
+        //鎖定敵人邏輯，如果有鎖定敵人並且相當靠近就停止RootMotion
         if (LockTarget != null && CloseEnemy)
         {
             DisableRootMotion();
@@ -123,6 +127,7 @@ public class PlayerController : MonoBehaviour
         {
             EnableRootMotion();
         }
+        //如果沒有鎖定敵人就動態抓取離玩家最近的敵方單位，如果有鎖定敵人就解除鎖定
         if (LockTarget != null)
         {
             float Targetdistance = Vector3.Distance(transform.position, LockTarget.transform.position);
@@ -134,23 +139,22 @@ public class PlayerController : MonoBehaviour
     }
 
     //技能系統
-    //public void CastSkill(BaseSkill Skill)
-    //{
-    //    if (isSkilling) return;
+    public void CastSkill(string skillName, float SkillDuration)
+    {
+        if (isSkilling) return;
 
-    //    isSkilling = true;
+        isSkilling = true;
 
-    //    StartCoroutine(SkillCastRoutine(Skill.castTime, Skill));
-    //}
+        animator.Play(skillName);
 
-    //private IEnumerator SkillCastRoutine(float castTime, BaseSkill Skill)
-    //{
-    //    yield return new WaitForSeconds(castTime);
+        StartCoroutine(SkillCastingRoutine(SkillDuration));
+    }
 
-    //    Skill.Execute();
-
-    //    isSkilling = false;
-    //}
+    private IEnumerator SkillCastingRoutine(float Duration)
+    {
+        yield return new WaitForSeconds(Duration);
+        isSkilling = false;
+    }
 
     //共用重力邏輯
     private void ApplyGravity()

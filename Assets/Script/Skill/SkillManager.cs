@@ -11,6 +11,7 @@ public class SkillManager : MonoBehaviour
 	[SerializeField] private SkillDataLibrarySO skillDataLibrarySO;
 	
 	private Dictionary<GameInput.Bind, BaseSkill> skillBind;
+	private PlayerController player;
 
 
     private void Awake()
@@ -20,7 +21,9 @@ public class SkillManager : MonoBehaviour
 
     private void Start()
 	{
-		skillBind = new Dictionary<GameInput.Bind, BaseSkill>();
+        player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+
+        skillBind = new Dictionary<GameInput.Bind, BaseSkill>();
 		
 		GameInput.Instance.OnSkillAction += UseSkill;
 	}
@@ -32,6 +35,7 @@ public class SkillManager : MonoBehaviour
 		{
 			if(baseSkill.canUse)
 			{
+				player.CastSkill(baseSkill.AnimationName, baseSkill.CastDurtion);
 				baseSkill.Use();
 			}
 		}

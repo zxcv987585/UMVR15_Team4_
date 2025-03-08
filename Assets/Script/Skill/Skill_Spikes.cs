@@ -6,7 +6,6 @@ public class Skill_Spikes : BaseSkill
 {
     private float radius = 5f;
     private float hitFlyPower = 5f;
-    public AnimatorOverrideController overrideController;
     
     public override void SkillAbility()
     {
