@@ -14,6 +14,8 @@ public class BossUI : MonoBehaviour
     //-------------------------------------------------
 
     //-----HP------------------------------------------
+    private Health health;
+    private Coroutine hpCoroutine;
     [SerializeField] private Image currentHP;
     [SerializeField] private Image costHP;
     //-------------------------------------------------
@@ -46,10 +48,16 @@ public class BossUI : MonoBehaviour
         float timer = 0f;
         Vector3 originalVector3 = bossTitle.transform.position;
 
+        Image image = bossPanel.GetComponent<Image>();
+        Color color = image.color;
+
         while(timer < showTimer)
         {
             timer += Time.deltaTime;
+            
             bossTitle.transform.position = Vector3.Lerp(originalVector3, bossHP.transform.position, timer/showTimer);
+            color.a = Mathf.Lerp(1, 0, timer/showTimer);
+            image.color = color;
 
             yield return null;
         }
@@ -61,6 +69,9 @@ public class BossUI : MonoBehaviour
 
     private IEnumerator ShowBossHP(float showTimer)
     {
+        bossPanel.gameObject.SetActive(false);
+        bossTitle.gameObject.SetActive(false);
+
         float timer = 0f;
 
         while(timer < showTimer)
@@ -75,8 +86,40 @@ public class BossUI : MonoBehaviour
         bossPanel.localScale = Vector3.one;
     }
 
-    private void SetHP(float hpRatio)
+    public void SetHealth(Health health)
     {
-        currentHP.fillAmount = hpRatio;
+        health.OnDamage += SetHP;
+        health.OnDead += SetHP;
+        this.health = health;
+    }
+
+    private void SetHP()
+    {
+        currentHP.fillAmount = health.GetHealthRatio();
+
+        if(hpCoroutine != null)
+        {
+            StopCoroutine(hpCoroutine);
+        }
+        hpCoroutine = StartCoroutine(HPFade(0.7f));
+    }
+
+    private IEnumerator HPFade(float fadeTimer)
+    {
+        float timer = 0;
+
+        Color color = costHP.color;
+
+        while(timer < fadeTimer)
+        {
+            timer += Time.deltaTime;
+            color.a = Mathf.Lerp(1, 0, timer/fadeTimer);
+
+            costHP.color = color;
+
+            yield return null;
+        }
+
+        costHP.fillAmount = currentHP.fillAmount;
     }
 }
