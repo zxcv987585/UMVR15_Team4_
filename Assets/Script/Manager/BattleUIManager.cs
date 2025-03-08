@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class BattleUIManager : MonoBehaviour
 {
-    public static BattleUIManager Instance{get; private set;}
+    public static BattleUIManager Instance { get; private set; }
 
     //--------------------------傷害數字-------------------------------
     [SerializeField] private Queue<DamageText> damageTextQuene;
@@ -40,6 +40,8 @@ public class BattleUIManager : MonoBehaviour
 
         currentHPText.text = health.GetMaxHealth().ToString();
         maxHPText.text = health.GetMaxHealth().ToString();
+        currentPPText.text = health.GetMaxPP().ToString();
+        maxPPText.text = health.GetMaxPP().ToString();
     }
 
     /// <summary>
@@ -49,7 +51,7 @@ public class BattleUIManager : MonoBehaviour
     /// <param name="damage">傷害的數字</param>
     public void ShowDamageText(Vector3 showPosition, float damage)
     {
-        if(damageTextQuene.Count > 0)
+        if (damageTextQuene.Count > 0)
         {
             DamageText damageText = damageTextQuene.Dequeue();
             damageText.transform.position = showPosition;
@@ -81,5 +83,19 @@ public class BattleUIManager : MonoBehaviour
         float newMaxHealth = health.GetMaxHealth();
         Debug.Log($"玩家升級！新最大血量: {newMaxHealth}");
         maxHPText.text = newMaxHealth.ToString();
+    }
+
+    //當玩家的PP變動，也跟著變動 UI 的 PP
+    private void ChangePPStatus()
+    {
+        currentPPText.text = health.GetCurrentPP().ToString();
+
+        PPSlider.value = health.GetPPRatio();
+    }
+    private void playerMaxPPupdate()
+    {
+        float newMaxPP = health.GetMaxPP();
+        Debug.Log($"玩家升級！新最大PP: {newMaxPP}");
+        maxPPText.text = newMaxPP.ToString();
     }
 }

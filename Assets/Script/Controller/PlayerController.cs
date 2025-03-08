@@ -177,7 +177,7 @@ public class PlayerController : MonoBehaviour
     //Walk、Run狀態機的核心邏輯
     public void MoveCharacter(Vector3 targetDirection, float currentSpeed)
     {
-        if (IsDie || isDash) return;
+        if (IsDie || isDash || isSkilling) return;
 
         controller.Move(targetDirection * currentSpeed * Time.deltaTime);
         SmoothRotation(targetDirection);
@@ -185,7 +185,7 @@ public class PlayerController : MonoBehaviour
     private void SetIsRun(bool isRun)
     {
         //死亡就不要跑步
-        if (IsDie) return;
+        if (isSkilling || IsDie) return;
         //透過涵式更改PlayerController的跑步bool狀態
         this.isRun = isRun;
     }
@@ -193,7 +193,7 @@ public class PlayerController : MonoBehaviour
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
-        if (IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+        if (isSkilling || IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
 
         isAttack = Attack;
     }
@@ -207,7 +207,7 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (IsDie || InItemMenu || stateMachine.GetState<DashState>() != null) return;
+        if (isSkilling || IsDie || InItemMenu || stateMachine.GetState<DashState>() != null) return;
 
         isAiming = isAim;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
@@ -47,11 +46,11 @@ public class PlayerHealth : MonoBehaviour
 
     private void LateUpdate()
     {
-        if(DamageCount >= 3)
+        if (DamageCount >= 3)
         {
             StartCoroutine(ResetDamageCount());
         }
-        else if(Time.time - LastDamageTime >= ResetDamageTime)
+        else if (Time.time - LastDamageTime >= ResetDamageTime)
         {
             DamageCount = 0;
         }
@@ -95,10 +94,22 @@ public class PlayerHealth : MonoBehaviour
         return MaxHealth;
     }
 
+    //取得最大PP
+    public float GetMaxPP()
+    {
+        return MaxPP;
+    }
+
     //取得當前血量以及最大血量的比例，主要用於UI血條，可用可不用
     public float GetHealthRatio()
     {
         return CurrentHealth / MaxHealth;
+    }
+
+    //取得當前PP以及最大PP的比例
+    public float GetPPRatio()
+    {
+        return CurrentPP / MaxPP;
     }
 
     //確認玩家是否為死亡狀態
