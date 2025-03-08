@@ -31,22 +31,8 @@ public class PlayerController : MonoBehaviour
     
     [Tooltip("玩家奔跑時的特效")]
     [SerializeField] GameObject SprintEffect;
-    [Tooltip("玩家Dash時的特效")]
-    [SerializeField] GameObject DashEffect;
-    [Tooltip("玩家揮劍時的特效 1")]
-    public GameObject SwordSlash1;
-    [Tooltip("玩家揮劍時的特效 2")]
-    public GameObject SwordSlash2;
-    [Tooltip("玩家揮劍時的特效 3")]
-    public GameObject SwordSlash3;
-    [Tooltip("玩家揮劍時的特效 4")]
-    public GameObject SwordSlash4;
-    [Tooltip("玩家揮劍時的特效 突進")]
-    public GameObject SwordSlashForword;
     [Tooltip("玩家擊中時的特效")]
     public GameObject HitEffect;
-    [Tooltip("Slash生成點")]
-    public Transform SlashPoint;
 
     [Header("鎖定邏輯")]
     [Tooltip("動態存放鎖定的敵方單位")]
@@ -119,14 +105,18 @@ public class PlayerController : MonoBehaviour
     {
         //重力運作邏輯
         ApplyGravity();
-        //檢測狀態機更新邏輯
-        stateMachine.Update();
+        //檢測狀態機更新邏輯，僅限沒有技能施放時使用
+        if (!isSkilling)
+        {
+            stateMachine.Update();
+        }
         //時刻檢查周遭是否存在敵人
         if (Time.time >= NextCheckTime)
         {
             NextCheckTime = Time.time + CheckInterval;
             GetClosestEnemy();
         }
+        //鎖定敵人邏輯，如果有鎖定敵人並且相當靠近就停止RootMotion
         if (LockTarget != null && CloseEnemy)
         {
             DisableRootMotion();
@@ -135,6 +125,7 @@ public class PlayerController : MonoBehaviour
         {
             EnableRootMotion();
         }
+        //如果沒有鎖定敵人就動態抓取離玩家最近的敵方單位，如果有鎖定敵人就解除鎖定
         if (LockTarget != null)
         {
             float Targetdistance = Vector3.Distance(transform.position, LockTarget.transform.position);
@@ -145,71 +136,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //劍氣特效
-    public void SpawnSlash1()
-    {
-        if (SlashPoint != null && SwordSlash1 != null)
-        {
-            Vector3 CurrentEuler = SwordSlash1.transform.eulerAngles;
-            Quaternion offset = Quaternion.Euler(CurrentEuler);
-            Instantiate(SwordSlash1, SlashPoint.position, SlashPoint.rotation * offset);
-        }
-    }
-    public void SpawnSlash2()
-    {
-        if (SlashPoint != null && SwordSlash2 != null)
-        {
-            Vector3 CurrentEuler = SwordSlash2.transform.eulerAngles;
-            Quaternion offset = Quaternion.Euler(CurrentEuler);
-            Instantiate(SwordSlash2, SlashPoint.position, SlashPoint.rotation * offset);
-        }
-    }
-    public void SpawnSlash3()
-    {
-        if (SlashPoint != null && SwordSlash3 != null)
-        {
-            Vector3 CurrentEuler = SwordSlash3.transform.eulerAngles;
-            Quaternion offset = Quaternion.Euler(CurrentEuler);
-            Instantiate(SwordSlash3, SlashPoint.position, SlashPoint.rotation * offset);
-        }
-    }
-    public void SpawnSlash4()
-    {
-        if (SlashPoint != null && SwordSlash4 != null)
-        {
-            Vector3 CurrentEuler = SwordSlash4.transform.eulerAngles;
-            Quaternion offset = Quaternion.Euler(CurrentEuler);
-            Instantiate(SwordSlash4, SlashPoint.position, SlashPoint.rotation * offset);
-        }
-    }
-    public void SpawnSlashForword()
-    {
-        if (SlashPoint != null && SwordSlashForword != null)
-        {
-            Vector3 CurrentEuler = SwordSlashForword.transform.eulerAngles;
-            Quaternion offset = Quaternion.Euler(CurrentEuler);
-            Instantiate(SwordSlashForword, SlashPoint.position, SlashPoint.rotation * offset);
-        }
-    }
-
     //技能系統
-    //public void CastSkill(BaseSkill Skill)
-    //{
-    //    if (isSkilling) return;
+    public void CastSkill(string skillName, float SkillDuration)
+    {
+        if (isSkilling || isAiming) return;
 
-    //    isSkilling = true;
-
-    //    StartCoroutine(SkillCastRoutine(Skill.castTime, Skill));
-    //}
-
-    //private IEnumerator SkillCastRoutine(float castTime, BaseSkill Skill)
-    //{
-    //    yield return new WaitForSeconds(castTime);
-
-    //    Skill.Execute();
-
-    //    isSkilling = false;
-    //}
+        isSkilling = true;
+        animator.Play(skillName);
+        StartCoroutine(SkillCastingRoutine(SkillDuration));
+    }
+    private IEnumerator SkillCastingRoutine(float Duration)
+    {
+        yield return new WaitForSeconds(Duration);
+        isSkilling = false;
+    }
 
     //共用重力邏輯
     private void ApplyGravity()
