@@ -18,6 +18,9 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI currentHPText;
     [SerializeField] private TextMeshProUGUI maxHPText;
     [SerializeField] private Slider HPSlider;
+    [SerializeField] private TextMeshProUGUI currentPPText;
+    [SerializeField] private TextMeshProUGUI maxPPText;
+    [SerializeField] private Slider PPSlider;
     [SerializeField] private LevelSystem levelSystem;
 
     private float fadeTime = 1f;
