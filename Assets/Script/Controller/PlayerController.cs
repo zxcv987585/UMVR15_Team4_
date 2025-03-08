@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     //多久檢查一次附近敵人
     private float CheckInterval = 0.2f;
     //檢查玩家與敵人的距離
-    [SerializeField] float stopRootMotionDistance = 0.5f;
+    [SerializeField] float stopRootMotionDistance = 1f;
 
     //用來記錄最後一次Dash的時間
     private float lastDashTime = -Mathf.Infinity;

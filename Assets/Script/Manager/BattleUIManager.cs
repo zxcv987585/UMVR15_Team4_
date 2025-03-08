@@ -36,12 +36,18 @@ public class BattleUIManager : MonoBehaviour
         damageTextQuene = new Queue<DamageText>();
         health.OnDamage += ChangeHPStatus;
         health.OnDead += ChangeHPStatus;
+        health.OnPPChanged += playerMaxPPupdate;
         levelSystem.PlayerLevelup += playerMaxHealthupdate;
 
         currentHPText.text = health.GetMaxHealth().ToString();
         maxHPText.text = health.GetMaxHealth().ToString();
         currentPPText.text = health.GetMaxPP().ToString();
         maxPPText.text = health.GetMaxPP().ToString();
+    }
+
+    private void Update()
+    {
+        UpdatePPUI();
     }
 
     /// <summary>
@@ -71,6 +77,15 @@ public class BattleUIManager : MonoBehaviour
         damageTextQuene.Enqueue(damageText);
     }
 
+    //PP實時更新至UI介面
+    private void UpdatePPUI()
+    {
+        // 如果想顯示整數
+        currentPPText.text = Mathf.FloorToInt(health.GetCurrentPP()).ToString();
+        maxPPText.text = Mathf.FloorToInt(health.GetMaxPP()).ToString();
+        PPSlider.value = health.GetPPRatio();
+    }
+
     //當玩家的 HP 變動, 也跟著變動 UI 的 HP
     private void ChangeHPStatus()
     {
@@ -94,8 +109,8 @@ public class BattleUIManager : MonoBehaviour
     }
     private void playerMaxPPupdate()
     {
-        float newMaxPP = health.GetMaxPP();
-        Debug.Log($"玩家升級！新最大PP: {newMaxPP}");
-        maxPPText.text = newMaxPP.ToString();
+        PPSlider.value = health.GetPPRatio();
+        currentPPText.text = health.GetCurrentPP().ToString();
+        maxPPText.text = health.GetMaxPP().ToString();
     }
 }

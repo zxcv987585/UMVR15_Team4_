@@ -12,6 +12,8 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] float MaxPP;
     [Header("當前PP量")]
     [SerializeField] float CurrentPP;
+    [Header("每秒回復PP量")]
+    [SerializeField] float PPRecoveryRate = 2f;
     [Header("玩家特效")]
     [Tooltip("玩家治療時的特效")]
     [SerializeField] GameObject HealEffect;
@@ -27,6 +29,9 @@ public class PlayerHealth : MonoBehaviour
 
     //敵人死亡時要觸發的委派事件
     public event Action<Transform> EnemyDead;
+
+    //PP消耗委派事件
+    public event Action OnPPChanged;
 
     //計算短時間內受到多少次傷害，如果短時間內受到多次傷害就給予無敵緩衝時間
     private float DamageCount;
@@ -44,6 +49,17 @@ public class PlayerHealth : MonoBehaviour
         levelSystem.PlayerLevelup += NewMaxHealth;
     }
 
+    private void Update()
+    {
+        if(!Isdead && CurrentPP < MaxPP)
+        {
+            float nextPP = CurrentPP + PPRecoveryRate * Time.deltaTime;
+
+            CurrentPP = MathF.Floor(nextPP);
+            CurrentPP = Mathf.Min(nextPP, MaxPP);
+        }
+    }
+
     private void LateUpdate()
     {
         if (DamageCount >= 3)
@@ -53,6 +69,23 @@ public class PlayerHealth : MonoBehaviour
         else if (Time.time - LastDamageTime >= ResetDamageTime)
         {
             DamageCount = 0;
+        }
+    }
+
+    //使用PP系統
+    public bool UsePP(float amout)
+    {
+        if(CurrentPP >= amout)
+        {
+            CurrentPP -= amout;
+            CurrentPP = Mathf.Max(CurrentPP, 0);
+
+            OnPPChanged?.Invoke();
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
