@@ -254,7 +254,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(playerData.HitCoolTime);
 
         isHit = false;
-        animator.SetBool("IsAim", true);
     }
     IEnumerator GunHitCoolDown()
     {
@@ -355,6 +354,8 @@ public class PlayerController : MonoBehaviour
         Transform Target = null;
         float CloseDistance = Mathf.Infinity;
 
+        bool foundCloseEnemy = false;
+
         foreach (Collider enemy in enemies) 
         { 
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
@@ -363,15 +364,13 @@ public class PlayerController : MonoBehaviour
                 CloseDistance = distance;
                 Target = enemy.transform;
             }
-            if(distance <= stopRootMotionDistance)
-            { 
-                CloseEnemy = true;
-            }
-            else
+            if (distance <= stopRootMotionDistance)
             {
-                CloseEnemy = false;
+                foundCloseEnemy = true;
             }
         }
+        CloseEnemy = foundCloseEnemy;
+
         return Target;
     }
     //檢查敵人與玩家距離是否需要開關RootMotion
