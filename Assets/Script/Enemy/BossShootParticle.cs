@@ -75,6 +75,7 @@ public class BossShootParticle : MonoBehaviour
     {
         yield return new WaitForSeconds(flightTime);
 
+        targetPosition.y = 0f;
         Instantiate(acitSplashPrefab, targetPosition, Quaternion.identity);
     }
 }

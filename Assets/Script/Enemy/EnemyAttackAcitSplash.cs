@@ -48,5 +48,7 @@ public class EnemyAttackAcitSplash : MonoBehaviour, IEnemyAttack
             yield return new WaitForSeconds(attackCooldown);
             timer += attackCooldown;
         }
+
+        Destroy(gameObject);
     }
 }

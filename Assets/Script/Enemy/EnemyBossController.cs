@@ -6,6 +6,8 @@ using UnityEngine.AI;
 
 public class EnemyBossController : MonoBehaviour
 {
+	[SerializeField] private GameObject bossUIPrefab;
+
     [SerializeField] private EnemyDataSO enemyDataSO;
 	[SerializeField] private Animator animator;
 	[SerializeField] private GameObject shootAttackPrefab;
@@ -13,11 +15,16 @@ public class EnemyBossController : MonoBehaviour
 
 	[SerializeField] private float attackCooldownTime;
 
-	private int hp;
 	private bool isIdle = true;
 	private bool isAttackCooldown = false;
+	private Health health;
 	private Transform playerTransform;
+	private PlayerHealth playerHealth;
 	private AnimatorStateInfo animatorStateInfo;
+	private BossUI bossUI;
+
+	private bool hpLessTrigger70 = false;
+	private bool hpLessTrigger35 = false;
 	
 
 	private BossState state;
@@ -33,20 +40,44 @@ public class EnemyBossController : MonoBehaviour
 	
 	private void Start()
 	{
-		hp = enemyDataSO.maxHP;
+		health = GetComponent<Health>();
+		health.SetMaxHealth(enemyDataSO.maxHP);
+		health.OnDamage += TakeDamage;
+		health.OnDead += DeadHandler;
+
 		playerTransform = FindObjectOfType<PlayerController>()?.transform;
+		playerHealth = playerTransform.GetComponent<PlayerHealth>();
 		
 		ChangeEnemyState(BossState.Idle);
+
+		GameObject go = Instantiate(bossUIPrefab, FindObjectOfType<BattleUIManager>().transform);
+		bossUI = go.GetComponent<BossUI>();
+		bossUI.SetHealth(health);
 	}
 
 	private void Update()
 	{
+		if(playerHealth.IsDead() || state == BossState.Dead)
+		{
+			return;
+		}
+
 		CheckAnimationIsIdle();
+		LookAtPlayer();
 
 		if(isIdle)
 		{
 			CheckPlayerDistance();
 		}
+	}
+
+	private void LookAtPlayer()
+	{
+		Vector3 direction = (playerTransform.position - transform.position).normalized;
+		direction.y = 0;
+		Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+		transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 15f * Time.deltaTime);
 	}
 
 	private void CheckAnimationIsIdle()
@@ -120,6 +151,7 @@ public class EnemyBossController : MonoBehaviour
 				StartCoroutine(DelayFloorAttackCoroutine());
                 break;
             case BossState.Dead:
+				animator.SetTrigger("isDead");
                 break;
         }
     }
@@ -145,6 +177,11 @@ public class EnemyBossController : MonoBehaviour
 	private void CallEnemy()
 	{
 	    //Call 小怪出來
+	}
+
+	private void DeadHandler()
+	{
+		ChangeEnemyState(BossState.Dead);
 	}
 
 	/*
@@ -186,19 +223,13 @@ public class EnemyBossController : MonoBehaviour
 	*/
 
 	//如果需要 Enemy 受傷, 呼叫該函數
-	public void TakeDamage(int damage)
+	public void TakeDamage()
 	{
 		if(state == BossState.Dead) return;
 
-		hp -= damage;
-		if(hp <= 0)
-		{
-			hp = 0;
-			AudioManager.Instance.PlaySound(enemyDataSO.SfxDeadKey, transform.position);
-			ChangeEnemyState(BossState.Dead);
-		}
+		//AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
 
-		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, damage);
+		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up * 6, health.LastDamage);
 	}
 	
 	public void DestroySelf()
