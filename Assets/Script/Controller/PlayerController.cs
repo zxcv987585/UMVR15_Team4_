@@ -31,8 +31,6 @@ public class PlayerController : MonoBehaviour
     
     [Tooltip("玩家奔跑時的特效")]
     [SerializeField] GameObject SprintEffect;
-    [Tooltip("玩家Dash時的特效")]
-    [SerializeField] GameObject DashEffect;
     [Tooltip("玩家擊中時的特效")]
     public GameObject HitEffect;
 
@@ -141,15 +139,12 @@ public class PlayerController : MonoBehaviour
     //技能系統
     public void CastSkill(string skillName, float SkillDuration)
     {
-        if (isSkilling) return;
+        if (isSkilling || isAiming) return;
 
         isSkilling = true;
-
         animator.Play(skillName);
-
         StartCoroutine(SkillCastingRoutine(SkillDuration));
     }
-
     private IEnumerator SkillCastingRoutine(float Duration)
     {
         yield return new WaitForSeconds(Duration);

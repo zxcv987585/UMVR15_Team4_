@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,15 @@ public class Skill_Spikes : BaseSkill
     
     public override void SkillAbility()
     {
+        StartCoroutine(DelaySkillEffect(0.7f));
+    }
+
+    private IEnumerator DelaySkillEffect(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
         transform.position = FindObjectOfType<PlayerController>()?.transform.position ?? Vector3.zero;
+
         skillParticleSystem.Play();
 
         Collider[] hitColliderArray = Physics.OverlapSphere(transform.position, radius, LayerMask.GetMask(ENEMY));
