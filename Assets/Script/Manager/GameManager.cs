@@ -12,10 +12,26 @@ public class GameManagerSingleton
         {
             if (m_Instance == null)
             {
-                m_Instance = new GameManagerSingleton();
-                m_Instance.gameObject = new GameObject("Gamemanager");
-                m_Instance.gameObject.AddComponent<InputController>();
-                m_Instance.m_Inputcontrol = m_Instance.gameObject.GetComponent<InputController>();
+                var existing = GameObject.Find("Gamemanager");
+                if (existing != null)
+                {
+                    m_Instance = new GameManagerSingleton();
+                    m_Instance.gameObject = existing;
+                    m_Instance.m_Inputcontrol = existing.GetComponent<InputController>();
+
+                    if (m_Instance.m_Inputcontrol == null)
+                    {
+                        existing.AddComponent<InputController>();
+                        m_Instance.m_Inputcontrol = existing.GetComponent<InputController>();
+                    }
+                }
+                else
+                {
+                    m_Instance = new GameManagerSingleton();
+                    m_Instance.gameObject = new GameObject("Gamemanager");
+                    m_Instance.gameObject.AddComponent<InputController>();
+                    m_Instance.m_Inputcontrol = m_Instance.gameObject.GetComponent<InputController>();
+                }
             }
             return m_Instance;
         }
