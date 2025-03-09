@@ -60,6 +60,15 @@ public class CameraController : MonoBehaviour
     [SerializeField] float collisionRadius = 0.2f;
     [SerializeField] float collisionOffset = 0.2f;
 
+    private void Awake()
+    {
+        if (FindObjectsOfType<CameraController>().Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
+    }
     private void Start()
     {
         input = GameManagerSingleton.Instance.InputControl;

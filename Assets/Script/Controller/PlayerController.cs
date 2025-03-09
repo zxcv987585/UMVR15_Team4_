@@ -84,6 +84,13 @@ public class PlayerController : MonoBehaviour
         health.SetMaxHealth(playerData.MaxHealth);
         //從Data資料庫初始化玩家最大PP值
         health.SetMaxPP(playerData.MaxPP);
+        //設置玩家不會因為切場景而被破壞
+        if (FindObjectsOfType<PlayerController>().Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()

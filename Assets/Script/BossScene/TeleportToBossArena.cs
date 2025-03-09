@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Android;
-using UnityEngine.InputSystem.XR;
 using UnityEngine.UI;
-using UnityEngine.UIElements.Experimental;
 
 public class TeleportToBossArena : MonoBehaviour
 {
@@ -24,7 +20,37 @@ public class TeleportToBossArena : MonoBehaviour
 
     private void Awake()
     {
-        blackScreen.gameObject.SetActive(true);
+        if(whiteScreen == null || blackScreen == null)
+        {
+            var BattleUI = GameObject.Find("BattleUICanvas");
+            
+            if(BattleUI != null)
+            {
+                whiteScreen = BattleUI.transform.Find("whiteScreen")?.GetComponent<Image>();
+                blackScreen = BattleUI.transform.Find("BlackScreen")?.GetComponent<Image>();
+            }
+        }
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+            }
+        }
+
+        if (mainCamera == null)
+        {
+            GameObject cameraObj = GameObject.FindWithTag("MainCamera");
+            if (cameraObj != null)
+            {
+                mainCamera = cameraObj.GetComponent<CameraController>();
+            }
+        }
+    }
+
+    private void Start()
+    {
         EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
         StartCoroutine(easyInOut.ChangeValue(
             new Vector4(0f, 0f, 0f, 1f),
@@ -77,15 +103,15 @@ public class TeleportToBossArena : MonoBehaviour
 
         EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
 
-        //1.=====�Ұʶǰe�S��=====
+        //1.=====啟動傳送門特效=====
         vfxHyperDriveEffect();
         magicCircleEffect();
-        whiteScreen.color = new Vector4(1f,1f,1f,0f);
+        whiteScreen.color = new Vector4(1f, 1f, 1f, 0f);
         whiteScreen.gameObject.SetActive(true);
         animator.Play("Idle");
         yield return new WaitForSeconds(1f);
 
-        //2.=====�S�ĥ[�j=====
+        //2.=====特效加強=====
         vfxImplosion.transform.position = new Vector3(playerPos.x, playerPos.y + 1, playerPos.z);
         vfxImplosion.gameObject.SetActive(true);
         yield return new WaitForSeconds(1.25f);
@@ -98,7 +124,7 @@ public class TeleportToBossArena : MonoBehaviour
             ));
         yield return new WaitForSeconds(0.75f);
 
-        //3.=====�ǰe=====
+        //3.=====傳送=====
         if (player != null)
         {
             player.transform.position = targetPos.transform.position;
@@ -114,7 +140,7 @@ public class TeleportToBossArena : MonoBehaviour
         StartCoroutine(ChangeVector4(Color.white, new Vector4(1f, 1f, 1f, 0f), 2f, value => whiteScreen.color = value));
         yield return new WaitForSeconds(0.5f);
 
-        //4.=====�ǰe��t�X=====
+        //4.=====ｶﾇｰeｫ蘯t･X=====
         charController.enabled = true;
         playerController.enabled = true;
         animatorController.enabled = true;
