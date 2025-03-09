@@ -26,7 +26,7 @@ public class GameManagerSingleton
                 else
                 {
                     m_Instance = new GameManagerSingleton();
-                    m_Instance.gameObject = new GameObject("Gamemanager");
+                    m_Instance.gameObject = new GameObject("GameManager");
 
                     GameObject.DontDestroyOnLoad(m_Instance.gameObject);
 

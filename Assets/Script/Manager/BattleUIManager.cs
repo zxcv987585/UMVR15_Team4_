@@ -7,6 +7,8 @@ public class BattleUIManager : MonoBehaviour
 {
     public static BattleUIManager Instance { get; private set; }
 
+    [SerializeField] private Canvas battleCanvas;
+
     //--------------------------傷害數字-------------------------------
     [SerializeField] private Queue<DamageText> damageTextQuene;
     [SerializeField] private Transform damageUI;
@@ -28,6 +30,7 @@ public class BattleUIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -111,5 +114,16 @@ public class BattleUIManager : MonoBehaviour
         PPSlider.value = health.GetPPRatio();
         currentPPText.text = health.GetCurrentPP().ToString();
         maxPPText.text = health.GetMaxPP().ToString();
+    }
+
+    //在不對的Scene時要關閉
+    public void HideUI()
+    {
+        battleCanvas.enabled = false;
+    }
+
+    public void ShowUI()
+    {
+        battleCanvas.enabled = true;
     }
 }

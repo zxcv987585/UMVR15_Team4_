@@ -1,11 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Android;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.UIElements.Experimental;
 
 public class TeleportToLoadScene : MonoBehaviour
 {
@@ -64,14 +59,12 @@ public class TeleportToLoadScene : MonoBehaviour
 
         EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
 
-        //1.=====啟動傳送特效=====
         vfxHyperDriveEffect();
         magicCircleEffect();
         whiteScreen.gameObject.SetActive(true);
         animator.Play("Idle");
         yield return new WaitForSeconds(1f);
 
-        //2.=====特效加強=====
         vfxImplosion.transform.position = new Vector3(playerPos.x, playerPos.y + 1, playerPos.z);
         vfxImplosion.gameObject.SetActive(true);
         yield return new WaitForSeconds(1.25f);
@@ -84,7 +77,6 @@ public class TeleportToLoadScene : MonoBehaviour
             ));
         yield return new WaitForSeconds(0.75f);
 
-        //3.=====傳送=====
         vfxHyperDrive.gameObject.SetActive(false);
         magicCircle.gameObject.SetActive(false);
         magicCircleSide.gameObject.SetActive(false);
@@ -105,6 +97,9 @@ public class TeleportToLoadScene : MonoBehaviour
             EasyInOut.EaseOut
             ));
         yield return new WaitForSeconds(0.75f);
+
+
+        whiteScreen.gameObject.SetActive(false);
 
         LoadManager.Load(LoadManager.Scene.AN_Demo_Boss);
     }
