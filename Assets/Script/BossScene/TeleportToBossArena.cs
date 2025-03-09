@@ -24,6 +24,7 @@ public class TeleportToBossArena : MonoBehaviour
 
     private void Awake()
     {
+        blackScreen.gameObject.SetActive(true);
         EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
         StartCoroutine(easyInOut.ChangeValue(
             new Vector4(0f, 0f, 0f, 1f),
