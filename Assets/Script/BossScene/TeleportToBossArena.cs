@@ -80,6 +80,7 @@ public class TeleportToBossArena : MonoBehaviour
         //1.=====啟動傳送特效=====
         vfxHyperDriveEffect();
         magicCircleEffect();
+        whiteScreen.color = new Vector4(1f,1f,1f,0f);
         whiteScreen.gameObject.SetActive(true);
         animator.Play("Idle");
         yield return new WaitForSeconds(1f);
