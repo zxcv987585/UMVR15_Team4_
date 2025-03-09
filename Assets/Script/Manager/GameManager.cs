@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 public class GameManagerSingleton
 {
@@ -28,7 +26,7 @@ public class GameManagerSingleton
                 else
                 {
                     m_Instance = new GameManagerSingleton();
-                    m_Instance.gameObject = new GameObject("Gamemanager");
+                    m_Instance.gameObject = new GameObject("GameManager");
 
                     GameObject.DontDestroyOnLoad(m_Instance.gameObject);
 

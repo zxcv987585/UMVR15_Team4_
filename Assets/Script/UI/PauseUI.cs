@@ -1,12 +1,11 @@
 using Michsky.UI.Shift;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PauseUI : MonoBehaviour
 {
-    private bool isOpen = false;
+    public bool isOpen = false;
 
     public EasyInOut easyInOut;
 
@@ -18,8 +17,12 @@ public class PauseUI : MonoBehaviour
 
     public RectTransform[] optionButtons;
 
+    public BagPanelManager[] optionList;
+    private Animator closeWindow;
+
     public IEnumerator RunPauseUI()
     {
+        //按下 TAB 開啟的方法
         if (isOpen == false)
         {
             //黑屏
@@ -43,8 +46,20 @@ public class PauseUI : MonoBehaviour
 
             isOpen = true;
         }
+        //按下 TAB 關閉的方法
         else if (isOpen == true)
         {
+            //關閉開啟中的 Options
+            for (int i = 0; i < optionList.Length; i++)
+            {
+                if (optionList[i].isOn == true)
+                {
+                    closeWindow = optionList[i].GetComponent<Animator>();
+                    closeWindow.CrossFade("Window Out", 0.1f);
+                    optionList[i].isOn = false;
+                }
+            }
+
             //黑屏
             StartCoroutine(easyInOut.ChangeValue(
                 blackScreenTargetColor,
@@ -66,6 +81,28 @@ public class PauseUI : MonoBehaviour
             }
 
             isOpen = false;
+        }
+    }
+
+    public void OpenOption(int index)
+    {
+        for (int i = 0; i < optionList.Length; i++)
+        {
+            //檢查條件，跳過要開啟的選單，只關閉其他的且已開啟的選單
+            if (i != index && optionList[i].isOn)
+            {
+                Animator closeAnim = optionList[i].GetComponent<Animator>();
+                closeAnim.CrossFade("Window Out", 0.1f);
+                optionList[i].isOn = false;
+            }
+        }
+
+        //檢查選單是否已被開啟，如果沒有就開啟
+        if (!optionList[index].isOn)
+        {
+            optionList[index].isOn = true;
+            Animator openAnim = optionList[index].GetComponent<Animator>();
+            openAnim.CrossFade("Window In", 0.1f);
         }
     }
 }

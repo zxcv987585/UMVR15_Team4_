@@ -18,8 +18,6 @@ public class FightState : PlayerState
     public Action<string> AttackCombo;
     //傳送重置Trigger的指令給動畫控制器
     public Action<bool> isAttacking;
-    //傳送劍氣生成指令給WeaponManager
-    public event Action SwordSlash;
 
     public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) {}
 

@@ -5,7 +5,7 @@ namespace Michsky.UI.Shift
     public class BagPanelManager : MonoBehaviour
     {
         Animator windowAnimator;
-        bool isOn = false;
+        public bool isOn = false;
 
         private void Update()
         {

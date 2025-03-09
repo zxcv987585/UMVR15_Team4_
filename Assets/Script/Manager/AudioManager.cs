@@ -16,14 +16,16 @@ public class AudioManager : MonoBehaviour
 
 	private void Awake()
 	{
-		if(Instance == null)
+		if(Instance != null && Instance != this)
 		{
-			Instance = this;
-			DontDestroyOnLoad(gameObject);	
+			Destroy(gameObject);
+			return;
 		}
-		
-		
-		bgmAudioSource = gameObject.AddComponent<AudioSource>();
+
+        Instance = this;
+		DontDestroyOnLoad(gameObject);
+
+        bgmAudioSource = gameObject.AddComponent<AudioSource>();
 	}
 
 	private void Start()
@@ -32,7 +34,10 @@ public class AudioManager : MonoBehaviour
 		bgmVolume = GameDataManager.Instance.gameData.bgmVolume;
 		sfxVolume = GameDataManager.Instance.gameData.sfxVolume;
 
-		PlayBGM("BackGroundMusic");
+        if (bgmAudioSource != null)
+		{
+            PlayBGM("BackGroundMusic");
+        }
 	}
 
 	public void PlayBGM(string key, float volume = 0.5f)
