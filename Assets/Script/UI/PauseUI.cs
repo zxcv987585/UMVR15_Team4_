@@ -36,8 +36,8 @@ public class PauseUI : MonoBehaviour
             foreach (var Button in optionButtons)
             {
                 StartCoroutine(easyInOut.ChangeValue(
-                new Vector2(Button.GetComponent<RectTransform>().anchoredPosition.x, -120f),
-                new Vector2(Button.GetComponent<RectTransform>().anchoredPosition.x, -280f),
+                new Vector2(Button.GetComponent<RectTransform>().anchoredPosition.x, -70.3f),
+                new Vector2(Button.GetComponent<RectTransform>().anchoredPosition.x, -180f),
                 0.3f,
                 value => Button.anchoredPosition = value,
                 EasyInOut.EaseOut));
@@ -72,8 +72,8 @@ public class PauseUI : MonoBehaviour
             foreach (var Button in optionButtons)
             {
                 StartCoroutine(easyInOut.ChangeValue(
-                new Vector2(Button.GetComponent<RectTransform>().anchoredPosition.x, -280f),
-                new Vector2(Button.GetComponent<RectTransform>().anchoredPosition.x, -120f),
+                new Vector2(Button.GetComponent<RectTransform>().anchoredPosition.x, -180f),
+                new Vector2(Button.GetComponent<RectTransform>().anchoredPosition.x, -70.3f),
                 0.2f,
                 value => Button.anchoredPosition = value,
                 EasyInOut.EaseIn));
