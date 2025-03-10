@@ -47,13 +47,6 @@ public class PlayerHealth : MonoBehaviour
     //PP消耗委派事件
     public event Action OnPPChanged;
 
-    //計算短時間內受到多少次傷害，如果短時間內受到多次傷害就給予無敵緩衝時間
-    private float DamageCount;
-    //紀錄上一次受到傷害的時間
-    private float LastDamageTime;
-    //多久沒受到傷害就重新計算受傷無敵
-    private float ResetDamageTime = 1.5f;
-
     private bool Isdead = false;
 
     private void Awake()
@@ -65,24 +58,12 @@ public class PlayerHealth : MonoBehaviour
 
     private void Update()
     {
-        if(!Isdead && CurrentPP < MaxPP)
+        if (!Isdead && CurrentPP < MaxPP)
         {
             float nextPP = CurrentPP + PPRecoveryRate * Time.deltaTime;
 
             CurrentPP = MathF.Floor(nextPP);
             CurrentPP = Mathf.Min(nextPP, MaxPP);
-        }
-    }
-
-    private void LateUpdate()
-    {
-        if (DamageCount >= 3)
-        {
-            StartCoroutine(ResetDamageCount());
-        }
-        else if (Time.time - LastDamageTime >= ResetDamageTime)
-        {
-            DamageCount = 0;
         }
     }
 
@@ -168,14 +149,11 @@ public class PlayerHealth : MonoBehaviour
     //受傷函式，用於傳入傷害
     public void TakeDamage(float damage)
     {
-        if (DamageCount == 3 || Isdead || player.Invincible || player.isCriticalHit) return;
+        if (player.isHit || Isdead || player.Invincible || player.isCriticalHit) return;
 
         Debug.Log($"受到共{damage}傷害！剩餘血量：{CurrentHealth}");
         CurrentHealth -= damage;
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
-
-        DamageCount++;
-        LastDamageTime += Time.time;
 
         if (CurrentHealth > 0)
         {
@@ -208,6 +186,7 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    //持續受傷函式，用來接收持續性傷害
     public void TakeDot(float damage)
     {
         if (Isdead || player.Invincible) return;
@@ -225,12 +204,6 @@ public class PlayerHealth : MonoBehaviour
         {
             HeadleDeath();
         }
-    }
-
-    private IEnumerator ResetDamageCount()
-    {
-        yield return new WaitForSeconds(1f);
-        DamageCount = 0;
     }
 
     //死亡後傳送訂閱給各大系統
