@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,23 +6,32 @@ public class ItemUseManager : MonoBehaviour
 {
     public Inventory myBag;
     public HotbarSlot[] hotbarSlot;
+
+    private PlayerController player;
+    private PlayerHealth health;
+
+    private void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        health = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+    }
     public void SetupItemAction(ItemData item)
     {
-        //®Ú¾ÚitemID³]©w®ÄªG
+        //æª¢æŸ¥é“å…·æ¬„ä½
         switch (item.itemID)
         {
             case 1: //1.HP Potion
                 item.itemAction = (ItemData data) =>
                 {
                     Debug.Log($"Use {data.itemName}");
-                    //Player.instance.Heal(50);
+                    health.Heal(data.amount);
                 };
                 break;
             case 2: //2.PP Potion
                 item.itemAction = (ItemData data) =>
                 {
                     Debug.Log($"Use {data.itemName}");
-                    //Player.instance.RestoreMP(30);
+                    health.HealPP(data.amount);
                 };
                 break;
             case 3: //3.Power Up
@@ -52,14 +61,14 @@ public class ItemUseManager : MonoBehaviour
     {
         if (item.itemAction == null) SetupItemAction(item);
         if (item == null) return;
-        //½T«O³o­Ó¹D¨ã¦³itemAction
+        //itemAction
         if (item.itemAction != null)
         {
             item.itemAction?.Invoke(item);
         }
         else
         {
-            Debug.Log($"{item.itemName} µLªk¨Ï¥Î¡I");
+            Debug.Log($"{item.itemName} ï½µLï½ªkï½¨ï¾ï½¥ï¾ï½¡I");
         }
     }
 
@@ -72,10 +81,10 @@ public class ItemUseManager : MonoBehaviour
             {
                 UseItem(hotbarSlot[i].slotItem);
                 hotbarSlot[i].slotItem.itemNum -= 1;
-                //·í¹D¨ã¼Æ¶q¬°0 ²MªÅ
+                //ï½·æ™¥Dï½¨ç¾®ï¾†ï½¶qï½¬ï½°0 ï½²Mï½ªï¾…
                 if (hotbarSlot[i].slotItem.itemNum == 0)
                 {
-                    //«O¯dhotbarSlot[i].slotItem¸ê®Æ¥H½T«ORemove()¥i¥H³Q¥¿½T°õ¦æ
+                    //ï½«Oï½¯dhotbarSlot[i].slotItemï½¸ãƒ»ï¾†ï½¥Hï½½Tï½«ORemove()ï½¥iï½¥Hï½³Qï½¥ï½¿ï½½Tï½°î‘ãƒ»
                     ItemData removedItem = hotbarSlot[i].slotItem;
                     hotbarSlot[i].slotItem = null;
                     myBag.itemList.Remove(removedItem);

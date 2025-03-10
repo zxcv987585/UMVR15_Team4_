@@ -24,8 +24,17 @@ public class PlayerHealth : MonoBehaviour
     //受到攻擊時要觸發的委派事件
     public event Action OnDamage;
 
+    //受到持續傷害時要觸發的委派事件
+    public event Action OnDot;
+
     //玩家死亡時要觸發的委派事件
     public event Action OnDead;
+
+    //玩家回血時要觸發的委派事件
+    public event Action OnHeal;
+
+    //玩家回PP時要觸發的委派事件
+    public event Action OnHealPP;
 
     //敵人死亡時要觸發的委派事件
     public event Action<Transform> EnemyDead;
@@ -174,6 +183,28 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    public void TakeDot(float damage)
+    {
+        if (Isdead || player.Invincible) return;
+
+        Debug.Log($"受到持續傷害！剩餘血量：{CurrentHealth}");
+        CurrentHealth -= damage;
+        CurrentHealth = Mathf.Max(CurrentHealth, 0);
+
+        DamageCount++;
+        LastDamageTime += Time.time;
+
+        if (CurrentHealth > 0)
+        {
+            OnDot?.Invoke();
+        }
+
+        if (CurrentHealth <= 0)
+        {
+            HeadleDeath();
+        }
+    }
+
     private IEnumerator ResetDamageCount()
     {
         yield return new WaitForSeconds(1f);
@@ -198,6 +229,25 @@ public class PlayerHealth : MonoBehaviour
     {
         CurrentHealth += amount;
         CurrentHealth = Mathf.Min(CurrentHealth, MaxHealth);
+        OnHeal?.Invoke();
+
+        if (HealEffect != null)
+        {
+            GameObject healEffect = Instantiate(HealEffect, transform.position + Vector3.up * 1f, Quaternion.identity);
+            healEffect.transform.SetParent(transform);
+        }
+        else
+        {
+            Debug.Log("沒有治癒特效可用");
+        }
+    }
+
+    //回復PP系統，呼叫後傳入數值來恢復PP值
+    public void HealPP(float amount)
+    {
+        CurrentPP += amount;
+        CurrentPP = Mathf.Min(CurrentPP, MaxPP);
+        OnHealPP?.Invoke();
 
         if (HealEffect != null)
         {

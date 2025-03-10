@@ -11,7 +11,6 @@ public class SkillManager : MonoBehaviour
 	private PlayerController player;
 	private PlayerHealth playerHealth;
 
-
     private void Awake()
     {
         Instance = this;
@@ -20,8 +19,8 @@ public class SkillManager : MonoBehaviour
 
     private void Start()
 	{
-        player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-        playerHealth = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
+        player = GetComponent<PlayerController>();
+        playerHealth = GetComponent<PlayerHealth>();
 
         skillBind = new Dictionary<GameInput.Bind, BaseSkill>();
 		
