@@ -63,6 +63,11 @@ public class FightState : PlayerState
             ResetCombo();
             return;
         }
+        if (player.isCriticalHit)
+        {
+            ResetCombo();
+            return;
+        }
     }
 
     public override void Move() { }

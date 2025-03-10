@@ -58,6 +58,12 @@ public class MoveState : PlayerState
             IsRun?.Invoke(false);
             return;
         }
+        if (player.isCriticalHit)
+        {
+            IsMoving?.Invoke(false);
+            IsRun?.Invoke(false);
+            return;
+        }
 
         Move();
     }

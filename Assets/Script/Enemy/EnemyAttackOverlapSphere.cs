@@ -73,7 +73,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
             if(collider.TryGetComponent(out PlayerHealth playerHealth))
             {
                 //OnAttackHit?.Invoke();
-                playerHealth.TakeDamage(damage);
+                playerHealth.CriticalDamage(damage);
             }
         }
         bombParticle.Play();

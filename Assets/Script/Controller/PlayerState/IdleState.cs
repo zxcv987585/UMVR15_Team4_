@@ -55,6 +55,11 @@ public class IdleState : PlayerState
             IsIdle?.Invoke(false);
             return;
         }
+        if (player.isCriticalHit)
+        {
+            IsIdle?.Invoke(false);
+            return;
+        }
         if (player.isAttack)
         {
             StateMachine.ChangeState(player.fightState);

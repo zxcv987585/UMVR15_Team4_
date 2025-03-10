@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour
     public bool Invincible { get; set; } = false;
     public bool InItemMenu { get; set; } = false;
     public bool isSkilling { get; private set; } = false;
+    public bool isCriticalHit { get; set; } = false;
 
     //玩家受傷與死亡的Delegate事件
     public event Action OnHit;
@@ -105,6 +106,7 @@ public class PlayerController : MonoBehaviour
         //Delegate訂閱事件
         health.OnDamage += GetHit;
         health.OnDead += Died;
+        health.OnCriticalDamage += OnCriticalDamage;
     }
 
     void Update()
@@ -145,7 +147,7 @@ public class PlayerController : MonoBehaviour
     //技能系統
     public void CastSkill(string skillName, float SkillDuration)
     {
-        if (isSkilling || isAiming) return;
+        if (isHit || isCriticalHit || isSkilling || isAiming) return;
 
         if (LockTarget != null)
         {
@@ -190,14 +192,14 @@ public class PlayerController : MonoBehaviour
     //Walk、Run狀態機的核心邏輯
     public void MoveCharacter(Vector3 targetDirection, float currentSpeed)
     {
-        if (isHit || IsDie || isDash || isSkilling) return;
+        if (isCriticalHit || isHit || IsDie || isDash || isSkilling) return;
 
         controller.Move(targetDirection * currentSpeed * Time.deltaTime);
         SmoothRotation(targetDirection);
     }
     private void SetIsRun(bool isRun)
     {
-        if (isHit || isSkilling || IsDie) return;
+        if (isCriticalHit || isHit || isSkilling || IsDie) return;
 
         this.isRun = isRun;
     }
@@ -205,7 +207,7 @@ public class PlayerController : MonoBehaviour
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
-        if (isHit || isSkilling || IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+        if (isCriticalHit || isHit || isSkilling || IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
 
         isAttack = Attack;
     }
@@ -219,7 +221,7 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (isSkilling || IsDie || InItemMenu || stateMachine.GetState<DashState>() != null) return;
+        if (isCriticalHit || isSkilling || IsDie || InItemMenu || stateMachine.GetState<DashState>() != null) return;
 
         isAiming = isAim;
 
@@ -244,6 +246,14 @@ public class PlayerController : MonoBehaviour
 
         StartCoroutine(HitCoolDown());
     }
+    private void OnCriticalDamage()
+    {
+        if (IsDie) return;
+
+        isCriticalHit = true;
+
+        StartCoroutine(CriticalDamageCoolDown());
+    }
     //計算玩家受傷時的硬質協程
     IEnumerator HitCoolDown()
     {
@@ -257,7 +267,13 @@ public class PlayerController : MonoBehaviour
         isHit = false;
         stateMachine.ChangeState(aimState);
     }
-    
+    IEnumerator CriticalDamageCoolDown()
+    {
+        yield return new WaitForSeconds(2f);
+        isCriticalHit = false;
+    }
+
+
     //玩家死亡邏輯
     public void Died()
     {
