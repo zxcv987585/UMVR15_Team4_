@@ -828,6 +828,14 @@ PrefabInstance:
       propertyPath: HealPPEffect
       value: 
       objectReference: {fileID: 2336685109152294099, guid: aeebcbfa648dbd44180cd3739aa8c228, type: 3}
+    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: MainCamera
+      value: 
+      objectReference: {fileID: 2125191231}
+    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: miancamera
+      value: 
+      objectReference: {fileID: 2125191231}
     - target: {fileID: 8211211446584772470, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: m_Name
       value: Player
@@ -3305,63 +3313,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 530644256}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &549328423
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5225343519086672903, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
-      propertyPath: m_Name
-      value: EnemyEggy
-      objectReference: {fileID: 0}
-    - target: {fileID: 8671304987104477406, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 75.10428
-      objectReference: {fileID: 0}
-    - target: {fileID: 8671304987104477406, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.00000023841858
-      objectReference: {fileID: 0}
-    - target: {fileID: 8671304987104477406, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 40.641342
-      objectReference: {fileID: 0}
-    - target: {fileID: 8671304987104477406, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8671304987104477406, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8671304987104477406, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8671304987104477406, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8671304987104477406, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8671304987104477406, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8671304987104477406, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
 --- !u!1 &552413783
 GameObject:
   m_ObjectHideFlags: 0
@@ -12956,6 +12907,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 30, y: 3, z: 25}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &2125191231 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1920559016646865334, guid: 22eca212736e34f669a7308846a42048, type: 3}
+  m_PrefabInstance: {fileID: 1745102942}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2146643217
 GameObject:
   m_ObjectHideFlags: 0
@@ -13304,4 +13260,3 @@ SceneRoots:
   - {fileID: 645802929}
   - {fileID: 363284854}
   - {fileID: 1537746649}
-  - {fileID: 549328423}

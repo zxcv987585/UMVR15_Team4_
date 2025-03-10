@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     //取得武器管理系統
     private WeaponManager weaponManager;
+    //取得攝影機
+    public GameObject MainCamera;
 
     [Header("玩家Data")]
     public PlayerDataSO playerData;
@@ -70,6 +72,7 @@ public class PlayerController : MonoBehaviour
         health = GetComponent<PlayerHealth>();
         weaponManager = GetComponent<WeaponManager>();
         animator = GetComponent<Animator>();
+        MainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         //初始化時建立玩家狀態機
         stateMachine = gameObject.AddComponent<PlayerStateMachine>();
         //初始化所有狀態，讓狀態成為單例
@@ -147,7 +150,7 @@ public class PlayerController : MonoBehaviour
     //技能系統
     public void CastSkill(string skillName, float SkillDuration)
     {
-        if (isHit || isCriticalHit || isSkilling || isAiming) return;
+        if (!CanPerformAction() || isSkilling || isAiming) return;
 
         if (LockTarget != null)
         {
@@ -192,14 +195,14 @@ public class PlayerController : MonoBehaviour
     //Walk、Run狀態機的核心邏輯
     public void MoveCharacter(Vector3 targetDirection, float currentSpeed)
     {
-        if (isCriticalHit || isHit || IsDie || isDash || isSkilling) return;
+        if (!CanPerformAction() || isDash || isSkilling) return;
 
         controller.Move(targetDirection * currentSpeed * Time.deltaTime);
         SmoothRotation(targetDirection);
     }
     private void SetIsRun(bool isRun)
     {
-        if (isCriticalHit || isHit || isSkilling || IsDie) return;
+        if (!CanPerformAction() || isSkilling) return;
 
         this.isRun = isRun;
     }
@@ -221,7 +224,7 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (isCriticalHit || isSkilling || IsDie || InItemMenu || stateMachine.GetState<DashState>() != null) return;
+        if (!CanPerformAction() || isSkilling || InItemMenu || stateMachine.GetState<DashState>() != null) return;
 
         isAiming = isAim;
 
@@ -269,7 +272,7 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator CriticalDamageCoolDown()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(2.1f);
         isCriticalHit = false;
     }
 
@@ -283,7 +286,7 @@ public class PlayerController : MonoBehaviour
     //Dash狀態機的核心邏輯
     private void Dash()
     {
-        if (isHit || IsDie || stateMachine.GetState<AimState>() != null) return;
+        if (!CanPerformAction() || stateMachine.GetState<AimState>() != null) return;
 
         if (Time.time >= lastDashTime + playerData.DashCoolTime)
         {
@@ -418,7 +421,7 @@ public class PlayerController : MonoBehaviour
     //取得相機正方方向
     public Vector3 GetCurrentCameraForward()
     {
-        Vector3 cameraForward = Camera.main.transform.forward;
+        Vector3 cameraForward = MainCamera.transform.forward;
         cameraForward.y = 0f;
         cameraForward.Normalize();
         return cameraForward;
@@ -427,9 +430,15 @@ public class PlayerController : MonoBehaviour
     //取得相機右方方向
     public Vector3 GetCurrentCameraRight()
     {
-        Vector3 cameraRight = Camera.main.transform.right;
+        Vector3 cameraRight = MainCamera.transform.right;
         cameraRight.y = 0f;
         cameraRight.Normalize();
         return cameraRight;
+    }
+
+    //將受傷與死亡相關內容集合
+    public bool CanPerformAction()
+    {
+        return !isCriticalHit || !isHit || IsDie;
     }
 }
