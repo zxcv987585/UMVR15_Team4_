@@ -15,9 +15,11 @@ public class EnemyController : MonoBehaviour
 
 	[SerializeField] private Renderer dissolveRenderer;
 	[SerializeField] private ParticleSystem deadParticle;
-	
+	[SerializeField] private float dissolveTime = 1f;
 	private Material material;
 	private const string DISSOLVE_AMOUNT = "_DissolveAmount";
+	private const string EMISSION_COLOR= "_EmissionColor";
+	private const string RIM_COLOR = "_RimColor";
 
 	private bool isAttack = false;
 	private bool isDamage = false;
@@ -62,7 +64,10 @@ public class EnemyController : MonoBehaviour
 		
 		//如果 NavMeshAgent 預設啟用, 會因為 NavMeshAgent 只允許物件放置在 NavMeshPath 上, 導致物件無法正常設定 transform.position, 因此延遲啟動
 		StartCoroutine(DelayEnableNavMeshAgent());
+		StartCoroutine(StartDissolveCoroutine(dissolveTime));
+
 	}
+
 
     //從物件池抓出時的初始化
     public void Init()
@@ -88,7 +93,7 @@ public class EnemyController : MonoBehaviour
 		navMeshAgent.enabled = true;
 	}
 
-	private void Update()
+	public void EnemyUpdate()
 	{
 		if(playerHealth.IsDead())
 		{
@@ -364,7 +369,7 @@ public class EnemyController : MonoBehaviour
 	// 啟動播放死亡動畫的協程
 	private void StartDestory()
 	{
-		StartCoroutine(DeadDissolveCoroutine());
+		StartCoroutine(DeadDissolveCoroutine(1f));
 	}
 
 	// 隱藏該物件, 及物件池回收	
@@ -375,23 +380,45 @@ public class EnemyController : MonoBehaviour
 	}
 
 	//死亡時的消融動畫效果
-	private IEnumerator DeadDissolveCoroutine()
+	private IEnumerator DeadDissolveCoroutine(float showTimer)
 	{
-		material.SetColor("_EmissionColor", Color.blue * 3f); // 設定發光 (藍色加強亮度)
-		material.SetColor("_RimColor", Color.cyan);
+		material.SetColor(EMISSION_COLOR, Color.cyan);
+		material.SetColor(RIM_COLOR, Color.cyan);
 
 		deadParticle.gameObject.SetActive(true);
 		deadParticle.Play();
 
-		float dissolveAmount = 0f;
-		while(dissolveAmount < 1f)
+		float timer = 0f;
+		while(timer < showTimer)
 		{
-			dissolveAmount += Time.deltaTime * 1f;
-			material.SetFloat(DISSOLVE_AMOUNT, dissolveAmount);
+			timer += Time.deltaTime;
+			material.SetFloat(DISSOLVE_AMOUNT, timer/showTimer);
 			
 			yield return null;
 		}
 
 		DestroySelf();
+	}
+
+	// 生成時的消融效果, 並於消融完成後, 將物件加入 EnemyManager 的更新列表中
+	private IEnumerator StartDissolveCoroutine(float showTimer)
+	{
+		material.SetColor(EMISSION_COLOR, Color.cyan);
+		material.SetColor(RIM_COLOR, Color.cyan);
+
+		float timer = 0f;
+		while(timer < showTimer)
+		{
+			timer += Time.deltaTime;
+			material.SetFloat(DISSOLVE_AMOUNT, 1 - timer/showTimer);
+
+			yield return null;
+		}
+
+		material.SetFloat(DISSOLVE_AMOUNT, 0f);
+		material.SetColor(EMISSION_COLOR, Color.black);
+		material.SetColor(RIM_COLOR, Color.black);
+
+		EnemyManager.Instance.AddToUpdateList(this);
 	}
 }

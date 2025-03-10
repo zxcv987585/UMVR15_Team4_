@@ -9,6 +9,8 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private List<GameObject> enemyPrefabList;
     private Dictionary<int, Queue<GameObject>> enemyObjectPool;
 
+    private List<EnemyController> enemyControllerList;
+
     private void Awake()
     {
         if(Instance == null)
@@ -23,6 +25,9 @@ public class EnemyManager : MonoBehaviour
 
     private void Start()
     {
+        enemyControllerList = new List<EnemyController>();
+
+        // 初始化怪物的物件池
         enemyObjectPool = new Dictionary<int, Queue<GameObject>>();
 
         foreach(GameObject enemyPrefab in enemyPrefabList)
@@ -32,6 +37,24 @@ public class EnemyManager : MonoBehaviour
             Debug.Log(" EnemyManager/Start Prefab key = " + enemyPrefabKey);
             enemyObjectPool.Add(enemyPrefabKey, new Queue<GameObject>());
         }
+    }
+
+    // 由 EnemyManager 統一管控所有怪物的 Update
+    private void Update()
+    {
+        for(int i = 0; i < enemyControllerList.Count; i++)
+        {
+            enemyControllerList[i].EnemyUpdate();
+        }
+    }
+
+    /// <summary>
+    /// 將 EnemyController 類別, 加入 EnemyManger 管理的更新列表
+    /// </summary>
+    /// <param name="enemyController"></param>
+    public void AddToUpdateList(EnemyController enemyController)
+    {
+        enemyControllerList.Add(enemyController);
     }
 
     /// <summary>
@@ -48,18 +71,18 @@ public class EnemyManager : MonoBehaviour
         {
             if(enemyprefabQueue.Count > 0)
             {
-                GameObject enemy = enemyprefabQueue.Dequeue();
-                enemy.transform.position = spawnTransform.position;
-                enemy.transform.rotation = spawnTransform.rotation;
-                enemy.GetComponent<EnemyController>().Init();
+                GameObject enemyGameObject = enemyprefabQueue.Dequeue();
+                enemyGameObject.transform.position = spawnTransform.position;
+                enemyGameObject.transform.rotation = spawnTransform.rotation;
+                enemyGameObject.GetComponent<EnemyController>().Init();
 
                 Debug.Log("對應 Enemy 物件池足夠, 取出並放置");
             }
             else
             {
-                GameObject enemy = Instantiate(spawnPrefab);
-                enemy.transform.position = spawnTransform.position;
-                enemy.transform.rotation = spawnTransform.rotation;
+                GameObject enemyGameObject = Instantiate(spawnPrefab);
+                enemyGameObject.transform.position = spawnTransform.position;
+                enemyGameObject.transform.rotation = spawnTransform.rotation;
 
                 Debug.Log("對應 Enemy 物件池不足, 產生新物件");
             }
@@ -67,6 +90,12 @@ public class EnemyManager : MonoBehaviour
         else
         {
             Debug.Log(" EnemyManager/SpawnEnemy 該物件沒有對應的物件池");
+            
+            GameObject enemyGameObject = Instantiate(spawnPrefab);
+            enemyGameObject.transform.position = spawnTransform.position;
+            enemyGameObject.transform.rotation = spawnTransform.rotation;
+
+            enemyObjectPool.Add(spawnPrefabKey, new Queue<GameObject>());
         }
     }
 
