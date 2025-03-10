@@ -37,14 +37,22 @@ public class BattleUIManager : MonoBehaviour
     {
         damageTextQuene = new Queue<DamageText>();
         health.OnDamage += ChangeHPStatus;
+        health.OnDot += ChangeHPStatus;
         health.OnDead += ChangeHPStatus;
+        health.OnHeal += ChangeHPStatus;
         health.OnPPChanged += playerMaxPPupdate;
+        health.OnHealPP += ChangePPStatus;
         levelSystem.PlayerLevelup += playerMaxHealthupdate;
 
         currentHPText.text = health.GetMaxHealth().ToString();
         maxHPText.text = health.GetMaxHealth().ToString();
         currentPPText.text = health.GetMaxPP().ToString();
         maxPPText.text = health.GetMaxPP().ToString();
+    }
+
+    private void Health_OnHeal()
+    {
+        throw new System.NotImplementedException();
     }
 
     private void Update()

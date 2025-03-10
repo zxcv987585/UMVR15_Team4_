@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour
         //重力運作邏輯
         ApplyGravity();
         //檢測狀態機更新邏輯，僅限沒有技能施放時使用
-        if (!isSkilling)
+        if (!isSkilling || !isHit)
         {
             stateMachine.Update();
         }
@@ -190,23 +190,22 @@ public class PlayerController : MonoBehaviour
     //Walk、Run狀態機的核心邏輯
     public void MoveCharacter(Vector3 targetDirection, float currentSpeed)
     {
-        if (IsDie || isDash || isSkilling) return;
+        if (isHit || IsDie || isDash || isSkilling) return;
 
         controller.Move(targetDirection * currentSpeed * Time.deltaTime);
         SmoothRotation(targetDirection);
     }
     private void SetIsRun(bool isRun)
     {
-        //死亡就不要跑步
-        if (isSkilling || IsDie) return;
-        //透過涵式更改PlayerController的跑步bool狀態
+        if (isHit || isSkilling || IsDie) return;
+
         this.isRun = isRun;
     }
 
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
-        if (isSkilling || IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+        if (isHit || isSkilling || IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
 
         isAttack = Attack;
     }
@@ -239,21 +238,11 @@ public class PlayerController : MonoBehaviour
     public void GetHit()
     {
         if (IsDie) return;
+  
+        OnHit?.Invoke();
+        isHit = true;
 
-        if (isAiming)
-        {
-            OnHit?.Invoke();
-            isHit = true;
-
-            StartCoroutine(GunHitCoolDown());
-        }
-        else
-        {
-            OnHit?.Invoke();
-            isHit = true;
-
-            StartCoroutine(HitCoolDown());
-        }
+        StartCoroutine(HitCoolDown());
     }
     //計算玩家受傷時的硬質協程
     IEnumerator HitCoolDown()
