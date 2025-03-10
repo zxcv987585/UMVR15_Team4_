@@ -25676,6 +25676,7 @@ MonoBehaviour:
   bombParticle: {fileID: 4529181856540440787}
   bombRenderer: {fileID: 4234193521772329681}
   damage: 30
+  bombTimer: 5
 --- !u!1 &4917208922515062737
 GameObject:
   m_ObjectHideFlags: 0
@@ -30668,6 +30669,7 @@ MonoBehaviour:
   enemyAttackMonoBehaviour: {fileID: 4561674245919088447}
   dissolveRenderer: {fileID: 4234193521772329681}
   deadParticle: {fileID: 8199946641955824161}
+  dissolveTime: 1
 --- !u!114 &1068885646187691178
 MonoBehaviour:
   m_ObjectHideFlags: 0

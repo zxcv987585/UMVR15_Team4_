@@ -9,6 +9,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
     [SerializeField] private ParticleSystem bombParticle;
     [SerializeField] private Renderer bombRenderer;
     [SerializeField] private float damage;
+    [SerializeField] private float bombTimer = 3f;
     public event Action OnAttackHit;
 
     private bool hasAttack = false;
@@ -17,6 +18,8 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
     private void Start()
     {
         health.OnDead += BombAttack;
+
+        StartAttack();
     }
 
     public void ResetHasAttack()
@@ -28,7 +31,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
     {
         if(!hasAttack)
         {
-            StartCoroutine(DelayBombAttack(3f));
+            StartCoroutine(DelayBombAttack(bombTimer));
             hasAttack = true;
         }
     }
@@ -63,7 +66,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
     
     private void BombAttack()
     {
-        Debug.Log("BombAttack");
+        //Debug.Log("BombAttack");
         Collider[] colliderArray = Physics.OverlapSphere(transform.position, 2f, LayerMask.GetMask(PLAYER));
         foreach(Collider collider in colliderArray)
         {

@@ -7,7 +7,7 @@ public class EnemyManager : MonoBehaviour
     public static EnemyManager Instance {get; private set;}
 
     [SerializeField] private List<GameObject> enemyPrefabList;
-    private Dictionary<int, Queue<GameObject>> enemyObjectPool;
+    private Dictionary<GameObject, Queue<GameObject>> enemyObjectPool;
 
     private List<EnemyController> enemyControllerList;
 
@@ -28,14 +28,14 @@ public class EnemyManager : MonoBehaviour
         enemyControllerList = new List<EnemyController>();
 
         // 初始化怪物的物件池
-        enemyObjectPool = new Dictionary<int, Queue<GameObject>>();
+        enemyObjectPool = new Dictionary<GameObject, Queue<GameObject>>();
 
         foreach(GameObject enemyPrefab in enemyPrefabList)
         {
-            int enemyPrefabKey = enemyPrefab.GetInstanceID();
-            
-            Debug.Log(" EnemyManager/Start Prefab key = " + enemyPrefabKey);
-            enemyObjectPool.Add(enemyPrefabKey, new Queue<GameObject>());
+            GameObject go = Instantiate(enemyPrefab);
+            go.SetActive(false);
+            //Debug.Log(" EnemyManager/Start Prefab key = " + enemyPrefabKey);
+            enemyObjectPool.Add(go, new Queue<GameObject>());
         }
     }
 
@@ -57,6 +57,11 @@ public class EnemyManager : MonoBehaviour
         enemyControllerList.Add(enemyController);
     }
 
+    public int GetEnemyControllerCount()
+    {
+        return enemyControllerList.Count;
+    }
+
     /// <summary>
     /// 生成 Enemy 物件
     /// </summary>
@@ -64,10 +69,15 @@ public class EnemyManager : MonoBehaviour
     /// <param name="spawnTransform"> 生成的物件 Transform 位置 </param>
     public void SpawnEnemy(GameObject spawnPrefab, Transform spawnTransform)
     {
-        int spawnPrefabKey = spawnPrefab.GetInstanceID();
-        Debug.Log(" EnemyManager/SpawnEnemy Prefab key = " + spawnPrefabKey);
+        //Debug.Log(" EnemyManager/SpawnEnemy Prefab key = " + spawnPrefabKey);
 
-        if(enemyObjectPool.TryGetValue(spawnPrefabKey, out Queue<GameObject> enemyprefabQueue))
+        Debug.Log("SpawnPrefab = " + spawnPrefab);
+        foreach(var data in enemyObjectPool)
+        {
+            Debug.Log(data.Key);
+        }
+
+        if(enemyObjectPool.TryGetValue(spawnPrefab, out Queue<GameObject> enemyprefabQueue))
         {
             if(enemyprefabQueue.Count > 0)
             {
@@ -95,7 +105,7 @@ public class EnemyManager : MonoBehaviour
             enemyGameObject.transform.position = spawnTransform.position;
             enemyGameObject.transform.rotation = spawnTransform.rotation;
 
-            enemyObjectPool.Add(spawnPrefabKey, new Queue<GameObject>());
+            enemyObjectPool.Add(enemyGameObject, new Queue<GameObject>());
         }
     }
 
@@ -105,10 +115,11 @@ public class EnemyManager : MonoBehaviour
     /// <param name="enemyPrefab"> 物件的 GameObject </param>
     public void RecycleEnemy(GameObject enemyPrefab)
     {
-        int enemyPrefabKey = enemyPrefab.GetInstanceID();
-        Debug.Log(" EnemyManager/RecycleEnemy Prefab key = " + enemyPrefabKey);
+        enemyControllerList.Remove(enemyPrefab.GetComponent<EnemyController>());
 
-        if(enemyObjectPool.TryGetValue(enemyPrefabKey, out Queue<GameObject> enemyPrefabQueue))
+        //Debug.Log(" EnemyManager/RecycleEnemy Prefab key = " + enemyPrefabKey);
+
+        if(enemyObjectPool.TryGetValue(enemyPrefab, out Queue<GameObject> enemyPrefabQueue))
         {
             enemyPrefabQueue.Enqueue(enemyPrefab);
         }
@@ -116,7 +127,7 @@ public class EnemyManager : MonoBehaviour
         {
             Debug.Log(" EnemyManager/RecycleEnemy 找不到對應的物件池, 生成新的對應物件池");
             
-            enemyObjectPool.Add(enemyPrefabKey, new Queue<GameObject>());
+            enemyObjectPool.Add(enemyPrefab, new Queue<GameObject>());
         }
     }
 }

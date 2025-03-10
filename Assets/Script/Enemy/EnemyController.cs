@@ -21,6 +21,7 @@ public class EnemyController : MonoBehaviour
 	private const string EMISSION_COLOR= "_EmissionColor";
 	private const string RIM_COLOR = "_RimColor";
 
+	private bool isInit = true;
 	private bool isAttack = false;
 	private bool isDamage = false;
 	
@@ -64,8 +65,11 @@ public class EnemyController : MonoBehaviour
 		
 		//如果 NavMeshAgent 預設啟用, 會因為 NavMeshAgent 只允許物件放置在 NavMeshPath 上, 導致物件無法正常設定 transform.position, 因此延遲啟動
 		StartCoroutine(DelayEnableNavMeshAgent());
-		StartCoroutine(StartDissolveCoroutine(dissolveTime));
+		
 
+		//
+		EnemyManager.Instance.AddToUpdateList(this);
+		StartCoroutine(StartDissolveCoroutine(dissolveTime));
 	}
 
 
@@ -95,6 +99,8 @@ public class EnemyController : MonoBehaviour
 
 	public void EnemyUpdate()
 	{
+		if(isInit) return;
+
 		if(playerHealth.IsDead())
 		{
 			if(enemyState != EnemyState.Idle)
@@ -419,6 +425,6 @@ public class EnemyController : MonoBehaviour
 		material.SetColor(EMISSION_COLOR, Color.black);
 		material.SetColor(RIM_COLOR, Color.black);
 
-		EnemyManager.Instance.AddToUpdateList(this);
+		isInit = false;
 	}
 }
