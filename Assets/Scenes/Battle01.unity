@@ -821,9 +821,21 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 548413006940239899, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-      propertyPath: PPRecoveryRate
-      value: 4
-      objectReference: {fileID: 0}
+      propertyPath: HealEffect
+      value: 
+      objectReference: {fileID: 8846938917156980417, guid: 625d05f27810bd844867ceeba476f1f3, type: 3}
+    - target: {fileID: 548413006940239899, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: HealPPEffect
+      value: 
+      objectReference: {fileID: 2336685109152294099, guid: aeebcbfa648dbd44180cd3739aa8c228, type: 3}
+    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: MainCamera
+      value: 
+      objectReference: {fileID: 2125191231}
+    - target: {fileID: 5841202809388031429, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: miancamera
+      value: 
+      objectReference: {fileID: 2125191231}
     - target: {fileID: 8211211446584772470, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: m_Name
       value: Player
@@ -871,19 +883,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8211211446584772470, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1355333811}
-    - targetCorrespondingSourceObject: {fileID: 8211211446584772470, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1355333812}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
---- !u!1 &69650494 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8211211446584772470, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
-  m_PrefabInstance: {fileID: 69650493}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &89811401
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2600,6 +2601,8 @@ MonoBehaviour:
     enemySpawnPosition: {fileID: 877066246}
   - enemyPrefab: {fileID: 314055311740652304, guid: 5d93422a2bb78b643b204b1fc3876af6, type: 3}
     enemySpawnPosition: {fileID: 634637433}
+  enemySpawnTimeInfoList: []
+  enemySpawnCountInfoList: []
 --- !u!65 &413805580
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3362,6 +3365,8 @@ MonoBehaviour:
     enemySpawnPosition: {fileID: 1544134105}
   - enemyPrefab: {fileID: 5225343519086672903, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
     enemySpawnPosition: {fileID: 1560016818}
+  enemySpawnTimeInfoList: []
+  enemySpawnCountInfoList: []
 --- !u!65 &552413786
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4727,6 +4732,8 @@ MonoBehaviour:
     enemySpawnPosition: {fileID: 568854280}
   - enemyPrefab: {fileID: 314055311740652304, guid: 5d93422a2bb78b643b204b1fc3876af6, type: 3}
     enemySpawnPosition: {fileID: 271815973}
+  enemySpawnTimeInfoList: []
+  enemySpawnCountInfoList: []
 --- !u!65 &835174656
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5253,6 +5260,8 @@ MonoBehaviour:
     enemySpawnPosition: {fileID: 1304992096}
   - enemyPrefab: {fileID: 5225343519086672903, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
     enemySpawnPosition: {fileID: 1317906753}
+  enemySpawnTimeInfoList: []
+  enemySpawnCountInfoList: []
 --- !u!65 &934113380
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7408,7 +7417,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8631780679438115670, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
   m_PrefabInstance: {fileID: 69650493}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69650494}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56df9beeaa58be34a9dda2af7e296a74, type: 3}
@@ -7419,38 +7428,12 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 548413006940239899, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
   m_PrefabInstance: {fileID: 69650493}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69650494}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1b94744774a994f4586ae721dea589ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1355333811
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69650494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cedb57fb5eeeb74cbd17d74ada3c42d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1355333780}
---- !u!114 &1355333812
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69650494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d21a826c83307744a854bca60e464d86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillDataLibrarySO: {fileID: 11400000, guid: 1566ab8bd644d7544876128e2ba56b8b, type: 2}
 --- !u!1 &1363603618
 GameObject:
   m_ObjectHideFlags: 0
@@ -10164,6 +10147,8 @@ MonoBehaviour:
     enemySpawnPosition: {fileID: 1871507595}
   - enemyPrefab: {fileID: 4902313336816358631, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
     enemySpawnPosition: {fileID: 65565473}
+  enemySpawnTimeInfoList: []
+  enemySpawnCountInfoList: []
 --- !u!65 &1610385670
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10971,6 +10956,8 @@ MonoBehaviour:
     enemySpawnPosition: {fileID: 979205559}
   - enemyPrefab: {fileID: 314055311740652304, guid: 5d93422a2bb78b643b204b1fc3876af6, type: 3}
     enemySpawnPosition: {fileID: 1847692409}
+  enemySpawnTimeInfoList: []
+  enemySpawnCountInfoList: []
 --- !u!65 &1754764506
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12897,6 +12884,8 @@ MonoBehaviour:
     enemySpawnPosition: {fileID: 1499051472}
   - enemyPrefab: {fileID: 4902313336816358631, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}
     enemySpawnPosition: {fileID: 1316903876}
+  enemySpawnTimeInfoList: []
+  enemySpawnCountInfoList: []
 --- !u!65 &2111599482
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12918,6 +12907,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 30, y: 3, z: 25}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &2125191231 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1920559016646865334, guid: 22eca212736e34f669a7308846a42048, type: 3}
+  m_PrefabInstance: {fileID: 1745102942}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2146643217
 GameObject:
   m_ObjectHideFlags: 0

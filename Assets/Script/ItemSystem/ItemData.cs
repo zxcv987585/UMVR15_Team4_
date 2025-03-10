@@ -13,6 +13,7 @@ public class ItemData : ScriptableObject
     public string itemInfo;
     public bool isStack;
     public float amount;
+    public float duration;
 
     public Action<ItemData> itemAction;
 }

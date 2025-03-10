@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     //取得武器管理系統
     private WeaponManager weaponManager;
+    //取得攝影機
+    public Transform MainCamera;
 
     [Header("玩家Data")]
     public PlayerDataSO playerData;
@@ -57,6 +59,7 @@ public class PlayerController : MonoBehaviour
     public bool Invincible { get; set; } = false;
     public bool InItemMenu { get; set; } = false;
     public bool isSkilling { get; private set; } = false;
+    public bool isCriticalHit { get; set; } = false;
 
     //玩家受傷與死亡的Delegate事件
     public event Action OnHit;
@@ -69,6 +72,7 @@ public class PlayerController : MonoBehaviour
         health = GetComponent<PlayerHealth>();
         weaponManager = GetComponent<WeaponManager>();
         animator = GetComponent<Animator>();
+        MainCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
         //初始化時建立玩家狀態機
         stateMachine = gameObject.AddComponent<PlayerStateMachine>();
         //初始化所有狀態，讓狀態成為單例
@@ -105,6 +109,7 @@ public class PlayerController : MonoBehaviour
         //Delegate訂閱事件
         health.OnDamage += GetHit;
         health.OnDead += Died;
+        health.OnCriticalDamage += OnCriticalDamage;
     }
 
     void Update()
@@ -145,7 +150,7 @@ public class PlayerController : MonoBehaviour
     //技能系統
     public void CastSkill(string skillName, float SkillDuration)
     {
-        if (isSkilling || isAiming) return;
+        if (!CanPerformAction() || isSkilling || isAiming) return;
 
         if (LockTarget != null)
         {
@@ -190,14 +195,14 @@ public class PlayerController : MonoBehaviour
     //Walk、Run狀態機的核心邏輯
     public void MoveCharacter(Vector3 targetDirection, float currentSpeed)
     {
-        if (isHit || IsDie || isDash || isSkilling) return;
+        if (!CanPerformAction() || isDash || isSkilling) return;
 
         controller.Move(targetDirection * currentSpeed * Time.deltaTime);
         SmoothRotation(targetDirection);
     }
     private void SetIsRun(bool isRun)
     {
-        if (isHit || isSkilling || IsDie) return;
+        if (!CanPerformAction() || isSkilling) return;
 
         this.isRun = isRun;
     }
@@ -205,7 +210,7 @@ public class PlayerController : MonoBehaviour
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
-        if (isHit || isSkilling || IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+        if (isCriticalHit || isHit || isSkilling || IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
 
         isAttack = Attack;
     }
@@ -219,7 +224,7 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (isSkilling || IsDie || InItemMenu || stateMachine.GetState<DashState>() != null) return;
+        if (!CanPerformAction() || isSkilling || InItemMenu || stateMachine.GetState<DashState>() != null) return;
 
         isAiming = isAim;
 
@@ -244,6 +249,14 @@ public class PlayerController : MonoBehaviour
 
         StartCoroutine(HitCoolDown());
     }
+    private void OnCriticalDamage()
+    {
+        if (IsDie) return;
+
+        isCriticalHit = true;
+
+        StartCoroutine(CriticalDamageCoolDown());
+    }
     //計算玩家受傷時的硬質協程
     IEnumerator HitCoolDown()
     {
@@ -257,7 +270,13 @@ public class PlayerController : MonoBehaviour
         isHit = false;
         stateMachine.ChangeState(aimState);
     }
-    
+    IEnumerator CriticalDamageCoolDown()
+    {
+        yield return new WaitForSeconds(2.1f);
+        isCriticalHit = false;
+    }
+
+
     //玩家死亡邏輯
     public void Died()
     {
@@ -267,7 +286,7 @@ public class PlayerController : MonoBehaviour
     //Dash狀態機的核心邏輯
     private void Dash()
     {
-        if (isHit || IsDie || stateMachine.GetState<AimState>() != null) return;
+        if (!CanPerformAction() || stateMachine.GetState<AimState>() != null) return;
 
         if (Time.time >= lastDashTime + playerData.DashCoolTime)
         {
@@ -402,7 +421,7 @@ public class PlayerController : MonoBehaviour
     //取得相機正方方向
     public Vector3 GetCurrentCameraForward()
     {
-        Vector3 cameraForward = Camera.main.transform.forward;
+        Vector3 cameraForward = MainCamera.transform.forward;
         cameraForward.y = 0f;
         cameraForward.Normalize();
         return cameraForward;
@@ -411,9 +430,15 @@ public class PlayerController : MonoBehaviour
     //取得相機右方方向
     public Vector3 GetCurrentCameraRight()
     {
-        Vector3 cameraRight = Camera.main.transform.right;
+        Vector3 cameraRight = MainCamera.transform.right;
         cameraRight.y = 0f;
         cameraRight.Normalize();
         return cameraRight;
+    }
+
+    //將受傷與死亡相關內容集合
+    public bool CanPerformAction()
+    {
+        return !isCriticalHit || !isHit || IsDie;
     }
 }
