@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     //取得武器管理系統
     private WeaponManager weaponManager;
     //取得攝影機
-    public GameObject MainCamera;
+    public Transform MainCamera;
 
     [Header("玩家Data")]
     public PlayerDataSO playerData;
@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
         health = GetComponent<PlayerHealth>();
         weaponManager = GetComponent<WeaponManager>();
         animator = GetComponent<Animator>();
-        MainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        MainCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
         //初始化時建立玩家狀態機
         stateMachine = gameObject.AddComponent<PlayerStateMachine>();
         //初始化所有狀態，讓狀態成為單例
