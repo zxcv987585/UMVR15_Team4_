@@ -12,14 +12,25 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
     [SerializeField] private float bombTimer = 3f;
     public event Action OnAttackHit;
 
-    private bool hasAttack = false;
+    private bool _hasInit = false;
+    private bool _hasAttack;
     private const string PLAYER = "Player";
 
-    private void Start()
+    private void OnEnable()
+    {
+        if(!_hasInit)
+        {
+            Init();
+        }
+
+        _hasAttack = false;
+        StartAttack();
+    }
+
+    private void Init()
     {
         health.OnDead += BombAttack;
-
-        StartAttack();
+        _hasInit = true;
     }
 
     public void ResetHasAttack()
@@ -29,10 +40,10 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
 
     public void StartAttack()
     {
-        if(!hasAttack)
+        if(!_hasAttack)
         {
             StartCoroutine(DelayBombAttack(bombTimer));
-            hasAttack = true;
+            _hasAttack = true;
         }
     }
     

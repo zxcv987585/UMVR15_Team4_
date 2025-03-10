@@ -3,10 +3,9 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [Header("最大血量")]
-    [SerializeField] float MaxHealth;
-    [Header("當前血量")]
-    [SerializeField] float CurrentHealth;
+    
+    [SerializeField][Header("最大血量")] float _maxHealth;
+    [SerializeField][Header("當前血量")] float _currentHealth;
 
     //受到攻擊時要觸發的委派事件
     public event Action OnDamage;
@@ -17,75 +16,62 @@ public class Health : MonoBehaviour
     //敵人死亡時要觸發的委派事件
     public event Action<Transform> EnemyDead;
 
-    private float lastDamage;
-    public float LastDamage
-    {
-        get { return lastDamage; }
-        private set { lastDamage = value; }
-    }
+    public float LastDamage {get; private set;}
     
-    private bool Isdead = false;
+    private bool _isdead = false;
 
+    // 設置怪物的血量上限
     public void SetMaxHealth(float maxHealth)
     {
-        this.MaxHealth = maxHealth;
-        CurrentHealth = MaxHealth;
+        _maxHealth = maxHealth;
+        _currentHealth = _maxHealth;
+    }
+
+    public void Init()
+    {
+        _isdead = false;
     }
 
     //取得當前血量
-    public float GetCurrentHealth()
-    {
-        return CurrentHealth;
-    }
-
+    public float GetCurrentHealth() => _currentHealth;
     //取得最大血量，主要用於定義當前血量最大值
-    public float GetMaxHealth()
-    {
-        return MaxHealth;
-    }
-
+    public float GetMaxHealth() => _maxHealth;
     //取得當前血量以及最大血量的比例，主要用於UI血條，可用可不用
-    public float GetHealthRatio()
-    {
-        return CurrentHealth / MaxHealth;
-    }
+    public float GetHealthRatio() => _currentHealth / _maxHealth;
 
     //確認玩家是否為死亡狀態
-    public bool IsDead()
-    {
-        return Isdead;
-    }
+    public bool IsDead() => _isdead;
 
     //受傷函式，用於傳入傷害
     public void TakeDamage(float damage)
     {
-        if (Isdead) return;
+        if (_isdead) return;
 
-        Debug.Log($"受到共{damage}傷害！剩餘血量：{CurrentHealth}");
-        CurrentHealth -= damage;
-        CurrentHealth = Mathf.Max(CurrentHealth, 0);
+        //Debug.Log($"受到共{damage}傷害！剩餘血量：{_currentHealth}");
+        _currentHealth -= damage;
+        _currentHealth = Mathf.Max(_currentHealth, 0);
 
-        lastDamage = damage;
+        LastDamage = damage;
 
-        if (CurrentHealth > 0)
+        if (_currentHealth > 0)
         {
             OnDamage?.Invoke();
         }
 
-        if (CurrentHealth <= 0)
+        if (_currentHealth <= 0)
         {
-            HeadleDeath();
+            HandleDeath();
         }
     }
 
     //死亡後傳送訂閱給各大系統
-    private void HeadleDeath()
+    private void HandleDeath()
     {
-        if (Isdead) return;
+        if (_isdead) return;
 
-        if (CurrentHealth <= 0)
+        if (_currentHealth <= 0)
         {
-            Isdead = true;
+            _isdead = true;
             OnDead?.Invoke();
             EnemyDead?.Invoke(transform);
         }
@@ -94,7 +80,7 @@ public class Health : MonoBehaviour
     //回血系統，呼叫後傳入數值來加血
     public void Heal(float amount)
     {
-        CurrentHealth += amount;
-        CurrentHealth = Mathf.Min(CurrentHealth, MaxHealth);
+        _currentHealth += amount;
+        _currentHealth = Mathf.Min(_currentHealth, _maxHealth);
     }
 }

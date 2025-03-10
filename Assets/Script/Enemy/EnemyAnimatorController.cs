@@ -8,9 +8,9 @@ public class EnemyAnimatorController : MonoBehaviour
 {
 	[SerializeField] Animator animator;
 	
-	private EnemyState currentState;
-	private bool isAttack = false;
-	private bool isDamage = false;
+	private EnemyState _currentState;
+	private bool _isAttack;
+	private bool _isDamage;
 	private AnimatorStateInfo animatorStateInfo;
 	
 	public Action<bool> OnAttackChange;
@@ -25,10 +25,13 @@ public class EnemyAnimatorController : MonoBehaviour
 	private const string IS_DEAD = "isDead";
 	private const string IS_DAMAGE = "isDamage";
 	
-	private void Start()
+	private void OnEnable()
 	{
-		currentState = EnemyState.Idle;
+		_currentState = EnemyState.Idle;
 		animator = GetComponent<Animator>();
+
+		_isAttack = false;
+		_isDamage = false;
 	}
 
 	private void Update()
@@ -43,11 +46,11 @@ public class EnemyAnimatorController : MonoBehaviour
 		animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
 		bool isPlayAttack = animatorStateInfo.IsName(ATTACK) && animatorStateInfo.normalizedTime < 1;
 		
-		if(isAttack == isPlayAttack) return;
+		if(_isAttack == isPlayAttack) return;
 		
-		isAttack = isPlayAttack;
-		animator.SetBool(IS_ATTACK, isAttack);
-		OnAttackChange?.Invoke(isAttack);
+		_isAttack = isPlayAttack;
+		animator.SetBool(IS_ATTACK, _isAttack);
+		OnAttackChange?.Invoke(_isAttack);
 	}
 	
 	// 檢查當前動畫是否是 Animation Damage
@@ -56,19 +59,19 @@ public class EnemyAnimatorController : MonoBehaviour
 		animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
 		bool isPlayDamage = animatorStateInfo.IsName(DAMAGE) && animatorStateInfo.normalizedTime < 1;
 		
-		if(isDamage == isPlayDamage) return;
+		if(_isDamage == isPlayDamage) return;
 		
-		isDamage = isPlayDamage;
-		OnDamageChange?.Invoke(isDamage);
+		_isDamage = isPlayDamage;
+		OnDamageChange?.Invoke(_isDamage);
 	}
 	
 	public void SetEnemyState(EnemyState newState)
 	{
-		if(currentState == EnemyState.Dead) return;
+		if(_currentState == EnemyState.Dead) return;
 		
-		currentState = newState;
+		_currentState = newState;
 
-		switch (currentState)
+		switch (_currentState)
 		{
 			case EnemyState.Idle:
 				animator.SetBool(IS_WALK, false);

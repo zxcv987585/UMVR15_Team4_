@@ -10,8 +10,8 @@ public class EnemyController : MonoBehaviour
 	[SerializeField] private EnemyDataSO enemyDataSO;
 	[SerializeField] private EnemyAnimatorController enemyAnimatorController;
 	[SerializeField] private MonoBehaviour enemyAttackMonoBehaviour;
-	private IEnemyAttack enemyAttack;
-	private EnemyState enemyState;
+	private IEnemyAttack _enemyAttack;
+	private EnemyState _enemyState;
 
 	[SerializeField] private Renderer dissolveRenderer;
 	[SerializeField] private ParticleSystem deadParticle;
@@ -21,9 +21,10 @@ public class EnemyController : MonoBehaviour
 	private const string EMISSION_COLOR= "_EmissionColor";
 	private const string RIM_COLOR = "_RimColor";
 
-	private bool isInit = true;
-	private bool isAttack = false;
-	private bool isDamage = false;
+	private bool _isInit = true;	// 用來等待生成動畫結束後, 才跑 Update 的旗標
+	private bool _hasInit = false; //用來檢查該物件是否為第一次被生成
+	private bool _isAttack;
+	private bool _isDamage;
 	
 	private Rigidbody rb;
 	private NavMeshAgent navMeshAgent;
@@ -32,57 +33,58 @@ public class EnemyController : MonoBehaviour
 	private PlayerHealth playerHealth;
 	private Transform playerTransform;
 	
-	private void Start()
+	private void OnEnable()
 	{
-		//抓取起始元件
-		rb = GetComponent<Rigidbody>();
-		bodyCollider = GetComponent<Collider>();
-		navMeshAgent = GetComponent<NavMeshAgent>();
-		playerTransform = FindObjectOfType<PlayerController>()?.transform;
-		playerHealth = playerTransform.GetComponent<PlayerHealth>();
-		material = dissolveRenderer.material;
-		enemyAttack = (IEnemyAttack)enemyAttackMonoBehaviour;
+		if(!_hasInit) Init();
 
-		//設定 血量
-		health = GetComponent<Health>();
+		health.Init();
 		health.SetMaxHealth(enemyDataSO.maxHP);
-		health.OnDamage += DamageEvent;
-		health.OnDead += DeadEvent;
 
-		//設定 NavMeshAgent
-		navMeshAgent.stoppingDistance = enemyDataSO.attackRange;
-		navMeshAgent.speed = enemyDataSO.moveSpeed;
-		
-		//訂閱其他 Enemy 相關事件
-		enemyAnimatorController.OnAttackChange += SetIsAttack;
-		enemyAnimatorController.OnDamageChange += SetIsDamage;
-		enemyAnimatorController.OnStartAttackCheck += AttackIsColliderCheck;
-		enemyAnimatorController.OnDead += StartDestory;
-		enemyAttack.OnAttackHit += Attack;
-		
+		_isAttack = false;
+		_isDamage = false;
+		bodyCollider.enabled = true;
+
 		//預設怪物狀態機以 Idle 開始
+		_enemyState = EnemyState.Idle;
 		ChangeEnemyState(EnemyState.Idle);
 		
 		//如果 NavMeshAgent 預設啟用, 會因為 NavMeshAgent 只允許物件放置在 NavMeshPath 上, 導致物件無法正常設定 transform.position, 因此延遲啟動
 		StartCoroutine(DelayEnableNavMeshAgent());
 		
-
-		//
 		EnemyManager.Instance.AddToUpdateList(this);
 		StartCoroutine(StartDissolveCoroutine(dissolveTime));
 	}
 
 
-    //從物件池抓出時的初始化
+    // 第一次被實例化時執行
     public void Init()
 	{
-		gameObject.SetActive(true);
-		bodyCollider.enabled = true;
-		enemyState = EnemyState.Idle;
-		health.SetMaxHealth(enemyDataSO.maxHP);
-		navMeshAgent.isStopped = true;
-		
-		material.SetFloat(DISSOLVE_AMOUNT, 0f);
+		_hasInit = true;
+
+		//抓取起始元件
+		rb = GetComponent<Rigidbody>();
+		bodyCollider = GetComponent<Collider>();
+		playerTransform = FindObjectOfType<PlayerController>()?.transform;
+		playerHealth = playerTransform.GetComponent<PlayerHealth>();
+		material = dissolveRenderer.material;
+		_enemyAttack = (IEnemyAttack)enemyAttackMonoBehaviour;
+
+		//設定 血量
+		health = GetComponent<Health>();
+		health.OnDamage += DamageEvent;
+		health.OnDead += DeadEvent;
+
+		//設定 NavMeshAgent
+		navMeshAgent = GetComponent<NavMeshAgent>();
+		navMeshAgent.stoppingDistance = enemyDataSO.attackRange;
+		navMeshAgent.speed = enemyDataSO.moveSpeed;
+
+		//訂閱其他 Enemy 相關事件
+		enemyAnimatorController.OnAttackChange += SetIsAttack;
+		enemyAnimatorController.OnDamageChange += SetIsDamage;
+		enemyAnimatorController.OnStartAttackCheck += AttackIsColliderCheck;
+		enemyAnimatorController.OnDead += StartDestory;
+		_enemyAttack.OnAttackHit += Attack;
 	}
 
 	//延遲啟用 NavMeshAgent
@@ -99,11 +101,13 @@ public class EnemyController : MonoBehaviour
 
 	public void EnemyUpdate()
 	{
-		if(isInit) return;
+		// 如果還在播放 初始動畫則直接離開
+		if(_isInit) return;
 
+		// 如果玩家死了就先把狀態換成 Idle, 之後就直接離開
 		if(playerHealth.IsDead())
 		{
-			if(enemyState != EnemyState.Idle)
+			if(_enemyState != EnemyState.Idle)
 			{
 				ChangeEnemyState(EnemyState.Idle);
 			}
@@ -111,17 +115,18 @@ public class EnemyController : MonoBehaviour
 		}
 
 		//如果目前怪物狀態不是在攻擊或被打中, 則檢查玩家位置
-		if(!isAttack && !isDamage)
+		if(!_isAttack && !_isDamage)
 		{
 			CheckPlayerDistance();
 
-			if(enemyState == EnemyState.Walk)
+			if(_enemyState == EnemyState.Walk)
 			{
 				MoveHandler();
 			}
 		}
 	}
 
+	// 當狀態為 Walk, 轉向及追蹤玩家
 	private void MoveHandler()
 	{
 		Vector3 nextPosition = navMeshAgent.nextPosition;
@@ -159,21 +164,21 @@ public class EnemyController : MonoBehaviour
 	private void ChangeEnemyState(EnemyState newState)
 	{
 		// 如果怪物狀態為死去 或是 不在地上, 則不允許變更狀態
-		if(enemyState == EnemyState.Dead || !navMeshAgent.enabled) return;
+		if(_enemyState == EnemyState.Dead || !navMeshAgent.enabled) return;
 		
-		enemyState = newState;
+		_enemyState = newState;
 
-		switch (enemyState)
+		switch (_enemyState)
 		{
 			case EnemyState.Idle:
 				navMeshAgent.isStopped = true;
-				enemyAnimatorController?.SetEnemyState(enemyState);
+				enemyAnimatorController?.SetEnemyState(_enemyState);
 				break;
 			case EnemyState.Walk:
 				navMeshAgent.isStopped = false;
 				//navMeshAgent.SetDestination(GetRandomPositionAroundPlayer());
 				navMeshAgent.SetDestination(playerTransform.position);
-				enemyAnimatorController?.SetEnemyState(enemyState);
+				enemyAnimatorController?.SetEnemyState(_enemyState);
 				break;
 			case EnemyState.Attack:
 				navMeshAgent.isStopped = true;
@@ -181,11 +186,11 @@ public class EnemyController : MonoBehaviour
 				break;
 			case EnemyState.Damage:
 				navMeshAgent.isStopped = true;
-				enemyAnimatorController?.SetEnemyState(enemyState);
+				enemyAnimatorController?.SetEnemyState(_enemyState);
 				break;
 			case EnemyState.Dead:
 				navMeshAgent.isStopped = true;
-				enemyAnimatorController?.SetEnemyState(enemyState);
+				enemyAnimatorController?.SetEnemyState(_enemyState);
 				break;
 		}
 	}
@@ -195,7 +200,7 @@ public class EnemyController : MonoBehaviour
 	{
 		while (true)
 		{
-			if(enemyState == EnemyState.Dead) break;
+			if(_enemyState == EnemyState.Dead) break;
 
 			// 檢查玩家是否仍在攻擊範圍內
 			float distance = Vector3.Distance(transform.position, targetPosition);
@@ -223,7 +228,7 @@ public class EnemyController : MonoBehaviour
 		}
 
 		// 確保敵人仍在攻擊狀態
-		if (enemyState == EnemyState.Attack)
+		if (_enemyState == EnemyState.Attack)
 		{
 			enemyAnimatorController.SetEnemyState(EnemyState.Attack);
 		}
@@ -264,7 +269,7 @@ public class EnemyController : MonoBehaviour
 	/// <param name="flyPower">擊飛的高度參數</param>
 	public void HitFly(float flyPower)
 	{
-		if (enemyState == EnemyState.Dead) return;
+		if (_enemyState == EnemyState.Dead) return;
 
 		//navMeshAgent.enabled = false;
 		rb.isKinematic = false;
@@ -288,7 +293,6 @@ public class EnemyController : MonoBehaviour
 			yield return null;
 		}
 
-		//navMeshAgent.enabled = true;
 		rb.isKinematic = true;
 	}
 
@@ -296,8 +300,8 @@ public class EnemyController : MonoBehaviour
 	{
 		//isFly = true;
 		navMeshAgent.isStopped = true; // 禁用 NavMeshAgent 的自動導航
-		isAttack = false;             // 禁止攻擊
-		isDamage = false;             // 禁止受擊
+		_isAttack = false;             // 禁止攻擊
+		_isDamage = false;             // 禁止受擊
 		enemyAnimatorController?.SetEnemyState(EnemyState.Damage);
 
 		Vector3 velocity = Vector3.up * flyPower; // 初始上升速度
@@ -334,18 +338,18 @@ public class EnemyController : MonoBehaviour
     {
         if(isStartAttack)
         {
-			enemyAttack.StartAttack();
+			_enemyAttack.StartAttack();
         }
         else
         {
-            enemyAttack.ResetHasAttack();
+            _enemyAttack.ResetHasAttack();
         }
     }
 
 	//攻擊玩家
 	public void Attack()
 	{
-		if(isAttack)
+		if(_isAttack)
 		{
 			playerHealth.TakeDamage(enemyDataSO.attackPower);
 		}
@@ -354,11 +358,11 @@ public class EnemyController : MonoBehaviour
 	// 設定當前是否正在攻擊
 	public void SetIsAttack(bool isAttack)
 	{
-		this.isAttack = isAttack;
+		_isAttack = isAttack;
 		
 		if(!isAttack)
 		{
-			enemyAttack.ResetHasAttack();
+			_enemyAttack.ResetHasAttack();
 		}
 		else
 		{
@@ -369,20 +373,13 @@ public class EnemyController : MonoBehaviour
 	// 設定當前是否正被攻擊
 	public void SetIsDamage(bool isDamage)
 	{
-		this.isDamage = isDamage;
+		_isDamage = isDamage;
 	}
 
 	// 啟動播放死亡動畫的協程
 	private void StartDestory()
 	{
 		StartCoroutine(DeadDissolveCoroutine(1f));
-	}
-
-	// 隱藏該物件, 及物件池回收	
-	public void DestroySelf()
-	{
-		gameObject.SetActive(false);
-		EnemyManager.Instance.RecycleEnemy(gameObject);
 	}
 
 	//死亡時的消融動畫效果
@@ -403,7 +400,8 @@ public class EnemyController : MonoBehaviour
 			yield return null;
 		}
 
-		DestroySelf();
+		// 待死亡動畫結束後, 讓物件池回收自己
+		EnemyManager.Instance.RecycleEnemy(gameObject);
 	}
 
 	// 生成時的消融效果, 並於消融完成後, 將物件加入 EnemyManager 的更新列表中
@@ -425,6 +423,6 @@ public class EnemyController : MonoBehaviour
 		material.SetColor(EMISSION_COLOR, Color.black);
 		material.SetColor(RIM_COLOR, Color.black);
 
-		isInit = false;
+		_isInit = false;
 	}
 }
