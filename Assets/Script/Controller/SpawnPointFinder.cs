@@ -21,7 +21,7 @@ public class SpawnPointFinder : MonoBehaviour
         if(scene.name == "AN_Demo_Boss")
         {
             spawnPoint = GameObject.Find("PlayerSpawnPoint");
-            player.SetLocalPositionAndRotation(spawnPoint.transform.position, player.transform.rotation);
+            player.SetLocalPositionAndRotation(spawnPoint.transform.position, spawnPoint.transform.rotation);
             Physics.SyncTransforms();
         }
     }
