@@ -14,9 +14,8 @@ public class Skill_Judgement_Cut : BaseSkill
     private IEnumerator Spatial_Section(float delay)
     {
         yield return new WaitForSeconds(delay);
-        
-        transform.position = FindObjectOfType<PlayerController>()?.transform.position ?? Vector3.zero;
 
+        transform.position = FindObjectOfType<PlayerController>()?.transform.position ?? Vector3.zero;
         skillParticleSystem.Play();
 
         Collider[] hitColliderArray = Physics.OverlapSphere(transform.position, radius, LayerMask.GetMask(ENEMY));

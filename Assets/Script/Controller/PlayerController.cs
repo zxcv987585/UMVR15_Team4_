@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject SprintEffect;
     [Tooltip("玩家擊中時的特效")]
     public GameObject HitEffect;
+    [Tooltip("玩家大招時的特效")]
+    public GameObject Judgement_Cut_Effect;
 
     [Header("鎖定邏輯")]
     [Tooltip("動態存放鎖定的敵方單位")]
@@ -480,6 +482,11 @@ public class PlayerController : MonoBehaviour
 
         Time.timeScale = originalTimeScale;
         Time.fixedDeltaTime = originalFixedDeltaTime;
+    }
+    public void JudgementCut()
+    {
+        Instantiate(Judgement_Cut_Effect, transform.position, Quaternion.identity);
+        Debug.Log("生成雷電特效!");
     }
 
 }
