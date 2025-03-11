@@ -54,6 +54,14 @@ public class EnemyBossController : MonoBehaviour
 		GameObject go = Instantiate(bossUIPrefab, FindObjectOfType<BattleUIManager>().transform);
 		bossUI = go.GetComponent<BossUI>();
 		bossUI.SetHealth(health);
+
+		StartCoroutine(testdamage());
+	}
+
+	private IEnumerator testdamage()
+	{
+		yield return new WaitForSeconds(2f);
+		health.TakeDamage(150);
 	}
 
 	private void Update()
@@ -62,6 +70,10 @@ public class EnemyBossController : MonoBehaviour
 
 		CheckAnimationIsIdle();
 		LookAtPlayer();
+		
+		animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+		bool isPlayCallEnemy = animatorStateInfo.IsName(BossState.CallEnemy.ToString());
+		Debug.Log("isPlayCallEnemy = " + isPlayCallEnemy);
 		
 
 		if(isIdle)
