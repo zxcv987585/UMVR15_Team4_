@@ -15,7 +15,7 @@ public class EasyInOut : MonoBehaviour
         float timer = 0f;
         while (timer < duration)
         {
-            timer += Time.deltaTime;
+            timer += Time.unscaledDeltaTime;
             float t = timer / duration;
 
             //選擇的緩動方法
