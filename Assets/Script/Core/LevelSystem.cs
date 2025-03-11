@@ -19,8 +19,9 @@ public class LevelSystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L))
         {
             playerData.attackDamage += 3;
+            playerData.MaxPP += 10;
             playerData.MaxHealth += 10;
-            playerData.GunDamage += 2;
+            playerData.GunDamage += 3;
             PlayerLevelup.Invoke();
         }
     }

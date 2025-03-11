@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Skill_Spatial_Section : BaseSkill
+public class Skill_Judgement_Cut : BaseSkill
 {
     private float radius = 12f;
 
