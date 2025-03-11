@@ -24,8 +24,14 @@ public class Skill_Judgement_Cut : BaseSkill
         {
             if (hit.TryGetComponent(out EnemyController enemy))
             {
-                enemy.gameObject.GetComponent<Health>().TakeDamage(GetSkillDataSO().damage);
+                EnemyManager.Instance.SetEnemyIsPause(2f);
+                StartCoroutine(WaitToAttack());
             }
         }
+    }
+    private IEnumerator WaitToAttack()
+    {
+        yield return new WaitForSeconds(2f);
+        EnemyManager.Instance.TakeAllEnemyDamage(skillDataSO.damage);
     }
 }
