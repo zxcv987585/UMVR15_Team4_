@@ -441,4 +441,45 @@ public class PlayerController : MonoBehaviour
     {
         return !isCriticalHit || !isHit || IsDie;
     }
+
+    //隱藏玩家
+    public void HidePlayer()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer rend in renderers)
+        {
+            rend.enabled = false;
+        }
+    }
+
+    // 顯示玩家
+    public void ShowPlayer()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer rend in renderers)
+        {
+            rend.enabled = true;
+        }
+    }
+
+    //放慢時間
+    public void TriggerSlowTime()
+    {
+        StartCoroutine(SlowTimeCoroutine(1f, 0.1f));
+    }
+
+    private IEnumerator SlowTimeCoroutine(float duration, float slowFactor)
+    {
+        float originalTimeScale = Time.timeScale;
+        float originalFixedDeltaTime = Time.fixedDeltaTime;
+
+        Time.timeScale = slowFactor;
+        Time.fixedDeltaTime = originalFixedDeltaTime * slowFactor;
+
+        yield return new WaitForSecondsRealtime(duration);
+
+        Time.timeScale = originalTimeScale;
+        Time.fixedDeltaTime = originalFixedDeltaTime;
+    }
+
 }

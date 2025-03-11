@@ -5804,6 +5804,51 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1056986207}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1062375061
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1062375063}
+  - component: {fileID: 1062375062}
+  m_Layer: 0
+  m_Name: SkillManger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1062375062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1062375061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d21a826c83307744a854bca60e464d86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillDataLibrarySO: {fileID: 11400000, guid: 1566ab8bd644d7544876128e2ba56b8b, type: 2}
+--- !u!4 &1062375063
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1062375061}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1068674701
 GameObject:
   m_ObjectHideFlags: 0
@@ -13231,94 +13276,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97a9b25d785321745b355a71be4a75e2, type: 3}
---- !u!1001 &7480378523368625018
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1268611533559864793, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-      propertyPath: m_Name
-      value: Judgement_Cut
-      objectReference: {fileID: 0}
-    - target: {fileID: 9060361977333305656, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 72.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 9060361977333305656, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.14
-      objectReference: {fileID: 0}
-    - target: {fileID: 9060361977333305656, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 40.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 9060361977333305656, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9060361977333305656, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9060361977333305656, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9060361977333305656, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9060361977333305656, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9060361977333305656, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9060361977333305656, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1268611533559864793, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7480378523368625020}
-  m_SourcePrefab: {fileID: 100100000, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
---- !u!1 &7480378523368625019 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1268611533559864793, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-  m_PrefabInstance: {fileID: 7480378523368625018}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7480378523368625020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7480378523368625019}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc8cd783f1f06f144aae8b0e778af3ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillDataSO: {fileID: 11400000, guid: fd979a6442f85fb4baeaeb52e51f27a0, type: 2}
-  skillParticleSystem: {fileID: 7998876829867123197}
-  canUse: 1
-  AnimationName: Judgement_Cut
-  CastDurtion: 1.8
-  PPCost: 100
---- !u!198 &7998876829867123197 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 4189189461065684103, guid: 16a67b7120ef1f24a9152cc820d9bf0d, type: 3}
-  m_PrefabInstance: {fileID: 7480378523368625018}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -13340,11 +13297,11 @@ SceneRoots:
   - {fileID: 1423520293}
   - {fileID: 1023274754}
   - {fileID: 1072224120}
+  - {fileID: 1062375063}
   - {fileID: 1680393298}
   - {fileID: 6548110684488217392}
   - {fileID: 1795194298}
   - {fileID: 1432552885}
-  - {fileID: 7480378523368625018}
   - {fileID: 6074066877100158034}
   - {fileID: 645802929}
   - {fileID: 363284854}

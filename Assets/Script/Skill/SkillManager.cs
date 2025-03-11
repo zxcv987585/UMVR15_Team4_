@@ -19,8 +19,8 @@ public class SkillManager : MonoBehaviour
 
     private void Start()
 	{
-        player = GetComponent<PlayerController>();
-        playerHealth = GetComponent<PlayerHealth>();
+        player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        playerHealth = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
 
         skillBind = new Dictionary<GameInput.Bind, BaseSkill>();
 		

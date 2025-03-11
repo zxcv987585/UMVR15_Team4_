@@ -2293,9 +2293,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6982621738269738466}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1703264763413261757}
   m_SourcePrefab: {fileID: 100100000, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
 --- !u!4 &93869846329237620 stripped
 Transform:
@@ -2551,6 +2548,7 @@ MonoBehaviour:
   CurrentPP: 0
   PPRecoveryRate: 4
   HealEffect: {fileID: 1146074261479283788, guid: fcfd79721f20e944d87bfd6eb9589f5e, type: 3}
+  HealPPEffect: {fileID: 0}
   levelSystem: {fileID: 0}
 --- !u!114 &3831638619911089666
 MonoBehaviour:
@@ -2592,6 +2590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
+  MainCamera: {fileID: 0}
   playerData: {fileID: 11400000, guid: b770376df1dbd7b49b10747a4fbf0014, type: 2}
   Velocity: {x: 0, y: 0, z: 0}
   SprintEffect: {fileID: 0}
@@ -2673,19 +2672,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 8845005771188919756}
---- !u!114 &1703264763413261757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8211211446584772470}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d21a826c83307744a854bca60e464d86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillDataLibrarySO: {fileID: 11400000, guid: 1566ab8bd644d7544876128e2ba56b8b, type: 2}
 --- !u!4 &8427152175007480866 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8519052518729677307, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
