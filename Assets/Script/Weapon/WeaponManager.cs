@@ -14,7 +14,7 @@ public class WeaponManager : MonoBehaviour
     public enum WeaponType { None, Katana, Gun };
 
     private PlayerController player;
-    private CameraController camera;
+    private CameraController Maincamera;
 
     public Transform weaponHolder;
     private GameObject currentWeapon;
@@ -50,7 +50,7 @@ public class WeaponManager : MonoBehaviour
     {
         EquipWeapon(defualtWeapon);
         player = GetComponent<PlayerController>();
-        camera = Camera.main.GetComponent<CameraController>();
+        Maincamera = Camera.main.GetComponent<CameraController>();
     }
 
     private void Update()
@@ -112,9 +112,9 @@ public class WeaponManager : MonoBehaviour
                 {
                     StartCoroutine(HitPauseCoroutine(0.03f, 0.03f));
                 }
-                if(camera != null)
+                if(Maincamera != null)
                 {
-                    camera.StartCoroutine(camera.ShakeCamera(0.3f, 2f));
+                    Maincamera.StartCoroutine(Maincamera.ShakeCamera(0.3f, 2f));
                 }
             }
         }

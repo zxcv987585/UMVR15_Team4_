@@ -24,7 +24,6 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private Slider PPSlider;
     [SerializeField] private LevelSystem levelSystem;
 
-    private float fadeTime = 1f;
     private Coroutine costAnimationCoroutine;
 
     private void Awake()
