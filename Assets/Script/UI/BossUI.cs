@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class BossUI : MonoBehaviour
 {
+    private PauseUI pauseUI;
+
     //-----開場動畫------------------------------------
     [SerializeField] private RectTransform bossPanel;
     [SerializeField] private RectTransform bossTitle;
@@ -26,9 +28,31 @@ public class BossUI : MonoBehaviour
 
     private void Start()
     {
+        pauseUI = FindObjectOfType<PauseUI>();
+        Transform parent = transform.parent;
+        if (parent != null)
+        {
+            transform.SetParent(parent, true);
+            transform.SetAsFirstSibling();
+        }
         StartCoroutine(ShowBossPanel(1.5f));
     }
 
+    private void Update()
+    {
+        //這個要想辦法優化 不要寫在update
+        GameObject bossHpGroup = GameObject.Find("BossHpGroup").gameObject;
+
+        //如果是暫停畫面是打開的，BOSS血條移到外面
+        if (pauseUI.isOpen == true)
+        {
+            bossHpGroup.GetComponent<RectTransform>().anchoredPosition = new Vector2 (0f,125f);
+        }
+        else
+        {
+            bossHpGroup.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        }
+    }
     private IEnumerator ShowBossPanel(float showTimer)
     {
         EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
@@ -58,7 +82,7 @@ public class BossUI : MonoBehaviour
         //BossPanel出現動畫
         bossPanel.gameObject.SetActive(true);
         StartCoroutine(easyInOut.ChangeValue(
-            new Vector3(0f,1f,1f), Vector3.one, 1.5f,
+            new Vector3(0f, 1f, 1f), Vector3.one, 1.5f,
             value => bossPanel.localScale = value,
             EasyInOut.EaseInOut));
 
