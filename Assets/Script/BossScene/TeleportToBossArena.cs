@@ -27,7 +27,7 @@ public class TeleportToBossArena : MonoBehaviour
             if(BattleUI != null)
             {
                 whiteScreen = BattleUI.transform.Find("whiteScreen")?.GetComponent<Image>();
-                blackScreen = BattleUI.transform.Find("BlackScreen")?.GetComponent<Image>();
+                blackScreen = BattleUI.transform.Find("blackScreen")?.GetComponent<Image>();
             }
         }
         if (player == null)
