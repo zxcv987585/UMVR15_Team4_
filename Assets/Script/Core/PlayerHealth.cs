@@ -149,7 +149,7 @@ public class PlayerHealth : MonoBehaviour
     //受傷函式，用於傳入傷害
     public void TakeDamage(float damage)
     {
-        if (player.isHit || Isdead || player.Invincible || player.isCriticalHit) return;
+        if (player.isSkilling || player.isHit || Isdead || player.Invincible || player.isCriticalHit) return;
 
         Debug.Log($"受到共{damage}傷害！剩餘血量：{CurrentHealth}");
         CurrentHealth -= damage;
@@ -169,7 +169,7 @@ public class PlayerHealth : MonoBehaviour
     //重傷函式，用於傳入重傷情形（爆炸或BOSS衝撞
     public void CriticalDamage(float damage)
     {
-        if (Isdead || player.Invincible) return;
+        if (player.isSkilling  || Isdead || player.Invincible) return;
 
         Debug.Log($"受到共{damage}傷害！剩餘血量：{CurrentHealth}");
         CurrentHealth -= damage;
