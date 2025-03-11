@@ -23,8 +23,8 @@ public class EnemyBossController : MonoBehaviour
 	private AnimatorStateInfo animatorStateInfo;
 	private BossUI bossUI;
 
-	private bool hpLessTrigger70 = false;
-	private bool hpLessTrigger35 = false;
+	private bool _hpLessTrigger70 = false;
+	private bool _hpLessTrigger35 = false;
 	
 
 	private BossState state;
@@ -55,7 +55,7 @@ public class EnemyBossController : MonoBehaviour
 		bossUI = go.GetComponent<BossUI>();
 		bossUI.SetHealth(health);
 
-		StartCoroutine(testdamage());
+		//StartCoroutine(testdamage());
 	}
 
 	private IEnumerator testdamage()
@@ -75,13 +75,14 @@ public class EnemyBossController : MonoBehaviour
 		bool isPlayCallEnemy = animatorStateInfo.IsName(BossState.CallEnemy.ToString());
 		Debug.Log("isPlayCallEnemy = " + isPlayCallEnemy);
 		
+		if(CheckHealthEvent())
+		{
+			return;
+		}
 
 		if(isIdle)
 		{
-			if(CheckHealthEvent())
-			{
-				return;
-			}
+			
 			CheckPlayerDistance();
 		}
 	}
@@ -160,7 +161,6 @@ public class EnemyBossController : MonoBehaviour
                 break;
 			case BossState.CallEnemy:
 				animator.SetTrigger(state.ToString());
-				CallEnemy();
                 break;
             case BossState.ShootAttack:
 				animator.SetTrigger(state.ToString());
@@ -217,27 +217,30 @@ public class EnemyBossController : MonoBehaviour
 	// 檢查血量是否低於特定條件, 來觸發事件
 	private bool CheckHealthEvent()
 	{
-		if(!hpLessTrigger70 && health.GetHealthRatio() < 0.7f)
+		if(!_hpLessTrigger70 && health.GetHealthRatio() < 0.7f)
 		{
 			ChangeEnemyState(BossState.CallEnemy);
 
 			animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-			if(animatorStateInfo.IsName(BossState.Idle.ToString()))
+			if(animatorStateInfo.IsName(BossState.CallEnemy.ToString()))
 			{
-				hpLessTrigger70 = true;
+				_hpLessTrigger70 = true;
+				
+				CallEnemy();
 			}
 
 			return true;
 		}
 
-		if(!hpLessTrigger35 && health.GetHealthRatio() < 0.35f)
+		if(!_hpLessTrigger35 && health.GetHealthRatio() < 0.35f)
 		{
 			ChangeEnemyState(BossState.CallEnemy);
 
 			animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-			if(animatorStateInfo.IsName(BossState.Idle.ToString()))
+			if(animatorStateInfo.IsName(BossState.CallEnemy.ToString()))
 			{
-				hpLessTrigger35 = true;
+				_hpLessTrigger35 = true;
+				CallEnemy();
 			}
 			return true;
 		}
