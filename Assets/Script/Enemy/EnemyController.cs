@@ -25,6 +25,7 @@ public class EnemyController : MonoBehaviour
 	private bool _hasInit = false; //用來檢查該物件是否為第一次被生成
 	private bool _isAttack;
 	private bool _isDamage;
+	private bool _isPause;
 	
 	private Rigidbody rb;
 	private NavMeshAgent navMeshAgent;
@@ -36,6 +37,8 @@ public class EnemyController : MonoBehaviour
 	private void OnEnable()
 	{
 		if(!_hasInit) Init();
+
+		_isPause = false;
 
 		health.Init();
 		health.SetMaxHealth(enemyDataSO.maxHP);
@@ -98,11 +101,21 @@ public class EnemyController : MonoBehaviour
 
 		navMeshAgent.enabled = true;
 	}
+	
+	
+	public void SetIsPause(bool isPause)
+	{
+		_isPause = isPause;
+		
+		enemyAnimatorController.SetIsPause(isPause);
+	}
 
 	public void EnemyUpdate()
 	{
 		// 如果還在播放 初始動畫則直接離開
 		if(_isInit) return;
+		
+		if(_isPause) return;
 
 		// 如果玩家死了就先把狀態換成 Idle, 之後就直接離開
 		if(playerHealth.IsDead())
@@ -200,6 +213,9 @@ public class EnemyController : MonoBehaviour
 	{
 		while (true)
 		{
+			// 如果目前 isPause 為 true, 則暫停更新 Coroutine
+			yield return new WaitUntil(() => !_isPause);
+		
 			if(_enemyState == EnemyState.Dead) break;
 
 			// 檢查玩家是否仍在攻擊範圍內
@@ -241,6 +257,11 @@ public class EnemyController : MonoBehaviour
 		Vector3 offset = new Vector3(Mathf.Cos(randomAngle), 0, Mathf.Sin(randomAngle)) * enemyDataSO.attackRange;
 
 		return playerTransform.position + offset;
+	}
+	
+	public Health GetHealth()
+	{
+		return health;
 	}
 
 	// 怪物受傷時的事件, 訂閱在 <Health> 的 OnDamage
@@ -294,43 +315,6 @@ public class EnemyController : MonoBehaviour
 		}
 
 		rb.isKinematic = true;
-	}
-
-	private IEnumerator HitFlyCoroutine(float flyPower, float duration)
-	{
-		//isFly = true;
-		navMeshAgent.isStopped = true; // 禁用 NavMeshAgent 的自動導航
-		_isAttack = false;             // 禁止攻擊
-		_isDamage = false;             // 禁止受擊
-		enemyAnimatorController?.SetEnemyState(EnemyState.Damage);
-
-		Vector3 velocity = Vector3.up * flyPower; // 初始上升速度
-		float timer = 0f;
-
-		while (timer < duration)
-		{
-			timer += Time.deltaTime;
-
-			// 更新速度（模擬重力影響）
-			velocity += Physics.gravity * Time.deltaTime;
-
-			// 使用 NavMeshAgent.Move() 來位移
-			navMeshAgent.Move(velocity * Time.deltaTime);
-
-			// 確保不會穿透地面
-			if (transform.position.y <= 0.16f) break;
-
-			yield return null;
-		}
-
-		// 保證敵人落地
-		transform.position = new Vector3(transform.position.x, 0.16f, transform.position.z);
-
-		yield return new WaitForSeconds(0.2f); // 短暫停頓，避免瞬間恢復
-
-		navMeshAgent.isStopped = false; // 恢復導航
-		//isFly = false;
-		ChangeEnemyState(EnemyState.Idle); // 切回待機狀態
 	}
 	
 	// 如果 EnemyAnimatorController 有回傳 開關攻擊事件, 則去呼叫 EnemyAttack 對應的 攻擊/結束 函式
@@ -394,6 +378,9 @@ public class EnemyController : MonoBehaviour
 		float timer = 0f;
 		while(timer < showTimer)
 		{
+			// 如果目前 isPause 為 true, 則暫停更新 Coroutine
+			yield return new WaitUntil(() => !_isPause);
+			
 			timer += Time.deltaTime;
 			material.SetFloat(DISSOLVE_AMOUNT, timer/showTimer);
 			
@@ -413,6 +400,9 @@ public class EnemyController : MonoBehaviour
 		float timer = 0f;
 		while(timer < showTimer)
 		{
+			// 如果目前 isPause 為 true, 則暫停更新 Coroutine
+			yield return new WaitUntil(() => !_isPause);
+		
 			timer += Time.deltaTime;
 			material.SetFloat(DISSOLVE_AMOUNT, 1 - timer/showTimer);
 

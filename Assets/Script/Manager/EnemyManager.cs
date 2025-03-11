@@ -48,6 +48,42 @@ public class EnemyManager : MonoBehaviour
             enemyControllerList[i].EnemyUpdate();
         }
     }
+    
+    /// <summary>
+    /// 讓所有怪物暫停活動
+    /// </summary>
+    /// <param name="pauseTime"> 讓怪物暫停的時間 </param>
+    public void SetEnemyIsPause(float pauseTime)
+    {
+        StartCoroutine(PauseCoroutine(pauseTime));
+    }
+    
+    private IEnumerator PauseCoroutine(float pauseTime)
+    {
+        for(int i = 0; i < enemyControllerList.Count; i++)
+        {
+            enemyControllerList[i].SetIsPause(true);
+        }
+        
+        yield return new WaitForSeconds(pauseTime);
+        
+        for(int i = 0; i < enemyControllerList.Count; i++)
+        {
+            enemyControllerList[i].SetIsPause(false);
+        }
+    }
+    
+    /// <summary>
+    /// 給予目前所有活著的怪物傷害
+    /// </summary>
+    /// <param name="damage"> 傷害值 </param>
+    public void TakeAllEnemyDamage(float damage)
+    {
+        for(int i = 0; i < enemyControllerList.Count; i++)
+        {
+            enemyControllerList[i].GetHealth().TakeDamage(damage);
+        }
+    }
 
     /// <summary>
     /// 將 EnemyController 類別, 加入 EnemyManger 管理的更新列表

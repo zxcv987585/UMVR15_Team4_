@@ -6,12 +6,12 @@ using UnityEngine;
 
 public class EnemyAnimatorController : MonoBehaviour
 {
-	[SerializeField] Animator animator;
+	[SerializeField] Animator _animator;
 	
 	private EnemyState _currentState;
 	private bool _isAttack;
 	private bool _isDamage;
-	private AnimatorStateInfo animatorStateInfo;
+	private AnimatorStateInfo _animatorStateInfo;
 	
 	public Action<bool> OnAttackChange;
 	public Action<bool> OnDamageChange;
@@ -28,7 +28,7 @@ public class EnemyAnimatorController : MonoBehaviour
 	private void OnEnable()
 	{
 		_currentState = EnemyState.Idle;
-		animator = GetComponent<Animator>();
+		_animator = GetComponent<Animator>();
 
 		_isAttack = false;
 		_isDamage = false;
@@ -43,21 +43,21 @@ public class EnemyAnimatorController : MonoBehaviour
 	// 檢查當前動畫是否是 Animation Attack
 	private void CheckAnimationIsAttack()
 	{
-		animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-		bool isPlayAttack = animatorStateInfo.IsName(ATTACK) && animatorStateInfo.normalizedTime < 1;
+		_animatorStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+		bool isPlayAttack = _animatorStateInfo.IsName(ATTACK) && _animatorStateInfo.normalizedTime < 1;
 		
 		if(_isAttack == isPlayAttack) return;
 		
 		_isAttack = isPlayAttack;
-		animator.SetBool(IS_ATTACK, _isAttack);
+		_animator.SetBool(IS_ATTACK, _isAttack);
 		OnAttackChange?.Invoke(_isAttack);
 	}
 	
 	// 檢查當前動畫是否是 Animation Damage
 	private void CheckAnimationIsDamage()
 	{
-		animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-		bool isPlayDamage = animatorStateInfo.IsName(DAMAGE) && animatorStateInfo.normalizedTime < 1;
+		_animatorStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+		bool isPlayDamage = _animatorStateInfo.IsName(DAMAGE) && _animatorStateInfo.normalizedTime < 1;
 		
 		if(_isDamage == isPlayDamage) return;
 		
@@ -74,22 +74,22 @@ public class EnemyAnimatorController : MonoBehaviour
 		switch (_currentState)
 		{
 			case EnemyState.Idle:
-				animator.SetBool(IS_WALK, false);
-				animator.SetBool(IS_ATTACK, false);
+				_animator.SetBool(IS_WALK, false);
+				_animator.SetBool(IS_ATTACK, false);
 				break;
 			case EnemyState.Walk:
-				animator.SetBool(IS_WALK, true);
-				animator.SetBool(IS_ATTACK, false);
+				_animator.SetBool(IS_WALK, true);
+				_animator.SetBool(IS_ATTACK, false);
 				break;
 			case EnemyState.Attack:
-				animator.SetBool(IS_WALK, false);
-				animator.SetBool(IS_ATTACK, true);
+				_animator.SetBool(IS_WALK, false);
+				_animator.SetBool(IS_ATTACK, true);
 				break;
 			case EnemyState.Damage:
-				animator.SetTrigger(IS_DAMAGE);
+				_animator.SetTrigger(IS_DAMAGE);
 				break;
 			case EnemyState.Dead:
-				animator.SetTrigger(IS_DEAD);
+				_animator.SetTrigger(IS_DEAD);
 				break;
 		}
 	}
@@ -107,5 +107,17 @@ public class EnemyAnimatorController : MonoBehaviour
 	public void EndAttackCheckTrigger()
 	{
 		OnStartAttackCheck?.Invoke(false);
+	}
+	
+	public void SetIsPause(bool isPause)
+	{
+		if(isPause)
+		{
+			_animator.speed = 0f;
+		}
+		else
+		{
+			_animator.speed = 1f;
+		}
 	}
 }
