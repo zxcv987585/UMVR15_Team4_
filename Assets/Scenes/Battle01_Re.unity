@@ -1753,6 +1753,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c61db88f6c56456286a86f74af86899, type: 3}
+--- !u!114 &233165853 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 492598931696196137, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+  m_PrefabInstance: {fileID: 1432552885}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &245146249
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2315,17 +2326,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 934113378}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &344101699 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 376044154906701427, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
-  m_PrefabInstance: {fileID: 1432552885}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &361243371
 GameObject:
   m_ObjectHideFlags: 0
@@ -2398,7 +2398,7 @@ PrefabInstance:
     - target: {fileID: 1144868007344481449, guid: 466dc234a16047d41862b0ac57d76fc3, type: 3}
       propertyPath: blackScreen
       value: 
-      objectReference: {fileID: 344101699}
+      objectReference: {fileID: 233165853}
     - target: {fileID: 1144868007344481449, guid: 466dc234a16047d41862b0ac57d76fc3, type: 3}
       propertyPath: whiteScreen
       value: 
@@ -4538,7 +4538,7 @@ PrefabInstance:
     - target: {fileID: 1144868007344481449, guid: 466dc234a16047d41862b0ac57d76fc3, type: 3}
       propertyPath: blackScreen
       value: 
-      objectReference: {fileID: 344101699}
+      objectReference: {fileID: 233165853}
     - target: {fileID: 1144868007344481449, guid: 466dc234a16047d41862b0ac57d76fc3, type: 3}
       propertyPath: whiteScreen
       value: 
@@ -9283,7 +9283,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4247721103914536274, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}

@@ -10,6 +10,8 @@ public class BossUI : MonoBehaviour
     //-----開場動畫------------------------------------
     [SerializeField] private RectTransform bossPanel;
     [SerializeField] private RectTransform bossTitle;
+    [SerializeField] private Image bossTitleBar;
+    [SerializeField] private RectTransform bossSubTitle;
     [SerializeField] private RectTransform bossName;
     [SerializeField] private RectTransform bossHP;
     [SerializeField] private RectTransform flash;
@@ -24,32 +26,58 @@ public class BossUI : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(ShowBossPanel(0.7f));
+        StartCoroutine(ShowBossPanel(1.5f));
     }
 
     private IEnumerator ShowBossPanel(float showTimer)
     {
+        EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
+
+        //BossTitle出現動畫
+        bossTitle.gameObject.SetActive(true);
+        StartCoroutine(easyInOut.ChangeValue(0f, 28f, 1.5f,
+           value => bossTitle.GetComponent<TextMeshProUGUI>().characterSpacing = value,
+           EasyInOut.EaseOut));
+        StartCoroutine(easyInOut.ChangeValue(
+           Vector3.one, new Vector3(1.1f, 1.1f, 1.1f), 1.5f,
+           value => bossTitle.localScale = value,
+           EasyInOut.EaseOut));
+
+        //BossTitleBar出現動畫
+        bossTitleBar.gameObject.SetActive(true);
+        RectTransform bossTitleBarRect = bossTitleBar.GetComponent<RectTransform>();
+
+        StartCoroutine(easyInOut.ChangeValue(
+            400f, 850f, 1.5f,
+            value => bossTitleBarRect.sizeDelta = new Vector2(value, bossTitleBarRect.sizeDelta.y),
+            EasyInOut.EaseOut));
+
+        //BossSubTitle出現
+        bossSubTitle.gameObject.SetActive(true);
+
+        //BossPanel出現動畫
+        bossPanel.gameObject.SetActive(true);
+        StartCoroutine(easyInOut.ChangeValue(
+            new Vector3(0f,1f,1f), Vector3.one, 1.5f,
+            value => bossPanel.localScale = value,
+            EasyInOut.EaseInOut));
+
         float timer = 0f;
 
         while (timer < showTimer)
         {
             timer += Time.deltaTime;
-            bossPanel.localScale = new Vector3(Mathf.Lerp(0f, 1f, timer / showTimer), 1f, 1f);
-            bossTitle.localScale = new Vector3(Mathf.Lerp(0f, 1f, timer / showTimer), 1f, 1f);
-
             yield return null;
         }
-
         bossPanel.localScale = Vector3.one;
 
-        StartCoroutine(MoveBossTitle(0.7f));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(MoveBossTitle(0.75f));
     }
 
     private IEnumerator MoveBossTitle(float showTimer)
     {
         float timer = 0f;
-        Vector3 originalVector3 = bossTitle.transform.position;
-
         Image image = bossPanel.GetComponent<Image>();
         Color color = image.color;
 
@@ -57,23 +85,23 @@ public class BossUI : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            bossTitle.transform.position = Vector3.Lerp(originalVector3, bossHP.transform.position, timer / showTimer);
             color.a = Mathf.Lerp(1, 0, timer / showTimer);
             image.color = color;
+            bossTitle.GetComponent<TextMeshProUGUI>().color = color;
+            bossSubTitle.GetComponent<TextMeshProUGUI>().color = color;
+            bossTitleBar.GetComponent<Image>().color = color;
 
             yield return null;
         }
-
-        bossTitle.transform.position = bossHP.transform.position;
-
         StartCoroutine(ShowBossHP(0.4f));
     }
-
 
     private IEnumerator ShowBossHP(float showTimer)
     {
         bossPanel.gameObject.SetActive(false);
         bossTitle.gameObject.SetActive(false);
+        bossTitleBar.gameObject.SetActive(false);
+        bossSubTitle.gameObject.SetActive(false);
 
         EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
 
@@ -138,32 +166,12 @@ public class BossUI : MonoBehaviour
         while (timer < showTimer)
         {
             timer += Time.deltaTime;
-            //bossHP.localScale = new Vector3(Mathf.Lerp(0f, 1f, timer / showTimer), 1f, 1f);
 
             yield return null;
         }
 
         bossPanel.localScale = Vector3.one;
     }
-
-    //private IEnumerator ShowBossHP(float showTimer)
-    //{
-    //    bossPanel.gameObject.SetActive(false);
-    //    bossTitle.gameObject.SetActive(false);
-
-    //    float timer = 0f;
-
-    //    while(timer < showTimer)
-    //    {
-    //        timer += Time.deltaTime;
-    //        bossName.localScale = new Vector3(Mathf.Lerp(0f, 1f, timer/showTimer), 1f, 1f);
-    //        bossHP.localScale = new Vector3(Mathf.Lerp(0f, 1f, timer/showTimer), 1f, 1f);
-
-    //        yield return null;
-    //    }
-
-    //    bossPanel.localScale = Vector3.one;
-    //}
 
     public void SetHealth(Health health)
     {
@@ -192,7 +200,7 @@ public class BossUI : MonoBehaviour
         while (timer < fadeTimer)
         {
             timer += Time.deltaTime;
-            color.a = Mathf.Lerp(255f/255f, 0f, timer / fadeTimer);
+            color.a = Mathf.Lerp(255f / 255f, 0f, timer / fadeTimer);
 
             fillCost.GetComponent<Image>().color = color;
 
@@ -200,23 +208,4 @@ public class BossUI : MonoBehaviour
         }
         costHP.fillAmount = currentHP.fillAmount;
     }
-
-    //private IEnumerator HPFade(float fadeTimer)
-    //{
-    //    float timer = 0;
-
-    //    Color color = costHP.color;
-
-    //    while (timer < fadeTimer)
-    //    {
-    //        timer += Time.deltaTime;
-    //        color.a = Mathf.Lerp(1, 0, timer / fadeTimer);
-
-    //        costHP.color = color;
-
-    //        yield return null;
-    //    }
-
-    //    costHP.fillAmount = currentHP.fillAmount;
-    //}
 }
