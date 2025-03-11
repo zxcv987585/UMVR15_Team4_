@@ -2,23 +2,24 @@
 
 public class GunSystem : MonoBehaviour
 {
-    PlayerController player;
-
     //槍械參數
     public float TimeBetweenShooting, spread, range, reloadingTime, timeBetweenShots;
     public int magazineSize, bulletsPerTap;
     public bool allowButtonHold;
     private int bulletLeft, bulletShot;
+    private float GunShotPP = 6f;
 
     //射擊判定
     private bool shooting, readyToShoot, reloading;
 
     //參照物（用於射擊與瞄準）
-    public Camera camera;
+    public Camera Maincamera;
     public Transform attackPoint;
     public RaycastHit rayHit;
     public LayerMask Enemy;
     public LayerMask Wall;
+    public PlayerController player;
+    public PlayerHealth health;
 
     //特效
     public GameObject muzzleFlash, bulletHole;
@@ -27,9 +28,10 @@ public class GunSystem : MonoBehaviour
     private void Awake()
     {
         player =  GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        health = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
         bulletLeft = magazineSize;
-        camera = Camera.main;
-        if (camera == null)
+        Maincamera = Camera.main;
+        if (Maincamera == null)
         {
             Debug.LogError("找不到攝影機！");
         }
@@ -58,9 +60,16 @@ public class GunSystem : MonoBehaviour
     //射擊程式碼
     private void Shoot()
     {
+        if (!health.UsePP(GunShotPP)) 
+        {
+            Debug.Log("PP不足，無法開火！");
+            ResetShot();
+            return;
+        }
+
         readyToShoot = false;
 
-        Ray cameraRay = camera.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
+        Ray cameraRay = Maincamera.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
         Vector3 targetPoint;
 
         if (Physics.Raycast(cameraRay, out RaycastHit hit, range))
