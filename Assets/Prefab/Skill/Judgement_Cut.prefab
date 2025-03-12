@@ -14736,6 +14736,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9060361977333305656}
   - component: {fileID: 6486148607183679498}
+  - component: {fileID: 5536607150916615503}
+  - component: {fileID: 7108513490274067177}
   m_Layer: 0
   m_Name: Judgement_Cut
   m_TagString: Untagged
@@ -14777,6 +14779,37 @@ MonoBehaviour:
   AnimationName: Judgement_Cut
   CastDurtion: 3.8
   PPCost: 100
+  postProcessVolume: {fileID: 7108513490274067177}
+  easyInOut: {fileID: 5536607150916615503}
+--- !u!114 &5536607150916615503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268611533559864793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da3c08c1bf72314196fa276e9073f1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7108513490274067177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268611533559864793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedProfile: {fileID: 11400000, guid: f2c23ff239ac3c64ebd7e4f87ac66a01, type: 2}
+  isGlobal: 0
+  blendDistance: 0
+  weight: 1
+  priority: 0
 --- !u!1 &1360136952665221882
 GameObject:
   m_ObjectHideFlags: 0
