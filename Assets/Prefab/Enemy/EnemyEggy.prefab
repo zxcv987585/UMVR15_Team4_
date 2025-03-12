@@ -15529,7 +15529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee9261e9e1d711242a5cc142915ff49d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 4234193521768006673}
+  _animator: {fileID: 0}
 --- !u!1 &4234193521775441875
 GameObject:
   m_ObjectHideFlags: 0
@@ -25672,6 +25672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 018714aabeb66274cb3138acab37b9d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyController: {fileID: 7065754872642794023}
   health: {fileID: 1068885646187691178}
   bombParticle: {fileID: 4529181856540440787}
   bombRenderer: {fileID: 4234193521772329681}
@@ -30682,8 +30683,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0b9ff7337c0e49c891fa4da7672a04a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 0
-  CurrentHealth: 0
+  _maxHealth: 0
+  _currentHealth: 0
 --- !u!195 &7515192276075400810
 NavMeshAgent:
   m_ObjectHideFlags: 0

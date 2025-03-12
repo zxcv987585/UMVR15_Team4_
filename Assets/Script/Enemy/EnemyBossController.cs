@@ -16,7 +16,6 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 	private bool _isIdle = true;
 	private bool _isAttackCooldown = false;
-	private bool _isPause = false;
 	private Transform _playerTransform;
 	private PlayerHealth _playerHealth;
 	private AnimatorStateInfo _animatorStateInfo;
@@ -27,12 +26,14 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	private bool _hpLessTrigger35 = false;
 	
 	public Health Health{get; private set;}
+	public bool IsPause{get; private set;}
 
 	private BossState state;
 
 	private enum BossState
 	{
 		Idle,
+		Walk,
 		RunAttack,
 		CallEnemy,
 		ShootAttack,
@@ -69,12 +70,12 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	
 	public void EnemyUpdate()
     {
-		if(_isPause) return;
+		if(IsPause) return;
     
         if(_playerHealth.IsDead() || state == BossState.Dead) return;
 
 		CheckAnimationIsIdle();
-		LookAtPlayer();
+		//LookAtPlayer();
 
 		if(_isIdle) CheckPlayerDistance();
     }
@@ -242,7 +243,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
     public void SetIsPause(bool isPause)
     {
-        _isPause = isPause;
+        IsPause = isPause;
         
         _animator.speed = isPause ? 0f : 1f;
     }

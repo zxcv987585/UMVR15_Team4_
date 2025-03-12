@@ -25,7 +25,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	private bool _hasInit = false; //用來檢查該物件是否為第一次被生成
 	private bool _isAttack;
 	private bool _isDamage;
-	private bool _isPause;
+	//private bool IsPause;
 	
 	private Rigidbody rb;
 	private NavMeshAgent navMeshAgent;
@@ -34,12 +34,13 @@ public class EnemyController : MonoBehaviour, IEnemy
 	private Transform playerTransform;
 	
 	public Health Health {get; private set;}
+	public bool IsPause{get; private set;}
 	
 	private void OnEnable()
 	{
 		if(!_hasInit) Init();
 
-		_isPause = false;
+		IsPause = false;
 
 		Health.Init();
 		Health.SetMaxHealth(enemyDataSO.maxHP);
@@ -106,7 +107,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	
 	public void SetIsPause(bool isPause)
 	{
-		_isPause = isPause;
+		IsPause = isPause;
 		
 		enemyAnimatorController.SetIsPause(isPause);
 	}
@@ -116,7 +117,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		// 如果還在播放 初始動畫則直接離開
 		if(_isInit) return;
 		
-		if(_isPause) return;
+		if(IsPause) return;
 
 		// 如果玩家死了就先把狀態換成 Idle, 之後就直接離開
 		if(playerHealth.IsDead())
@@ -215,7 +216,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		while (true)
 		{
 			// 如果目前 isPause 為 true, 則暫停更新 Coroutine
-			yield return new WaitUntil(() => !_isPause);
+			yield return new WaitUntil(() => !IsPause);
 		
 			if(_enemyState == EnemyState.Dead) break;
 
@@ -249,15 +250,6 @@ public class EnemyController : MonoBehaviour, IEnemy
 		{
 			enemyAnimatorController.SetEnemyState(EnemyState.Attack);
 		}
-	}
-
-	//抓取玩家周圍 360度的隨機座標
-	private Vector3 GetRandomPositionAroundPlayer()
-	{
-		float randomAngle = UnityEngine.Random.Range(0f, MathF.PI * 2f);
-		Vector3 offset = new Vector3(Mathf.Cos(randomAngle), 0, Mathf.Sin(randomAngle)) * enemyDataSO.attackRange;
-
-		return playerTransform.position + offset;
 	}
 	
 	public Health GetHealth()
@@ -380,7 +372,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		while(timer < showTimer)
 		{
 			// 如果目前 isPause 為 true, 則暫停更新 Coroutine
-			yield return new WaitUntil(() => !_isPause);
+			yield return new WaitUntil(() => !IsPause);
 			
 			timer += Time.deltaTime;
 			material.SetFloat(DISSOLVE_AMOUNT, timer/showTimer);
@@ -402,7 +394,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		while(timer < showTimer)
 		{
 			// 如果目前 isPause 為 true, 則暫停更新 Coroutine
-			yield return new WaitUntil(() => !_isPause);
+			yield return new WaitUntil(() => !IsPause);
 		
 			timer += Time.deltaTime;
 			material.SetFloat(DISSOLVE_AMOUNT, 1 - timer/showTimer);

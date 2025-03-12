@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
 {
-    [SerializeField] private Health health;
+    [SerializeField] private EnemyController enemyController;
     [SerializeField] private ParticleSystem bombParticle;
     [SerializeField] private Renderer bombRenderer;
     [SerializeField] private float damage;
@@ -29,7 +29,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
 
     private void Init()
     {
-        health.OnDead += BombAttack;
+        enemyController.Health.OnDead += BombAttack;
         _hasInit = true;
     }
 
@@ -54,6 +54,10 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
     
         while(timer < delayBombTime)
         {
+            yield return new WaitUntil(() => !enemyController.IsPause);
+            
+            if(enemyController.Health.IsDead()) break;
+            
             // 計算進度 (0 ~ 1)
             float progress = timer / delayBombTime;
 
@@ -70,20 +74,20 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
             yield return null;
         }
         
-        material.SetColor("_EmissionColor", Color.red);
-        
-        health.TakeDamage(999);
+        if(!enemyController.Health.IsDead())
+        {
+            material.SetColor("_EmissionColor", Color.red);
+            enemyController.Health.TakeDamage(999);
+        }
     }
     
     private void BombAttack()
     {
-        //Debug.Log("BombAttack");
         Collider[] colliderArray = Physics.OverlapSphere(transform.position, 2f, LayerMask.GetMask(PLAYER));
         foreach(Collider collider in colliderArray)
         {
             if(collider.TryGetComponent(out PlayerHealth playerHealth))
             {
-                //OnAttackHit?.Invoke();
                 playerHealth.CriticalDamage(damage);
             }
         }
