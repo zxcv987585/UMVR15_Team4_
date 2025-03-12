@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class AnimatorController : MonoBehaviour
@@ -58,6 +57,8 @@ public class AnimatorController : MonoBehaviour
 
     private void Aim(bool isAim)
     {
+        if (player.IsDie) return;
+
         if (isAim)
         {
             animator.SetLayerWeight(0, 0);
@@ -78,15 +79,8 @@ public class AnimatorController : MonoBehaviour
 
     private void Hit()
     {
-        if (player.isAiming)
-        {
-            animator.SetTrigger("Hit");
-        }
-        else
-        {
-            animator.CrossFade("Hit", 0f, 0);
-            animator.SetBool("IsAim", false);
-        }
+        animator.CrossFade("Hit", 0f, 0);
+        animator.SetBool("IsAim", false);
     }
 
     private void Dash(string isDash)
