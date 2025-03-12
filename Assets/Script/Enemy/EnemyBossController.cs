@@ -28,7 +28,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	public Health Health{get; private set;}
 	public bool IsPause{get; private set;}
 
-	private BossState state;
+	private BossState _state;
 
 	private enum BossState
 	{
@@ -70,14 +70,31 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	
 	public void EnemyUpdate()
     {
+		// 如果怪物處於暫停狀態
 		if(IsPause) return;
     
-        if(_playerHealth.IsDead() || state == BossState.Dead) return;
+		// 如果玩家或怪物已經死亡則不在更新, 並將狀態改為 Idle
+        if(_playerHealth.IsDead() || _state == BossState.Dead)
+        {
+            if(_state != BossState.Idle) ChangeEnemyState(BossState.Idle);
+            return;
+        }
 
+		// 如果怪物在 Idle 狀態, 則開始判斷需要做什麼
 		CheckAnimationIsIdle();
-		//LookAtPlayer();
-
-		if(_isIdle) CheckPlayerDistance();
+		if(_isIdle) CheckState();
+    }
+    
+    private void CheckState()
+    {
+        if(_isAttackCooldown)
+        {
+            ChangeEnemyState(BossState.Walk);
+        }
+        else
+        {
+			CheckPlayerDistance();
+        }
     }
 
 	private void LookAtPlayer()
@@ -115,7 +132,6 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 		yield return new WaitForSeconds(_attackCooldownTime);
 
-		//isIdle = true;
 		ChangeEnemyState(BossState.Idle);
 		_isAttackCooldown = false;
 	}
@@ -145,28 +161,32 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	
 	private void ChangeEnemyState(BossState newState)
 	{
-		if(state == BossState.Dead || state == newState) return;
+		if(_state == BossState.Dead || _state == newState) return;
 		
-		state = newState;
+		_state = newState;
 
-        switch (state)
+        switch (_state)
         {
             case BossState.Idle:
 				_isIdle = true;
+				_animator.Play(_state.ToString());
                 break;
+            case BossState.Walk:
+				_animator.Play(_state.ToString());
+				break;
             case BossState.RunAttack:
-				_animator.SetTrigger(state.ToString());
+				_animator.SetTrigger(_state.ToString());
                 break;
 			case BossState.CallEnemy:
-				_animator.SetTrigger(state.ToString());
+				_animator.SetTrigger(_state.ToString());
 				StartCoroutine(DelayCallEnemyCoroutine());
                 break;
             case BossState.ShootAttack:
-				_animator.SetTrigger(state.ToString());
+				_animator.SetTrigger(_state.ToString());
 				StartCoroutine(DelayShootAttackCoroutine());
                 break;
             case BossState.FloorAttack:
-				_animator.SetTrigger(state.ToString());
+				_animator.SetTrigger(_state.ToString());
 				StartCoroutine(DelayFloorAttackCoroutine());
                 break;
             case BossState.Dead:
@@ -209,7 +229,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	//如果需要 Enemy 受傷, 呼叫該函數
 	public void TakeDamage()
 	{
-		if(state == BossState.Dead) return;
+		if(_state == BossState.Dead) return;
 
 		//AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
 
