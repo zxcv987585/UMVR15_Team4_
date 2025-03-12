@@ -47,7 +47,10 @@ public class CameraController : MonoBehaviour
     float CameraToTargetDistance = 4f;
     float Mouse_x = 0;
     float Mouse_y = 30;
+    //存儲絲滑移動量的變數
     Vector3 smoothVelocity = Vector3.zero;
+    //存儲震動偏移量的變數
+    Vector3 shakeOffset = Vector3.zero;
 
     private InputController input;
     private PlayerController player;
@@ -84,7 +87,7 @@ public class CameraController : MonoBehaviour
 
         if (!isLocked)
         {
-            // 計算轉換參數，根據是否瞄準，目標值分別為1或0
+            // 根據是否瞄準，計算過渡參數（0~1）
             float targetTransition = isAiming ? 1f : 0f;
             transitionValue = Mathf.Lerp(transitionValue, targetTransition, Time.deltaTime * transitionSpeed);
 
@@ -93,13 +96,12 @@ public class CameraController : MonoBehaviour
             Quaternion normalRotation = Quaternion.Euler(Mouse_y, Mouse_x, 0);
             float normalCamDistance = CameraToTargetDistance;
 
-            // 瞄準模式下的參數（根據你的程式邏輯計算）
+            // 瞄準模式下的參數（可根據需求調整）
             Vector3 aimPosition = target.position + target.right * AimOffset.x + target.up * AimOffset.y;
-            // 旋轉上加個偏移，例如額外偏移15度（依需求調整）
             Quaternion aimRotation = Quaternion.Euler(Mouse_y, Mouse_x + 15f, 0);
             float aimCamDistance = AimOffset.z;
 
-            // 混合參數：位置、旋轉與攝影機距離都使用過渡參數進行插值
+            // 插值混合位置、旋轉與距離
             Vector3 blendedPosition = Vector3.Lerp(normalPosition, aimPosition, transitionValue);
             Quaternion blendedRotation = Quaternion.Slerp(normalRotation, aimRotation, transitionValue);
             float blendedDistance = Mathf.Lerp(normalCamDistance, aimCamDistance, transitionValue);
@@ -107,13 +109,29 @@ public class CameraController : MonoBehaviour
             if (isAiming && AimTarget != null)
             {
                 if (player.IsDie) return;
-
                 Vector3 cameraForward = Camera.main.transform.forward;
                 AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
             }
 
-            // 最後更新攝影機位置，加入碰撞檢測邏輯
-            UpdateCameraPosition(blendedPosition, blendedRotation, blendedDistance);
+            // 計算期望的相機位置
+            Vector3 desiredCameraPos = blendedPosition + blendedRotation * new Vector3(0, 0, -blendedDistance);
+
+            // 碰撞檢測：從 blendedPosition 發射一個球形射線
+            Vector3 direction = (desiredCameraPos - blendedPosition).normalized;
+            float adjustedDistance = blendedDistance;
+            RaycastHit hit;
+            if (Physics.SphereCast(blendedPosition, collisionRadius, direction, out hit, blendedDistance, collisionLayers))
+            {
+                adjustedDistance = hit.distance - collisionOffset;
+                adjustedDistance = Mathf.Clamp(adjustedDistance, 0.1f, blendedDistance);
+                desiredCameraPos = blendedPosition + blendedRotation * new Vector3(0, 0, -adjustedDistance);
+            }
+
+            // 平滑更新相機位置，最後加上 shakeOffset 來達成震動效果
+            Vector3 finalPosition = Vector3.SmoothDamp(transform.position, desiredCameraPos, ref smoothVelocity, SmoothTime);
+            finalPosition += shakeOffset;
+            transform.position = finalPosition;
+            transform.rotation = blendedRotation;
         }
 
         if (isLocked && !isAiming)
@@ -122,51 +140,27 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    // 攝影機輸入邏輯
+    // 處理滑鼠輸入來旋轉攝影機
     private void HandleCameraRotation()
     {
         if (isLocked && !isAiming) return;
-        // 處理滑鼠輸入來旋轉攝影機
         Mouse_x += input.GetMouseXAxis() * sensitivity_x;
         Mouse_y -= input.GetMouseYAxis() * sensitivity_y;
         Mouse_y = Mathf.Clamp(Mouse_y, MinVerticalAngle, MaxVerticalAngle);
     }
 
-    // 更新攝影機位置的方法
-    private void UpdateCameraPosition(Vector3 targetPosition, Quaternion rotation, float distance)
-    {
-        // 期望的攝影機位置：從目標位置向後一定距離
-        Vector3 desiredCameraPos = targetPosition + rotation * new Vector3(0, 0, -distance);
-
-        // 碰撞檢測：從 targetPosition 發射一個球形射線
-        Vector3 direction = (desiredCameraPos - targetPosition).normalized;
-        float adjustedDistance = distance;
-        RaycastHit hit;
-        if (Physics.SphereCast(targetPosition, collisionRadius, direction, out hit, distance, collisionLayers))
-        {
-            // 碰撞到障礙物時，將攝影機距離調整為碰撞點距離，並留下一些間隙
-            adjustedDistance = hit.distance - collisionOffset;
-            adjustedDistance = Mathf.Clamp(adjustedDistance, 0.1f, distance);
-            desiredCameraPos = targetPosition + rotation * new Vector3(0, 0, -adjustedDistance);
-        }
-
-        Vector3 finalPosition = Vector3.SmoothDamp(transform.position, desiredCameraPos, ref smoothVelocity, SmoothTime);
-        transform.position = finalPosition;
-        transform.rotation = rotation;
-    }
-
-    // 鎖定模式下的攝影機邏輯
+    // 鎖定模式下的相機處理邏輯
     private void HandleLockMode()
     {
         LockTransfrom = player.LockTarget;
         if (LockTransfrom == null || isAiming) return;
 
-        Vector3 targetPoition = target.position + Vector3.up * 1.3f;
-        Vector3 desiredCameraPos = targetPoition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
+        Vector3 targetPosition = target.position + Vector3.up * 1.3f;
+        Vector3 desiredCameraPos = targetPosition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
 
         int WallLayer = LayerMask.GetMask("Wall");
         float targetDistance = DefaultCameraToTargetDistance;
-        if (Physics.Raycast(targetPoition, (desiredCameraPos - targetPoition).normalized, out RaycastHit hit, CameraToTargetDistance, WallLayer))
+        if (Physics.Raycast(targetPosition, (desiredCameraPos - targetPosition).normalized, out RaycastHit hit, CameraToTargetDistance, WallLayer))
         {
             targetDistance = Mathf.Lerp(PreviousCameraToTargetDistance, hit.distance - 0.2f, Time.deltaTime * 10f);
         }
@@ -178,55 +172,49 @@ public class CameraController : MonoBehaviour
         CameraToTargetDistance = targetDistance;
         PreviousCameraToTargetDistance = CameraToTargetDistance;
 
-        Vector3 finalPosition = targetPoition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
+        Vector3 finalPosition = targetPosition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
+        // 加入震動偏移量
+        finalPosition += shakeOffset;
         transform.position = Vector3.SmoothDamp(transform.position, finalPosition, ref smoothVelocity, SmoothTime);
 
-        Vector3 rotationDirection = LockTransfrom.transform.position - transform.position;
-        rotationDirection.Normalize();
+        Vector3 rotationDirection = LockTransfrom.position - transform.position;
         rotationDirection.y = 0f;
-
         Quaternion targetRotation = Quaternion.LookRotation(rotationDirection);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, LockOnTargetFollowSpeed);
 
-        rotationDirection = LockTransfrom.position - target.position;
-        rotationDirection.Normalize();
-
-        // 更新滑鼠角度，讓後續切換回普通視角時能夠延續目前的方向
+        // 更新滑鼠角度以延續後續普通視角方向
         Vector3 currentEuler = transform.rotation.eulerAngles;
         Mouse_x = currentEuler.y;
         Mouse_y = currentEuler.x;
     }
 
-    // 獲取瞄準輸入
+    // 取得瞄準輸入
     private void SetAim(bool isAiming)
     {
         if (player.IsDie) return;
         this.isAiming = isAiming;
     }
 
-    //進入BOSS傳送門後的角度修正
+    // BOSS 傳送門進入後的角度調整
     public void SetCameraRotation(float yaw, float pitch)
     {
         Mouse_x = yaw;
         Mouse_y = Mathf.Clamp(pitch, MinVerticalAngle, MaxVerticalAngle);
     }
 
-    //攻擊與特殊技能的抖動運鏡效果
+    // 攻擊與特殊技能的震動效果，僅更新 shakeOffset 變數
     public IEnumerator ShakeCamera(float duration, float magnitude)
     {
-        Vector3 originalPos = transform.position;
+        Debug.Log("開始震動!");
         float elapsed = 0f;
-
-        while (elapsed < duration) 
+        while (elapsed < duration)
         {
             float offsetX = Random.Range(-1f, 1f) * magnitude;
             float offsetY = Random.Range(-1f, 1f) * magnitude;
-            transform.position = originalPos + new Vector3(offsetX, offsetY, 0f);
-
+            shakeOffset = new Vector3(offsetX, offsetY, 0f);
             elapsed += Time.deltaTime;
             yield return null;
         }
-
-        transform.position = originalPos;
+        shakeOffset = Vector3.zero;
     }
 }

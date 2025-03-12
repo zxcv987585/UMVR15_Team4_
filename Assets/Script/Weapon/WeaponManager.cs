@@ -112,10 +112,6 @@ public class WeaponManager : MonoBehaviour
                 {
                     StartCoroutine(HitPauseCoroutine(0.03f, 0.03f));
                 }
-                if (Maincamera != null)
-                {
-                    Maincamera.StartCoroutine(Maincamera.ShakeCamera(0.3f, 2f));
-                }
             }
         }
     }

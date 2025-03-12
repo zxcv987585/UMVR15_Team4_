@@ -25,6 +25,12 @@ public class PlayerDataSO : ScriptableObject
     public float MaxHealth = 120f;
     [Tooltip("玩家最大PP值")]
     public float MaxPP = 100f;
+    [Tooltip("玩家等級")]
+    public int CurrentLevel = 1;
+    [Tooltip("玩家經驗值")]
+    public float CurrentExp = 0f;
+    [Tooltip("玩家下一等級所需經驗值")]
+    public int XPForNextLevel = 100;
     [Tooltip("受傷狀態的持續時間")]
     public float HitCoolTime = 1f;
     [Tooltip("玩家的傷害量")]
