@@ -482,7 +482,7 @@ public class PlayerController : MonoBehaviour
         CameraController camera = Camera.main.GetComponent<CameraController>();
         if(camera != null)
         {
-            camera.StartCoroutine(camera.ShakeCamera(0.6f, 3f));
+            camera.StartCoroutine(camera.ShakeCamera(1f, 0.1f));
             Debug.Log("找到攝影機！開始抖動");
         }
     }
