@@ -32,7 +32,6 @@ public class EnemySpawnTirgger : MonoBehaviour
     [SerializeField][Header("戰鬥時, 怪物少於等於 lessCount 則生成怪物")] private List<EnemySpawnCountInfo> enemySpawnCountInfoList;
 
     private Collider triggerCollider;
-    private bool hasSpawn = false;
 
     private void Start()
     {
@@ -41,21 +40,27 @@ public class EnemySpawnTirgger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(!hasSpawn && other.GetComponent<PlayerController>() != null)
+        if(other.GetComponent<PlayerController>() != null)
         {
-            //生成怪物
-            foreach(EnemySpawnInfo enemySpawnInfo in enemySpawnInfoList)
-            {
-                EnemyManager.Instance.SpawnEnemy(enemySpawnInfo.enemyPrefab, enemySpawnInfo.enemySpawnPosition);
-            }
-
-            hasSpawn = true;
-            triggerCollider.enabled = false;
+            StartSpawnEnemy();
+        }
+    }
+    
+    // 生成怪物
+    public void StartSpawnEnemy()
+    {
+        //生成怪物
+        foreach(EnemySpawnInfo enemySpawnInfo in enemySpawnInfoList)
+        {
+            EnemyManager.Instance.SpawnEnemy(enemySpawnInfo.enemyPrefab, enemySpawnInfo.enemySpawnPosition);
         }
 
+        triggerCollider.enabled = false;
+        
         StartCoroutine(CheckEnemySpawnList());
     }
 
+    // 檢查根據 時間, 場上怪物數量 條件來生成的 怪物
     private IEnumerator CheckEnemySpawnList()
     {
         yield return null;
@@ -66,6 +71,7 @@ public class EnemySpawnTirgger : MonoBehaviour
         {
             timer += Time.deltaTime;
 
+            // 移除符合生成條件(時間)的資料, 並將對應怪物生成
             enemySpawnTimeInfoList.RemoveAll(enemySpawnTimeInfo => 
             {
                 if (enemySpawnTimeInfo.spawnTimer < timer)
@@ -76,6 +82,7 @@ public class EnemySpawnTirgger : MonoBehaviour
                 return false;
             });
 
+            // 移除符合生成條件(場上數量)的資料, 並將對應怪物生成
             enemySpawnCountInfoList.RemoveAll(EnemySpawnCountInfo => 
             {
                 if (EnemySpawnCountInfo.lessCount >= EnemyManager.Instance.GetEnemyControllerCount())

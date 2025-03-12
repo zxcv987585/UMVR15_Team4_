@@ -4,28 +4,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyBossController : MonoBehaviour
+public class EnemyBossController : MonoBehaviour, IEnemy
 {
-	[SerializeField] private GameObject bossUIPrefab;
+	[SerializeField] private GameObject _bossUIPrefab;
+    [SerializeField] private EnemyDataSO _enemyDataSO;
+	[SerializeField] private Animator _animator;
+	[SerializeField] private GameObject _shootAttackPrefab;
+	[SerializeField] private GameObject _floorAttackPrefab;
 
-    [SerializeField] private EnemyDataSO enemyDataSO;
-	[SerializeField] private Animator animator;
-	[SerializeField] private GameObject shootAttackPrefab;
-	[SerializeField] private GameObject floorAttackPrefab;
+	[SerializeField] private float _attackCooldownTime;
 
-	[SerializeField] private float attackCooldownTime;
-
-	private bool isIdle = true;
-	private bool isAttackCooldown = false;
-	private Health health;
-	private Transform playerTransform;
-	private PlayerHealth playerHealth;
-	private AnimatorStateInfo animatorStateInfo;
-	private BossUI bossUI;
+	private bool _isIdle = true;
+	private bool _isAttackCooldown = false;
+	private bool _isPause = false;
+	private Transform _playerTransform;
+	private PlayerHealth _playerHealth;
+	private AnimatorStateInfo _animatorStateInfo;
+	private BossUI _bossUI;
+	private EnemySpawnTirgger _enemySpawnTirgger;
 
 	private bool _hpLessTrigger70 = false;
 	private bool _hpLessTrigger35 = false;
 	
+	public Health Health{get; private set;}
 
 	private BossState state;
 
@@ -41,55 +42,46 @@ public class EnemyBossController : MonoBehaviour
 	
 	private void Start()
 	{
-		health = GetComponent<Health>();
-		health.SetMaxHealth(enemyDataSO.maxHP);
-		health.OnDamage += TakeDamage;
-		health.OnDead += DeadHandler;
+		// 設定血量及相關事件
+		Health = GetComponent<Health>();
+		Health.SetMaxHealth(_enemyDataSO.maxHP);
+		Health.OnDamage += TakeDamage;
+		Health.OnDead += DeadHandler;
 
-		playerTransform = FindObjectOfType<PlayerController>()?.transform;
-		playerHealth = playerTransform.GetComponent<PlayerHealth>();
-		
+		// 抓取玩家資料
+		_playerTransform = FindObjectOfType<PlayerController>()?.transform;
+		_playerHealth = _playerTransform.GetComponent<PlayerHealth>();
+
+		// Boss 本身自帶的 UI 效果
+		GameObject go = Instantiate(_bossUIPrefab, FindObjectOfType<BattleUIManager>().transform);
+		_bossUI = go.GetComponent<BossUI>();
+		_bossUI.SetHealth(Health);
+
+		// 預設 Boss 狀態為 Idle		
 		ChangeEnemyState(BossState.Idle);
-
-		GameObject go = Instantiate(bossUIPrefab, FindObjectOfType<BattleUIManager>().transform);
-		bossUI = go.GetComponent<BossUI>();
-		bossUI.SetHealth(health);
-
-		//StartCoroutine(testdamage());
+		
+		// 用字串去抓, 很蠢, 但先這樣
+		_enemySpawnTirgger = GameObject.Find("EnemyBossSpawnTrigger").GetComponent<EnemySpawnTirgger>();
+		
+		// 將 Boss 的 Update 也交給 EnemyManger 來管理
+		EnemyManager.Instance.AddToUpdateList(this);
 	}
-
-	private IEnumerator testdamage()
-	{
-		yield return new WaitForSeconds(2f);
-		health.TakeDamage(150);
-	}
-
-	private void Update()
-	{
-		if(playerHealth.IsDead() || state == BossState.Dead) return;
+	
+	public void EnemyUpdate()
+    {
+		if(_isPause) return;
+    
+        if(_playerHealth.IsDead() || state == BossState.Dead) return;
 
 		CheckAnimationIsIdle();
 		LookAtPlayer();
-		
-		animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-		bool isPlayCallEnemy = animatorStateInfo.IsName(BossState.CallEnemy.ToString());
-		Debug.Log("isPlayCallEnemy = " + isPlayCallEnemy);
-		
-		if(CheckHealthEvent())
-		{
-			return;
-		}
 
-		if(isIdle)
-		{
-			
-			CheckPlayerDistance();
-		}
-	}
+		if(_isIdle) CheckPlayerDistance();
+    }
 
 	private void LookAtPlayer()
 	{
-		Vector3 direction = (playerTransform.position - transform.position).normalized;
+		Vector3 direction = (_playerTransform.position - transform.position).normalized;
 		direction.y = 0;
 		Quaternion targetRotation = Quaternion.LookRotation(direction);
 
@@ -98,18 +90,18 @@ public class EnemyBossController : MonoBehaviour
 
 	private void CheckAnimationIsIdle()
 	{
-		animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-		bool isPlayIdle = animatorStateInfo.IsName(BossState.Idle.ToString());
+		_animatorStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+		bool isPlayIdle = _animatorStateInfo.IsName(BossState.Idle.ToString());
 		
-		if(isIdle == isPlayIdle) return;
+		if(_isIdle == isPlayIdle) return;
 		
 		if(!isPlayIdle)
 		{
-			isIdle = false;
+			_isIdle = false;
 		}
 		else
 		{
-			if(!isAttackCooldown)
+			if(!_isAttackCooldown)
 			{
 				StartCoroutine(StartAttackCoolDown());
 			}
@@ -118,23 +110,28 @@ public class EnemyBossController : MonoBehaviour
 
 	private IEnumerator StartAttackCoolDown()
 	{
-		isAttackCooldown = true;
+		_isAttackCooldown = true;
 
-		yield return new WaitForSeconds(attackCooldownTime);
+		yield return new WaitForSeconds(_attackCooldownTime);
 
 		//isIdle = true;
 		ChangeEnemyState(BossState.Idle);
-		isAttackCooldown = false;
+		_isAttackCooldown = false;
 	}
 	
 	private void CheckPlayerDistance()
 	{
-		if(playerTransform != null)
+		if(_playerTransform != null)
 		{
-			float distance = Vector3.Distance(transform.position, playerTransform.position);
+			float distance = Vector3.Distance(transform.position, _playerTransform.position);
 
+			if(CheckHealthEvent())
+			{
+				ChangeEnemyState(BossState.CallEnemy);
+				return;
+			}
 
-			if (distance <= enemyDataSO.attackRange)
+			if (distance <= _enemyDataSO.attackRange)
 			{
 				ChangeEnemyState(BossState.FloorAttack);
 			}
@@ -154,49 +151,53 @@ public class EnemyBossController : MonoBehaviour
         switch (state)
         {
             case BossState.Idle:
-				isIdle = true;
+				_isIdle = true;
                 break;
             case BossState.RunAttack:
-				animator.SetTrigger(state.ToString());
+				_animator.SetTrigger(state.ToString());
                 break;
 			case BossState.CallEnemy:
-				animator.SetTrigger(state.ToString());
+				_animator.SetTrigger(state.ToString());
+				StartCoroutine(DelayCallEnemyCoroutine());
                 break;
             case BossState.ShootAttack:
-				animator.SetTrigger(state.ToString());
+				_animator.SetTrigger(state.ToString());
 				StartCoroutine(DelayShootAttackCoroutine());
                 break;
             case BossState.FloorAttack:
-				animator.SetTrigger(state.ToString());
+				_animator.SetTrigger(state.ToString());
 				StartCoroutine(DelayFloorAttackCoroutine());
                 break;
             case BossState.Dead:
-				animator.SetTrigger("isDead");
+				_animator.SetTrigger("isDead");
                 break;
         }
     }
 
 	private IEnumerator DelayShootAttackCoroutine()
 	{
-		shootAttackPrefab.SetActive(false);
+		_shootAttackPrefab.SetActive(false);
 
 		yield return new WaitForSeconds(1.7f);
 
-		shootAttackPrefab.SetActive(true);
+		_shootAttackPrefab.SetActive(true);
 	}
 
 	private IEnumerator DelayFloorAttackCoroutine()
 	{
-		floorAttackPrefab.SetActive(false);
+		_floorAttackPrefab.SetActive(false);
 
 		yield return new WaitForSeconds(0.8f);
 
-		floorAttackPrefab.SetActive(true);
+		_floorAttackPrefab.SetActive(true);
 	}
 	
-	private void CallEnemy()
+	// 招喚小怪, 用 Animation Event 來觸發
+	private IEnumerator DelayCallEnemyCoroutine()
 	{
-	    //Call 小怪出來
+		yield return new WaitForSeconds(1.0f);
+		
+	    _enemySpawnTirgger.StartSpawnEnemy();
 	}
 
 	private void DeadHandler()
@@ -211,37 +212,23 @@ public class EnemyBossController : MonoBehaviour
 
 		//AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
 
-		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up * 6, health.LastDamage);
+		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up * 6, Health.LastDamage);
 	}
 
 	// 檢查血量是否低於特定條件, 來觸發事件
 	private bool CheckHealthEvent()
 	{
-		if(!_hpLessTrigger70 && health.GetHealthRatio() < 0.7f)
+		if(!_hpLessTrigger70 && Health.GetHealthRatio() < 0.7f)
 		{
-			ChangeEnemyState(BossState.CallEnemy);
-
-			animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-			if(animatorStateInfo.IsName(BossState.CallEnemy.ToString()))
-			{
-				_hpLessTrigger70 = true;
-				
-				CallEnemy();
-			}
-
+			_hpLessTrigger70 = true;
+			
 			return true;
 		}
 
-		if(!_hpLessTrigger35 && health.GetHealthRatio() < 0.35f)
+		if(!_hpLessTrigger35 && Health.GetHealthRatio() < 0.35f)
 		{
-			ChangeEnemyState(BossState.CallEnemy);
-
-			animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-			if(animatorStateInfo.IsName(BossState.CallEnemy.ToString()))
-			{
-				_hpLessTrigger35 = true;
-				CallEnemy();
-			}
+			_hpLessTrigger35 = true;
+			
 			return true;
 		}
 
@@ -252,4 +239,11 @@ public class EnemyBossController : MonoBehaviour
 	{
 		Destroy(gameObject);
 	}
+
+    public void SetIsPause(bool isPause)
+    {
+        _isPause = isPause;
+        
+        _animator.speed = isPause ? 0f : 1f;
+    }
 }

@@ -9,7 +9,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private List<GameObject> enemyPrefabList;
     private Dictionary<GameObject, Queue<GameObject>> enemyObjectPool;
 
-    private List<EnemyController> enemyControllerList;
+    private List<IEnemy> enemyList;
 
     private void Awake()
     {
@@ -25,17 +25,12 @@ public class EnemyManager : MonoBehaviour
 
     private void Start()
     {
-        enemyControllerList = new List<EnemyController>();
+        enemyList = new List<IEnemy>();
 
         // 初始化怪物的物件池
         enemyObjectPool = new Dictionary<GameObject, Queue<GameObject>>();
-
         foreach(GameObject enemyPrefab in enemyPrefabList)
         {
-            // Queue<GameObject> gameObjectQueue = new Queue<GameObject>();
-            // GameObject go = Instantiate(enemyPrefab);
-            // go.SetActive(false);
-            // gameObjectQueue.Enqueue(go);
             enemyObjectPool.Add(enemyPrefab, new Queue<GameObject>());
         }
     }
@@ -43,9 +38,9 @@ public class EnemyManager : MonoBehaviour
     // 由 EnemyManager 統一管控所有怪物的 Update
     private void Update()
     {
-        for(int i = 0; i < enemyControllerList.Count; i++)
+        for(int i = 0; i < enemyList.Count; i++)
         {
-            enemyControllerList[i].EnemyUpdate();
+            enemyList[i].EnemyUpdate();
         }
     }
     
@@ -58,18 +53,19 @@ public class EnemyManager : MonoBehaviour
         StartCoroutine(PauseCoroutine(pauseTime));
     }
     
+    // 暫停用的協成, 根據 PauseTime 來決定暫停幾秒
     private IEnumerator PauseCoroutine(float pauseTime)
     {
-        for(int i = 0; i < enemyControllerList.Count; i++)
+        for(int i = 0; i < enemyList.Count; i++)
         {
-            enemyControllerList[i].SetIsPause(true);
+            enemyList[i].SetIsPause(true);
         }
         
         yield return new WaitForSeconds(pauseTime);
         
-        for(int i = 0; i < enemyControllerList.Count; i++)
+        for(int i = 0; i < enemyList.Count; i++)
         {
-            enemyControllerList[i].SetIsPause(false);
+            enemyList[i].SetIsPause(false);
         }
     }
     
@@ -79,25 +75,34 @@ public class EnemyManager : MonoBehaviour
     /// <param name="damage"> 傷害值 </param>
     public void TakeAllEnemyDamage(float damage)
     {
-        for(int i = 0; i < enemyControllerList.Count; i++)
+        for(int i = 0; i < enemyList.Count; i++)
         {
-            enemyControllerList[i].GetHealth().TakeDamage(damage);
+            enemyList[i].Health.TakeDamage(damage);
         }
     }
 
     /// <summary>
-    /// 將 EnemyController 類別, 加入 EnemyManger 管理的更新列表
+    /// 將 IEnemy 類別, 加入 EnemyManger 管理的更新列表
     /// </summary>
     /// <param name="enemyController"></param>
-    public void AddToUpdateList(EnemyController enemyController)
+    public void AddToUpdateList(IEnemy enemy)
     {
-        enemyControllerList.Add(enemyController);
+        enemyList.Add(enemy);
+    }
+    
+    /// <summary>
+    /// 將 IEnemy 類別, 移除 EnemyManger 管理的更新列表
+    /// </summary>
+    /// <param name="enemy"></param>
+    public void RemoveToUpdateList(IEnemy enemy)
+    {
+        enemyList.Remove(enemy);
     }
 
     // 取得目前活動中的怪物數量
     public int GetEnemyControllerCount()
     {
-        return enemyControllerList.Count;
+        return enemyList.Count;
     }
 
     /// <summary>
@@ -140,7 +145,7 @@ public class EnemyManager : MonoBehaviour
     public void RecycleEnemy(GameObject enemyPrefab)
     {
         enemyPrefab.SetActive(false);
-        enemyControllerList.Remove(enemyPrefab.GetComponent<EnemyController>());
+        RemoveToUpdateList(enemyPrefab.GetComponent<IEnemy>());
 
         foreach(var data in enemyObjectPool)
         {

@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IEnemy
 {
 	[SerializeField] private EnemyDataSO enemyDataSO;
 	[SerializeField] private EnemyAnimatorController enemyAnimatorController;
@@ -30,9 +30,10 @@ public class EnemyController : MonoBehaviour
 	private Rigidbody rb;
 	private NavMeshAgent navMeshAgent;
 	private Collider bodyCollider;
-	private Health health;
 	private PlayerHealth playerHealth;
 	private Transform playerTransform;
+	
+	public Health Health {get; private set;}
 	
 	private void OnEnable()
 	{
@@ -40,8 +41,8 @@ public class EnemyController : MonoBehaviour
 
 		_isPause = false;
 
-		health.Init();
-		health.SetMaxHealth(enemyDataSO.maxHP);
+		Health.Init();
+		Health.SetMaxHealth(enemyDataSO.maxHP);
 
 		_isAttack = false;
 		_isDamage = false;
@@ -73,9 +74,9 @@ public class EnemyController : MonoBehaviour
 		_enemyAttack = (IEnemyAttack)enemyAttackMonoBehaviour;
 
 		//設定 血量
-		health = GetComponent<Health>();
-		health.OnDamage += DamageEvent;
-		health.OnDead += DeadEvent;
+		Health = GetComponent<Health>();
+		Health.OnDamage += DamageEvent;
+		Health.OnDead += DeadEvent;
 
 		//設定 NavMeshAgent
 		navMeshAgent = GetComponent<NavMeshAgent>();
@@ -261,7 +262,7 @@ public class EnemyController : MonoBehaviour
 	
 	public Health GetHealth()
 	{
-		return health;
+		return Health;
 	}
 
 	// 怪物受傷時的事件, 訂閱在 <Health> 的 OnDamage
@@ -270,7 +271,7 @@ public class EnemyController : MonoBehaviour
 		AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
 		ChangeEnemyState(EnemyState.Damage);
 
-		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, health.LastDamage);
+		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, Health.LastDamage);
 	}
 
 	// 怪物死亡時呼叫該事件, 訂閱在 <Health> 的 OnDead
@@ -281,7 +282,7 @@ public class EnemyController : MonoBehaviour
 		AudioManager.Instance.PlaySound(enemyDataSO.SfxDeadKey, transform.position);
 		ChangeEnemyState(EnemyState.Dead);
 
-		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, health.LastDamage);
+		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, Health.LastDamage);
 	}
 
 	/// <summary>
