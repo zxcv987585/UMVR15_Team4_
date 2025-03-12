@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class BossUI : MonoBehaviour
 {
     private PauseUI pauseUI;
+    private GameObject bossHpGroup;
+    private bool isBossHpGroupVisible = false;
 
     //-----開場動畫------------------------------------
     [SerializeField] private RectTransform bossPanel;
@@ -28,6 +30,7 @@ public class BossUI : MonoBehaviour
 
     private void Start()
     {
+        bossHpGroup = GameObject.Find("BossHpGroup").gameObject;
         pauseUI = FindObjectOfType<PauseUI>();
         Transform parent = transform.parent;
         if (parent != null)
@@ -40,19 +43,14 @@ public class BossUI : MonoBehaviour
 
     private void Update()
     {
-        //這個要想辦法優化 不要寫在update
-        GameObject bossHpGroup = GameObject.Find("BossHpGroup").gameObject;
-
         //如果是暫停畫面是打開的，BOSS血條移到外面
-        if (pauseUI.isOpen == true)
+        if (pauseUI.isOpen != isBossHpGroupVisible)
         {
-            bossHpGroup.GetComponent<RectTransform>().anchoredPosition = new Vector2 (0f,125f);
-        }
-        else
-        {
-            bossHpGroup.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            isBossHpGroupVisible = pauseUI.isOpen;
+            StartCoroutine(AnimateBossHpGroup(isBossHpGroupVisible ? new Vector2(0f, 125f) : Vector2.zero));
         }
     }
+
     private IEnumerator ShowBossPanel(float showTimer)
     {
         EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
@@ -231,5 +229,18 @@ public class BossUI : MonoBehaviour
             yield return null;
         }
         costHP.fillAmount = currentHP.fillAmount;
+    }
+    private IEnumerator AnimateBossHpGroup(Vector2 targetPosition)
+    {
+        EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
+        bossHpGroup = GameObject.Find("BossHpGroup").gameObject;
+
+        StartCoroutine(easyInOut.ChangeValue(
+            bossHpGroup.GetComponent<RectTransform>().anchoredPosition, targetPosition, 0.5f,
+            value => bossHpGroup.GetComponent<RectTransform>().anchoredPosition = value,
+            EasyInOut.EaseInOut
+        ));
+
+        yield return null;
     }
 }
