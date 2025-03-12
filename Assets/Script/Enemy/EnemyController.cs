@@ -27,11 +27,11 @@ public class EnemyController : MonoBehaviour, IEnemy
 	private bool _isDamage;
 	//private bool IsPause;
 	
-	private Rigidbody rb;
-	private NavMeshAgent navMeshAgent;
-	private Collider bodyCollider;
-	private PlayerHealth playerHealth;
-	private Transform playerTransform;
+	private Rigidbody _rb;
+	private NavMeshAgent _navMeshAgent;
+	private Collider _bodyCollider;
+	private PlayerHealth _playerHealth;
+	private Transform _playerTransform;
 	
 	public Health Health {get; private set;}
 	public bool IsPause{get; private set;}
@@ -47,7 +47,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 
 		_isAttack = false;
 		_isDamage = false;
-		bodyCollider.enabled = true;
+		_bodyCollider.enabled = true;
 
 		//預設怪物狀態機以 Idle 開始
 		_enemyState = EnemyState.Idle;
@@ -67,10 +67,10 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_hasInit = true;
 
 		//抓取起始元件
-		rb = GetComponent<Rigidbody>();
-		bodyCollider = GetComponent<Collider>();
-		playerTransform = FindObjectOfType<PlayerController>()?.transform;
-		playerHealth = playerTransform.GetComponent<PlayerHealth>();
+		_rb = GetComponent<Rigidbody>();
+		_bodyCollider = GetComponent<Collider>();
+		_playerTransform = FindObjectOfType<PlayerController>()?.transform;
+		_playerHealth = _playerTransform.GetComponent<PlayerHealth>();
 		material = dissolveRenderer.material;
 		_enemyAttack = (IEnemyAttack)enemyAttackMonoBehaviour;
 
@@ -80,9 +80,9 @@ public class EnemyController : MonoBehaviour, IEnemy
 		Health.OnDead += DeadEvent;
 
 		//設定 NavMeshAgent
-		navMeshAgent = GetComponent<NavMeshAgent>();
-		navMeshAgent.stoppingDistance = enemyDataSO.attackRange;
-		navMeshAgent.speed = enemyDataSO.moveSpeed;
+		_navMeshAgent = GetComponent<NavMeshAgent>();
+		_navMeshAgent.stoppingDistance = enemyDataSO.attackRange;
+		_navMeshAgent.speed = enemyDataSO.moveSpeed;
 
 		//訂閱其他 Enemy 相關事件
 		enemyAnimatorController.OnAttackChange += SetIsAttack;
@@ -97,11 +97,11 @@ public class EnemyController : MonoBehaviour, IEnemy
 	{
 		yield return null;
 
-		navMeshAgent.updatePosition = false;
-		navMeshAgent.updateRotation = false;
-		navMeshAgent.speed = enemyDataSO.moveSpeed;
+		_navMeshAgent.updatePosition = false;
+		_navMeshAgent.updateRotation = false;
+		_navMeshAgent.speed = enemyDataSO.moveSpeed;
 
-		navMeshAgent.enabled = true;
+		_navMeshAgent.enabled = true;
 	}
 	
 	
@@ -120,7 +120,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		if(IsPause) return;
 
 		// 如果玩家死了就先把狀態換成 Idle, 之後就直接離開
-		if(playerHealth.IsDead())
+		if(_playerHealth.IsDead())
 		{
 			if(_enemyState != EnemyState.Idle)
 			{
@@ -136,33 +136,33 @@ public class EnemyController : MonoBehaviour, IEnemy
 
 			if(_enemyState == EnemyState.Walk)
 			{
-				MoveHandler();
+				HandlerMove();
 			}
 		}
 	}
 
 	// 當狀態為 Walk, 轉向及追蹤玩家
-	private void MoveHandler()
+	private void HandlerMove()
 	{
-		Vector3 nextPosition = navMeshAgent.nextPosition;
+		Vector3 nextPosition = _navMeshAgent.nextPosition;
         Vector3 direction = (nextPosition - transform.position).normalized;
         direction.y = 0; // 確保不會影響 Y 軸 (防止怪物漂浮)
 
 		if (direction != Vector3.zero)
 		{
 			Quaternion targetRotation = Quaternion.LookRotation(direction);
-			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1f * Time.deltaTime);
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
 		}
 
-        transform.position += direction * enemyDataSO.moveSpeed * Time.deltaTime;
+        transform.position += enemyDataSO.moveSpeed * Time.deltaTime * direction;
 	}
 	
 	// 檢測玩家位置來判斷要進行 攻擊或是追擊
 	private void CheckPlayerDistance()
 	{
-		if(playerTransform != null && navMeshAgent.isOnNavMesh)
+		if(_playerTransform != null && _navMeshAgent.isOnNavMesh)
 		{
-			float distance = Vector3.Distance(transform.position, playerTransform.position);
+			float distance = Vector3.Distance(transform.position, _playerTransform.position);
 
 			if (distance <= enemyDataSO.attackRange)
 			{
@@ -179,32 +179,32 @@ public class EnemyController : MonoBehaviour, IEnemy
 	private void ChangeEnemyState(EnemyState newState)
 	{
 		// 如果怪物狀態為死去 或是 不在地上, 則不允許變更狀態
-		if(_enemyState == EnemyState.Dead || !navMeshAgent.enabled) return;
+		if(_enemyState == EnemyState.Dead || !_navMeshAgent.enabled) return;
 		
 		_enemyState = newState;
 
 		switch (_enemyState)
 		{
 			case EnemyState.Idle:
-				navMeshAgent.isStopped = true;
+				_navMeshAgent.isStopped = true;
 				enemyAnimatorController?.SetEnemyState(_enemyState);
 				break;
 			case EnemyState.Walk:
-				navMeshAgent.isStopped = false;
+				_navMeshAgent.isStopped = false;
 				//navMeshAgent.SetDestination(GetRandomPositionAroundPlayer());
-				navMeshAgent.SetDestination(playerTransform.position);
+				_navMeshAgent.SetDestination(_playerTransform.position);
 				enemyAnimatorController?.SetEnemyState(_enemyState);
 				break;
 			case EnemyState.Attack:
-				navMeshAgent.isStopped = true;
-				StartCoroutine(TryAttackAfterTurn(playerTransform.position));
+				_navMeshAgent.isStopped = true;
+				StartCoroutine(TryAttackAfterTurn(_playerTransform.position));
 				break;
 			case EnemyState.Damage:
-				navMeshAgent.isStopped = true;
+				_navMeshAgent.isStopped = true;
 				enemyAnimatorController?.SetEnemyState(_enemyState);
 				break;
 			case EnemyState.Dead:
-				navMeshAgent.isStopped = true;
+				_navMeshAgent.isStopped = true;
 				enemyAnimatorController?.SetEnemyState(_enemyState);
 				break;
 		}
@@ -269,7 +269,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	// 怪物死亡時呼叫該事件, 訂閱在 <Health> 的 OnDead
 	public void DeadEvent()
 	{
-		bodyCollider.enabled = false;
+		_bodyCollider.enabled = false;
 
 		AudioManager.Instance.PlaySound(enemyDataSO.SfxDeadKey, transform.position);
 		ChangeEnemyState(EnemyState.Dead);
@@ -286,11 +286,11 @@ public class EnemyController : MonoBehaviour, IEnemy
 		if (_enemyState == EnemyState.Dead) return;
 
 		//navMeshAgent.enabled = false;
-		rb.isKinematic = false;
+		_rb.isKinematic = false;
 
 		float originalHeight = transform.position.y;
-		rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-		rb.AddForce(Vector3.up * flyPower, ForceMode.Impulse);
+		_rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+		_rb.AddForce(Vector3.up * flyPower, ForceMode.Impulse);
 		StartCoroutine(EnableNavMeshDelay(1f, originalHeight));
 
 		//StartCoroutine(HitFlyCoroutine(flyPower, 1f));
@@ -301,13 +301,13 @@ public class EnemyController : MonoBehaviour, IEnemy
 	{
 		yield return new WaitForSeconds(delayTime);
 
-		while(Mathf.Abs(rb.velocity.y) > 0.1f)
+		while(Mathf.Abs(_rb.velocity.y) > 0.1f)
 		{
 			if(transform.position.y <= originalHeight) break;
 			yield return null;
 		}
 
-		rb.isKinematic = true;
+		_rb.isKinematic = true;
 	}
 	
 	// 如果 EnemyAnimatorController 有回傳 開關攻擊事件, 則去呼叫 EnemyAttack 對應的 攻擊/結束 函式
@@ -328,7 +328,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	{
 		if(_isAttack)
 		{
-			playerHealth.TakeDamage(enemyDataSO.attackPower);
+			_playerHealth.TakeDamage(enemyDataSO.attackPower);
 		}
 	}
 	

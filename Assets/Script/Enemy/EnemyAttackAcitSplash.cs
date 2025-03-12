@@ -41,7 +41,7 @@ public class EnemyAttackAcitSplash : MonoBehaviour, IEnemyAttack
             {
                 if(collider.TryGetComponent(out PlayerHealth playerHealth))
                 {
-                    playerHealth.TakeDamage(damage);
+                    playerHealth.TakeDot(damage);
                 }
             }
             

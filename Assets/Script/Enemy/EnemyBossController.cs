@@ -21,6 +21,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	private AnimatorStateInfo _animatorStateInfo;
 	private BossUI _bossUI;
 	private EnemySpawnTirgger _enemySpawnTirgger;
+	private NavMeshAgent _navMeshAgent;
 
 	private bool _hpLessTrigger70 = false;
 	private bool _hpLessTrigger35 = false;
@@ -49,6 +50,12 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		Health.OnDamage += TakeDamage;
 		Health.OnDead += DeadHandler;
 
+		// 設定 NavMeshAgent 不移動, 該元件僅用來抓取路徑
+		_navMeshAgent = GetComponent<NavMeshAgent>();
+		_navMeshAgent.updatePosition = false;
+		_navMeshAgent.updateRotation = false;
+		_navMeshAgent.speed = _enemyDataSO.moveSpeed;
+
 		// 抓取玩家資料
 		_playerTransform = FindObjectOfType<PlayerController>()?.transform;
 		_playerHealth = _playerTransform.GetComponent<PlayerHealth>();
@@ -62,7 +69,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		ChangeEnemyState(BossState.Idle);
 		
 		// 用字串去抓, 很蠢, 但先這樣
-		_enemySpawnTirgger = GameObject.Find("EnemyBossSpawnTrigger").GetComponent<EnemySpawnTirgger>();
+		//_enemySpawnTirgger = GameObject.Find("EnemyBossSpawnTrigger").GetComponent<EnemySpawnTirgger>();
 		
 		// 將 Boss 的 Update 也交給 EnemyManger 來管理
 		EnemyManager.Instance.AddToUpdateList(this);
@@ -80,30 +87,46 @@ public class EnemyBossController : MonoBehaviour, IEnemy
             return;
         }
 
-		// 如果怪物在 Idle 狀態, 則開始判斷需要做什麼
+		// 如果怪物在 Idle 狀態, 則切換為 Walk 狀態
 		CheckAnimationIsIdle();
-		if(_isIdle) CheckState();
-    }
-    
-    private void CheckState()
-    {
-        if(_isAttackCooldown)
-        {
-            ChangeEnemyState(BossState.Walk);
-        }
-        else
-        {
-			CheckPlayerDistance();
-        }
+		if(_isIdle) ChangeEnemyState(BossState.Walk);
     }
 
-	private void LookAtPlayer()
+	private IEnumerator ReadToAttackCoroutine()
 	{
-		Vector3 direction = (_playerTransform.position - transform.position).normalized;
-		direction.y = 0;
-		Quaternion targetRotation = Quaternion.LookRotation(direction);
+		_navMeshAgent.enabled = true;
+		float timer = 0f;
 
-		transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 15f * Time.deltaTime);
+		while(timer < _attackCooldownTime)
+		{
+			yield return new WaitUntil(() => !IsPause);
+
+			HandleMove();
+			
+			timer += Time.deltaTime;
+			yield return null;
+		}
+
+		CheckPlayerDistance();
+
+	}
+
+	// 移動及旋轉至玩家方向
+	private void HandleMove()
+	{
+		_navMeshAgent.SetDestination(_playerTransform.position);
+
+		Vector3 nextPosition = _navMeshAgent.nextPosition;
+        Vector3 direction = (nextPosition - transform.position).normalized;
+        direction.y = 0; // 確保不會影響 Y 軸 (防止怪物漂浮)
+
+		if (direction != Vector3.zero)
+		{
+			Quaternion targetRotation = Quaternion.LookRotation(direction);
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
+		}
+
+        transform.position += _enemyDataSO.moveSpeed * Time.deltaTime * direction;
 	}
 
 	private void CheckAnimationIsIdle()
@@ -113,27 +136,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		
 		if(_isIdle == isPlayIdle) return;
 		
-		if(!isPlayIdle)
-		{
-			_isIdle = false;
-		}
-		else
-		{
-			if(!_isAttackCooldown)
-			{
-				StartCoroutine(StartAttackCoolDown());
-			}
-		}
-	}
-
-	private IEnumerator StartAttackCoolDown()
-	{
-		_isAttackCooldown = true;
-
-		yield return new WaitForSeconds(_attackCooldownTime);
-
-		ChangeEnemyState(BossState.Idle);
-		_isAttackCooldown = false;
+		_isIdle = isPlayIdle;
 	}
 	
 	private void CheckPlayerDistance()
@@ -142,11 +145,11 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		{
 			float distance = Vector3.Distance(transform.position, _playerTransform.position);
 
-			if(CheckHealthEvent())
-			{
-				ChangeEnemyState(BossState.CallEnemy);
-				return;
-			}
+			// if(CheckHealthEvent())
+			// {
+			// 	ChangeEnemyState(BossState.CallEnemy);
+			// 	return;
+			// }
 
 			if (distance <= _enemyDataSO.attackRange)
 			{
@@ -173,20 +176,21 @@ public class EnemyBossController : MonoBehaviour, IEnemy
                 break;
             case BossState.Walk:
 				_animator.Play(_state.ToString());
+				StartCoroutine(ReadToAttackCoroutine());
 				break;
             case BossState.RunAttack:
-				_animator.SetTrigger(_state.ToString());
+				_animator.Play(_state.ToString());
                 break;
 			case BossState.CallEnemy:
-				_animator.SetTrigger(_state.ToString());
+				_animator.Play(_state.ToString());
 				StartCoroutine(DelayCallEnemyCoroutine());
                 break;
             case BossState.ShootAttack:
-				_animator.SetTrigger(_state.ToString());
+				_animator.Play(_state.ToString());
 				StartCoroutine(DelayShootAttackCoroutine());
                 break;
             case BossState.FloorAttack:
-				_animator.SetTrigger(_state.ToString());
+				_animator.Play(_state.ToString());
 				StartCoroutine(DelayFloorAttackCoroutine());
                 break;
             case BossState.Dead:
