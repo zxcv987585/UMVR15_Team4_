@@ -16,6 +16,8 @@ public class AimState : PlayerState
 
     public override void Enter()
     {
+        if (player.IsDie) return;
+
         weaponManager.SwitchWeapon(WeaponManager.WeaponType.Gun);
         OnAim?.Invoke(true);
         Vector3 cameraForward = player.GetCurrentCameraForward();

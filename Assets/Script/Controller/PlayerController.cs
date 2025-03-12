@@ -19,8 +19,6 @@ public class PlayerController : MonoBehaviour
     private PlayerHealth health;
     //取得動畫控制器（用來開關RootMotion）
     private Animator animator;
-    //取得武器管理系統
-    private WeaponManager weaponManager;
     //取得攝影機
     public Transform MainCamera;
 
@@ -72,7 +70,6 @@ public class PlayerController : MonoBehaviour
         //初始化玩家身上掛載的CC、Health、WeaponManager、Animator
         controller = GetComponent<CharacterController>();
         health = GetComponent<PlayerHealth>();
-        weaponManager = GetComponent<WeaponManager>();
         animator = GetComponent<Animator>();
         MainCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
         //初始化時建立玩家狀態機
@@ -119,7 +116,7 @@ public class PlayerController : MonoBehaviour
         //重力運作邏輯
         ApplyGravity();
         //檢測狀態機更新邏輯，僅限沒有技能施放時使用
-        if (!isSkilling || !isHit)
+        if (!isSkilling)
         {
             stateMachine.Update();
         }
@@ -263,6 +260,11 @@ public class PlayerController : MonoBehaviour
     IEnumerator HitCoolDown()
     {
         yield return new WaitForSeconds(playerData.HitCoolTime);
+        Vector3 inputDirection = GetMoveInput().normalized;
+        if (inputDirection == Vector3.zero)
+        {
+            stateMachine.ChangeState(idleState);
+        }
 
         isHit = false;
     }
@@ -330,16 +332,6 @@ public class PlayerController : MonoBehaviour
         {
             LockTarget = null;
         }
-
-
-        if (LockTarget != null)
-        {
-            Debug.Log($"正在鎖定敵人");
-        }
-        else
-        {
-            Debug.Log("解除鎖定敵人");
-        }
     }
     //檢查敵人是否死亡
     private void EnemyDead(Transform Enemytransform)
@@ -362,7 +354,6 @@ public class PlayerController : MonoBehaviour
             }
         }
         LockTarget = null;
-        Debug.Log("敵人已解除鎖定！");
     }
     //偵測距離玩家最近的敵方單位
     private Transform GetClosestEnemy()
@@ -441,7 +432,7 @@ public class PlayerController : MonoBehaviour
     //將受傷與死亡相關內容集合
     public bool CanPerformAction()
     {
-        return !isCriticalHit || !isHit || IsDie;
+        return !isCriticalHit || !isHit || !IsDie;
     }
 
     //隱藏玩家
@@ -483,10 +474,17 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = originalTimeScale;
         Time.fixedDeltaTime = originalFixedDeltaTime;
     }
+
+    //大招前搖效果
     public void JudgementCut()
     {
         Instantiate(Judgement_Cut_Effect, transform.position, Quaternion.identity);
-        Debug.Log("生成雷電特效!");
+        CameraController camera = Camera.main.GetComponent<CameraController>();
+        if(camera != null)
+        {
+            camera.StartCoroutine(camera.ShakeCamera(0.6f, 3f));
+            Debug.Log("找到攝影機！開始抖動");
+        }
     }
 
 }
