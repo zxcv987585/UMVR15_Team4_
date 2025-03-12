@@ -24,7 +24,8 @@ public class DashState : PlayerState
         Vector3 cameraRight = player.GetCurrentCameraRight();
 
         if (inputDirection == Vector3.zero) 
-        { 
+        {
+            //如果玩家沒有輸入方向，那Dash的方向就是玩家前方
             dashDirection = player.transform.forward;
         }
         else

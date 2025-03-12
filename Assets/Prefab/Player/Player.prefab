@@ -1807,7 +1807,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 79.69
+      value: 79.66
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1815,7 +1815,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 36.63
+      value: 36.55
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2547,8 +2547,8 @@ MonoBehaviour:
   MaxPP: 0
   CurrentPP: 0
   PPRecoveryRate: 4
-  HealEffect: {fileID: 1146074261479283788, guid: fcfd79721f20e944d87bfd6eb9589f5e, type: 3}
-  HealPPEffect: {fileID: 0}
+  HealEffect: {fileID: 8846938917156980417, guid: 625d05f27810bd844867ceeba476f1f3, type: 3}
+  HealPPEffect: {fileID: 2336685109152294099, guid: aeebcbfa648dbd44180cd3739aa8c228, type: 3}
   levelSystem: {fileID: 0}
 --- !u!114 &3831638619911089666
 MonoBehaviour:
@@ -2595,6 +2595,7 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0, z: 0}
   SprintEffect: {fileID: 0}
   HitEffect: {fileID: 6465009843436118771, guid: 7b07dfb903a79104e98f12917049f0f9, type: 3}
+  Judgement_Cut_Effect: {fileID: 7834434380170384362, guid: 68101499d07aced4aa0ded4acb624942, type: 3}
   LockTarget: {fileID: 0}
   stopRootMotionDistance: 1
 --- !u!114 &3825294987410653912
