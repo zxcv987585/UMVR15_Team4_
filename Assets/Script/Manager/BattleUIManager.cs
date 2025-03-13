@@ -111,7 +111,11 @@ public class BattleUIManager : MonoBehaviour
         float newMaxHealth = health.GetMaxHealth();
         Debug.Log($"玩家升級！新最大血量: {newMaxHealth}");
         maxHPText.text = newMaxHealth.ToString();
+        float newCurrentHealth = health.GetCurrentHealth();
+        currentHPText.text = newCurrentHealth.ToString();
         LevelText.text = Mathf.FloorToInt(player.playerData.CurrentLevel).ToString();
+        PPSlider.value = health.GetPPRatio();
+        HPSlider.value = health.GetHealthRatio();
     }
 
     //當玩家的PP變動，也跟著變動 UI 的 PP
