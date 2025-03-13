@@ -263,7 +263,10 @@ public class EnemyController : MonoBehaviour, IEnemy
 		AudioManager.Instance.PlaySound(_enemyDataSO.SfxDamageKey, transform.position);
 		ChangeEnemyState(EnemyState.Damage);
 
-		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, Health.LastDamage);
+		if(Health.LastDamage != 999)
+		{
+		    BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, Health.LastDamage);
+		}
 	}
 
 	// 怪物死亡時呼叫該事件, 訂閱在 <Health> 的 OnDead
@@ -274,7 +277,10 @@ public class EnemyController : MonoBehaviour, IEnemy
 		AudioManager.Instance.PlaySound(_enemyDataSO.SfxDeadKey, transform.position);
 		ChangeEnemyState(EnemyState.Dead);
 
-		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, Health.LastDamage);
+		if(Health.LastDamage != 999)
+		{
+		    BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, Health.LastDamage);
+		}
 		
 		_playerTransform.GetComponent<LevelSystem>().AddExperience(_enemyDataSO.exp);
 	}
