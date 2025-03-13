@@ -134,6 +134,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		{
 			Quaternion targetRotation = Quaternion.LookRotation(direction);
 			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
+			//transform.rotation = _navMeshAgent.transform.rotation;
 		}
 
         transform.position += _enemyDataSO.moveSpeed * Time.deltaTime * direction;
@@ -356,7 +357,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		    yield return null;
 		}
 		
-		_bodyTransform.rotation = Quaternion.identity;
+		_bodyTransform.localRotation = Quaternion.identity;
 		
 		originalVector3 = transform.position;
 		targetVector3 = transform.position + Vector3.up * 4f;
