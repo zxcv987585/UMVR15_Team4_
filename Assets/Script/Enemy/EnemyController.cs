@@ -276,7 +276,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 
 		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, Health.LastDamage);
 		
-		//_playerTransform.GetComponent<LevelSystem>().AddExperience(_enemyDataSO.exp);
+		_playerTransform.GetComponent<LevelSystem>().AddExperience(_enemyDataSO.exp);
 	}
 
 	/// <summary>

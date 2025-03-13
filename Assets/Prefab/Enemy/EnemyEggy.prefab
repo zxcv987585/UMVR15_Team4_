@@ -25673,7 +25673,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyController: {fileID: 7065754872642794023}
-  health: {fileID: 1068885646187691178}
   bombParticle: {fileID: 4529181856540440787}
   bombRenderer: {fileID: 4234193521772329681}
   damage: 30
@@ -30665,12 +30664,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feba82ae5d829064a960c57ae59717c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyDataSO: {fileID: 11400000, guid: 30ce2ccac31b59a4f94bc34217f0b375, type: 2}
-  enemyAnimatorController: {fileID: 5243753078760515405}
-  enemyAttackMonoBehaviour: {fileID: 4561674245919088447}
-  dissolveRenderer: {fileID: 4234193521772329681}
-  deadParticle: {fileID: 8199946641955824161}
-  dissolveTime: 1
+  _enemyDataSO: {fileID: 11400000, guid: 30ce2ccac31b59a4f94bc34217f0b375, type: 2}
+  _enemyAnimatorController: {fileID: 5243753078760515405}
+  _enemyAttackMonoBehaviour: {fileID: 4561674245919088447}
+  _dissolveRenderer: {fileID: 4234193521772329681}
+  _deadParticle: {fileID: 8199946641955824161}
+  _dissolveTime: 1
 --- !u!114 &1068885646187691178
 MonoBehaviour:
   m_ObjectHideFlags: 0
