@@ -105,6 +105,8 @@ public class FightState : PlayerState
         //突進攻擊瞬間速度
         float dashspeed = 30f;
 
+        ResetCombo();
+
         Vector3 startPos = player.transform.position;
         Vector3 TargetPos = player.LockTarget.position;
 

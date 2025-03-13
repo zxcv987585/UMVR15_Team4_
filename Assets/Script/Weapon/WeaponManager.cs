@@ -70,6 +70,12 @@ public class WeaponManager : MonoBehaviour
         {
             Attack();
         }
+
+        // 如果玩家被攻擊就停止傷害判定
+        if (player.isHit || player.isCriticalHit || player.isDash)
+        {
+            isAttackWindowActive = false;
+        }
     }
 
     // 在動畫事件中呼叫：開始攻擊視窗
@@ -107,10 +113,6 @@ public class WeaponManager : MonoBehaviour
                 if (player.HitEffect != null)
                 {
                     Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
-                }
-                if (!isHitPauseActive)
-                {
-                    StartCoroutine(HitPauseCoroutine(0.03f, 0.03f));
                 }
             }
         }
@@ -194,24 +196,5 @@ public class WeaponManager : MonoBehaviour
     {
         previousWeaponType = currentWeaponType;
         EquipWeapon(weaponType);
-    }
-
-    //打擊停頓效果
-    private IEnumerator HitPauseCoroutine(float duration, float pauseTimeScale)
-    {
-        isHitPauseActive = true;
-
-        float originalTimeScale = Time.timeScale;
-        float originalFixedDeltaTime = Time.fixedDeltaTime;
-
-        Time.timeScale = pauseTimeScale;
-        Time.fixedDeltaTime = originalFixedDeltaTime * pauseTimeScale;
-
-        yield return new WaitForSecondsRealtime(duration);
-
-        Time.timeScale = originalTimeScale;
-        Time.fixedDeltaTime = originalFixedDeltaTime;
-
-        isHitPauseActive = false;
     }
 }

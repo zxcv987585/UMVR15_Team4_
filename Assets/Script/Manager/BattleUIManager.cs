@@ -16,12 +16,14 @@ public class BattleUIManager : MonoBehaviour
     //-----------------------------------------------------------------
 
     [SerializeField] private PlayerHealth health;
+    [SerializeField] private PlayerController player;
     [SerializeField] private TextMeshProUGUI currentHPText;
     [SerializeField] private TextMeshProUGUI maxHPText;
     [SerializeField] private Slider HPSlider;
     [SerializeField] private TextMeshProUGUI currentPPText;
     [SerializeField] private TextMeshProUGUI maxPPText;
     [SerializeField] private Slider PPSlider;
+    [SerializeField] private TextMeshProUGUI LevelText;
     [SerializeField] private LevelSystem levelSystem;
 
     private Coroutine costAnimationCoroutine;
@@ -36,6 +38,7 @@ public class BattleUIManager : MonoBehaviour
     {
         damageTextQuene = new Queue<DamageText>();
         health.OnDamage += ChangeHPStatus;
+        health.OnCriticalDamage += ChangeHPStatus;
         health.OnDot += ChangeHPStatus;
         health.OnDead += ChangeHPStatus;
         health.OnHeal += ChangeHPStatus;
@@ -93,6 +96,7 @@ public class BattleUIManager : MonoBehaviour
         currentPPText.text = Mathf.FloorToInt(health.GetCurrentPP()).ToString();
         maxPPText.text = Mathf.FloorToInt(health.GetMaxPP()).ToString();
         PPSlider.value = health.GetPPRatio();
+        LevelText.text = Mathf.FloorToInt(player.playerData.CurrentLevel).ToString();
     }
 
     //當玩家的 HP 變動, 也跟著變動 UI 的 HP
@@ -107,6 +111,7 @@ public class BattleUIManager : MonoBehaviour
         float newMaxHealth = health.GetMaxHealth();
         Debug.Log($"玩家升級！新最大血量: {newMaxHealth}");
         maxHPText.text = newMaxHealth.ToString();
+        LevelText.text = Mathf.FloorToInt(player.playerData.CurrentLevel).ToString();
     }
 
     //當玩家的PP變動，也跟著變動 UI 的 PP

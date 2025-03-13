@@ -6,6 +6,10 @@ public class MiniMap : MonoBehaviour
 {
     public Transform Player;
 
+    private void Start()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
     // Update is called once per frame
     void LateUpdate()
     {
