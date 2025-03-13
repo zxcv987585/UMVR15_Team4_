@@ -115,8 +115,8 @@ public class PlayerController : MonoBehaviour
         playerData.MaxHealth = 100;
         playerData.MaxPP = 100;
         playerData.CurrentLevel = 1;
-        playerData.attackDamage = 20;
-        playerData.GunDamage = 8;
+        playerData.attackDamage = 15;
+        playerData.GunDamage = 6;
     }
 
     void Update()
@@ -491,6 +491,16 @@ public class PlayerController : MonoBehaviour
         if (camera != null)
         {
             camera.StartCoroutine(camera.ShakeCamera(1f, 0.1f));
+            Debug.Log("找到攝影機！開始抖動");
+        }
+    }
+
+    public void SpikeShake()
+    {
+        CameraController camera = Camera.main.GetComponent<CameraController>();
+        if (camera != null)
+        {
+            camera.StartCoroutine(camera.ShakeCamera(0.2f, 0.1f));
             Debug.Log("找到攝影機！開始抖動");
         }
     }
