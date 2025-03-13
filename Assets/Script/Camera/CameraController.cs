@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -30,6 +31,12 @@ public class CameraController : MonoBehaviour
     [Header("鎖定狀態攝影機的移動速度")]
     [SerializeField] float LockOnTargetFollowSpeed;
 
+    [Header("開場用來遮擋螢幕的遮罩")]
+    [SerializeField] Image fadeImage;
+
+    [Header("遊戲開場時的淡出時間")]
+    [SerializeField] float fadeDuration = 4f;
+
     // 用來控制普通與瞄準模式之間的平滑過渡
     private float transitionValue = 0f;
     [Header("轉換速度")]
@@ -60,8 +67,8 @@ public class CameraController : MonoBehaviour
 
     [Header("碰撞檢測")]
     [SerializeField] LayerMask collisionLayers;
-    [SerializeField] float collisionRadius = 0.2f;
-    [SerializeField] float collisionOffset = 0.2f;
+    [SerializeField] float collisionRadius = 0.3f;
+    [SerializeField] float collisionOffset = 0.3f;
 
     private void Awake()
     {
@@ -79,6 +86,8 @@ public class CameraController : MonoBehaviour
         GameInput.Instance.OnAimAction += SetAim;
 
         DefaultCameraToTargetDistance = CameraToTargetDistance;
+
+        StartCoroutine(FadeIn());
     }
 
     private void LateUpdate()
@@ -113,10 +122,9 @@ public class CameraController : MonoBehaviour
                 AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
             }
 
-            // 計算期望的相機位置
             Vector3 desiredCameraPos = blendedPosition + blendedRotation * new Vector3(0, 0, -blendedDistance);
 
-            // 碰撞檢測：從 blendedPosition 發射一個球形射線
+            // 碰撞檢測
             Vector3 direction = (desiredCameraPos - blendedPosition).normalized;
             float adjustedDistance = blendedDistance;
             RaycastHit hit;
@@ -127,7 +135,7 @@ public class CameraController : MonoBehaviour
                 desiredCameraPos = blendedPosition + blendedRotation * new Vector3(0, 0, -adjustedDistance);
             }
 
-            // 平滑更新相機位置，最後加上 shakeOffset 來達成震動效果
+            // 平滑更新相機位置
             Vector3 finalPosition = Vector3.SmoothDamp(transform.position, desiredCameraPos, ref smoothVelocity, SmoothTime);
             finalPosition += shakeOffset;
             transform.position = finalPosition;
@@ -156,37 +164,38 @@ public class CameraController : MonoBehaviour
         if (LockTransfrom == null || isAiming) return;
 
         Vector3 targetPosition = target.position + Vector3.up * 1.3f;
-        Vector3 desiredCameraPos = targetPosition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
+        Vector3 idealCameraPos = targetPosition + transform.rotation * new Vector3(0, 0, -DefaultCameraToTargetDistance);
 
         int WallLayer = LayerMask.GetMask("Wall");
-        float targetDistance = DefaultCameraToTargetDistance;
-        if (Physics.Raycast(targetPosition, (desiredCameraPos - targetPosition).normalized, out RaycastHit hit, CameraToTargetDistance, WallLayer))
+        float desiredDistance = DefaultCameraToTargetDistance;
+        RaycastHit hit;
+        if (Physics.SphereCast(targetPosition, collisionRadius, (idealCameraPos - targetPosition).normalized, out hit, DefaultCameraToTargetDistance, WallLayer))
         {
-            targetDistance = Mathf.Lerp(PreviousCameraToTargetDistance, hit.distance - 0.2f, Time.deltaTime * 10f);
-        }
-        else
-        {
-            targetDistance = Mathf.Lerp(PreviousCameraToTargetDistance, DefaultCameraToTargetDistance, Time.deltaTime * 3f);
+            desiredDistance = hit.distance - collisionOffset;
+            desiredDistance = Mathf.Clamp(desiredDistance, 0.1f, DefaultCameraToTargetDistance);
         }
 
-        CameraToTargetDistance = targetDistance;
+        // 平滑更新攝影機與目標之間的距離
+        CameraToTargetDistance = Mathf.Lerp(CameraToTargetDistance, desiredDistance, Time.deltaTime * 10f);
         PreviousCameraToTargetDistance = CameraToTargetDistance;
 
+        // 根據更新後的距離重新計算最終位置
         Vector3 finalPosition = targetPosition + transform.rotation * new Vector3(0, 0, -CameraToTargetDistance);
-        // 加入震動偏移量
         finalPosition += shakeOffset;
         transform.position = Vector3.SmoothDamp(transform.position, finalPosition, ref smoothVelocity, SmoothTime);
 
+        // 更新攝影機朝向鎖定目標的旋轉，但保持 Y 軸不變
         Vector3 rotationDirection = LockTransfrom.position - transform.position;
         rotationDirection.y = 0f;
         Quaternion targetRotation = Quaternion.LookRotation(rotationDirection);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, LockOnTargetFollowSpeed);
 
-        // 更新滑鼠角度以延續後續普通視角方向
+        // 更新滑鼠角度
         Vector3 currentEuler = transform.rotation.eulerAngles;
         Mouse_x = currentEuler.y;
         Mouse_y = currentEuler.x;
     }
+
 
     // 取得瞄準輸入
     private void SetAim(bool isAiming)
@@ -216,5 +225,22 @@ public class CameraController : MonoBehaviour
             yield return null;
         }
         shakeOffset = Vector3.zero;
+    }
+
+    //開場的淡入
+    private IEnumerator FadeIn()
+    {
+        float elapsed = 0f;
+        Color tempcolor = fadeImage.color;
+        while(elapsed < fadeDuration)
+        {
+            tempcolor.a = Mathf.Lerp(1.5f, 0f, elapsed / fadeDuration);
+            fadeImage.color = tempcolor;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        tempcolor.a = 0f;
+        fadeImage.color = tempcolor;
+        fadeImage.gameObject.SetActive(false);
     }
 }

@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     //取得攝影機
     public Transform MainCamera;
+    //取得等級系統
+    public LevelSystem levelSystem;
 
     [Header("玩家Data")]
     public PlayerDataSO playerData;
@@ -34,6 +36,8 @@ public class PlayerController : MonoBehaviour
     public GameObject HitEffect;
     [Tooltip("玩家大招時的特效")]
     public GameObject Judgement_Cut_Effect;
+    [Tooltip("玩家升級時的特效")]
+    public GameObject LevelUp_Effect;
 
     [Header("鎖定邏輯")]
     [Tooltip("動態存放鎖定的敵方單位")]
@@ -72,6 +76,7 @@ public class PlayerController : MonoBehaviour
         health = GetComponent<PlayerHealth>();
         animator = GetComponent<Animator>();
         MainCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        levelSystem = GetComponent<LevelSystem>();
         //初始化時建立玩家狀態機
         stateMachine = gameObject.AddComponent<PlayerStateMachine>();
         //初始化所有狀態，讓狀態成為單例
@@ -109,6 +114,15 @@ public class PlayerController : MonoBehaviour
         health.OnDamage += GetHit;
         health.OnDead += Died;
         health.OnCriticalDamage += OnCriticalDamage;
+        levelSystem.PlayerLevelup += LevelUp;
+        //初始化數據
+        playerData.CurrentExp = 0;
+        playerData.XPForNextLevel = 100;
+        playerData.MaxHealth = 100;
+        playerData.MaxPP = 100;
+        playerData.CurrentLevel = 1;
+        playerData.attackDamage = 15;
+        playerData.GunDamage = 6;
     }
 
     void Update()
@@ -241,7 +255,7 @@ public class PlayerController : MonoBehaviour
     //玩家受傷邏輯（無狀態機，屬於隨時都可能進入狀態
     public void GetHit()
     {
-        if (IsDie) return;
+        if (IsDie || Invincible) return;
   
         OnHit?.Invoke();
         isHit = true;
@@ -250,7 +264,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnCriticalDamage()
     {
-        if (IsDie) return;
+        if (IsDie || Invincible) return;
 
         isCriticalHit = true;
 
@@ -480,11 +494,26 @@ public class PlayerController : MonoBehaviour
     {
         Instantiate(Judgement_Cut_Effect, transform.position, Quaternion.identity);
         CameraController camera = Camera.main.GetComponent<CameraController>();
-        //if(camera != null)
-        //{
-        //    camera.StartCoroutine(camera.ShakeCamera(1f, 0.1f));
-        //    Debug.Log("找到攝影機！開始抖動");
-        //}
+        if (camera != null)
+        {
+            camera.StartCoroutine(camera.ShakeCamera(1f, 0.1f));
+            Debug.Log("找到攝影機！開始抖動");
+        }
     }
 
+    //重擊時攝影機的晃動
+    public void SpikeShake()
+    {
+        CameraController camera = Camera.main.GetComponent<CameraController>();
+        if (camera != null)
+        {
+            camera.StartCoroutine(camera.ShakeCamera(0.2f, 0.1f));
+            Debug.Log("找到攝影機！開始抖動");
+        }
+    }
+
+    public void LevelUp()
+    {
+        Instantiate(LevelUp_Effect, transform.position, LevelUp_Effect.transform.rotation);
+    }
 }
