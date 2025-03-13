@@ -88,6 +88,7 @@ public class PlayerHealth : MonoBehaviour
     {
         this.MaxHealth += 10;
         this.MaxPP += 10;
+        CurrentHealth = MaxHealth;
     }
 
     //初始化最大血量
