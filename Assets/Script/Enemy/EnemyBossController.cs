@@ -250,7 +250,6 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 				StartCoroutine(ReadToAttackCoroutine());
 				break;
             case BossState.RunAttack:
-				//StartCoroutine(DelayFloorAttackCoroutine());
 				StartCoroutine(RunAttackCoroutine());
                 break;
 			case BossState.CallEnemy:
@@ -268,6 +267,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
     
     private IEnumerator RunAttackCoroutine()
     {
+		//-----鑽地板
 		float timer = 0f;
 		
 		Vector3 originalVector3 = transform.position;
@@ -287,40 +287,38 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		}
 		
 		transform.position = targetVector3;
+		//-----鑽地板結束
 		
+		
+		//-----旋轉衝刺
+		// 取得向玩家的方向
 		Vector3 direct = (_playerTransform.position - transform.position).normalized;
 		direct.y = 0;
 		
+		_navMeshAgent.enabled = true;
+		_navMeshAgent.speed = 20f;
+		_navMeshAgent.SetDestination(transform.position + direct * 100f);
+		
 		bool hasCollider = false;
+		
+		timer = 0f;
 		
 		while(true)
 		{
 		    yield return new WaitUntil(() => !IsPause);
 		    
-			Vector3 nextPosition = transform.position + direct * (_enemyDataSO.moveSpeed * 6f * Time.deltaTime);
-		    nextPosition.y = 0;
-		    
-		    // if(Physics.Raycast(transform.position, direct, out RaycastHit hit, 4f, LayerMask.GetMask("Wall")))
-		    // {
-			// 	Debug.Log("BOSS 碰到牆壁，停止移動");
-		    //     if (hit.collider.CompareTag("Wall")) // 假設你的牆壁有 "Wall" Tag
-			// 	{
-			// 		Debug.Log("123 BOSS 碰到牆壁，停止移動");
-			// 		//break;
-			// 	}
-		    // }
-		    
-		    // if(_navMeshAgent.isOnNavMesh)
-		    // {
-		    //     Debug.Log("123");
-		    // }
-		    
-		    if(!NavMesh.SamplePosition(nextPosition, out NavMeshHit hit, 4f, NavMesh.AllAreas))
-		    {
-		        Debug.Log("出事了");
-		    }
-		    
-		    transform.position += direct * (_enemyDataSO.moveSpeed * 6f * Time.deltaTime);
+		    Vector3 nextPosition = _navMeshAgent.nextPosition;
+		    nextPosition.y = -4f;
+		
+			transform.position = nextPosition;
+			
+			
+			if(_navMeshAgent.velocity.magnitude < 0.1f)
+			{
+				timer += Time.deltaTime;
+			}
+			
+			if(timer > 0.6f) break;
 		    
 		    Collider[] colliderArray = Physics.OverlapSphere(transform.position + Vector3.up * 4f, 4f);
 		    _bodyTransform.Rotate(Vector3.up * 20f);
@@ -339,6 +337,45 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		    
 		    yield return null;
 		}
+		
+		_navMeshAgent.enabled = false;
+		_navMeshAgent.speed = _enemyDataSO.moveSpeed;
+		//-----旋轉衝刺結束
+		
+		//-----爬起來
+		timer = 0f;
+		
+		_animator.Play(_state.ToString(), 0, 0f);
+		
+		while(timer < 0.3f)
+		{
+			float rotateSpeed = Mathf.Lerp(20f, 0f, timer/0.2f);
+		    _bodyTransform.Rotate(Vector3.up * rotateSpeed);
+		    
+		    timer += Time.deltaTime;
+		    yield return null;
+		}
+		
+		_bodyTransform.rotation = Quaternion.identity;
+		
+		originalVector3 = transform.position;
+		targetVector3 = transform.position + Vector3.up * 4f;
+	
+		// 鑽到地板的動畫
+		while(timer < 1.3f)
+		{
+			yield return new WaitUntil(() => !IsPause);
+			
+			transform.position = Vector3.Slerp(originalVector3, targetVector3, timer/1.3f);
+			
+			timer += Time.deltaTime;
+		    yield return null;
+		}
+		
+		transform.position = targetVector3;
+		
+		ChangeEnemyState(BossState.Idle);
+		//-----爬起來完成
     }
 
 	private IEnumerator DelayShootAttackCoroutine()
