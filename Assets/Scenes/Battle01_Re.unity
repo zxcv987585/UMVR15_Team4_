@@ -8207,7 +8207,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2265926257615244587, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 224.63943
+      value: 0.00024414062
       objectReference: {fileID: 0}
     - target: {fileID: 2282603489819538082, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_AnchorMax.x
@@ -8423,7 +8423,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4630899246069818597, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 484.83755
+      value: 0.00015258789
       objectReference: {fileID: 0}
     - target: {fileID: 4889986899531220624, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_text
@@ -11015,6 +11015,10 @@ PrefabInstance:
       propertyPath: AimTarget
       value: 
       objectReference: {fileID: 290686676}
+    - target: {fileID: 1706126559645681964, guid: 22eca212736e34f669a7308846a42048, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 767
+      objectReference: {fileID: 0}
     - target: {fileID: 1920559016646865334, guid: 22eca212736e34f669a7308846a42048, type: 3}
       propertyPath: m_LocalPosition.x
       value: 79.71
