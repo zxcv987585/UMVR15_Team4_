@@ -69,7 +69,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		ChangeEnemyState(BossState.Idle);
 		
 		// 用字串去抓, 很蠢, 但先這樣
-		//_enemySpawnTirgger = GameObject.Find("EnemyBossSpawnTrigger").GetComponent<EnemySpawnTirgger>();
+		_enemySpawnTirgger = GameObject.Find("EnemyBossSpawnTrigger").GetComponent<EnemySpawnTirgger>();
 		
 		// 將 Boss 的 Update 也交給 EnemyManger 來管理
 		EnemyManager.Instance.AddToUpdateList(this);
@@ -194,7 +194,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 				StartCoroutine(DelayFloorAttackCoroutine());
                 break;
             case BossState.Dead:
-				_animator.SetTrigger("isDead");
+				_animator.Play(_state.ToString());
                 break;
         }
     }
@@ -239,32 +239,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up * 6, Health.LastDamage);
 	}
-
-	// 檢查血量是否低於特定條件, 來觸發事件
-	private bool CheckHealthEvent()
-	{
-		if(!_hpLessTrigger70 && Health.GetHealthRatio() < 0.7f)
-		{
-			_hpLessTrigger70 = true;
-			
-			return true;
-		}
-
-		if(!_hpLessTrigger35 && Health.GetHealthRatio() < 0.35f)
-		{
-			_hpLessTrigger35 = true;
-			
-			return true;
-		}
-
-		return false;
-	}
 	
-	public void DestroySelf()
-	{
-		Destroy(gameObject);
-	}
-
+	// 暫停怪物
     public void SetIsPause(bool isPause)
     {
         IsPause = isPause;
