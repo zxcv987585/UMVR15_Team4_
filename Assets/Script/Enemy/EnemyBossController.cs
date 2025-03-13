@@ -69,7 +69,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		ChangeEnemyState(BossState.Idle);
 		
 		// 用字串去抓, 很蠢, 但先這樣
-		_enemySpawnTirgger = GameObject.Find("EnemyBossSpawnTrigger").GetComponent<EnemySpawnTirgger>();
+		//_enemySpawnTirgger = GameObject.Find("EnemyBossSpawnTrigger").GetComponent<EnemySpawnTirgger>();
 		
 		// 將 Boss 的 Update 也交給 EnemyManger 來管理
 		EnemyManager.Instance.AddToUpdateList(this);
@@ -228,6 +228,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	private void DeadHandler()
 	{
 		ChangeEnemyState(BossState.Dead);
+		
+		_playerTransform.GetComponent<LevelSystem>().AddExperience(_enemyDataSO.exp);
 	}
 
 	//如果需要 Enemy 受傷, 呼叫該函數

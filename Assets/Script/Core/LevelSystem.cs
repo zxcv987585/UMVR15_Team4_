@@ -7,7 +7,7 @@ public class LevelSystem : MonoBehaviour
 
     public event Action PlayerLevelup;
 
-    public void AddExperience(int xp)
+    public void AddExperience(float xp)
     {
         playerData.CurrentExp += xp;
         Debug.Log("經驗值增加：" + xp + " | 當前經驗值：" + playerData.CurrentExp + " / " + playerData.XPForNextLevel);

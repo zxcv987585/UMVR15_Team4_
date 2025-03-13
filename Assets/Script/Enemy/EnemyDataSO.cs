@@ -15,4 +15,6 @@ public class EnemyDataSO : ScriptableObject
 	public string SfxAttackKey;
 	public string SfxDamageKey;
 	public string SfxDeadKey;
+	
+	public float exp;
 }

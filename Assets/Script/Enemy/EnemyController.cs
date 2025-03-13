@@ -7,15 +7,15 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour, IEnemy
 {
-	[SerializeField] private EnemyDataSO enemyDataSO;
-	[SerializeField] private EnemyAnimatorController enemyAnimatorController;
-	[SerializeField] private MonoBehaviour enemyAttackMonoBehaviour;
+	[SerializeField] private EnemyDataSO _enemyDataSO;
+	[SerializeField] private EnemyAnimatorController _enemyAnimatorController;
+	[SerializeField] private MonoBehaviour _enemyAttackMonoBehaviour;
 	private IEnemyAttack _enemyAttack;
 	private EnemyState _enemyState;
 
-	[SerializeField] private Renderer dissolveRenderer;
-	[SerializeField] private ParticleSystem deadParticle;
-	[SerializeField] private float dissolveTime = 1f;
+	[SerializeField] private Renderer _dissolveRenderer;
+	[SerializeField] private ParticleSystem _deadParticle;
+	[SerializeField] private float _dissolveTime = 1f;
 	private Material material;
 	private const string DISSOLVE_AMOUNT = "_DissolveAmount";
 	private const string EMISSION_COLOR= "_EmissionColor";
@@ -39,11 +39,11 @@ public class EnemyController : MonoBehaviour, IEnemy
 	private void OnEnable()
 	{
 		if(!_hasInit) Init();
-
+	
 		IsPause = false;
 
 		Health.Init();
-		Health.SetMaxHealth(enemyDataSO.maxHP);
+		Health.SetMaxHealth(_enemyDataSO.maxHP);
 
 		_isAttack = false;
 		_isDamage = false;
@@ -57,7 +57,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		StartCoroutine(DelayEnableNavMeshAgent());
 		
 		EnemyManager.Instance.AddToUpdateList(this);
-		StartCoroutine(StartDissolveCoroutine(dissolveTime));
+		StartCoroutine(StartDissolveCoroutine(_dissolveTime));
 	}
 
 
@@ -71,8 +71,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_bodyCollider = GetComponent<Collider>();
 		_playerTransform = FindObjectOfType<PlayerController>()?.transform;
 		_playerHealth = _playerTransform.GetComponent<PlayerHealth>();
-		material = dissolveRenderer.material;
-		_enemyAttack = (IEnemyAttack)enemyAttackMonoBehaviour;
+		material = _dissolveRenderer.material;
+		_enemyAttack = (IEnemyAttack)_enemyAttackMonoBehaviour;
 
 		//設定 血量
 		Health = GetComponent<Health>();
@@ -81,14 +81,14 @@ public class EnemyController : MonoBehaviour, IEnemy
 
 		//設定 NavMeshAgent
 		_navMeshAgent = GetComponent<NavMeshAgent>();
-		_navMeshAgent.stoppingDistance = enemyDataSO.attackRange;
-		_navMeshAgent.speed = enemyDataSO.moveSpeed;
+		_navMeshAgent.stoppingDistance = _enemyDataSO.attackRange;
+		_navMeshAgent.speed = _enemyDataSO.moveSpeed;
 
 		//訂閱其他 Enemy 相關事件
-		enemyAnimatorController.OnAttackChange += SetIsAttack;
-		enemyAnimatorController.OnDamageChange += SetIsDamage;
-		enemyAnimatorController.OnStartAttackCheck += AttackIsColliderCheck;
-		enemyAnimatorController.OnDead += StartDestory;
+		_enemyAnimatorController.OnAttackChange += SetIsAttack;
+		_enemyAnimatorController.OnDamageChange += SetIsDamage;
+		_enemyAnimatorController.OnStartAttackCheck += AttackIsColliderCheck;
+		_enemyAnimatorController.OnDead += StartDestory;
 		_enemyAttack.OnAttackHit += Attack;
 	}
 
@@ -99,7 +99,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 
 		_navMeshAgent.updatePosition = false;
 		_navMeshAgent.updateRotation = false;
-		_navMeshAgent.speed = enemyDataSO.moveSpeed;
+		_navMeshAgent.speed = _enemyDataSO.moveSpeed;
 
 		_navMeshAgent.enabled = true;
 	}
@@ -109,7 +109,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	{
 		IsPause = isPause;
 		
-		enemyAnimatorController.SetIsPause(isPause);
+		_enemyAnimatorController.SetIsPause(isPause);
 	}
 
 	public void EnemyUpdate()
@@ -154,7 +154,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
 		}
 
-        transform.position += enemyDataSO.moveSpeed * Time.deltaTime * direction;
+        transform.position += _enemyDataSO.moveSpeed * Time.deltaTime * direction;
 	}
 	
 	// 檢測玩家位置來判斷要進行 攻擊或是追擊
@@ -164,7 +164,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		{
 			float distance = Vector3.Distance(transform.position, _playerTransform.position);
 
-			if (distance <= enemyDataSO.attackRange)
+			if (distance <= _enemyDataSO.attackRange)
 			{
 				ChangeEnemyState(EnemyState.Attack);
 			}
@@ -187,13 +187,13 @@ public class EnemyController : MonoBehaviour, IEnemy
 		{
 			case EnemyState.Idle:
 				_navMeshAgent.isStopped = true;
-				enemyAnimatorController?.SetEnemyState(_enemyState);
+				_enemyAnimatorController?.SetEnemyState(_enemyState);
 				break;
 			case EnemyState.Walk:
 				_navMeshAgent.isStopped = false;
 				//navMeshAgent.SetDestination(GetRandomPositionAroundPlayer());
 				_navMeshAgent.SetDestination(_playerTransform.position);
-				enemyAnimatorController?.SetEnemyState(_enemyState);
+				_enemyAnimatorController?.SetEnemyState(_enemyState);
 				break;
 			case EnemyState.Attack:
 				_navMeshAgent.isStopped = true;
@@ -201,11 +201,11 @@ public class EnemyController : MonoBehaviour, IEnemy
 				break;
 			case EnemyState.Damage:
 				_navMeshAgent.isStopped = true;
-				enemyAnimatorController?.SetEnemyState(_enemyState);
+				_enemyAnimatorController?.SetEnemyState(_enemyState);
 				break;
 			case EnemyState.Dead:
 				_navMeshAgent.isStopped = true;
-				enemyAnimatorController?.SetEnemyState(_enemyState);
+				_enemyAnimatorController?.SetEnemyState(_enemyState);
 				break;
 		}
 	}
@@ -222,7 +222,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 
 			// 檢查玩家是否仍在攻擊範圍內
 			float distance = Vector3.Distance(transform.position, targetPosition);
-			if (distance > enemyDataSO.attackRange)
+			if (distance > _enemyDataSO.attackRange)
 			{
 				ChangeEnemyState(EnemyState.Walk);
 				yield break;
@@ -248,7 +248,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		// 確保敵人仍在攻擊狀態
 		if (_enemyState == EnemyState.Attack)
 		{
-			enemyAnimatorController.SetEnemyState(EnemyState.Attack);
+			_enemyAnimatorController.SetEnemyState(EnemyState.Attack);
 		}
 	}
 	
@@ -260,7 +260,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	// 怪物受傷時的事件, 訂閱在 <Health> 的 OnDamage
 	private void DamageEvent()
 	{
-		AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
+		AudioManager.Instance.PlaySound(_enemyDataSO.SfxDamageKey, transform.position);
 		ChangeEnemyState(EnemyState.Damage);
 
 		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, Health.LastDamage);
@@ -271,10 +271,12 @@ public class EnemyController : MonoBehaviour, IEnemy
 	{
 		_bodyCollider.enabled = false;
 
-		AudioManager.Instance.PlaySound(enemyDataSO.SfxDeadKey, transform.position);
+		AudioManager.Instance.PlaySound(_enemyDataSO.SfxDeadKey, transform.position);
 		ChangeEnemyState(EnemyState.Dead);
 
 		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up, Health.LastDamage);
+		
+		//_playerTransform.GetComponent<LevelSystem>().AddExperience(_enemyDataSO.exp);
 	}
 
 	/// <summary>
@@ -328,7 +330,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	{
 		if(_isAttack)
 		{
-			_playerHealth.TakeDamage(enemyDataSO.attackPower);
+			_playerHealth.TakeDamage(_enemyDataSO.attackPower);
 		}
 	}
 	
@@ -343,7 +345,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		}
 		else
 		{
-			AudioManager.Instance.PlaySound(enemyDataSO.SfxAttackKey, transform.position);
+			AudioManager.Instance.PlaySound(_enemyDataSO.SfxAttackKey, transform.position);
 		}
 	}
 	
@@ -365,8 +367,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 		material.SetColor(EMISSION_COLOR, Color.cyan);
 		material.SetColor(RIM_COLOR, Color.cyan);
 
-		deadParticle.gameObject.SetActive(true);
-		deadParticle.Play();
+		_deadParticle.gameObject.SetActive(true);
+		_deadParticle.Play();
 
 		float timer = 0f;
 		while(timer < showTimer)
