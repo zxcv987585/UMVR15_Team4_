@@ -372,19 +372,36 @@ public class PlayerController : MonoBehaviour
     //偵測距離玩家最近的敵方單位
     private Transform GetClosestEnemy()
     {
-        Collider[] enemies = Physics.OverlapSphere(transform.position, playerData.LockRange, playerData.EnemyLayer);
-        Transform Target = null;
-        float CloseDistance = Mathf.Infinity;
-
-        bool foundCloseEnemy = false;
-
-        foreach (Collider enemy in enemies) 
-        { 
-            float distance = Vector3.Distance(transform.position, enemy.transform.position);
-            if(distance < CloseDistance)
+        Collider[] bossTargets = Physics.OverlapSphere(transform.position, playerData.LockRange, playerData.BossLayer);
+        if (bossTargets.Length > 0)
+        {
+            Transform bossTarget = null;
+            float closestBossDistance = Mathf.Infinity;
+            foreach (Collider boss in bossTargets)
             {
-                CloseDistance = distance;
-                Target = enemy.transform;
+                float distance = Vector3.Distance(transform.position, boss.transform.position);
+                if (distance < closestBossDistance)
+                {
+                    closestBossDistance = distance;
+                    bossTarget = boss.transform;
+                }
+            }
+            CloseEnemy = (closestBossDistance <= stopRootMotionDistance);
+            return bossTarget;
+        }
+
+        // 若未檢測到 Boss，則以原邏輯檢查一般敵人
+        Collider[] enemies = Physics.OverlapSphere(transform.position, playerData.LockRange, playerData.EnemyLayer);
+        Transform closestEnemy = null;
+        float closestEnemyDistance = Mathf.Infinity;
+        bool foundCloseEnemy = false;
+        foreach (Collider enemy in enemies)
+        {
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distance < closestEnemyDistance)
+            {
+                closestEnemyDistance = distance;
+                closestEnemy = enemy.transform;
             }
             if (distance <= stopRootMotionDistance)
             {
@@ -392,8 +409,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         CloseEnemy = foundCloseEnemy;
-
-        return Target;
+        return closestEnemy;
     }
     //檢查敵人與玩家距離是否需要開關RootMotion
     private void EnableRootMotion()

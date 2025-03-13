@@ -97,10 +97,28 @@ public class WeaponManager : MonoBehaviour
     {
         if (attackPoint == null) return;
 
+        Collider[] hitBosses = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, player.playerData.BossLayer);
+        foreach (Collider boss in hitBosses)
+        {
+            if (!attackedEnemies.Contains(boss))
+            {
+                attackedEnemies.Add(boss);
+                Debug.Log($"攻擊到 Boss: {boss.name}");
+                Health bossHealth = boss.GetComponent<Health>();
+                if (bossHealth != null)
+                {
+                    bossHealth.TakeDamage(player.playerData.attackDamage);
+                }
+                if (player.HitEffect != null)
+                {
+                    Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
+                }
+            }
+        }
+
         Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, player.playerData.EnemyLayer);
         foreach (Collider enemy in hitEnemies)
         {
-            // 如果這次攻擊視窗內還沒擊中該敵人，就處理傷害
             if (!attackedEnemies.Contains(enemy))
             {
                 attackedEnemies.Add(enemy);
