@@ -113,10 +113,9 @@ public class CameraController : MonoBehaviour
                 AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
             }
 
-            // 計算期望的相機位置
             Vector3 desiredCameraPos = blendedPosition + blendedRotation * new Vector3(0, 0, -blendedDistance);
 
-            // 碰撞檢測：從 blendedPosition 發射一個球形射線
+            // 碰撞檢測
             Vector3 direction = (desiredCameraPos - blendedPosition).normalized;
             float adjustedDistance = blendedDistance;
             RaycastHit hit;
@@ -127,7 +126,7 @@ public class CameraController : MonoBehaviour
                 desiredCameraPos = blendedPosition + blendedRotation * new Vector3(0, 0, -adjustedDistance);
             }
 
-            // 平滑更新相機位置，最後加上 shakeOffset 來達成震動效果
+            // 平滑更新相機位置
             Vector3 finalPosition = Vector3.SmoothDamp(transform.position, desiredCameraPos, ref smoothVelocity, SmoothTime);
             finalPosition += shakeOffset;
             transform.position = finalPosition;

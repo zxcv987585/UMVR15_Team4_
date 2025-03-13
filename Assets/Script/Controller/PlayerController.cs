@@ -109,6 +109,14 @@ public class PlayerController : MonoBehaviour
         health.OnDamage += GetHit;
         health.OnDead += Died;
         health.OnCriticalDamage += OnCriticalDamage;
+        //初始化數據
+        playerData.CurrentExp = 0;
+        playerData.XPForNextLevel = 100;
+        playerData.MaxHealth = 100;
+        playerData.MaxPP = 100;
+        playerData.CurrentLevel = 1;
+        playerData.attackDamage = 20;
+        playerData.GunDamage = 8;
     }
 
     void Update()
@@ -241,7 +249,7 @@ public class PlayerController : MonoBehaviour
     //玩家受傷邏輯（無狀態機，屬於隨時都可能進入狀態
     public void GetHit()
     {
-        if (IsDie) return;
+        if (IsDie || Invincible) return;
   
         OnHit?.Invoke();
         isHit = true;
@@ -250,7 +258,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnCriticalDamage()
     {
-        if (IsDie) return;
+        if (IsDie || Invincible) return;
 
         isCriticalHit = true;
 
@@ -480,11 +488,11 @@ public class PlayerController : MonoBehaviour
     {
         Instantiate(Judgement_Cut_Effect, transform.position, Quaternion.identity);
         CameraController camera = Camera.main.GetComponent<CameraController>();
-        //if(camera != null)
-        //{
-        //    camera.StartCoroutine(camera.ShakeCamera(1f, 0.1f));
-        //    Debug.Log("找到攝影機！開始抖動");
-        //}
+        if (camera != null)
+        {
+            camera.StartCoroutine(camera.ShakeCamera(1f, 0.1f));
+            Debug.Log("找到攝影機！開始抖動");
+        }
     }
 
 }
