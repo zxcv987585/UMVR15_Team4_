@@ -9,6 +9,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	[SerializeField] private GameObject _bossUIPrefab;
     [SerializeField] private EnemyDataSO _enemyDataSO;
 	[SerializeField] private Animator _animator;
+	[SerializeField] private Transform _bodyTransform;
 	[SerializeField] private GameObject _shootAttackPrefab;
 	[SerializeField] private GameObject _floorAttackPrefab;
 
@@ -16,8 +17,10 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 	private bool _isIdle = true;
 	private bool _isAttackCooldown = false;
+	private float _originalAnimatorSpeed;
 	private Transform _playerTransform;
 	private PlayerHealth _playerHealth;
+	private Collider _collider;
 	private AnimatorStateInfo _animatorStateInfo;
 	private BossUI _bossUI;
 	private EnemySpawnTirgger _enemySpawnTirgger;
@@ -42,8 +45,12 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		Dead
 	}
 	
+	private Dictionary<BossState, int> _attackWeights;
+	
 	private void Start()
 	{
+		_collider = GetComponent<Collider>();
+	
 		// 設定血量及相關事件
 		Health = GetComponent<Health>();
 		Health.SetMaxHealth(_enemyDataSO.maxHP);
@@ -55,6 +62,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		_navMeshAgent.updatePosition = false;
 		_navMeshAgent.updateRotation = false;
 		_navMeshAgent.speed = _enemyDataSO.moveSpeed;
+		_navMeshAgent.stoppingDistance = 4f;
 
 		// 抓取玩家資料
 		_playerTransform = FindObjectOfType<PlayerController>()?.transform;
@@ -65,11 +73,11 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		_bossUI = go.GetComponent<BossUI>();
 		_bossUI.SetHealth(Health);
 
-		// 預設 Boss 狀態為 Idle		
+		// 預設 Boss 狀態為 Idle
 		ChangeEnemyState(BossState.Idle);
 		
 		// 用字串去抓, 很蠢, 但先這樣
-		//_enemySpawnTirgger = GameObject.Find("EnemyBossSpawnTrigger").GetComponent<EnemySpawnTirgger>();
+		_enemySpawnTirgger = GameObject.Find("EnemyBossSpawnTrigger").GetComponent<EnemySpawnTirgger>();
 		
 		// 將 Boss 的 Update 也交給 EnemyManger 來管理
 		EnemyManager.Instance.AddToUpdateList(this);
@@ -92,6 +100,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		if(_isIdle) ChangeEnemyState(BossState.Walk);
     }
 
+	// 準備攻擊期間, 往玩家移動
 	private IEnumerator ReadToAttackCoroutine()
 	{
 		_navMeshAgent.enabled = true;
@@ -106,9 +115,10 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 			timer += Time.deltaTime;
 			yield return null;
 		}
-
-		CheckPlayerDistance();
-
+		
+		_navMeshAgent.enabled = false;
+		AdjustAttackWeight();
+		ChangeEnemyState(GetNextBossState());
 	}
 
 	// 移動及旋轉至玩家方向
@@ -129,37 +139,99 @@ public class EnemyBossController : MonoBehaviour, IEnemy
         transform.position += _enemyDataSO.moveSpeed * Time.deltaTime * direction;
 	}
 
+	// 檢查目前是否為 Idle 狀態
 	private void CheckAnimationIsIdle()
 	{
 		_animatorStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-		bool isPlayIdle = _animatorStateInfo.IsName(BossState.Idle.ToString());
-		
-		if(_isIdle == isPlayIdle) return;
-		
-		_isIdle = isPlayIdle;
+		_isIdle = _animatorStateInfo.IsName(BossState.Idle.ToString());
 	}
 	
-	private void CheckPlayerDistance()
+	private void InitAttackWeight()
 	{
-		if(_playerTransform != null)
+	    _attackWeights = new Dictionary<BossState, int>()
 		{
-			float distance = Vector3.Distance(transform.position, _playerTransform.position);
+			{ BossState.RunAttack, 45 },
+			{ BossState.CallEnemy, 10 },
+			{ BossState.ShootAttack, 45 },
+			{ BossState.FloorAttack, 0 }
+		};
+	}
+	
+	// 根據目前情況, 調整攻擊種類的權重
+	private void AdjustAttackWeight()
+	{
+		InitAttackWeight();
+	
+		float healthRatio = Health.GetHealthRatio();
+		float distance = Vector3.Distance(transform.position, _playerTransform.position);
 
-			// if(CheckHealthEvent())
-			// {
-			// 	ChangeEnemyState(BossState.CallEnemy);
-			// 	return;
-			// }
+		// 調整召喚小怪機率
+		if(!_hpLessTrigger70 && healthRatio < 0.7f)
+		{
+		    _hpLessTrigger70 = true;
+		    
+		    _attackWeights = new Dictionary<BossState, int>()
+			{
+				{ BossState.RunAttack, 0 },
+				{ BossState.CallEnemy, 100 },
+				{ BossState.ShootAttack, 0 },
+				{ BossState.FloorAttack, 0 }
+			};
+			
+			return;
+		}
+		
+		if(!_hpLessTrigger35 && healthRatio < 0.35f)
+		{
+		    _hpLessTrigger35 = true;
+		    
+		    _attackWeights = new Dictionary<BossState, int>()
+			{
+				{ BossState.RunAttack, 0 },
+				{ BossState.CallEnemy, 100 },
+				{ BossState.ShootAttack, 0 },
+				{ BossState.FloorAttack, 0 }
+			};
+			
+			return;
+		}
 
-			if (distance <= _enemyDataSO.attackRange)
+		// 根據玩家距離, 調整攻擊方式
+		if (distance < _enemyDataSO.attackRange)
+		{
+			_attackWeights[BossState.RunAttack] = 50;
+			_attackWeights[BossState.ShootAttack] = 0;
+		}
+		else
+		{
+			_attackWeights[BossState.RunAttack] = 0;
+			_attackWeights[BossState.ShootAttack] = 50;
+		}
+	}
+	
+	// 根據攻擊的分配權重, 取得要用哪招
+	private BossState GetNextBossState()
+	{
+		int totalWeight = 0;
+		foreach (int weight in _attackWeights.Values)
+		{
+			totalWeight += weight;
+		}
+
+		int randomValue = UnityEngine.Random.Range(0, totalWeight);
+		int sumRandomValue = 0;
+
+		foreach (var data in _attackWeights)
+		{
+			sumRandomValue += data.Value;
+			if (randomValue < sumRandomValue)
 			{
-				ChangeEnemyState(BossState.FloorAttack);
-			}
-			else
-			{
-				ChangeEnemyState(BossState.ShootAttack);
+				return data.Key;
 			}
 		}
+	
+		Debug.Log(" EnemyBossController/GetNextBossState 不應該回傳該參數才對");
+	    return BossState.RunAttack;
 	}
 	
 	private void ChangeEnemyState(BossState newState)
@@ -167,36 +239,106 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		if(_state == BossState.Dead || _state == newState) return;
 		
 		_state = newState;
+		_animator.CrossFade(_state.ToString(), 0.2f);
 
         switch (_state)
         {
             case BossState.Idle:
 				_isIdle = true;
-				_animator.Play(_state.ToString());
                 break;
             case BossState.Walk:
-				_animator.Play(_state.ToString());
 				StartCoroutine(ReadToAttackCoroutine());
 				break;
             case BossState.RunAttack:
-				_animator.Play(_state.ToString());
+				//StartCoroutine(DelayFloorAttackCoroutine());
+				StartCoroutine(RunAttackCoroutine());
                 break;
 			case BossState.CallEnemy:
-				_animator.Play(_state.ToString());
 				StartCoroutine(DelayCallEnemyCoroutine());
                 break;
             case BossState.ShootAttack:
-				_animator.Play(_state.ToString());
 				StartCoroutine(DelayShootAttackCoroutine());
                 break;
             case BossState.FloorAttack:
-				_animator.Play(_state.ToString());
-				StartCoroutine(DelayFloorAttackCoroutine());
                 break;
             case BossState.Dead:
-				_animator.Play(_state.ToString());
                 break;
         }
+    }
+    
+    private IEnumerator RunAttackCoroutine()
+    {
+		float timer = 0f;
+		
+		Vector3 originalVector3 = transform.position;
+		Vector3 targetVector3 = transform.position + Vector3.down * 4f;
+		
+		yield return new WaitForSeconds(0.7f);
+		
+		// 鑽到地板的動畫
+		while(timer < 1.3f)
+		{
+			yield return new WaitUntil(() => !IsPause);
+			
+			transform.position = Vector3.Slerp(originalVector3, targetVector3, timer/1.3f);
+			
+			timer += Time.deltaTime;
+		    yield return null;
+		}
+		
+		transform.position = targetVector3;
+		
+		Vector3 direct = (_playerTransform.position - transform.position).normalized;
+		direct.y = 0;
+		
+		bool hasCollider = false;
+		
+		while(true)
+		{
+		    yield return new WaitUntil(() => !IsPause);
+		    
+			Vector3 nextPosition = transform.position + direct * (_enemyDataSO.moveSpeed * 6f * Time.deltaTime);
+		    nextPosition.y = 0;
+		    
+		    // if(Physics.Raycast(transform.position, direct, out RaycastHit hit, 4f, LayerMask.GetMask("Wall")))
+		    // {
+			// 	Debug.Log("BOSS 碰到牆壁，停止移動");
+		    //     if (hit.collider.CompareTag("Wall")) // 假設你的牆壁有 "Wall" Tag
+			// 	{
+			// 		Debug.Log("123 BOSS 碰到牆壁，停止移動");
+			// 		//break;
+			// 	}
+		    // }
+		    
+		    // if(_navMeshAgent.isOnNavMesh)
+		    // {
+		    //     Debug.Log("123");
+		    // }
+		    
+		    if(!NavMesh.SamplePosition(nextPosition, out NavMeshHit hit, 4f, NavMesh.AllAreas))
+		    {
+		        Debug.Log("出事了");
+		    }
+		    
+		    transform.position += direct * (_enemyDataSO.moveSpeed * 6f * Time.deltaTime);
+		    
+		    Collider[] colliderArray = Physics.OverlapSphere(transform.position + Vector3.up * 4f, 4f);
+		    _bodyTransform.Rotate(Vector3.up * 20f);
+		    
+		    foreach(Collider collider in colliderArray)
+		    {
+		        if(collider.TryGetComponent(out PlayerHealth playerHealth))
+		        {
+		            //Debug.Log("123");
+		            playerHealth.CriticalDamage(50);
+		            hasCollider = true;
+		        }
+		    }
+		    
+		    if(hasCollider) break;
+		    
+		    yield return null;
+		}
     }
 
 	private IEnumerator DelayShootAttackCoroutine()
@@ -247,6 +389,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
     {
         IsPause = isPause;
         
-        _animator.speed = isPause ? 0f : 1f;
+        if(isPause) _originalAnimatorSpeed = _animator.speed;
+        _animator.speed = isPause ? 0f : _originalAnimatorSpeed;
     }
 }
