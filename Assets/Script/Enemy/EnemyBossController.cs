@@ -33,6 +33,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	public bool IsPause{get; private set;}
 
 	private BossState _state;
+	private BossState _lastAttackState;
 
 	private enum BossState
 	{
@@ -62,7 +63,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		_navMeshAgent.updatePosition = false;
 		_navMeshAgent.updateRotation = false;
 		_navMeshAgent.speed = _enemyDataSO.moveSpeed;
-		_navMeshAgent.stoppingDistance = 4f;
+		_navMeshAgent.stoppingDistance = 5f;
+		_navMeshAgent.enabled = true;
 
 		// 抓取玩家資料
 		_playerTransform = FindObjectOfType<PlayerController>()?.transform;
@@ -103,7 +105,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	// 準備攻擊期間, 往玩家移動
 	private IEnumerator ReadToAttackCoroutine()
 	{
-		_navMeshAgent.enabled = true;
+		_navMeshAgent.transform.localRotation = transform.localRotation;
+		_navMeshAgent.isStopped = false;
 		float timer = 0f;
 
 		while(timer < _attackCooldownTime)
@@ -116,7 +119,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 			yield return null;
 		}
 		
-		_navMeshAgent.enabled = false;
+		_navMeshAgent.isStopped = true;
 		AdjustAttackWeight();
 		ChangeEnemyState(GetNextBossState());
 	}
@@ -200,13 +203,18 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		// 根據玩家距離, 調整攻擊方式
 		if (distance < _enemyDataSO.attackRange)
 		{
-			_attackWeights[BossState.RunAttack] = 50;
-			_attackWeights[BossState.ShootAttack] = 0;
+			_attackWeights[BossState.RunAttack] = 60;
+			_attackWeights[BossState.ShootAttack] = 30;
 		}
 		else
 		{
-			_attackWeights[BossState.RunAttack] = 0;
-			_attackWeights[BossState.ShootAttack] = 50;
+			_attackWeights[BossState.RunAttack] = 30;
+			_attackWeights[BossState.ShootAttack] = 60;
+		}
+
+		if(_attackWeights.TryGetValue(_lastAttackState, out int value))
+		{
+			_attackWeights[_lastAttackState] -= 15;
 		}
 	}
 	
@@ -227,6 +235,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 			sumRandomValue += data.Value;
 			if (randomValue < sumRandomValue)
 			{
+				_lastAttackState = data.Key;
 				return data.Key;
 			}
 		}
@@ -296,7 +305,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		Vector3 direct = (_playerTransform.position - transform.position).normalized;
 		direct.y = 0;
 		
-		_navMeshAgent.enabled = true;
+		_navMeshAgent.isStopped = false;
 		_navMeshAgent.speed = 20f;
 		_navMeshAgent.SetDestination(transform.position + direct * 100f);
 		
@@ -339,7 +348,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		    yield return null;
 		}
 		
-		_navMeshAgent.enabled = false;
+		_navMeshAgent.isStopped = true;
 		_navMeshAgent.speed = _enemyDataSO.moveSpeed;
 		//-----旋轉衝刺結束
 		
