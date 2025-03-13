@@ -75,7 +75,7 @@ public class FightState : PlayerState
     private void Attack()
     {
         if (!CanAttack) return;
-        if (player.LockTarget != null) 
+        if (player.LockTarget != null)
         {
             Vector3 direction = (player.LockTarget.position - player.transform.position).normalized;
             direction.y = 0;
@@ -86,9 +86,15 @@ public class FightState : PlayerState
         CanAttack = false;
 
         float distanceToEnemy = player.LockTarget != null ? Vector3.Distance(player.transform.position, player.LockTarget.position) : 0;
-        float MinDashDistance = 3f;
+        // 預設一般敵人的跳砍距離
+        float minDashDistance = 3f;
+        // 如果鎖定目標屬於 Boss 的 Layer，則延長跳砍判定距離
+        if (player.LockTarget != null && player.LockTarget.gameObject.layer == LayerMask.NameToLayer("Boss"))
+        {
+            minDashDistance = 5f; 
+        }
 
-        if (player.LockTarget != null && distanceToEnemy > MinDashDistance) 
+        if (player.LockTarget != null && distanceToEnemy > minDashDistance)
         {
             player.StartPlayerCoroutine(DashAttack());
         }

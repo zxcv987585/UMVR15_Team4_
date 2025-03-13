@@ -45,4 +45,6 @@ public class PlayerDataSO : ScriptableObject
     public float LockRange = 15f;
     [Tooltip("可以被鎖定的Layer層")]
     public LayerMask EnemyLayer;
+    [Tooltip("Boss 的Layer")]
+    public LayerMask BossLayer;
 }
