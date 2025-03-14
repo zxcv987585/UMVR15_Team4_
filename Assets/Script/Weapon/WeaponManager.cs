@@ -14,6 +14,7 @@ public class WeaponManager : MonoBehaviour
     public enum WeaponType { None, Katana, Gun };
 
     private PlayerController player;
+    private PlayerHealth health;
     private CameraController Maincamera;
 
     public Transform weaponHolder;
@@ -50,6 +51,7 @@ public class WeaponManager : MonoBehaviour
     {
         EquipWeapon(defualtWeapon);
         player = GetComponent<PlayerController>();
+        health = GetComponent<PlayerHealth>();
         Maincamera = Camera.main.GetComponent<CameraController>();
     }
 
