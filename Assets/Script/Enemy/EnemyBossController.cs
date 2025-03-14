@@ -105,8 +105,20 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	// 準備攻擊期間, 往玩家移動
 	private IEnumerator ReadToAttackCoroutine()
 	{
-		_navMeshAgent.transform.localRotation = transform.localRotation;
+		Debug.Log("123 transform.rotation = " + transform.rotation);
+		Debug.Log("123 NavMesh rotation = " + _navMeshAgent.transform.rotation);
+
+		_navMeshAgent.transform.position = transform.position;
+		_navMeshAgent.transform.rotation = transform.rotation;
+
+		Debug.Log("456 transform.rotation = " + transform.rotation);
+		Debug.Log("456 NavMesh rotation = " + _navMeshAgent.transform.rotation);
+
 		_navMeshAgent.isStopped = false;
+
+		Debug.Log("789 transform.rotation = " + transform.rotation);
+		Debug.Log("789 NavMesh rotation = " + _navMeshAgent.transform.rotation);
+
 		float timer = 0f;
 
 		while(timer < _attackCooldownTime)
@@ -127,20 +139,25 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	// 移動及旋轉至玩家方向
 	private void HandleMove()
 	{
+		Debug.Log("transform.rotation = " + transform.rotation);
+		Debug.Log("NavMesh rotation = " + _navMeshAgent.transform.rotation);
 		_navMeshAgent.SetDestination(_playerTransform.position);
 
 		Vector3 nextPosition = _navMeshAgent.nextPosition;
-        Vector3 direction = (nextPosition - transform.position).normalized;
+        //Vector3 direction = (nextPosition - transform.position).normalized;
+		Vector3 direction = _navMeshAgent.desiredVelocity.normalized;
         direction.y = 0; // 確保不會影響 Y 軸 (防止怪物漂浮)
 
 		if (direction != Vector3.zero)
 		{
 			Quaternion targetRotation = Quaternion.LookRotation(direction);
-			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
+			transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
 			//transform.rotation = _navMeshAgent.transform.rotation;
 		}
 
         transform.position += _enemyDataSO.moveSpeed * Time.deltaTime * direction;
+		_navMeshAgent.nextPosition = transform.position;
+		//_navMeshAgent.transform.rotation = transform.rotation;
 	}
 
 	// 檢查目前是否為 Idle 狀態
@@ -214,7 +231,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 		if(_attackWeights.TryGetValue(_lastAttackState, out int value))
 		{
-			_attackWeights[_lastAttackState] -= 15;
+			_attackWeights[_lastAttackState] -= 35;
 		}
 	}
 	
@@ -283,14 +300,14 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		Vector3 originalVector3 = transform.position;
 		Vector3 targetVector3 = transform.position + Vector3.down * 4f;
 		
-		yield return new WaitForSeconds(0.7f);
+		yield return new WaitForSeconds(0.8f);
 		
 		// 鑽到地板的動畫
-		while(timer < 1.3f)
+		while(timer < 1.2f)
 		{
 			yield return new WaitUntil(() => !IsPause);
 			
-			transform.position = Vector3.Slerp(originalVector3, targetVector3, timer/1.3f);
+			transform.position = Vector3.Slerp(originalVector3, targetVector3, timer/1.2f);
 			
 			timer += Time.deltaTime;
 		    yield return null;
@@ -306,7 +323,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		direct.y = 0;
 		
 		_navMeshAgent.isStopped = false;
-		_navMeshAgent.speed = 20f;
+		_navMeshAgent.speed = 35f;
 		_navMeshAgent.SetDestination(transform.position + direct * 100f);
 		
 		bool hasCollider = false;
@@ -328,7 +345,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 				timer += Time.deltaTime;
 			}
 			
-			if(timer > 0.6f) break;
+			if(timer > 0.5f) break;
 		    
 		    Collider[] colliderArray = Physics.OverlapSphere(transform.position + Vector3.up * 4f, 4f);
 		    _bodyTransform.Rotate(Vector3.up * 20f);
@@ -356,11 +373,13 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		timer = 0f;
 		
 		_animator.Play(_state.ToString(), 0, 0f);
+		Quaternion startRotation = _bodyTransform.localRotation; // 記錄起始旋轉
+		Quaternion targetRotation = Quaternion.identity; // 目標旋轉
 		
 		while(timer < 0.3f)
 		{
-			float rotateSpeed = Mathf.Lerp(20f, 0f, timer/0.2f);
-		    _bodyTransform.Rotate(Vector3.up * rotateSpeed);
+			float rotateSpeed = Mathf.Lerp(540f, 0f, timer/0.3f);
+			_bodyTransform.localRotation = Quaternion.RotateTowards(_bodyTransform.localRotation, targetRotation, rotateSpeed * Time.deltaTime);
 		    
 		    timer += Time.deltaTime;
 		    yield return null;
@@ -368,6 +387,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		
 		_bodyTransform.localRotation = Quaternion.identity;
 		
+		timer = 0f;
 		originalVector3 = transform.position;
 		targetVector3 = transform.position + Vector3.up * 4f;
 	

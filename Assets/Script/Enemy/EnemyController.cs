@@ -151,7 +151,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		if (direction != Vector3.zero)
 		{
 			Quaternion targetRotation = Quaternion.LookRotation(direction);
-			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
+			transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
 		}
 
         transform.position += _enemyDataSO.moveSpeed * Time.deltaTime * direction;
