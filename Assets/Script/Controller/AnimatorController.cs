@@ -79,8 +79,7 @@ public class AnimatorController : MonoBehaviour
 
     private void Hit()
     {
-        animator.CrossFade("Hit", 0f, 0);
-        animator.SetBool("IsAim", false);
+        animator.SetTrigger("Hit");
     }
 
     private void Dash(string isDash)

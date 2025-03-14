@@ -308,6 +308,7 @@ public class PlayerController : MonoBehaviour
 
         if (Time.time >= lastDashTime + playerData.DashCoolTime)
         {
+            isHit = false;
             isDash = true;
             lastDashTime = Time.time;
         }
