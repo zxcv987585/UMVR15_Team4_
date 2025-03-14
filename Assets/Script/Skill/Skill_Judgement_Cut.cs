@@ -29,7 +29,7 @@ public class Skill_Judgement_Cut : BaseSkill
     public override void SkillAbility()
     {
         postProcessVolume.isGlobal = true;
-        //ÅÜ·t
+        //ï¿½Ü·t
         if (postProcessVolume.profile.TryGetSettings(out colorGrading))
         {
             StartCoroutine(easyInOut.ChangeValue(
@@ -39,7 +39,7 @@ public class Skill_Judgement_Cut : BaseSkill
            value => colorGrading.colorFilter.value = value,
            EasyInOut.EaseOut));
         }
-        //·t¨¤ÅÜ·t
+        //ï¿½tï¿½ï¿½ï¿½Ü·t
         if (postProcessVolume.profile.TryGetSettings(out vignette))
         {
             StartCoroutine(easyInOut.ChangeValue(
@@ -57,7 +57,7 @@ public class Skill_Judgement_Cut : BaseSkill
         transform.position = FindObjectOfType<PlayerController>()?.transform.position ?? Vector3.zero;
         skillParticleSystem.Play();
 
-        //°{¤@¤U¥Õ¥ú
+        //ï¿½{ï¿½@ï¿½Uï¿½Õ¥ï¿½
         if (postProcessVolume.profile.TryGetSettings(out colorGrading))
         {
             StartCoroutine(easyInOut.ChangeValue(
@@ -77,10 +77,10 @@ public class Skill_Judgement_Cut : BaseSkill
 
 
 
-        Collider[] hitColliderArray = Physics.OverlapSphere(transform.position, radius, LayerMask.GetMask(ENEMY));
+        Collider[] hitColliderArray = Physics.OverlapSphere(transform.position, radius);
         foreach (Collider hit in hitColliderArray)
         {
-            if (hit.TryGetComponent(out EnemyController enemy))
+            if (hit.TryGetComponent(out IEnemy enemy))
             {
                 EnemyManager.Instance.SetEnemyIsPause(2f);
                 StartCoroutine(WaitToAttack());
@@ -88,7 +88,7 @@ public class Skill_Judgement_Cut : BaseSkill
         }
 
         yield return new WaitForSeconds(2f);
-        //¦A°{¤@¤U¥Õ¥ú
+        //ï¿½Aï¿½{ï¿½@ï¿½Uï¿½Õ¥ï¿½
         if (postProcessVolume.profile.TryGetSettings(out colorGrading))
         {
             StartCoroutine(easyInOut.ChangeValue(
@@ -103,7 +103,7 @@ public class Skill_Judgement_Cut : BaseSkill
             value => colorGrading.postExposure.value = value,
             EasyInOut.EaseOut));
         }
-        //·t¨¤ÅÜ¦^
+        //ï¿½tï¿½ï¿½ï¿½Ü¦^
         if (postProcessVolume.profile.TryGetSettings(out vignette))
         {
             StartCoroutine(easyInOut.ChangeValue(
