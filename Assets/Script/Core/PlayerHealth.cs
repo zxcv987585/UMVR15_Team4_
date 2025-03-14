@@ -87,7 +87,7 @@ public class PlayerHealth : MonoBehaviour
     private void NewMaxHealth()
     {
         this.MaxHealth += 10;
-        this.MaxPP += 10;
+        this.MaxPP += 5;
         CurrentHealth = MaxHealth;
     }
 

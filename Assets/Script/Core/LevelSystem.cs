@@ -24,7 +24,7 @@ public class LevelSystem : MonoBehaviour
         playerData.CurrentLevel++;
 
         playerData.attackDamage += 3;
-        playerData.MaxPP += 10;
+        playerData.MaxPP += 5;
         playerData.MaxHealth += 10;
         playerData.GunDamage += 2;
 
