@@ -19,13 +19,17 @@ public class Skill_Spikes : BaseSkill
 
         skillParticleSystem.Play();
 
-        Collider[] hitColliderArray = Physics.OverlapSphere(transform.position, radius, LayerMask.GetMask(ENEMY));
+        Collider[] hitColliderArray = Physics.OverlapSphere(transform.position, radius);
         foreach (Collider hit in hitColliderArray)
         {
             if (hit.TryGetComponent(out EnemyController enemy))
             {
                 enemy.HitFly(hitFlyPower);
-                enemy.gameObject.GetComponent<Health>().TakeDamage(GetSkillDataSO().damage);
+            }
+            
+            if(hit.TryGetComponent(out Health health))
+            {
+                health.TakeDamage(GetSkillDataSO().damage);
             }
         }
     }

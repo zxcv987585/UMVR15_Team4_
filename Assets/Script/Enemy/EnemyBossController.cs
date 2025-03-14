@@ -303,11 +303,11 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		yield return new WaitForSeconds(0.8f);
 		
 		// 鑽到地板的動畫
-		while(timer < 1.2f)
+		while(timer < 1.3f)
 		{
 			yield return new WaitUntil(() => !IsPause);
 			
-			transform.position = Vector3.Slerp(originalVector3, targetVector3, timer/1.2f);
+			transform.position = Vector3.Slerp(originalVector3, targetVector3, timer/1.3f);
 			
 			timer += Time.deltaTime;
 		    yield return null;

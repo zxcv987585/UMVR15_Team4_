@@ -35,7 +35,7 @@ public class Skill_FlySword : BaseSkill
             timer += Time.deltaTime;
             attackPosition += transform.forward * speed * Time.deltaTime;
 
-            hitColliderArray = Physics.OverlapSphere(attackPosition, radius, LayerMask.GetMask(ENEMY));
+            hitColliderArray = Physics.OverlapSphere(attackPosition, radius);
             foreach (Collider hit in hitColliderArray)
             {
                 if (hit.TryGetComponent(out Health enemyHealth))
