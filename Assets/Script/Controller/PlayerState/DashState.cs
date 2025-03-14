@@ -47,7 +47,7 @@ public class DashState : PlayerState
             player.controller.SimpleMove(player.Velocity);
             return;
         }
-        player.isDash = false;
+        player.IsDash = false;
         player.Invincible = false;
         StateMachine.ChangeState(player.idleState);
         ForceIdle?.Invoke(true);

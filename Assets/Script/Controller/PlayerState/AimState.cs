@@ -26,13 +26,13 @@ public class AimState : PlayerState
 
     public override void Update()
     {
-        if (!player.isAiming)
+        if (!player.IsAiming)
         {
             StateMachine.ChangeState(player.moveState);
             OnAim?.Invoke(false);
             return;
         }
-        if (!player.isAiming && player.GetMoveInput().sqrMagnitude < 0.01f)
+        if (!player.IsAiming && player.GetMoveInput().sqrMagnitude < 0.01f)
         {
             StateMachine.ChangeState(player.idleState);
             OnAim?.Invoke(false);

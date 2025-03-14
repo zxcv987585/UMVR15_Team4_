@@ -11,7 +11,7 @@ public class MoveState : PlayerState
     public override void Enter()
     {
         IsMoving?.Invoke(true);
-        IsRun?.Invoke(player.isRun);
+        IsRun?.Invoke(player.IsRun);
     }
 
     public override void Update()
@@ -24,7 +24,7 @@ public class MoveState : PlayerState
             IsRun?.Invoke(false);
             return;
         }
-        if (player.isAiming)
+        if (player.IsAiming)
         {
             StateMachine.ChangeState(player.aimState);
             IsMoving?.Invoke(false);
@@ -38,27 +38,27 @@ public class MoveState : PlayerState
             IsRun?.Invoke(false);
             return;
         }
-        if (player.isAttack)
+        if (player.IsAttack)
         {
             StateMachine.ChangeState(player.fightState);
             IsMoving?.Invoke(false);
             IsRun?.Invoke(false);
             return;
         }
-        if (player.isDash)
+        if (player.IsDash)
         {
             StateMachine.ChangeState(player.dashState);
             IsMoving?.Invoke(false);
             IsRun?.Invoke(false);
             return;
         }
-        if (player.isHit)
+        if (player.IsHit)
         {
             IsMoving?.Invoke(false);
             IsRun?.Invoke(false);
             return;
         }
-        if (player.isCriticalHit)
+        if (player.IsCriticalHit)
         {
             IsMoving?.Invoke(false);
             IsRun?.Invoke(false);
@@ -79,9 +79,9 @@ public class MoveState : PlayerState
         // 根據相機方向調整角色的移動方向
         Vector3 targetDirection = cameraForward * moveDirection.z + cameraRight * moveDirection.x;
 
-        bool isSprinting = player.isRun;
+        bool isSprinting = player.IsRun;
         // 根據玩家是否正在跑步來調整速度
-        float currentSpeed = player.isRun ? player.playerData.MoveSpeed * player.playerData.SprintSpeedModifier : player.playerData.MoveSpeed;
+        float currentSpeed = player.IsRun ? player.playerData.MoveSpeed * player.playerData.SprintSpeedModifier : player.playerData.MoveSpeed;
 
         IsRun?.Invoke(isSprinting);
         IsMoving?.Invoke(!isSprinting);

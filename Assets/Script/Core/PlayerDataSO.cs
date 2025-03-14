@@ -23,6 +23,8 @@ public class PlayerDataSO : ScriptableObject
     [Header("角色屬性")]
     [Tooltip("玩家最大血量")]
     public float MaxHealth = 120f;
+    [Tooltip("玩家隱藏防禦值")]
+    public float Defense = 0f;
     [Tooltip("玩家最大PP值")]
     public float MaxPP = 100f;
     [Tooltip("玩家等級")]

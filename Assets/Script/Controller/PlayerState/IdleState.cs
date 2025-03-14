@@ -32,13 +32,13 @@ public class IdleState : PlayerState
             }
             return;
         }
-        if (player.isDash)
+        if (player.IsDash)
         {
             StateMachine.ChangeState(player.dashState);
             IsIdle?.Invoke(false);
             return;
         }
-        if (player.isAiming)
+        if (player.IsAiming)
         {
             StateMachine.ChangeState(player.aimState);
             IsIdle?.Invoke(false);
@@ -50,17 +50,17 @@ public class IdleState : PlayerState
             IsIdle?.Invoke(false);
             return;
         }
-        if (player.isHit)
+        if (player.IsHit)
         {
             IsIdle?.Invoke(false);
             return;
         }
-        if (player.isCriticalHit)
+        if (player.IsCriticalHit)
         {
             IsIdle?.Invoke(false);
             return;
         }
-        if (player.isAttack)
+        if (player.IsAttack)
         {
             StateMachine.ChangeState(player.fightState);
             IsIdle?.Invoke(false);

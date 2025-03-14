@@ -19,7 +19,7 @@ public class LookAtTarget : MonoBehaviour
     void Update()
     {
 
-        if (player.isAiming)
+        if (player.IsAiming)
         {
             rig.weight = 1f;
         }
