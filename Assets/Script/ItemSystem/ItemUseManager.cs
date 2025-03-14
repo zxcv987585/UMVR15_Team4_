@@ -52,7 +52,8 @@ public class ItemUseManager : MonoBehaviour
                 item.itemAction = (ItemData data) =>
                 {
                     Debug.Log($"Use {data.itemName}");
-                    //Player.instance.AddBuff("Attack", 10);
+                    if(player.IsDie)
+                    health.Rivive();
                 };
                 break;
         }
@@ -67,6 +68,11 @@ public class ItemUseManager : MonoBehaviour
             return false;
         }
         if (item.itemID == 4 && player.IsDefenseBuff)
+        {
+            Debug.Log("玩家正在進入Buff狀態！");
+            return false;
+        }
+        if (item.itemID == 5 && !player.IsDie)
         {
             Debug.Log("玩家正在進入Buff狀態！");
             return false;

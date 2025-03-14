@@ -47,6 +47,9 @@ public class PlayerHealth : MonoBehaviour
     //PP消耗委派事件
     public event Action OnPPChanged;
 
+    //玩家復活事件
+    public event Action PlayerRivive;
+
     private bool Isdead = false;
 
     private void Awake()
@@ -259,5 +262,7 @@ public class PlayerHealth : MonoBehaviour
 
         CurrentHealth = MaxHealth;
         Isdead = false;
+        player.IsDie = false;
+        PlayerRivive?.Invoke();
     }
 }

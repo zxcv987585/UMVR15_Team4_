@@ -173,7 +173,6 @@ public class FightState : PlayerState
                 player.IsAttack = false;
                 break;
         }
-
         player.StartPlayerCoroutine(AttackCoolDown());
     }
 

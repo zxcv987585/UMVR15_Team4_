@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class AnimatorController : MonoBehaviour
@@ -31,7 +32,14 @@ public class AnimatorController : MonoBehaviour
             player.OnHit += Hit;
             health.OnDead += Dead;
             health.OnCriticalDamage += CriticalDamage;
+            health.PlayerRivive += Rivive;
         }
+    }
+
+    private void Rivive()
+    {
+        isDead = false;
+        animator.CrossFade("revive", 0f, 0);
     }
 
     private void CriticalDamage()

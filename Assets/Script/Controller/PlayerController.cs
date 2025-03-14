@@ -38,6 +38,12 @@ public class PlayerController : MonoBehaviour
     public GameObject Judgement_Cut_Effect;
     [Tooltip("玩家升級時的特效")]
     public GameObject LevelUp_Effect;
+    [Tooltip("玩家復活時的特效")]
+    public GameObject Rivive_Effect;
+    [Tooltip("玩家攻擊上升時的特效")]
+    public GameObject AttackUP_Effect;
+    [Tooltip("玩家防禦上升時的特效")]
+    public GameObject DefenseUP_Effect;
 
     [Header("鎖定邏輯")]
     [Tooltip("動態存放鎖定的敵方單位")]
@@ -115,6 +121,7 @@ public class PlayerController : MonoBehaviour
         health.OnDamage += GetHit;
         health.OnDead += Died;
         health.OnCriticalDamage += OnCriticalDamage;
+        health.PlayerRivive += Rivive;
         levelSystem.PlayerLevelup += LevelUp;
         //初始化數據
         playerData.CurrentExp = 0;
@@ -519,7 +526,6 @@ public class PlayerController : MonoBehaviour
             Debug.Log("找到攝影機！開始抖動");
         }
     }
-
     //重擊時攝影機的晃動
     public void SpikeShake()
     {
@@ -541,33 +547,57 @@ public class PlayerController : MonoBehaviour
     public IEnumerator AttackUP(float Amout, float Duration)
     {
         Debug.Log("開始增加傷害！");
+
         float OriginAttackDamage = playerData.attackDamage;
+
+        GameObject AttackUPEffect = Instantiate(AttackUP_Effect, transform.position, AttackUP_Effect.transform.rotation);
+        AttackUPEffect.transform.SetParent(transform);
+
         float elapsed = 0f;
         playerData.attackDamage += Amout;
+
         while (elapsed < Duration) 
         {
             elapsed += Time.deltaTime;
             IsAttackBuff = true;
             yield return null;
         }
+
         Debug.Log("增傷結束！");
         playerData.attackDamage = OriginAttackDamage;
         IsAttackBuff = false;
+
+        Destroy(AttackUPEffect);
     }
     //防禦Buff邏輯
     public IEnumerator DefenseUP(float Amout, float Duration)
     {
         Debug.Log("開始增加防禦！");
+
+        GameObject DefenseUPEffect = Instantiate(DefenseUP_Effect, transform.position, DefenseUP_Effect.transform.rotation);
+        DefenseUPEffect.transform.SetParent(transform);
+
         float elapsed = 0f;
         playerData.Defense += Amout;
+
         while (elapsed < Duration)
         {
             elapsed += Time.deltaTime;
             IsDefenseBuff = true;
             yield return null;
         }
+
         Debug.Log("增防結束！");
         playerData.Defense = 0;
         IsDefenseBuff = false;
+
+        Destroy(DefenseUPEffect);
+    }
+
+    //玩家重生
+    private void Rivive()
+    {
+        Instantiate(Rivive_Effect, transform.position, Rivive_Effect.transform.rotation);
+        stateMachine.ChangeState(idleState);
     }
 }
