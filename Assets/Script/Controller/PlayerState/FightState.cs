@@ -75,6 +75,7 @@ public class FightState : PlayerState
     private void Attack()
     {
         if (!CanAttack) return;
+
         if (player.LockTarget != null)
         {
             Vector3 direction = (player.LockTarget.position - player.transform.position).normalized;

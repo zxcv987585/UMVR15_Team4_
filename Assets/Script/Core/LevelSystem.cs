@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class LevelSystem : MonoBehaviour
 {
-    public PlayerController player;
     public PlayerDataSO playerData;
     public event Action PlayerLevelup;
 

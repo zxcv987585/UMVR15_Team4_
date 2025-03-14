@@ -27,9 +27,11 @@ public class PlayerController : MonoBehaviour
     [Header("玩家Data")]
     public PlayerDataSO playerData;
 
+    [Header("玩家Vector3")]
     [Tooltip("玩家的位移Vector3")]
     public Vector3 Velocity;
-    
+
+    [Header("玩家特效")]
     [Tooltip("玩家奔跑時的特效")]
     [SerializeField] GameObject SprintEffect;
     [Tooltip("玩家擊中時的特效")]
