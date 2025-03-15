@@ -110,7 +110,7 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     /// <param name="spawnPrefab"> 生成的物件 Prefab </param>
     /// <param name="spawnTransform"> 生成的物件 Transform 位置 </param>
-    public void SpawnEnemy(GameObject spawnPrefab, Transform spawnTransform)
+    public void SpawnEnemy(GameObject spawnPrefab, Transform spawnTransform, float spawnDissolveTime = 1f)
     {
         // 如果回收的物件沒有放在物件池類, 則創建新的池
         if (!enemyObjectPool.TryGetValue(spawnPrefab, out Queue<GameObject> objectQueue))
@@ -134,8 +134,8 @@ public class EnemyManager : MonoBehaviour
 
         enemyGameObject.transform.position = spawnTransform.position;
         enemyGameObject.transform.rotation = spawnTransform.rotation;
+        enemyGameObject.GetComponent<EnemyController>().SetDissolveTime(spawnDissolveTime);
         enemyGameObject.SetActive(true);
-        //enemyGameObject.GetComponent<EnemyController>().Init();
     }
 
     /// <summary>

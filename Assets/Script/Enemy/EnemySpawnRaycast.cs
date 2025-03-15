@@ -9,23 +9,28 @@ public class EnemySpawnRaycast : MonoBehaviour
     
     private ParticleSystem _particleSystem;
     private ParticleSystem.MainModule _mainModule;
+    private Vector3 _startVector3;
 
-    void Start()
+    private void Start()
     {
         _particleSystem = GetComponent<ParticleSystem>();
         _mainModule = _particleSystem.main;
 
         // 確保啟用 3D Start Size
         _mainModule.startSize3D = true;
+
+        _startVector3 = _startPoint.position + Vector3.up * 2f;
     }
 
-    void Update()
+    public void SetEndPoint(Transform endTransform)
     {
-        
+        _endPoint = endTransform;
+        StartCoroutine(EndRaycastCoroutine(2.5f));
+
         if (_startPoint == null || _endPoint == null) return;
 
         // 計算雷射方向與長度
-        Vector3 direction = _endPoint.position - _startPoint.position;
+        Vector3 direction = _endPoint.position - _startVector3;
         float laserLength = direction.magnitude;  // 計算距離
 
         Debug.Log("laserLength = " + laserLength);
@@ -35,16 +40,21 @@ public class EnemySpawnRaycast : MonoBehaviour
         _mainModule.startSizeY = laserLength / 2;  // 設定雷射長度
         _mainModule.startSizeZ = 0.2f;  // 固定厚度
 
-        // 讓雷射朝向終點
-        // transform.position = _startPoint.position;
-        // transform.LookAt(_endPoint.position);
-
         // 設定雷射的中心點
-        Vector3 midPoint = (_startPoint.position + _endPoint.position) / 2;
+        Vector3 midPoint = (_startVector3 + _endPoint.position) / 2;
         transform.position = midPoint;
 
         // 修正方向 (確保 Y 軸不會翻轉)
         transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
         transform.rotation *= Quaternion.Euler(90, 0, 0);
+
+        _particleSystem.Play();
+    }
+
+    private IEnumerator EndRaycastCoroutine(float closeTimer)
+    {
+        yield return new WaitForSeconds(closeTimer);
+
+        _particleSystem.Stop();
     }
 }

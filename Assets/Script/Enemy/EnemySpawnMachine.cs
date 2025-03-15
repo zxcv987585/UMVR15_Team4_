@@ -43,11 +43,11 @@ public class EnemySpawnMachine : MonoBehaviour
 
         while(true)
         {
-            yield return new WaitForSeconds(_spawnTimer);
-
             spawnTransform =  _spawnTransformArray[Random.Range(0, _spawnTransformArray.Length)];
-            //_enemySpawnRaycast.SetTargetTransform(spawnTransform);
-            EnemyManager.Instance.SpawnEnemy(_spawnPrefab, spawnTransform);
+            _enemySpawnRaycast.SetEndPoint(spawnTransform);
+            EnemyManager.Instance.SpawnEnemy(_spawnPrefab, spawnTransform, _spawnTimer);
+
+            yield return new WaitForSeconds(_spawnTimer);
         }
     }
 

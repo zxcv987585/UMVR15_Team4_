@@ -15,8 +15,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 
 	[SerializeField] private Renderer _dissolveRenderer;
 	[SerializeField] private ParticleSystem _deadParticle;
-	[SerializeField] private float _dissolveTime = 1f;
-	private Material material;
+	private float _dissolveTime = 1f;
+	private Material _material;
 	private const string DISSOLVE_AMOUNT = "_DissolveAmount";
 	private const string EMISSION_COLOR= "_EmissionColor";
 	private const string RIM_COLOR = "_RimColor";
@@ -71,7 +71,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_bodyCollider = GetComponent<Collider>();
 		_playerTransform = FindObjectOfType<PlayerController>()?.transform;
 		_playerHealth = _playerTransform.GetComponent<PlayerHealth>();
-		material = _dissolveRenderer.material;
+		_material = _dissolveRenderer.material;
 		_enemyAttack = (IEnemyAttack)_enemyAttackMonoBehaviour;
 
 		//設定 血量
@@ -90,6 +90,11 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_enemyAnimatorController.OnStartAttackCheck += AttackIsColliderCheck;
 		_enemyAnimatorController.OnDead += StartDestory;
 		_enemyAttack.OnAttackHit += Attack;
+	}
+
+	public void SetDissolveTime(float dissolveTime)
+	{
+		_dissolveTime = dissolveTime;
 	}
 
 	//延遲啟用 NavMeshAgent
@@ -370,8 +375,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 	//死亡時的消融動畫效果
 	private IEnumerator DeadDissolveCoroutine(float showTimer)
 	{
-		material.SetColor(EMISSION_COLOR, Color.cyan);
-		material.SetColor(RIM_COLOR, Color.cyan);
+		_material.SetColor(EMISSION_COLOR, Color.cyan);
+		_material.SetColor(RIM_COLOR, Color.cyan);
 
 		_deadParticle.gameObject.SetActive(true);
 		_deadParticle.Play();
@@ -383,10 +388,12 @@ public class EnemyController : MonoBehaviour, IEnemy
 			yield return new WaitUntil(() => !IsPause);
 			
 			timer += Time.deltaTime;
-			material.SetFloat(DISSOLVE_AMOUNT, timer/showTimer);
+			_material.SetFloat(DISSOLVE_AMOUNT, timer/showTimer);
 			
 			yield return null;
 		}
+
+		_dissolveTime = 1f;
 
 		// 待死亡動畫結束後, 讓物件池回收自己
 		EnemyManager.Instance.RecycleEnemy(gameObject);
@@ -395,8 +402,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 	// 生成時的消融效果, 並於消融完成後, 將物件加入 EnemyManager 的更新列表中
 	private IEnumerator StartDissolveCoroutine(float showTimer)
 	{
-		material.SetColor(EMISSION_COLOR, Color.cyan);
-		material.SetColor(RIM_COLOR, Color.cyan);
+		_material.SetColor(EMISSION_COLOR, Color.cyan);
+		_material.SetColor(RIM_COLOR, Color.cyan);
 
 		float timer = 0f;
 		while(timer < showTimer)
@@ -405,14 +412,14 @@ public class EnemyController : MonoBehaviour, IEnemy
 			yield return new WaitUntil(() => !IsPause);
 		
 			timer += Time.deltaTime;
-			material.SetFloat(DISSOLVE_AMOUNT, 1 - timer/showTimer);
+			_material.SetFloat(DISSOLVE_AMOUNT, 1 - timer/showTimer);
 
 			yield return null;
 		}
 
-		material.SetFloat(DISSOLVE_AMOUNT, 0f);
-		material.SetColor(EMISSION_COLOR, Color.black);
-		material.SetColor(RIM_COLOR, Color.black);
+		_material.SetFloat(DISSOLVE_AMOUNT, 0f);
+		_material.SetColor(EMISSION_COLOR, Color.black);
+		_material.SetColor(RIM_COLOR, Color.black);
 
 		_isInit = false;
 	}
