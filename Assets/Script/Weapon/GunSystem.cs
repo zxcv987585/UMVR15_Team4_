@@ -109,6 +109,7 @@ public class GunSystem : MonoBehaviour
         {
             GameObject GunFire = Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
             GunFire.transform.rotation = attackPoint.rotation;
+            GunFire.transform.SetParent(attackPoint);
         }
 
         if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Boss))
