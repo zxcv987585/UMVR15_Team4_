@@ -26,6 +26,10 @@ public class AimState : PlayerState
 
     public override void Update()
     {
+        if (player.IsHit || player.IsCriticalHit || player.IsRivive)
+        {
+            return;
+        }
         if (!player.IsAiming)
         {
             StateMachine.ChangeState(player.moveState);

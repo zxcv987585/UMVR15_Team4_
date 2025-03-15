@@ -44,8 +44,6 @@ public class WeaponManager : MonoBehaviour
     private bool isAttackWindowActive = false;
     // 記錄在一次攻擊視窗內已經擊中的敵人
     private HashSet<Collider> attackedEnemies = new HashSet<Collider>();
-    //擊中慢動作的防呆旗標
-    private bool isHitPauseActive = false;
 
     private void Awake()
     {

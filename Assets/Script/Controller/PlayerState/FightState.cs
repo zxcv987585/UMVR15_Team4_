@@ -29,6 +29,10 @@ public class FightState : PlayerState
 
     public override void Update()
     {
+        if (player.IsHit || player.IsCriticalHit || player.IsRivive)
+        {
+            return;
+        }
         if (QuitState())
         {
             ResetCombo();
