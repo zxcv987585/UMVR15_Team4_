@@ -52,7 +52,7 @@ public class AnimatorController : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
-        animator.CrossFade("Die", 0f, 0);
+        animator.Play("Die");
 
         health.OnDead -= Dead;
     }
