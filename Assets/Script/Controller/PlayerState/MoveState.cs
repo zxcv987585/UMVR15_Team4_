@@ -16,6 +16,10 @@ public class MoveState : PlayerState
 
     public override void Update()
     {
+        if (player.IsHit || player.IsCriticalHit || player.IsRivive)
+        {
+            return;
+        }
         // 如果玩家沒有輸入移動，則切換到 Idle 狀態
         if (player.GetMoveInput().sqrMagnitude < 0.01f)
         {

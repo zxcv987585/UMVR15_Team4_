@@ -41,6 +41,10 @@ public class DashState : PlayerState
 
     public override void Update()
     {
+        if (player.IsCriticalHit || player.IsRivive)
+        {
+            return;
+        }
         if (dashTimer > 0f)
         {
             dashTimer -= Time.deltaTime;

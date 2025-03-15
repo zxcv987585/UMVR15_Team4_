@@ -65,8 +65,10 @@ public class AnimatorController : MonoBehaviour
 
     private void Aim(bool isAim)
     {
-        if (player.IsDie) return;
-
+        if (player.IsHit || player.IsCriticalHit || player.IsRivive || player.IsDie)
+        {
+            return;
+        }
         if (isAim)
         {
             animator.SetLayerWeight(0, 0);
@@ -97,11 +99,19 @@ public class AnimatorController : MonoBehaviour
 
     private void Sprint(bool sprint)
     {
+        if (player.IsHit || player.IsCriticalHit || player.IsRivive)
+        {
+            return;
+        }
         animator.SetBool("Sprint", sprint);
     }
 
     private void Walk(bool Iswalk)
     {
+        if (player.IsHit || player.IsCriticalHit || player.IsRivive)
+        {
+            return;
+        }
         animator.SetBool("Run", Iswalk);
     }
 
@@ -130,6 +140,10 @@ public class AnimatorController : MonoBehaviour
 
     private void AttackCombo(string attack)
     {
+        if (player.IsHit || player.IsCriticalHit || player.IsRivive)
+        {
+            return;
+        }
         animator.SetTrigger(attack);
     }
 }

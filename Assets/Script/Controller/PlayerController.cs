@@ -73,6 +73,7 @@ public class PlayerController : MonoBehaviour
     public bool IsCriticalHit { get; set; } = false;
     public bool IsAttackBuff { get; private set; } = false;
     public bool IsDefenseBuff { get; private set; } = false;
+    public bool IsRivive {  get; set; } = false;
 
     //玩家受傷與死亡的Delegate事件
     public event Action OnHit;
@@ -285,13 +286,16 @@ public class PlayerController : MonoBehaviour
     IEnumerator HitCoolDown()
     {
         yield return new WaitForSeconds(playerData.HitCoolTime);
+        IsHit = false;
         Vector3 inputDirection = GetMoveInput().normalized;
         if (inputDirection == Vector3.zero)
         {
             stateMachine.ChangeState(idleState);
         }
-
-        IsHit = false;
+        else if (inputDirection != Vector3.zero)
+        {
+            stateMachine.ChangeState(moveState);
+        }
     }
     IEnumerator GunHitCoolDown()
     {
@@ -301,8 +305,17 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator CriticalDamageCoolDown()
     {
-        yield return new WaitForSeconds(2.1f);
+        yield return new WaitForSeconds(2f);
         IsCriticalHit = false;
+        Vector3 inputDirection = GetMoveInput().normalized;
+        if (inputDirection == Vector3.zero)
+        {
+            stateMachine.ChangeState(idleState);
+        }
+        else if (inputDirection != Vector3.zero)
+        {
+            stateMachine.ChangeState(moveState);
+        }
     }
 
 
@@ -474,7 +487,7 @@ public class PlayerController : MonoBehaviour
     //將受傷與死亡相關內容集合
     public bool CanPerformAction()
     {
-        return !IsCriticalHit || !IsHit || !IsDie;
+        return !IsCriticalHit || !IsHit || !IsDie || !IsRivive;
     }
 
     //隱藏玩家
@@ -599,7 +612,23 @@ public class PlayerController : MonoBehaviour
     //玩家重生
     private void Rivive()
     {
+        IsRivive = true;
         Instantiate(Rivive_Effect, transform.position, Rivive_Effect.transform.rotation);
-        stateMachine.ChangeState(idleState);
+        StartCoroutine(RiviveCoolDown());
+    }
+    private IEnumerator RiviveCoolDown()
+    {
+        yield return new WaitForSeconds(1.8f);
+        IsRivive = false;
+
+        Vector3 inputDirection = GetMoveInput().normalized;
+        if (inputDirection == Vector3.zero)
+        {
+            stateMachine.ChangeState(idleState);
+        }
+        else if (inputDirection != Vector3.zero)
+        {
+            stateMachine.ChangeState(moveState);
+        }
     }
 }
