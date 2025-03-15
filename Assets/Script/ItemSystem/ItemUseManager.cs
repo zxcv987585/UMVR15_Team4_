@@ -36,38 +36,58 @@ public class ItemUseManager : MonoBehaviour
                 item.itemAction = (ItemData data) =>
                 {
                     Debug.Log($"Use {data.itemName}");
-                    //Player.instance.AddBuff("Attack", 10);
+                    if(!player.IsAttackBuff)
+                    StartCoroutine(player.AttackUP(data.amount, data.duration));
                 };
                 break;
             case 4: //4.Defense Up
                 item.itemAction = (ItemData data) =>
                 {
                     Debug.Log($"Use {data.itemName}");
-                    //Player.instance.AddBuff("Attack", 10);
+                    if(!player.IsDefenseBuff)
+                        StartCoroutine(player.DefenseUP(data.amount, data.duration));
                 };
                 break;
             case 5: //5.Rebitrh
                 item.itemAction = (ItemData data) =>
                 {
                     Debug.Log($"Use {data.itemName}");
-                    //Player.instance.AddBuff("Attack", 10);
+                    if(player.IsDie)
+                    health.Rivive();
                 };
                 break;
         }
     }
-    public void UseItem(ItemData item)
+    public bool UseItem(ItemData item)
     {
-        if (item.itemAction == null) SetupItemAction(item);
-        if (item == null) return;
+        if (item == null) return false;
         //itemAction
+        if (item.itemID == 3 && player.IsAttackBuff)
+        {
+            Debug.Log("玩家正在進入Buff狀態！");
+            return false;
+        }
+        if (item.itemID == 4 && player.IsDefenseBuff)
+        {
+            Debug.Log("玩家正在進入Buff狀態！");
+            return false;
+        }
+        if (item.itemID == 5 && !player.IsDie)
+        {
+            Debug.Log("玩家正在進入Buff狀態！");
+            return false;
+        }
+
+        if (item.itemAction == null) SetupItemAction(item);
+
         if (item.itemAction != null)
         {
             item.itemAction?.Invoke(item);
+            return true;
         }
-        else
-        {
-            Debug.Log($"{item.itemName} ｵLｪkｨﾏ･ﾎ｡I");
-        }
+
+        item.itemAction?.Invoke(item);
+        return true;
     }
 
     private void Update()
@@ -77,17 +97,18 @@ public class ItemUseManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha1 + i)
                 && hotbarSlot[i].slotItem != null && hotbarSlot[i].slotItem.itemNum > 0)
             {
-                UseItem(hotbarSlot[i].slotItem);
-                hotbarSlot[i].slotItem.itemNum -= 1;
-                //ｷ晥Dｨ羮ﾆｶqｬｰ0 ｲMｪﾅ
-                if (hotbarSlot[i].slotItem.itemNum == 0)
+                if (UseItem(hotbarSlot[i].slotItem))
                 {
-                    //ｫOｯdhotbarSlot[i].slotItemｸ・ﾆ･HｽTｫORemove()･i･HｳQ･ｿｽTｰ・
-                    ItemData removedItem = hotbarSlot[i].slotItem;
-                    hotbarSlot[i].slotItem = null;
-                    myBag.itemList.Remove(removedItem);
+                    hotbarSlot[i].slotItem.itemNum -= 1;
+                    //成功使用道具才減少數量
+                    if (hotbarSlot[i].slotItem.itemNum == 0)
+                    {
+                        ItemData removedItem = hotbarSlot[i].slotItem;
+                        hotbarSlot[i].slotItem = null;
+                        myBag.itemList.Remove(removedItem);
+                    }
+                    InventoryManager.instance.RefreshUI();
                 }
-                InventoryManager.instance.RefreshUI();
             }
         }
     }

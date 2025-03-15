@@ -27,9 +27,11 @@ public class PlayerController : MonoBehaviour
     [Header("玩家Data")]
     public PlayerDataSO playerData;
 
+    [Header("玩家Vector3")]
     [Tooltip("玩家的位移Vector3")]
     public Vector3 Velocity;
-    
+
+    [Header("玩家特效")]
     [Tooltip("玩家奔跑時的特效")]
     [SerializeField] GameObject SprintEffect;
     [Tooltip("玩家擊中時的特效")]
@@ -38,6 +40,12 @@ public class PlayerController : MonoBehaviour
     public GameObject Judgement_Cut_Effect;
     [Tooltip("玩家升級時的特效")]
     public GameObject LevelUp_Effect;
+    [Tooltip("玩家復活時的特效")]
+    public GameObject Rivive_Effect;
+    [Tooltip("玩家攻擊上升時的特效")]
+    public GameObject AttackUP_Effect;
+    [Tooltip("玩家防禦上升時的特效")]
+    public GameObject DefenseUP_Effect;
 
     [Header("鎖定邏輯")]
     [Tooltip("動態存放鎖定的敵方單位")]
@@ -52,18 +60,19 @@ public class PlayerController : MonoBehaviour
     //用來記錄最後一次Dash的時間
     private float lastDashTime = -Mathf.Infinity;
 
-    public bool isRun { get; private set; } = false;
-    public bool isAiming { get; private set; } = false;
-    public bool isHit { get; private set; } = false;
-    public bool isAttack { get; set; } = false;
-    public bool isRolling { get; set; } = false;
-    public bool isDash { get; set; } = false;
+    public bool IsRun { get; private set; } = false;
+    public bool IsAiming { get; private set; } = false;
+    public bool IsHit { get; private set; } = false;
+    public bool IsAttack { get; set; } = false;
+    public bool IsDash { get; set; } = false;
     public bool IsDie { get; set; } = false;
     public bool CloseEnemy { get; set; } = false;
     public bool Invincible { get; set; } = false;
     public bool InItemMenu { get; set; } = false;
-    public bool isSkilling { get; private set; } = false;
-    public bool isCriticalHit { get; set; } = false;
+    public bool IsSkilling { get; private set; } = false;
+    public bool IsCriticalHit { get; set; } = false;
+    public bool IsAttackBuff { get; private set; } = false;
+    public bool IsDefenseBuff { get; private set; } = false;
 
     //玩家受傷與死亡的Delegate事件
     public event Action OnHit;
@@ -114,6 +123,7 @@ public class PlayerController : MonoBehaviour
         health.OnDamage += GetHit;
         health.OnDead += Died;
         health.OnCriticalDamage += OnCriticalDamage;
+        health.PlayerRivive += Rivive;
         levelSystem.PlayerLevelup += LevelUp;
         //初始化數據
         playerData.CurrentExp = 0;
@@ -123,6 +133,7 @@ public class PlayerController : MonoBehaviour
         playerData.CurrentLevel = 1;
         playerData.attackDamage = 15;
         playerData.GunDamage = 6;
+        playerData.Defense = 0f;
     }
 
     void Update()
@@ -130,7 +141,7 @@ public class PlayerController : MonoBehaviour
         //重力運作邏輯
         ApplyGravity();
         //檢測狀態機更新邏輯，僅限沒有技能施放時使用
-        if (!isSkilling)
+        if (!IsSkilling)
         {
             stateMachine.Update();
         }
@@ -163,7 +174,7 @@ public class PlayerController : MonoBehaviour
     //技能系統
     public void CastSkill(string skillName, float SkillDuration)
     {
-        if (!CanPerformAction() || isSkilling || isAiming) return;
+        if (!CanPerformAction() || IsSkilling || IsAiming) return;
 
         if (LockTarget != null)
         {
@@ -172,20 +183,20 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(direction);
         }
 
-        isSkilling = true;
+        IsSkilling = true;
         animator.Play(skillName);
         StartCoroutine(SkillCastingRoutine(SkillDuration));
     }
     private IEnumerator SkillCastingRoutine(float Duration)
     {
         yield return new WaitForSeconds(Duration);
-        isSkilling = false;
+        IsSkilling = false;
     }
 
     //共用重力邏輯
     private void ApplyGravity()
     {
-        if (isDash) return;
+        if (IsDash) return;
 
         if (controller.isGrounded)
         {
@@ -208,24 +219,24 @@ public class PlayerController : MonoBehaviour
     //Walk、Run狀態機的核心邏輯
     public void MoveCharacter(Vector3 targetDirection, float currentSpeed)
     {
-        if (!CanPerformAction() || isDash || isSkilling) return;
+        if (!CanPerformAction() || IsDash || IsSkilling) return;
 
         controller.Move(targetDirection * currentSpeed * Time.deltaTime);
         SmoothRotation(targetDirection);
     }
     private void SetIsRun(bool isRun)
     {
-        if (!CanPerformAction() || isSkilling) return;
+        if (!CanPerformAction() || IsSkilling) return;
 
-        this.isRun = isRun;
+        this.IsRun = isRun;
     }
 
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
-        if (isCriticalHit || isHit || isSkilling || IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+        if (IsCriticalHit || IsHit || IsSkilling || IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
 
-        isAttack = Attack;
+        IsAttack = Attack;
     }
 
     //狀態機不繼承MonoBehaviour，無法使用StartCoroutine，因此由這邊提供給各大狀態機啟動協程
@@ -237,9 +248,9 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (!CanPerformAction() || isSkilling || InItemMenu || stateMachine.GetState<DashState>() != null) return;
+        if (!CanPerformAction() || IsSkilling || InItemMenu || stateMachine.GetState<DashState>() != null) return;
 
-        isAiming = isAim;
+        IsAiming = isAim;
 
         if (LockTarget != null)
         {
@@ -258,7 +269,7 @@ public class PlayerController : MonoBehaviour
         if (IsDie || Invincible) return;
   
         OnHit?.Invoke();
-        isHit = true;
+        IsHit = true;
 
         StartCoroutine(HitCoolDown());
     }
@@ -266,7 +277,7 @@ public class PlayerController : MonoBehaviour
     {
         if (IsDie || Invincible) return;
 
-        isCriticalHit = true;
+        IsCriticalHit = true;
 
         StartCoroutine(CriticalDamageCoolDown());
     }
@@ -280,18 +291,18 @@ public class PlayerController : MonoBehaviour
             stateMachine.ChangeState(idleState);
         }
 
-        isHit = false;
+        IsHit = false;
     }
     IEnumerator GunHitCoolDown()
     {
         yield return new WaitForSeconds(playerData.HitCoolTime);
-        isHit = false;
+        IsHit = false;
         stateMachine.ChangeState(aimState);
     }
     IEnumerator CriticalDamageCoolDown()
     {
         yield return new WaitForSeconds(2.1f);
-        isCriticalHit = false;
+        IsCriticalHit = false;
     }
 
 
@@ -308,8 +319,8 @@ public class PlayerController : MonoBehaviour
 
         if (Time.time >= lastDashTime + playerData.DashCoolTime)
         {
-            isHit = false;
-            isDash = true;
+            IsHit = false;
+            IsDash = true;
             lastDashTime = Time.time;
         }
     }
@@ -329,7 +340,7 @@ public class PlayerController : MonoBehaviour
     }
     private void LockOnTarget()
     {
-        if (isAiming || IsDie) return;
+        if (IsAiming || IsDie) return;
 
         if (LockTarget == null)
         {
@@ -463,7 +474,7 @@ public class PlayerController : MonoBehaviour
     //將受傷與死亡相關內容集合
     public bool CanPerformAction()
     {
-        return !isCriticalHit || !isHit || !IsDie;
+        return !IsCriticalHit || !IsHit || !IsDie;
     }
 
     //隱藏玩家
@@ -517,7 +528,6 @@ public class PlayerController : MonoBehaviour
             Debug.Log("找到攝影機！開始抖動");
         }
     }
-
     //重擊時攝影機的晃動
     public void SpikeShake()
     {
@@ -529,8 +539,67 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //升級時的特效
     public void LevelUp()
     {
         Instantiate(LevelUp_Effect, transform.position, LevelUp_Effect.transform.rotation);
+    }
+
+    //攻擊Buff邏輯
+    public IEnumerator AttackUP(float Amout, float Duration)
+    {
+        Debug.Log("開始增加傷害！");
+
+        float OriginAttackDamage = playerData.attackDamage;
+
+        GameObject AttackUPEffect = Instantiate(AttackUP_Effect, transform.position, AttackUP_Effect.transform.rotation);
+        AttackUPEffect.transform.SetParent(transform);
+
+        float elapsed = 0f;
+        playerData.attackDamage += Amout;
+
+        while (elapsed < Duration) 
+        {
+            elapsed += Time.deltaTime;
+            IsAttackBuff = true;
+            yield return null;
+        }
+
+        Debug.Log("增傷結束！");
+        playerData.attackDamage = OriginAttackDamage;
+        IsAttackBuff = false;
+
+        Destroy(AttackUPEffect);
+    }
+    //防禦Buff邏輯
+    public IEnumerator DefenseUP(float Amout, float Duration)
+    {
+        Debug.Log("開始增加防禦！");
+
+        GameObject DefenseUPEffect = Instantiate(DefenseUP_Effect, transform.position, DefenseUP_Effect.transform.rotation);
+        DefenseUPEffect.transform.SetParent(transform);
+
+        float elapsed = 0f;
+        playerData.Defense += Amout;
+
+        while (elapsed < Duration)
+        {
+            elapsed += Time.deltaTime;
+            IsDefenseBuff = true;
+            yield return null;
+        }
+
+        Debug.Log("增防結束！");
+        playerData.Defense = 0;
+        IsDefenseBuff = false;
+
+        Destroy(DefenseUPEffect);
+    }
+
+    //玩家重生
+    private void Rivive()
+    {
+        Instantiate(Rivive_Effect, transform.position, Rivive_Effect.transform.rotation);
+        stateMachine.ChangeState(idleState);
     }
 }

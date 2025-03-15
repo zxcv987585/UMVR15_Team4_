@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagicaCloth;
+using System;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
@@ -12,7 +13,7 @@ public class PlayerHealth : MonoBehaviour
     [Header("當前PP量")]
     [SerializeField] float CurrentPP;
     [Header("每秒回復PP量")]
-    [SerializeField] float PPRecoveryRate = 2f;
+    [SerializeField] float PPRecoveryRate = 0.5f;
     [Header("玩家特效")]
     [Tooltip("玩家治療時的特效")]
     [SerializeField] GameObject HealEffect;
@@ -45,6 +46,9 @@ public class PlayerHealth : MonoBehaviour
 
     //PP消耗委派事件
     public event Action OnPPChanged;
+
+    //玩家復活事件
+    public event Action PlayerRivive;
 
     private bool Isdead = false;
 
@@ -150,11 +154,12 @@ public class PlayerHealth : MonoBehaviour
     //受傷函式，用於傳入傷害
     public void TakeDamage(float damage)
     {
-        if (player.isSkilling || Isdead || player.Invincible || player.isCriticalHit) return;
+        if (player.IsSkilling || Isdead || player.Invincible || player.IsCriticalHit) return;
 
-        Debug.Log($"受到共{damage}傷害！剩餘血量：{CurrentHealth}");
-        CurrentHealth -= damage;
+        float effectiveDamage = Mathf.Max(damage - player.playerData.Defense, 0);
+        CurrentHealth -= effectiveDamage;
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
+        Debug.Log($"受到 {damage} 傷害（防禦值 {player.playerData.Defense} 抵消），實際傷害：{effectiveDamage}！剩餘血量：{CurrentHealth}");
 
         if (CurrentHealth > 0)
         {
@@ -170,11 +175,12 @@ public class PlayerHealth : MonoBehaviour
     //重傷函式，用於傳入重傷情形（爆炸或BOSS衝撞
     public void CriticalDamage(float damage)
     {
-        if (player.isSkilling  || Isdead || player.Invincible) return;
+        if (player.IsSkilling  || Isdead || player.Invincible) return;
 
-        Debug.Log($"受到共{damage}傷害！剩餘血量：{CurrentHealth}");
-        CurrentHealth -= damage;
+        float effectiveDamage = Mathf.Max(damage - player.playerData.Defense, 0);
+        CurrentHealth -= effectiveDamage;
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
+        Debug.Log($"受到 {damage} 傷害（防禦值 {player.playerData.Defense} 抵消），實際傷害：{effectiveDamage}！剩餘血量：{CurrentHealth}");
 
         if (CurrentHealth > 0)
         {
@@ -192,9 +198,10 @@ public class PlayerHealth : MonoBehaviour
     {
         if (Isdead || player.Invincible) return;
 
-        Debug.Log($"受到持續傷害！剩餘血量：{CurrentHealth}");
-        CurrentHealth -= damage;
+        float effectiveDamage = Mathf.Max(damage - player.playerData.Defense, 0);
+        CurrentHealth -= effectiveDamage;
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
+        Debug.Log($"受到 {damage} 傷害（防禦值 {player.playerData.Defense} 抵消），實際傷害：{effectiveDamage}！剩餘血量：{CurrentHealth}");
 
         if (CurrentHealth > 0)
         {
@@ -255,5 +262,7 @@ public class PlayerHealth : MonoBehaviour
 
         CurrentHealth = MaxHealth;
         Isdead = false;
+        player.IsDie = false;
+        PlayerRivive?.Invoke();
     }
 }

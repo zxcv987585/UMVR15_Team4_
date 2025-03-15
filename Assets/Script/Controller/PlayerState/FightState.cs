@@ -36,18 +36,18 @@ public class FightState : PlayerState
             return;
         }
 
-        if (CanAttack && player.isAttack)
+        if (CanAttack && player.IsAttack)
         {
             Attack();
             return;
         }
-        if (player.isDash)
+        if (player.IsDash)
         {
             StateMachine.ChangeState(player.dashState);
             ResetCombo();
             return;
         }
-        if (player.isAiming)
+        if (player.IsAiming)
         {
             StateMachine.ChangeState(player.aimState);
             ResetCombo();
@@ -58,12 +58,12 @@ public class FightState : PlayerState
             StateMachine.ChangeState(player.deadState);
             return;
         }
-        if (player.isHit)
+        if (player.IsHit)
         {
             ResetCombo();
             return;
         }
-        if (player.isCriticalHit)
+        if (player.IsCriticalHit)
         {
             ResetCombo();
             return;
@@ -75,6 +75,7 @@ public class FightState : PlayerState
     private void Attack()
     {
         if (!CanAttack) return;
+
         if (player.LockTarget != null)
         {
             Vector3 direction = (player.LockTarget.position - player.transform.position).normalized;
@@ -149,31 +150,30 @@ public class FightState : PlayerState
             case 0:
                 AttackCombo.Invoke("Attack1");
                 //SwordSlash.Invoke();
-                player.isAttack = false;
+                player.IsAttack = false;
                 break;
             case 1:
                 AttackCombo.Invoke("Attack2");
                 //SwordSlash.Invoke();
-                player.isAttack = false;
+                player.IsAttack = false;
                 break;
             case 2:
                 AttackCombo.Invoke("Attack3");
                 //SwordSlash.Invoke();
-                player.isAttack = false;
+                player.IsAttack = false;
                 break;
             case 3:
                 AttackCombo.Invoke("Attack4");
                 //SwordSlash.Invoke();
-                player.isAttack = false;
+                player.IsAttack = false;
                 break;
             case 4:
                 ResetCombo();
                 AttackCombo.Invoke("Attack1");
                 //SwordSlash.Invoke();
-                player.isAttack = false;
+                player.IsAttack = false;
                 break;
         }
-
         player.StartPlayerCoroutine(AttackCoolDown());
     }
 
@@ -188,13 +188,13 @@ public class FightState : PlayerState
         yield return new WaitForSeconds(attackAnimationTime);
 
         CanAttack = true;
-        player.isAttack = false;
+        player.IsAttack = false;
         currentComboStep++;
     }
 
     bool QuitState()
     {
-        if (CanAttack && !player.isAttack)
+        if (CanAttack && !player.IsAttack)
         {
             attackTimer += Time.deltaTime;
             if (attackTimer >= attackResetTime)

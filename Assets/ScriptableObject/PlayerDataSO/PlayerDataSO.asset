@@ -18,16 +18,17 @@ MonoBehaviour:
   Gravity: 40
   DashSpeed: 20
   DashDuration: 0.2
-  DashCoolTime: 1
+  DashCoolTime: 1.2
   MaxHealth: 100
+  Defense: 0
   MaxPP: 100
   CurrentLevel: 1
   CurrentExp: 0
   XPForNextLevel: 100
   HitCoolTime: 1
-  attackDamage: 17
+  attackDamage: 15
   attackRadius: 0.5
-  GunDamage: 8
+  GunDamage: 6
   LockRange: 20
   EnemyLayer:
     serializedVersion: 2
