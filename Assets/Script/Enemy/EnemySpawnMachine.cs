@@ -10,6 +10,7 @@ public class EnemySpawnMachine : MonoBehaviour
     [SerializeField] private GameObject _lockWallPrefab;
     [SerializeField] private Transform[] _spawnTransformArray;
     [SerializeField] private ParticleSystem _bombParticleSystem;
+    [SerializeField] private EnemySpawnRaycast _enemySpawnRaycast;
 
     [SerializeField] private Collider _triggerCollider;
     private Coroutine _spawnCoroutine;
@@ -38,11 +39,15 @@ public class EnemySpawnMachine : MonoBehaviour
 
     private IEnumerator SpawnEnemyCoroutine()
     {
+        Transform spawnTransform;
+
         while(true)
         {
             yield return new WaitForSeconds(_spawnTimer);
 
-            EnemyManager.Instance.SpawnEnemy(_spawnPrefab, _spawnTransformArray[Random.Range(0, _spawnTransformArray.Length)]);
+            spawnTransform =  _spawnTransformArray[Random.Range(0, _spawnTransformArray.Length)];
+            //_enemySpawnRaycast.SetTargetTransform(spawnTransform);
+            EnemyManager.Instance.SpawnEnemy(_spawnPrefab, spawnTransform);
         }
     }
 
