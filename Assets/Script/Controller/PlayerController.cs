@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
     //用來記錄最後一次Dash的時間
     private float lastDashTime = -Mathf.Infinity;
 
+    //所有狀態旗標
     public bool IsRun { get; private set; } = false;
     public bool IsAiming { get; private set; } = false;
     public bool IsHit { get; private set; } = false;
@@ -73,10 +74,13 @@ public class PlayerController : MonoBehaviour
     public bool IsCriticalHit { get; set; } = false;
     public bool IsAttackBuff { get; private set; } = false;
     public bool IsDefenseBuff { get; private set; } = false;
-    public bool IsRivive {  get; set; } = false;
+    public bool IsRivive { get; set; } = false;
+    public bool GunHit { get; set; } = false;
 
     //玩家受傷與死亡的Delegate事件
     public event Action OnHit;
+    public event Action OnGunHit;
+    public event Action CriticalGunHit;
     public Action<bool> isDead;
 
     private void Awake()
@@ -268,7 +272,13 @@ public class PlayerController : MonoBehaviour
     public void GetHit()
     {
         if (IsDie || Invincible) return;
-  
+
+        if (IsAiming) 
+        {
+            GunHit = true;
+            OnGunHit?.Invoke();
+            StartCoroutine(GunHitCoolDown());
+        }
         OnHit?.Invoke();
         IsHit = true;
 
@@ -277,6 +287,14 @@ public class PlayerController : MonoBehaviour
     private void OnCriticalDamage()
     {
         if (IsDie || Invincible) return;
+
+        if (IsAiming)
+        {
+            CriticalGunHit?.Invoke();
+            IsCriticalHit = true;
+
+            StartCoroutine(CriticalDamageCoolDown());
+        }
 
         IsCriticalHit = true;
 
@@ -300,7 +318,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator GunHitCoolDown()
     {
         yield return new WaitForSeconds(playerData.HitCoolTime);
-        IsHit = false;
+        GunHit = false;
         stateMachine.ChangeState(aimState);
     }
     IEnumerator CriticalDamageCoolDown()
