@@ -24385,6 +24385,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff82cb5a57e7d8243bbfbe2930149091, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _canSpawnAmount: 10
+  _allowSceneEnemyAmount: 10
   _spawnTimer: 5
   _enemyDataSO: {fileID: 11400000, guid: 010b4266ecf81d6489db326799d9db25, type: 2}
   _spawnPrefab: {fileID: 4902313336816358631, guid: ad189a93fb0a7aa4f92fa65b5ef75002, type: 3}

@@ -25,7 +25,6 @@ public class EnemyController : MonoBehaviour, IEnemy
 	private bool _hasInit = false; //用來檢查該物件是否為第一次被生成
 	private bool _isAttack;
 	private bool _isDamage;
-	//private bool IsPause;
 	
 	private Rigidbody _rb;
 	private NavMeshAgent _navMeshAgent;
@@ -107,6 +106,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_navMeshAgent.speed = _enemyDataSO.moveSpeed;
 
 		_navMeshAgent.enabled = true;
+		_navMeshAgent.SetDestination(transform.position);
 	}
 	
 	
@@ -394,6 +394,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 		}
 
 		_dissolveTime = 1f;
+		_navMeshAgent.enabled = false;
+		_isInit = true;
 
 		// 待死亡動畫結束後, 讓物件池回收自己
 		EnemyManager.Instance.RecycleEnemy(gameObject);
@@ -405,17 +407,25 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_material.SetColor(EMISSION_COLOR, Color.cyan);
 		_material.SetColor(RIM_COLOR, Color.cyan);
 
+		Debug.Log("Start Time.time =" + Time.time);
+
 		float timer = 0f;
 		while(timer < showTimer)
 		{
 			// 如果目前 isPause 為 true, 則暫停更新 Coroutine
 			yield return new WaitUntil(() => !IsPause);
 		
-			timer += Time.deltaTime;
+			//timer += Time.deltaTime;
 			_material.SetFloat(DISSOLVE_AMOUNT, 1 - timer/showTimer);
 
-			yield return null;
+			//Debug.Log("time.deltatime is = " + Time.deltaTime);
+
+			yield return new WaitForSeconds(0.1f);
+			timer += 0.1f;
 		}
+
+		// Debug.Log("timer = " + timer);
+		Debug.Log("End Time.time =" + Time.time);
 
 		_material.SetFloat(DISSOLVE_AMOUNT, 0f);
 		_material.SetColor(EMISSION_COLOR, Color.black);

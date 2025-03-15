@@ -1700,7 +1700,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4195535969837648465
 Transform:
   m_ObjectHideFlags: 0
@@ -1756,7 +1756,6 @@ MonoBehaviour:
   _enemyAttackMonoBehaviour: {fileID: 597593559272414011}
   _dissolveRenderer: {fileID: 7125434475003762138}
   _deadParticle: {fileID: 7253020140021985861}
-  _dissolveTime: 1
 --- !u!195 &3987218191405196165
 NavMeshAgent:
   m_ObjectHideFlags: 0

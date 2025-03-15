@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class EnemySpawnMachine : MonoBehaviour
 {
-    [SerializeField] private float _spawnTimer;
+    [SerializeField][Header("最多只會生幾隻怪")] private int _canSpawnAmount;
+    [SerializeField][Header("場上最大怪物數量")] private int _allowSceneEnemyAmount;
+    [SerializeField][Header("每幾秒生一隻怪")] private float _spawnTimer;
+
     [SerializeField] private EnemyDataSO _enemyDataSO;
     [SerializeField] private GameObject _spawnPrefab;
     [SerializeField] private GameObject _lockWallPrefab;
@@ -41,11 +44,20 @@ public class EnemySpawnMachine : MonoBehaviour
     {
         Transform spawnTransform;
 
+        int spawnCount = 0;
+
         while(true)
         {
+            // 在場上數量少於一定數量才繼續生怪
+            yield return new WaitUntil(() => EnemyManager.Instance.GetEnemyControllerCount() < _allowSceneEnemyAmount);
+
             spawnTransform =  _spawnTransformArray[Random.Range(0, _spawnTransformArray.Length)];
-            _enemySpawnRaycast.SetEndPoint(spawnTransform);
+            _enemySpawnRaycast.SetEndPoint(spawnTransform, _spawnTimer);
             EnemyManager.Instance.SpawnEnemy(_spawnPrefab, spawnTransform, _spawnTimer);
+
+            // 當該物件生超過一定次數, 就不在繼續生成怪物
+            spawnCount++;
+            if(spawnCount > _canSpawnAmount) break;
 
             yield return new WaitForSeconds(_spawnTimer);
         }

@@ -22,10 +22,11 @@ public class EnemySpawnRaycast : MonoBehaviour
         _startVector3 = _startPoint.position + Vector3.up * 2f;
     }
 
-    public void SetEndPoint(Transform endTransform)
+    public void SetEndPoint(Transform endTransform, float closeTimer)
     {
         _endPoint = endTransform;
-        StartCoroutine(EndRaycastCoroutine(2.5f));
+        Debug.Log("CloseTimer = " + closeTimer);
+        StartCoroutine(EndRaycastCoroutine(closeTimer-0.2f));
 
         if (_startPoint == null || _endPoint == null) return;
 
