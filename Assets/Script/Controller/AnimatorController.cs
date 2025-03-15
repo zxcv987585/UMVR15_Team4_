@@ -30,10 +30,27 @@ public class AnimatorController : MonoBehaviour
             player.aimState.OnAim += Aim;
             player.aimState.OnAimMove += AimMove;
             player.OnHit += Hit;
+            player.OnGunHit += GunHit;
+            player.CriticalGunHit += CriticalGunHit;
             health.OnDead += Dead;
             health.OnCriticalDamage += CriticalDamage;
             health.PlayerRivive += Rivive;
         }
+    }
+
+    private void CriticalGunHit()
+    {
+        if (isDead) return;
+        animator.SetLayerWeight(0, 1);
+        animator.SetLayerWeight(1, 0);
+        animator.SetBool("IsAim", false);
+        animator.CrossFade("CriticalDamage", 0f, 0);
+    }
+
+    private void GunHit()
+    {
+        if (isDead) return;
+        animator.SetTrigger("GunHit");
     }
 
     private void Rivive()
