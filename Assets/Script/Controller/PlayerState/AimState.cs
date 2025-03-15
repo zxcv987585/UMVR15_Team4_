@@ -16,7 +16,7 @@ public class AimState : PlayerState
 
     public override void Enter()
     {
-        if (player.IsDie) return;
+        if (player.IsDie || player.IsRivive) return;
 
         weaponManager.SwitchWeapon(WeaponManager.WeaponType.Gun);
         OnAim?.Invoke(true);
@@ -26,7 +26,7 @@ public class AimState : PlayerState
 
     public override void Update()
     {
-        if (player.IsHit || player.IsCriticalHit || player.IsRivive)
+        if (player.IsHit || player.IsCriticalHit || player.IsRivive || player.IsDie)
         {
             return;
         }

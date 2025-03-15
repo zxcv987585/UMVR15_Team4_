@@ -863,6 +863,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 548413006940239899, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
+      propertyPath: PPRecoveryRate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1571570507611820236, guid: 65047152edc854af8b95f7dce9c537db, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -11996,7 +12000,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 956855827222649765, guid: 822c50a77a272c741ac920512cc39a68, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 1920
+      value: 1792
       objectReference: {fileID: 0}
     - target: {fileID: 2959401144693029760, guid: 822c50a77a272c741ac920512cc39a68, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12101,7 +12105,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2485181296435086205, guid: 6a57e29c6d3d46c40b8f63850e094c74, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 1920
+      value: 1792
       objectReference: {fileID: 0}
     - target: {fileID: 7397398975311410844, guid: 6a57e29c6d3d46c40b8f63850e094c74, type: 3}
       propertyPath: m_Name

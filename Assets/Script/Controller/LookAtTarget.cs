@@ -18,6 +18,7 @@ public class LookAtTarget : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (player.IsDie) return;
 
         if (player.IsAiming)
         {
