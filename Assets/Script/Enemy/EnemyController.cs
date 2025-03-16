@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	[SerializeField] private EnemyDataSO _enemyDataSO;
 	[SerializeField] private EnemyAnimatorController _enemyAnimatorController;
 	[SerializeField] private MonoBehaviour _enemyAttackMonoBehaviour;
+	[SerializeField] private GameObject _dropPrefab;
 	private IEnemyAttack _enemyAttack;
 	private EnemyState _enemyState;
 
@@ -398,6 +399,9 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_dissolveTime = 1f;
 		_navMeshAgent.enabled = false;
 		_isInit = true;
+
+		if(_dropPrefab != null)
+			Instantiate(_dropPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
 
 		// 待死亡動畫結束後, 讓物件池回收自己
 		EnemyManager.Instance.RecycleEnemy(gameObject);
