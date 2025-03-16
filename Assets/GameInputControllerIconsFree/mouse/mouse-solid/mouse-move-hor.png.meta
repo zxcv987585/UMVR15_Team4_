@@ -3,7 +3,7 @@ guid: 143efcb8b14d41343990b168db6db89d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 12
+  serializedVersion: 13
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -121,7 +121,133 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: mouse-move-hor_0
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 216
+        width: 89
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1174925c724c06741ad7d3a5812ecf83
+      internalID: -1959306001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mouse-move-hor_1
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 272
+        width: 129
+        height: 184
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3287851061090fd428900a1c3448be44
+      internalID: -1152846256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mouse-move-hor_2
+      rect:
+        serializedVersion: 2
+        x: 236
+        y: 303
+        width: 39
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76f476724a42cff40913d75775302a60
+      internalID: -1164227216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mouse-move-hor_3
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 272
+        width: 129
+        height: 184
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0da0e6316d311a444b4b888c1f0875d7
+      internalID: -454139901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mouse-move-hor_4
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 215
+        width: 89
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9367e0dcadce684e9a4d24bd7f16b7a
+      internalID: -1673212815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mouse-move-hor_5
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 56
+        width: 274
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 814ca7554c2df0447af9ac3469d2fe54
+      internalID: -1793865095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -132,7 +258,13 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      mouse-move-hor_0: -1959306001
+      mouse-move-hor_1: -1152846256
+      mouse-move-hor_2: -1164227216
+      mouse-move-hor_3: -454139901
+      mouse-move-hor_4: -1673212815
+      mouse-move-hor_5: -1793865095
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
