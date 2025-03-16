@@ -70,8 +70,6 @@ public class AnimatorController : MonoBehaviour
         if (isDead) return;
         isDead = true;
         animator.Play("Die");
-
-        health.OnDead -= Dead;
     }
 
     private void AimMove(float moveX, float moveY)

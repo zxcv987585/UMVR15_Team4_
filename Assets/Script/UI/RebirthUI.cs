@@ -23,10 +23,9 @@ public class RebirthUI : MonoBehaviour
         StartCoroutine(RebirthUIAnimation());
     }
 
-    //等待一秒後撥放死亡視窗畫面
     private IEnumerator RebirthUIAnimation()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.8f);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         gameObject.GetComponent<RebirthUI>().openAction.Invoke();

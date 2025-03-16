@@ -44,6 +44,7 @@ public class BattleUIManager : MonoBehaviour
         health.OnHeal += ChangeHPStatus;
         health.OnPPChanged += playerMaxPPupdate;
         health.OnHealPP += ChangePPStatus;
+        health.PlayerRivive += playerMaxHealthupdate;
         levelSystem.PlayerLevelup += playerMaxHealthupdate;
 
         currentHPText.text = health.GetMaxHealth().ToString();
