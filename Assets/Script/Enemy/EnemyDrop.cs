@@ -47,6 +47,7 @@ public class EnemyDrop : MonoBehaviour
                         if(dropWeight.itemData.itemID == itemData.itemID)
                         {
                             itemData.itemNum++;
+                            InventoryManager.instance.RefreshUI();
                             break;
                         }
                     }
