@@ -7,59 +7,40 @@ public class DialogueTake : MonoBehaviour
     public TextMeshProUGUI TextComponent;
     public string[] Lines;
     public float TextSpeed;
+    public float WaitForNextLine;
 
     private int Index;
 
-    // Start is called before the first frame update
     void Start()
     {
         TextComponent.text = string.Empty;
-        StartDialogue();
+
+        StartCoroutine(DisplayDialogue());
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator DisplayDialogue()
     {
-        if (Input.GetKeyDown(KeyCode.K))
+        for(Index = 0; Index < Lines.Length; Index++)
         {
-            if (TextComponent.text == Lines[Index])
+            yield return StartCoroutine(TypeLine(Lines[Index]));
+
+            if (Index < Lines.Length - 1) 
             {
-                NextLine();
-            }
-            else
-            {
-                StopAllCoroutines();
-                TextComponent.text = Lines[Index];
+                yield return new WaitForSeconds(WaitForNextLine);
+                TextComponent.text = string.Empty;
             }
         }
+
+        yield return new WaitForSeconds(7f);
+        gameObject.SetActive(false);
     }
 
-    void StartDialogue()
+    IEnumerator TypeLine(string line)
     {
-        Index = 0;
-        StartCoroutine(TypeLine());
-    }
-
-    IEnumerator TypeLine()
-    {
-        foreach(char c in Lines[Index].ToCharArray())
+        foreach(char c in line.ToCharArray())
         {
             TextComponent.text += c;
             yield return new WaitForSeconds(TextSpeed);
-        }
-    }
-
-    void NextLine()
-    {
-        if (Index < Lines.Length - 1)
-        {
-            Index++;
-            TextComponent.text = string.Empty;
-            StartCoroutine(TypeLine());
-        }
-        else
-        {
-            gameObject.SetActive(false);
         }
     }
 }
