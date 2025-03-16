@@ -15,11 +15,11 @@ public class ItemDropper : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        //½T«O©ì¦²ª««~¦s¦b
+        //½T«O©E²ª««~¦s¦b
         ItemDragger dragger = eventData.pointerDrag.GetComponent<ItemDragger>();
         if (dragger == null) return;
 
-        //§PÂ_©ì¦²¥Ø¼Ð¬O§_¬°§Ö±¶Äæ¥Bª«¥ó¬O§_¬°Item
+        //§PÂ_©E²¥Ø¼Ð¬O§_¬°§Ö±¶Äæ¥Bª«¥ó¬O§_¬°Item
         if (transform.CompareTag("HotbarSlots") && dragger.gameObject.CompareTag("Item"))
         {
             int slotIndex = transform.GetSiblingIndex();

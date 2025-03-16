@@ -4588,7 +4588,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -5931,8 +5931,7 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 114630083077725508, guid: 99dd25f7aec14f24194a7f0eb3c4507c, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1719407063193124, guid: 99dd25f7aec14f24194a7f0eb3c4507c, type: 3}
     m_AddedGameObjects: []
@@ -6693,7 +6692,7 @@ GameObject:
   - component: {fileID: 1234999166}
   - component: {fileID: 1234999168}
   - component: {fileID: 1234999167}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Digger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7320,7 +7319,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 625, y: 250}
+  m_AnchoredPosition: {x: 0, y: -280}
   m_SizeDelta: {x: -1350, y: -900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1318415898
@@ -7370,7 +7369,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1318415896}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eab66051ec3e444290016115673699e, type: 3}
+  m_Script: {fileID: 11500000, guid: 55588e153a9e6c04884d507c5dec1976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   TextComponent: {fileID: 2130517577}
@@ -7379,7 +7378,7 @@ MonoBehaviour:
   - "\u96D6\u7136\u4F60\u662F\u6211\u5011\u7DCA\u6025\u627E\u4F86\u7684\u9867\u50AD\u5175\uFF0C\u4F46\u6211\u5011\u63D0\u4F9B\u7684\u6230\u9B25\u670D\u53EF\u4E0D\u4FBF\u5B9C\uFF0C\u52D9\u5FC5\u59A5\u5584\u4F7F\u7528\u3002"
   - "\u4E0D\u904E\u6211\u807D\u8AAA\u4F60\u4EE5\u524D\u662F\u500B\u6230\u9B25\u5230\u8166\u888B\u58DE\u6389\u7684\u50AD\u5175\uFF0C\u9019\u5C0D\u4EFB\u52D9\u4F86\u8AAA\u662F\u597D\u4E8B\u3002"
   - "\u7E3D\u4E4B\u4F4D\u65BC\u908A\u5883\u7684\u5BE6\u9A57\u5712\u5340\u51FA\u73FE\u5927\u91CF\u5BE6\u9A57\u9AD4\u5916\u6D29\u7684\u4E8B\u4EF6\uFF0C\u8A73\u7D30\u6D29\u6F0F\u4E8B\u4EF6\u7684\u524D\u56E0\u5F8C\u679C\u6211\u4E5F\u4E0D\u662F\u5F88\u6E05\u695A\uFF0C\u9EBB\u7169\u4F60\u5148\u53BB\u770B\u770B\u72C0\u6CC1\u3002"
-  TextSpeed: 0.05
+  TextSpeed: 0
 --- !u!1001 &1326433419
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11275,7 +11274,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 700, y: 0}
+  m_AnchoredPosition: {x: 700, y: 451}
   m_SizeDelta: {x: -1400, y: -900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1824790186
@@ -11293,9 +11292,9 @@ MonoBehaviour:
   TextComponent: {fileID: 815080519}
   Lines:
   - "\u79FB\u52D5\u6ED1\u9F20\u4F86\u89C0\u5BDF\u56DB\u5468"
-  - "WASD\u79FB\u52D5\uFF0C\u6309\u4E0BShift\u53EF\u4EE5\u9032\u5165\u885D\u523A"
-  - "\u7A7A\u767D\u9375\u53EF\u4EE5\u77AC\u79FB\u9583\u907F"
-  TextSpeed: 0.05
+  - "\u6309\u4E0BWASD\u79FB\u52D5\uFF0C\u6309\u4E0BShift\u53EF\u4EE5\u9032\u5165\u885D\u523A"
+  - "\u6309\u4E0BSpace\u53EF\u4EE5\u77AC\u79FB\u9583\u907F"
+  TextSpeed: 0
 --- !u!114 &1824790187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11309,7 +11308,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.48235294}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
