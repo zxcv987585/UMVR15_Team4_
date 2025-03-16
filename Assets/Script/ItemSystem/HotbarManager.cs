@@ -34,7 +34,7 @@ public class HotbarManager : MonoBehaviour
 
         if (previousSlot != null)
         {
-            //²M°£­ì¥»§Ö±¶Äæ¤ºªº¹D¨ã
+            //²M°£­E»§Ö±¶Äæ¤ºªº¹D¨E
             previousSlot.ClearSlot();
         }
 

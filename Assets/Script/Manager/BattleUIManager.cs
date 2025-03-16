@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -28,6 +29,10 @@ public class BattleUIManager : MonoBehaviour
 
     private Coroutine costAnimationCoroutine;
 
+    [SerializeField] private Image onDotRedImage;
+    private Coroutine onDotEffectCoroutine;
+    private bool isDotEffectPlaying = false;
+
     private void Awake()
     {
         Instance = this;
@@ -44,12 +49,15 @@ public class BattleUIManager : MonoBehaviour
         health.OnHeal += ChangeHPStatus;
         health.OnPPChanged += playerMaxPPupdate;
         health.OnHealPP += ChangePPStatus;
+        health.PlayerRivive += playerMaxHealthupdate;
         levelSystem.PlayerLevelup += playerMaxHealthupdate;
 
         currentHPText.text = health.GetMaxHealth().ToString();
         maxHPText.text = health.GetMaxHealth().ToString();
         currentPPText.text = health.GetMaxPP().ToString();
         maxPPText.text = health.GetMaxPP().ToString();
+
+        health.OnDot += OnDotUI;
     }
 
     private void Health_OnHeal()
@@ -141,5 +149,47 @@ public class BattleUIManager : MonoBehaviour
     public void ShowUI()
     {
         battleCanvas.enabled = true;
+    }
+
+    private void OnDotUI()
+    {
+        if (isDotEffectPlaying == false)
+        {
+            StartCoroutine(OnDotUIAnimation());
+        }
+    }
+    private IEnumerator OnDotUIAnimation()
+    {
+        isDotEffectPlaying = true;
+        onDotRedImage.gameObject.SetActive(true);
+
+        float duration = 0.5f;
+        float timer = 0f;
+        CanvasGroup canvasGroup = onDotRedImage.GetComponent<CanvasGroup>();
+        canvasGroup.alpha = 0f;
+        //Color color = onDotRedImage.color;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Lerp(0f, 1f, timer / duration);
+            //onDotRedImage.color = color;
+            yield return null;
+        }
+        canvasGroup.alpha = 1f;
+        yield return new WaitForSeconds(0.125f);
+
+        timer = 0f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Lerp(1f, 0f, timer / duration);
+            //onDotRedImage.color = color;
+            yield return null;
+        }
+        canvasGroup.alpha = 0f;
+
+        onDotRedImage.gameObject.SetActive(false);
+        isDotEffectPlaying = false;
     }
 }
