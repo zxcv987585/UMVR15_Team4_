@@ -56,7 +56,9 @@ public class EnemyController : MonoBehaviour, IEnemy
 		StartCoroutine(DelayEnableNavMeshAgent());
 		
 		EnemyManager.Instance.AddToUpdateList(this);
-		StartCoroutine(StartDissolveCoroutine(_dissolveTime));
+
+		// 生成動畫, 我也不曉得為啥要 /2 才會正常
+		StartCoroutine(StartDissolveCoroutine(_dissolveTime/2));
 	}
 
 
@@ -407,25 +409,24 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_material.SetColor(EMISSION_COLOR, Color.cyan);
 		_material.SetColor(RIM_COLOR, Color.cyan);
 
-		Debug.Log("Start Time.time =" + Time.time);
-
 		float timer = 0f;
+
+		//Debug.Log("Start Time = " + Time.time);
+
 		while(timer < showTimer)
 		{
 			// 如果目前 isPause 為 true, 則暫停更新 Coroutine
 			yield return new WaitUntil(() => !IsPause);
+
+			//Debug.Log("Timer = " + timer);
 		
-			//timer += Time.deltaTime;
+			timer += Time.deltaTime;
 			_material.SetFloat(DISSOLVE_AMOUNT, 1 - timer/showTimer);
 
-			//Debug.Log("time.deltatime is = " + Time.deltaTime);
-
-			yield return new WaitForSeconds(0.1f);
-			timer += 0.1f;
+			yield return null;
 		}
 
-		// Debug.Log("timer = " + timer);
-		Debug.Log("End Time.time =" + Time.time);
+		//Debug.Log("End Time = " + Time.time);
 
 		_material.SetFloat(DISSOLVE_AMOUNT, 0f);
 		_material.SetColor(EMISSION_COLOR, Color.black);

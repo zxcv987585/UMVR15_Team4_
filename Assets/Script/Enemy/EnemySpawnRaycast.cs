@@ -25,7 +25,7 @@ public class EnemySpawnRaycast : MonoBehaviour
     public void SetEndPoint(Transform endTransform, float closeTimer)
     {
         _endPoint = endTransform;
-        Debug.Log("CloseTimer = " + closeTimer);
+
         StartCoroutine(EndRaycastCoroutine(closeTimer-0.2f));
 
         if (_startPoint == null || _endPoint == null) return;
@@ -33,8 +33,6 @@ public class EnemySpawnRaycast : MonoBehaviour
         // 計算雷射方向與長度
         Vector3 direction = _endPoint.position - _startVector3;
         float laserLength = direction.magnitude;  // 計算距離
-
-        Debug.Log("laserLength = " + laserLength);
 
         // 設定粒子系統長度 (改變 Y 軸)
         _mainModule.startSizeX = 0.2f;  // 固定寬度
