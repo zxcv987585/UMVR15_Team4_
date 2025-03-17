@@ -32,7 +32,8 @@ public class AnimatorController : MonoBehaviour
             player.OnHit += Hit;
             player.OnGunHit += GunHit;
             player.CriticalGunHit += CriticalGunHit;
-            health.OnDead += Dead;
+            health.HaveReviveItemDead += Dead;
+            health.NoReviveItemDead += Dead;
             health.OnCriticalDamage += CriticalDamage;
             health.PlayerRivive += Rivive;
         }

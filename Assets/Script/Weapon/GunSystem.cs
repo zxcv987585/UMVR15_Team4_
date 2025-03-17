@@ -7,7 +7,7 @@ public class GunSystem : MonoBehaviour
     public int magazineSize, bulletsPerTap;
     public bool allowButtonHold;
     private int bulletLeft, bulletShot;
-    private float GunShotPP = 6f;
+    private float GunShotPP = 4f;
 
     //射擊判定
     private bool shooting, readyToShoot, reloading;

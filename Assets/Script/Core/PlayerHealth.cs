@@ -33,7 +33,10 @@ public class PlayerHealth : MonoBehaviour
     public event Action OnCriticalDamage;
 
     //玩家死亡時要觸發的委派事件
-    public event Action OnDead;
+    public event Action HaveReviveItemDead;
+
+    //玩家死亡時要觸發的委派事件
+    public event Action NoReviveItemDead;
 
     //玩家回血時要觸發的委派事件
     public event Action OnHeal;
@@ -50,6 +53,8 @@ public class PlayerHealth : MonoBehaviour
     //玩家復活事件
     public event Action PlayerRivive;
 
+    private bool playerHasReviveItem = false;
+
     private bool Isdead = false;
 
     private void Awake()
@@ -57,6 +62,16 @@ public class PlayerHealth : MonoBehaviour
         player = GetComponent<PlayerController>();
         levelSystem = GetComponent<LevelSystem>();
         levelSystem.PlayerLevelup += NewMaxHealth;
+    }
+
+    private void OnEnable()
+    {
+        ItemUseManager.ReviveItemFound += HandleReviveItemFound;
+    }
+
+    private void OnDisable()
+    {
+        ItemUseManager.ReviveItemFound -= HandleReviveItemFound;
     }
 
     private void Update()
@@ -68,6 +83,12 @@ public class PlayerHealth : MonoBehaviour
             CurrentPP = MathF.Floor(nextPP);
             CurrentPP = Mathf.Min(nextPP, MaxPP);
         }
+    }
+
+
+    private void HandleReviveItemFound(ItemData reviveitem)
+    {
+        playerHasReviveItem = (reviveitem != null);
     }
 
     //使用PP系統
@@ -227,9 +248,18 @@ public class PlayerHealth : MonoBehaviour
 
         if (CurrentHealth <= 0)
         {
-            Isdead = true;
-            OnDead?.Invoke();
-            EnemyDead?.Invoke(transform);
+            if (playerHasReviveItem)
+            {
+                Isdead = true;
+                HaveReviveItemDead?.Invoke();
+                EnemyDead?.Invoke(transform);
+            }
+            else
+            {
+                Isdead = true;
+                NoReviveItemDead?.Invoke();
+                EnemyDead?.Invoke(transform);
+            }
         }
     }
 

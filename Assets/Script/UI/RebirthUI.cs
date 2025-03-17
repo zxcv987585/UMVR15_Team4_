@@ -10,12 +10,14 @@ public class RebirthUI : MonoBehaviour
     public UnityEvent openAction;
     public UnityEvent closeAction;
 
+    public Inventory myBag;
+
     private void Start()
     {
         playerHealth = FindObjectOfType<PlayerHealth>();
         if (playerHealth != null)
         {
-            playerHealth.OnDead += ShowRebirthUI;
+            playerHealth.HaveReviveItemDead += ShowRebirthUI;
         }
     }
     private void ShowRebirthUI()
@@ -33,6 +35,18 @@ public class RebirthUI : MonoBehaviour
 
     public void RevivePlayer()
     {
+        if (myBag != null)
+        {
+            ItemData reviveItem = myBag.itemList.Find(item => item.itemID == 5);
+            if (reviveItem != null)
+            {
+                reviveItem.itemNum--;
+                if(reviveItem.itemNum <= 0)
+                {
+                    myBag.itemList.Remove(reviveItem);
+                }
+            }
+        }
         if (playerHealth != null)
         {
             playerHealth.Rivive();

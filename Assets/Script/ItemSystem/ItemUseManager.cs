@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class ItemUseManager : MonoBehaviour
 {
@@ -8,11 +9,27 @@ public class ItemUseManager : MonoBehaviour
     private PlayerController player;
     private PlayerHealth health;
 
+    public delegate void ReviveItemHandler(ItemData reviveitem);
+    public static event ReviveItemHandler ReviveItemFound;
+
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         health = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+
+        CheckReviveItemInInventory();
     }
+
+    private void CheckReviveItemInInventory()
+    {
+        ItemData reviveitem = myBag.itemList.Find(item => item.itemID == 5);
+        if (reviveitem != null) 
+        {
+            Debug.Log("檢查到背包中有復活道具");
+            ReviveItemFound?.Invoke(reviveitem);
+        }
+    }
+
     public void SetupItemAction(ItemData item)
     {
         //檢查道具欄位
@@ -51,9 +68,7 @@ public class ItemUseManager : MonoBehaviour
             case 5: //5.Rebitrh
                 item.itemAction = (ItemData data) =>
                 {
-                    Debug.Log($"Use {data.itemName}");
-                    if(player.IsDie)
-                    health.Rivive();
+                    Debug.Log($"復活道具無法直接使用");
                 };
                 break;
         }
