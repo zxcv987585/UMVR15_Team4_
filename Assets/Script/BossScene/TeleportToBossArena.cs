@@ -81,6 +81,8 @@ public class TeleportToBossArena : MonoBehaviour
     {
         if (isUseable == true && Input.GetKeyDown(KeyCode.P))
         {
+            AudioManager.Instance.PlaySound("Teleport", transform.position, false, 4f);
+            
             StartCoroutine(TeleportSequence());
             isUseable = false;
         }

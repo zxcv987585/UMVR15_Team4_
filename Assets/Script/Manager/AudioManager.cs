@@ -79,7 +79,7 @@ public class AudioManager : MonoBehaviour
 		}
 	}
 
-	public void PlaySound(string key, Vector3 position, bool isLoop = false)
+	public void PlaySound(string key, Vector3 position, bool isLoop = false, float playTimer = 0f)
 	{
 		// 檢查輸入的 key 是否正確
 		AudioClip audioClip = _audioLibrarySO.GetAudioClip(key);
@@ -108,7 +108,15 @@ public class AudioManager : MonoBehaviour
 		audioSource.loop = isLoop;
 		audioSource.Play();
 
-		StartCoroutine(RecycleAudioToPool(key, audioSource, audioClip.length));
+		if(playTimer == 0f)
+		{
+			StartCoroutine(RecycleAudioToPool(key, audioSource, audioClip.length));
+		}
+		else
+		{
+			StartCoroutine(RecycleAudioToPool(key, audioSource, playTimer));
+		}
+		
 	}
 
 	public void StopSound(string key)
@@ -121,6 +129,7 @@ public class AudioManager : MonoBehaviour
 	{
 		yield return new WaitForSeconds(audioTime);
 
+		audioSource.Stop();
 		_audioPool.Enqueue(audioSource);
 	}
 

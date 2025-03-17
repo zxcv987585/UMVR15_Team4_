@@ -266,7 +266,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 				_isIdle = true;
                 break;
             case BossState.Walk:
-				AudioManager.Instance.PlaySound("BossWalk", transform.position);
+				AudioManager.Instance.PlaySound("BossWalk", transform.position, true, _attackCooldownTime);
 				StartCoroutine(ReadToAttackCoroutine());
 				break;
             case BossState.RunAttack:

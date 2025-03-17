@@ -50,6 +50,8 @@ public class RecoverFullHpPp : MonoBehaviour
             useParticle3.Play();
             health.Heal(1000);
             health.HealPP(1000);
+
+            AudioManager.Instance.PlaySound("Health", transform.position);
         }
     }
 }

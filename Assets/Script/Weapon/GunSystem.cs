@@ -68,6 +68,9 @@ public class GunSystem : MonoBehaviour
             return;
         }
 
+        AudioManager.Instance.PlaySound("Shoot", transform.position);
+        AudioManager.Instance.PlaySound("Shoot", transform.position);
+
         readyToShoot = false;
 
         Ray cameraRay = Maincamera.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
