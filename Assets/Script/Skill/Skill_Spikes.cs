@@ -15,6 +15,7 @@ public class Skill_Spikes : BaseSkill
     {
         yield return new WaitForSeconds(delay);
 
+        AudioManager.Instance.PlaySound("Sprike", transform.position);
         transform.position = FindObjectOfType<PlayerController>()?.transform.position ?? Vector3.zero;
 
         skillParticleSystem.Play();

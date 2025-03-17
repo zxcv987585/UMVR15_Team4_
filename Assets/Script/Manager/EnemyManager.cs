@@ -134,7 +134,7 @@ public class EnemyManager : MonoBehaviour
 
         enemyGameObject.transform.position = spawnTransform.position;
         enemyGameObject.transform.rotation = spawnTransform.rotation;
-        enemyGameObject.GetComponent<EnemyController>().SetDissolveTime(spawnDissolveTime);
+        enemyGameObject.GetComponent<EnemyController>()?.SetDissolveTime(spawnDissolveTime);
         enemyGameObject.SetActive(true);
     }
 

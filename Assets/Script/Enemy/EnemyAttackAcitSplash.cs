@@ -15,6 +15,7 @@ public class EnemyAttackAcitSplash : MonoBehaviour, IEnemyAttack
     private void Start()
     {
         StartCoroutine(IntervalAttack());
+        AudioManager.Instance.PlaySound("AcitSplash", transform.position);
     }
 
     public void ResetHasAttack()

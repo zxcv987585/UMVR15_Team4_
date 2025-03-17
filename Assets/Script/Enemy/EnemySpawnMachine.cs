@@ -65,11 +65,15 @@ public class EnemySpawnMachine : MonoBehaviour
 
     private void DamageHandle()
     {
+        AudioManager.Instance.PlaySound("SpawnMachineDamage", transform.position);
+
         BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up * 2f, _health.LastDamage);
     }
 
     private void DeadHandle()
     {
+        AudioManager.Instance.PlaySound("EggyDead", transform.position);
+
         StopCoroutine(_spawnCoroutine);
         _lockWallPrefab?.SetActive(false);
 

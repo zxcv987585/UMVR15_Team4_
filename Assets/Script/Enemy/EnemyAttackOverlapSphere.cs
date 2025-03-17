@@ -15,6 +15,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
     private bool _hasInit = false;
     private bool _hasAttack;
     private const string PLAYER = "Player";
+    private const string EMISSION_COLOR = "_EmissionColor";
 
     private void OnEnable()
     {
@@ -42,7 +43,8 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
     {
         if(!_hasAttack)
         {
-            StartCoroutine(DelayBombAttack(bombTimer));
+            AudioManager.Instance.PlaySound("EggyAttack", transform.position);
+            StartCoroutine(DelayBombAttack(bombTimer/2));
             _hasAttack = true;
         }
     }
@@ -67,7 +69,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
             // 計算閃爍 (sin 波動)
             float emissionStrength = (Mathf.Sin(Time.time * frequency * Mathf.PI * 2) + 1f) / 2f;
             
-            material.SetColor("_EmissionColor", Color.red * emissionStrength);
+            material.SetColor(EMISSION_COLOR, Color.red * emissionStrength);
             
             timer += Time.deltaTime;
         
@@ -76,7 +78,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
         
         if(!enemyController.Health.IsDead())
         {
-            material.SetColor("_EmissionColor", Color.red);
+            material.SetColor(EMISSION_COLOR, Color.red);
             enemyController.Health.TakeDamage(999);
         }
     }

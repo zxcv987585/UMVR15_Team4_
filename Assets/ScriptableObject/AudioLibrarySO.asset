@@ -15,8 +15,12 @@ MonoBehaviour:
   audioClipObjectList:
   - key: ButtonSelect
     audioClip: {fileID: 8300000, guid: 49ea5f5ab1e7efb479338627abab5e7f, type: 3}
+  - key: ButtonClick
+    audioClip: {fileID: 8300000, guid: 09013411bb77f754a9397dc79275c526, type: 3}
   - key: BackGroundMusic
     audioClip: {fileID: 8300000, guid: 04c724157547df043b6f2d03c461f009, type: 3}
+  - key: BattleBackGoundMusic
+    audioClip: {fileID: 8300000, guid: 1f37ad3cd06bc2b449a925fa87f439ff, type: 3}
   - key: SpiderAttack
     audioClip: {fileID: 8300000, guid: f09ff19b31891bc48ad6750fc20e4a84, type: 3}
   - key: SpiderDamage
@@ -24,17 +28,17 @@ MonoBehaviour:
   - key: SpiderDead
     audioClip: {fileID: 8300000, guid: 419269ee1e65c1348b42a358d8b7e8f0, type: 3}
   - key: LangsatAttack
-    audioClip: {fileID: 8300000, guid: 419269ee1e65c1348b42a358d8b7e8f0, type: 3}
+    audioClip: {fileID: 8300000, guid: 9d8c19ed3a510174898f026d0f64fe04, type: 3}
   - key: LangsatDamage
-    audioClip: {fileID: 8300000, guid: 419269ee1e65c1348b42a358d8b7e8f0, type: 3}
+    audioClip: {fileID: 8300000, guid: c79a53fbca9708e45a2491e15a735e03, type: 3}
   - key: LangsatDead
-    audioClip: {fileID: 8300000, guid: 419269ee1e65c1348b42a358d8b7e8f0, type: 3}
+    audioClip: {fileID: 8300000, guid: 425440ff40ccbd24bb06505a86572110, type: 3}
   - key: EggyAttack
-    audioClip: {fileID: 8300000, guid: 9b343ffca9d1b844a9dc4b407ba501f7, type: 3}
+    audioClip: {fileID: 8300000, guid: aca66d54fa078934989a417670ec9bd9, type: 3}
   - key: EggyDamage
     audioClip: {fileID: 8300000, guid: f14926eb16d3cd349a2d892b65729135, type: 3}
   - key: EggyDead
-    audioClip: {fileID: 8300000, guid: 419269ee1e65c1348b42a358d8b7e8f0, type: 3}
+    audioClip: {fileID: 8300000, guid: 11ddc90762371b740bb12babf6f8f68f, type: 3}
   - key: AcitSplash
     audioClip: {fileID: 8300000, guid: 334b3eedab45c5c4f9cea7cb1641916b, type: 3}
   - key: BossWalk
@@ -45,9 +49,31 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 155e814134cadad4fa665b987bda1264, type: 3}
   - key: BossAttackShoot
     audioClip: {fileID: 8300000, guid: 03916b570cbb1364a9a8c8d9d8e2d2d4, type: 3}
-  - key: BossDeath
+  - key: BossDead
     audioClip: {fileID: 8300000, guid: bd793e983e38da94db9b4612e30ac9ca, type: 3}
   - key: FlySword
     audioClip: {fileID: 8300000, guid: 8f6552d665d7a3e4299665d69b12c5d1, type: 3}
   - key: Sprike
     audioClip: {fileID: 8300000, guid: bf833560d4209f443a845e0ec3875d45, type: 3}
+  - key: Power
+    audioClip: {fileID: 8300000, guid: fe4f5d775869510419e1411676b4393b, type: 3}
+  - key: Power2
+    audioClip: {fileID: 8300000, guid: bf4ad8e344f4b1c4b9caddc70e8f4700, type: 3}
+  - key: MenuOpen
+    audioClip: {fileID: 8300000, guid: 6f541b642afffd14aae9bc5158905a6f, type: 3}
+  - key: GoGoGo
+    audioClip: {fileID: 8300000, guid: 4589f57564852fe40bf34086d1aab93e, type: 3}
+  - key: SpawnMachineDamage
+    audioClip: {fileID: 8300000, guid: ca3290d7cd75e0e4590989b44bbe0af9, type: 3}
+  - key: ElectricSpark
+    audioClip: {fileID: 8300000, guid: fee6310271402614c8882f4c08755f9b, type: 3}
+  - key: EquipSkill
+    audioClip: {fileID: 8300000, guid: 082f661c194f2b6429b46690be6ed5ef, type: 3}
+  - key: MuchSword
+    audioClip: {fileID: 8300000, guid: 2bc6ad8c30dbe8342b041118d0b93617, type: 3}
+  - key: PlayerDamage
+    audioClip: {fileID: 8300000, guid: d7a2878efee94c147922790b8d852860, type: 3}
+  - key: PlayerWalk
+    audioClip: {fileID: 8300000, guid: 63098bd404d58c5449392414deb796de, type: 3}
+  - key: Teleport
+    audioClip: {fileID: 8300000, guid: 908c6163eab14944fba0ef1815c32fdb, type: 3}

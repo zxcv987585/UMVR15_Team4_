@@ -28,6 +28,7 @@ public class Skill_Judgement_Cut : BaseSkill
 
     public override void SkillAbility()
     {
+        AudioManager.Instance.PlaySound("ElectricSpark", transform.position);
         postProcessVolume.isGlobal = true;
         //�ܷt
         if (postProcessVolume.profile.TryGetSettings(out colorGrading))
@@ -67,6 +68,7 @@ public class Skill_Judgement_Cut : BaseSkill
             value => colorGrading.colorFilter.value = value,
             EasyInOut.EaseOut));
 
+            AudioManager.Instance.PlaySound("MuchSword",transform.position);
             colorGrading.postExposure.overrideState = true;
 
             StartCoroutine(easyInOut.ChangeValue(
@@ -88,6 +90,7 @@ public class Skill_Judgement_Cut : BaseSkill
         }
 
         yield return new WaitForSeconds(2f);
+        AudioManager.Instance.PlaySound("Power",transform.position);
         //�A�{�@�U�ե�
         if (postProcessVolume.profile.TryGetSettings(out colorGrading))
         {

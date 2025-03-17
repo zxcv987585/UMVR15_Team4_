@@ -38,6 +38,8 @@ public class TeleportToLoadScene : MonoBehaviour
     {
         if (isUseable == true && Input.GetKeyDown(KeyCode.P))
         {
+            AudioManager.Instance.PlaySound("Teleport", transform.position);
+            
             StartCoroutine(TeleportSequence());
             isUseable = false;
         }

@@ -6,16 +6,20 @@ public class AudioManager : MonoBehaviour
 {
 	public static AudioManager Instance {get; private set;}
 
-	[SerializeField] private AudioLibrarySO audioLibrarySO;
-	
-	[Range(0, 1)][SerializeField] private float mainVolume;
-	[Range(0, 1)][SerializeField] private float bgmVolume;
-	[Range(0, 1)][SerializeField] private float sfxVolume;
+	[SerializeField] private AudioLibrarySO _audioLibrarySO;
+	[Range(0, 1)][SerializeField] private float _mainVolume;
+	[Range(0, 1)][SerializeField] private float _bgmVolume;
+	[Range(0, 1)][SerializeField] private float _sfxVolume;
 
-	private AudioSource bgmAudioSource;
+	[SerializeField] private int _audioPoolSize;
+	private Queue<AudioSource> _audioPool = new Queue<AudioSource>();
+	private Dictionary<string, AudioSource> _nowPlayAudio;
+
+	private AudioSource _bgmAudioSource;
 
 	private void Awake()
 	{
+		// 單例模式
 		if(Instance != null && Instance != this)
 		{
 			Destroy(gameObject);
@@ -25,73 +29,120 @@ public class AudioManager : MonoBehaviour
         Instance = this;
 		DontDestroyOnLoad(gameObject);
 
-        bgmAudioSource = gameObject.AddComponent<AudioSource>();
+        _bgmAudioSource = gameObject.AddComponent<AudioSource>();
+
+		// 預先做好池子
+		for(int i = 0; i < _audioPoolSize; i++)
+		{
+			AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+			audioSource.playOnAwake = false;
+			_audioPool.Enqueue(audioSource);
+		}
 	}
 
 	private void Start()
 	{
-		mainVolume = GameDataManager.Instance.gameData.mainVolume;
-		bgmVolume = GameDataManager.Instance.gameData.bgmVolume;
-		sfxVolume = GameDataManager.Instance.gameData.sfxVolume;
+		// mainVolume = GameDataManager.Instance.gameData.mainVolume;
+		// bgmVolume = GameDataManager.Instance.gameData.bgmVolume;
+		// sfxVolume = GameDataManager.Instance.gameData.sfxVolume;
 
-        if (bgmAudioSource != null)
+        if (_bgmAudioSource != null)
 		{
             PlayBGM("BackGroundMusic");
         }
 	}
 
-	public void PlayBGM(string key, float volume = 0.5f)
+	private void OnValidate()
 	{
-		AudioClip audioClip = audioLibrarySO.GetAudioClip(key);
-
-		if(audioClip != null)
+		if(_bgmAudioSource != null)
 		{
-			if(bgmAudioSource.clip == audioClip) return;
-
-			bgmAudioSource.clip = audioClip;
-			bgmAudioSource.loop = true;
-			bgmAudioSource.volume = mainVolume * bgmVolume;
-			bgmAudioSource.Play();
-		}
-		else
-		{
-			Debug.LogError("AudioManager PlaySound 輸入的 Key 有錯");
+			_bgmAudioSource.volume = _mainVolume * _bgmVolume;
 		}
 	}
 
-	public void PlaySound(string key, Vector3 position, float volume = 0.5f)
+	public void PlayBGM(string key, float volume = 0.5f)
 	{
-		AudioClip audioClip = audioLibrarySO.GetAudioClip(key);
-		
+		AudioClip audioClip = _audioLibrarySO.GetAudioClip(key);
+
 		if(audioClip != null)
 		{
-			AudioSource.PlayClipAtPoint(audioClip, position, mainVolume * sfxVolume);
+			if(_bgmAudioSource.clip == audioClip) return;
+
+			_bgmAudioSource.clip = audioClip;
+			_bgmAudioSource.loop = true;
+			_bgmAudioSource.volume = _mainVolume * _bgmVolume;
+			_bgmAudioSource.Play();
 		}
 		else
 		{
-			Debug.LogError("AudioManager PlaySound 輸入的 Key 有錯");
+			Debug.Log("AudioManager PlaySound 輸入的 Key 有錯");
 		}
+	}
+
+	public void PlaySound(string key, Vector3 position, bool isLoop = false)
+	{
+		// 檢查輸入的 key 是否正確
+		AudioClip audioClip = _audioLibrarySO.GetAudioClip(key);
+
+		if(audioClip == null)
+		{
+			Debug.Log("AudioManager PlaySound 輸入的 Key 有錯, key 為" + key);
+			return;
+		}
+
+		AudioSource audioSource;
+
+		if(_audioPool.Count > 0)
+		{
+			audioSource = _audioPool.Dequeue();
+		}
+		else
+		{
+			audioSource = gameObject.AddComponent<AudioSource>();
+			audioSource.playOnAwake = false;
+		}
+
+		audioSource.transform.position = position;
+		audioSource.clip = audioClip;
+		audioSource.volume = _mainVolume * _sfxVolume;
+		audioSource.loop = isLoop;
+		audioSource.Play();
+
+		StartCoroutine(RecycleAudioToPool(key, audioSource, audioClip.length));
+	}
+
+	public void StopSound(string key)
+	{
+		
+	}
+
+	// 將 AudioSource 播完後, 回收進物件池中
+	private IEnumerator RecycleAudioToPool(string key, AudioSource audioSource, float audioTime)
+	{
+		yield return new WaitForSeconds(audioTime);
+
+		_audioPool.Enqueue(audioSource);
 	}
 
 	public void SetMainVolume(float mainVolume)
 	{
-		this.mainVolume = mainVolume;
-		bgmAudioSource.volume = mainVolume * bgmVolume;
+		_mainVolume = mainVolume;
+		_bgmAudioSource.volume = mainVolume * _bgmVolume;
 
 		GameDataManager.Instance.gameData.mainVolume = mainVolume;
 	}
 
 	public void SetBGMVolume(float bgmVolume)
 	{
-		this.bgmVolume = bgmVolume;
-		bgmAudioSource.volume = mainVolume * bgmVolume;
+		_bgmVolume = bgmVolume;
+		_bgmAudioSource.volume = _mainVolume * bgmVolume;
 
 		GameDataManager.Instance.gameData.bgmVolume = bgmVolume;
 	}
 
 	public void SetSFXVolume(float sfxVolume)
 	{
-		this.sfxVolume = sfxVolume;
+		_sfxVolume = sfxVolume;
 
 		GameDataManager.Instance.gameData.sfxVolume = sfxVolume;
 	}

@@ -22,6 +22,8 @@ public class PauseUI : MonoBehaviour
 
     public IEnumerator RunPauseUI()
     {
+        AudioManager.Instance.PlaySound("MenuOpen", Vector3.zero);
+
         //按下 TAB 開啟的方法
         if (isOpen == false)
         {

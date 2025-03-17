@@ -83,6 +83,9 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		
 		// 將 Boss 的 Update 也交給 EnemyManger 來管理
 		EnemyManager.Instance.AddToUpdateList(this);
+
+		// 切換 Boss 的 BGM
+		AudioManager.Instance.PlayBGM("BattleBackGoundMusic");
 	}
 	
 	public void EnemyUpdate()
@@ -105,19 +108,10 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	// 準備攻擊期間, 往玩家移動
 	private IEnumerator ReadToAttackCoroutine()
 	{
-		Debug.Log("123 transform.rotation = " + transform.rotation);
-		Debug.Log("123 NavMesh rotation = " + _navMeshAgent.transform.rotation);
-
 		_navMeshAgent.transform.position = transform.position;
 		_navMeshAgent.transform.rotation = transform.rotation;
 
-		Debug.Log("456 transform.rotation = " + transform.rotation);
-		Debug.Log("456 NavMesh rotation = " + _navMeshAgent.transform.rotation);
-
 		_navMeshAgent.isStopped = false;
-
-		Debug.Log("789 transform.rotation = " + transform.rotation);
-		Debug.Log("789 NavMesh rotation = " + _navMeshAgent.transform.rotation);
 
 		float timer = 0f;
 
@@ -139,8 +133,6 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	// 移動及旋轉至玩家方向
 	private void HandleMove()
 	{
-		Debug.Log("transform.rotation = " + transform.rotation);
-		Debug.Log("NavMesh rotation = " + _navMeshAgent.transform.rotation);
 		_navMeshAgent.SetDestination(_playerTransform.position);
 
 		Vector3 nextPosition = _navMeshAgent.nextPosition;
@@ -274,15 +266,19 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 				_isIdle = true;
                 break;
             case BossState.Walk:
+				AudioManager.Instance.PlaySound("BossWalk", transform.position);
 				StartCoroutine(ReadToAttackCoroutine());
 				break;
             case BossState.RunAttack:
+				AudioManager.Instance.PlaySound("BossAttackGround", transform.position);
 				StartCoroutine(RunAttackCoroutine());
                 break;
 			case BossState.CallEnemy:
+				AudioManager.Instance.PlaySound("BossAttackCall", transform.position);
 				StartCoroutine(DelayCallEnemyCoroutine());
                 break;
             case BossState.ShootAttack:
+				AudioManager.Instance.PlaySound("BossAttackShoot", transform.position);
 				StartCoroutine(DelayShootAttackCoroutine());
                 break;
             case BossState.FloorAttack:
@@ -329,6 +325,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		bool hasCollider = false;
 		
 		timer = 0f;
+
+		AudioManager.Instance.PlaySound("GoGoGo", transform.position);
 		
 		while(true)
 		{
@@ -370,6 +368,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		//-----旋轉衝刺結束
 		
 		//-----爬起來
+		AudioManager.Instance.PlaySound("BossAttackGround", transform.position);
 		timer = 0f;
 		
 		_animator.Play(_state.ToString(), 0, 0f);
@@ -437,6 +436,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	private void DeadHandler()
 	{
 		ChangeEnemyState(BossState.Dead);
+		AudioManager.Instance.PlaySound("BossDead", transform.position);
 		
 		_playerTransform.GetComponent<LevelSystem>().AddExperience(_enemyDataSO.exp);
 	}

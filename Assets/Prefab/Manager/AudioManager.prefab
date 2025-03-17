@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36b0bf4a001107441945b80fc9a658f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioLibrarySO: {fileID: 11400000, guid: f4c53b059105a0b4d9853ed953ea0e7d, type: 2}
-  mainVolume: 0
-  bgmVolume: 0
-  sfxVolume: 0
+  _audioLibrarySO: {fileID: 11400000, guid: f4c53b059105a0b4d9853ed953ea0e7d, type: 2}
+  _mainVolume: 0
+  _bgmVolume: 0
+  _sfxVolume: 0
+  _audioPoolSize: 10

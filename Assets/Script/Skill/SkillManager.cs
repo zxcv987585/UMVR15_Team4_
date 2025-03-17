@@ -58,6 +58,8 @@ public class SkillManager : MonoBehaviour
 
 		GameObject baseSkillPrefab = Instantiate(skillDataLibrarySO.GetSkillPrefab(skillDataSO), transform);
 		skillBind[bind] = baseSkillPrefab.GetComponent<BaseSkill>();
+
+		AudioManager.Instance.PlaySound("EquipSkill", transform.position);
 	}
 	
 	public void RemoveSkillBind(GameInput.Bind bind)

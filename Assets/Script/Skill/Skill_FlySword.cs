@@ -22,6 +22,7 @@ public class Skill_FlySword : BaseSkill
             skillParticleSystem.Play();
 
             StartCoroutine(AttackCheckCoroutine());
+            AudioManager.Instance.PlaySound("FlySword", transform.position);
         }
     }
 
