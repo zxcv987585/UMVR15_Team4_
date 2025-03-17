@@ -19,7 +19,8 @@ public class GameInput : MonoBehaviour
 		LockOn,
 		Skill1,
 		Skill2,
-		ItemMenu
+		ItemMenu,
+		Interaction
 	}
 
 	public event Action<bool> OnAttackAction;
@@ -29,6 +30,7 @@ public class GameInput : MonoBehaviour
     public event Action OnItemMenu;
     public event Action<bool> OnSprintAction;
 	public event Action<Bind> OnSkillAction;
+	public event Action OnInteraction;
 	
 	public bool isAttackClick = false;
 
@@ -56,7 +58,16 @@ public class GameInput : MonoBehaviour
         playerInputAction.Player.Skill1.performed += Skill1_performed;
 		playerInputAction.Player.Skill2.performed += Skill2_performed;
 		playerInputAction.Player.ItemMenu.performed += ItemMenu_performed;
+		playerInputAction.Player.Interaction.performed += Interaction_performed;
 	}
+
+    private void Interaction_performed(InputAction.CallbackContext context)
+    {
+        if(canInput)
+		{
+			OnInteraction?.Invoke();
+		}
+    }
 
     private void AttackRelease_Performed(InputAction.CallbackContext context)
     {

@@ -59,6 +59,8 @@ public class TeleportToBossArena : MonoBehaviour
             value => blackScreen.color = value,
             EasyInOut.EaseIn
             ));
+
+        GameInput.Instance.OnInteraction += Teleport;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -77,12 +79,12 @@ public class TeleportToBossArena : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Teleport()
     {
-        if (isUseable == true && Input.GetKeyDown(KeyCode.P))
+        if (isUseable == true)
         {
             AudioManager.Instance.PlaySound("Teleport", transform.position, false, 4f);
-            
+
             StartCoroutine(TeleportSequence());
             isUseable = false;
         }

@@ -34,9 +34,14 @@ public class TeleportToLoadScene : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Start()
     {
-        if (isUseable == true && Input.GetKeyDown(KeyCode.P))
+        GameInput.Instance.OnInteraction += Teleport;
+    }
+
+    private void Teleport()
+    {
+        if (isUseable == true)
         {
             AudioManager.Instance.PlaySound("Teleport", transform.position, false, 4f);
             

@@ -116,6 +116,15 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interaction"",
+                    ""type"": ""Button"",
+                    ""id"": ""4d7fb712-06f2-4978-87d0-09da0c146f6d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -327,6 +336,17 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""action"": ""ItemMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""33b89913-83e6-47cf-869d-af0b5548a47a"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interaction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -406,6 +426,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Player_MouseMove = m_Player.FindAction("MouseMove", throwIfNotFound: true);
         m_Player_LockOn = m_Player.FindAction("LockOn", throwIfNotFound: true);
         m_Player_ItemMenu = m_Player.FindAction("ItemMenu", throwIfNotFound: true);
+        m_Player_Interaction = m_Player.FindAction("Interaction", throwIfNotFound: true);
     }
 
     ~@PlayerInputAction()
@@ -482,6 +503,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_MouseMove;
     private readonly InputAction m_Player_LockOn;
     private readonly InputAction m_Player_ItemMenu;
+    private readonly InputAction m_Player_Interaction;
     public struct PlayerActions
     {
         private @PlayerInputAction m_Wrapper;
@@ -496,6 +518,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         public InputAction @MouseMove => m_Wrapper.m_Player_MouseMove;
         public InputAction @LockOn => m_Wrapper.m_Player_LockOn;
         public InputAction @ItemMenu => m_Wrapper.m_Player_ItemMenu;
+        public InputAction @Interaction => m_Wrapper.m_Player_Interaction;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -535,6 +558,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @ItemMenu.started += instance.OnItemMenu;
             @ItemMenu.performed += instance.OnItemMenu;
             @ItemMenu.canceled += instance.OnItemMenu;
+            @Interaction.started += instance.OnInteraction;
+            @Interaction.performed += instance.OnInteraction;
+            @Interaction.canceled += instance.OnInteraction;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -569,6 +595,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @ItemMenu.started -= instance.OnItemMenu;
             @ItemMenu.performed -= instance.OnItemMenu;
             @ItemMenu.canceled -= instance.OnItemMenu;
+            @Interaction.started -= instance.OnInteraction;
+            @Interaction.performed -= instance.OnInteraction;
+            @Interaction.canceled -= instance.OnInteraction;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -643,5 +672,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         void OnMouseMove(InputAction.CallbackContext context);
         void OnLockOn(InputAction.CallbackContext context);
         void OnItemMenu(InputAction.CallbackContext context);
+        void OnInteraction(InputAction.CallbackContext context);
     }
 }

@@ -16,6 +16,8 @@ public class RecoverFullHpPp : MonoBehaviour
     private void Start()
     {
         health = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+
+        GameInput.Instance.OnInteraction += HealthPlayer;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -33,9 +35,9 @@ public class RecoverFullHpPp : MonoBehaviour
         }
     }
 
-    void Update()
+    private void HealthPlayer()
     {
-        if (isUseable == true && isBeUse == false && Input.GetKeyDown(KeyCode.P))
+        if (isUseable == true && isBeUse == false)
         {
             //StartCoroutine(TeleportSequence());
             isUseable = false;
