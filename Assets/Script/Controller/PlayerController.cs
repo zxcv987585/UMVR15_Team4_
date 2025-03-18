@@ -126,7 +126,8 @@ public class PlayerController : MonoBehaviour
         GameInput.Instance.OnItemMenu += ItemMenu;
         //Delegate訂閱事件
         health.OnDamage += GetHit;
-        health.OnDead += Died;
+        health.HaveReviveItemDead += Died;
+        health.NoReviveItemDead += Died;
         health.OnCriticalDamage += OnCriticalDamage;
         health.PlayerRivive += Rivive;
         levelSystem.PlayerLevelup += LevelUp;
@@ -137,7 +138,7 @@ public class PlayerController : MonoBehaviour
         playerData.MaxPP = 100;
         playerData.CurrentLevel = 1;
         playerData.attackDamage = 15;
-        playerData.GunDamage = 6;
+        playerData.GunDamage = 8;
         playerData.Defense = 0f;
     }
 

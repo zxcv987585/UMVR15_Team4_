@@ -45,7 +45,8 @@ public class BattleUIManager : MonoBehaviour
         health.OnDamage += ChangeHPStatus;
         health.OnCriticalDamage += ChangeHPStatus;
         health.OnDot += ChangeHPStatus;
-        health.OnDead += ChangeHPStatus;
+        health.HaveReviveItemDead += ChangeHPStatus;
+        health.NoReviveItemDead += ChangeHPStatus;
         health.OnHeal += ChangeHPStatus;
         health.OnPPChanged += playerMaxPPupdate;
         health.OnHealPP += ChangePPStatus;
