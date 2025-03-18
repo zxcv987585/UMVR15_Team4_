@@ -42,7 +42,7 @@ Shader "Vefects/SH_Vefects_VFX_AdvTrail"
 		CGPROGRAM
 		#include "UnityShaderVariables.cginc"
 		#pragma target 3.0
-		#pragma surface surf Unlit keepalpha noshadow vertex:vertexDataFunc 
+		#pragma surface surf Unlit keepalpha noshadow nofog vertex:vertexDataFunc 
 		struct Input
 		{
 			float3 worldPos;

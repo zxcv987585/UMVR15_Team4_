@@ -18,20 +18,43 @@ public class EnemyDrop : MonoBehaviour
     private void Start()
     {
         _endPosition = FindObjectOfType<PlayerController>().transform;
+        
+        StartCoroutine(MoveToUp(transform.position + Vector3.up * 2f));
+    }
+    
+    // 先往上飄
+    private IEnumerator MoveToUp(Vector3 targetPosition)
+    {
+        while(transform.position.y < targetPosition.y)
+        {
+            transform.position += Vector3.up * (_moveSpeed * Time.deltaTime);
+    
+            yield return null;
+        }
+    
+        StartCoroutine(MoveToPlayer());
     }
 
     // 往玩家方向前進
-    private void Update()
+    private IEnumerator MoveToPlayer()
     {
-        Vector3 direction = (_endPosition.position - transform.position).normalized;
-
-        transform.position += direction * (_moveSpeed * Time.deltaTime);
-
-        if(Vector3.Distance(_endPosition.position, transform.position) < 0.1f)
+        while(true)
         {
-            GetDropItem();
+            Vector3 direction = (_endPosition.position - transform.position).normalized;
+
+            transform.position += direction * (_moveSpeed * Time.deltaTime);
+
+            if(Vector3.Distance(_endPosition.position, transform.position) < 0.1f)
+            {
+                GetDropItem();
+                break;
+            }
+            
+            yield return null;
         }
     }
+    
+    
 
     // 根據道具的掉落來給玩家對應的物品, 並刪除該物件
     private void GetDropItem()

@@ -383,6 +383,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 
 		_deadParticle.gameObject.SetActive(true);
 		_deadParticle.Play();
+			
+		float dropTimer = showTimer / 2;
 
 		float timer = 0f;
 		while(timer < showTimer)
@@ -393,15 +395,18 @@ public class EnemyController : MonoBehaviour, IEnemy
 			timer += Time.deltaTime;
 			_material.SetFloat(DISSOLVE_AMOUNT, timer/showTimer);
 			
+			if(timer > dropTimer && _dropPrefab != null)
+			{
+				Instantiate(_dropPrefab, transform.position, Quaternion.identity);
+				dropTimer = 999;
+			}
+			
 			yield return null;
 		}
 
 		_dissolveTime = 1f;
 		_navMeshAgent.enabled = false;
 		_isInit = true;
-
-		if(_dropPrefab != null)
-			Instantiate(_dropPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
 
 		// 待死亡動畫結束後, 讓物件池回收自己
 		EnemyManager.Instance.RecycleEnemy(gameObject);
@@ -415,22 +420,16 @@ public class EnemyController : MonoBehaviour, IEnemy
 
 		float timer = 0f;
 
-		//Debug.Log("Start Time = " + Time.time);
-
 		while(timer < showTimer)
 		{
 			// 如果目前 isPause 為 true, 則暫停更新 Coroutine
 			yield return new WaitUntil(() => !IsPause);
-
-			//Debug.Log("Timer = " + timer);
 		
 			timer += Time.deltaTime;
 			_material.SetFloat(DISSOLVE_AMOUNT, 1 - timer/showTimer);
 
 			yield return null;
 		}
-
-		//Debug.Log("End Time = " + Time.time);
 
 		_material.SetFloat(DISSOLVE_AMOUNT, 0f);
 		_material.SetColor(EMISSION_COLOR, Color.black);
