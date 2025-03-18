@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class TitleUIManager : MonoBehaviour
 {
 	[SerializeField] private Button startButton;
-	[SerializeField] private Button continueButton;
 	[SerializeField] private Button settingButton;
 	[SerializeField] private Button exitButton;
 	[SerializeField] private OptionUI optionUI;
@@ -21,7 +20,6 @@ public class TitleUIManager : MonoBehaviour
 	{
 		//幫按鈕追加選取及取消選取的事件
 		ButtonAddSelectEvent(startButton, ButtonUISelect, ButtonUIDeSelect);
-		ButtonAddSelectEvent(continueButton, ButtonUISelect, ButtonUIDeSelect);
 		ButtonAddSelectEvent(settingButton, ButtonUISelect, ButtonUIDeSelect);
 		ButtonAddSelectEvent(exitButton, ButtonUISelect, ButtonUIDeSelect);
 		
@@ -33,10 +31,6 @@ public class TitleUIManager : MonoBehaviour
 		startButton.onClick.AddListener(() =>
 		{
 			LoadManager.Load(LoadManager.Scene.Battle01);
-		});
-		continueButton.onClick.AddListener(() => 
-		{
-
 		});
 		settingButton.onClick.AddListener(() => 
 		{
