@@ -1,4 +1,5 @@
 using Michsky.UI.Shift;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class RebirthUI : MonoBehaviour
     public UnityEvent closeAction;
 
     public Inventory myBag;
+
+    public event Action UseReviveItem;
 
     private void Start()
     {
@@ -35,18 +38,8 @@ public class RebirthUI : MonoBehaviour
 
     public void RevivePlayer()
     {
-        if (myBag != null)
-        {
-            ItemData reviveItem = myBag.itemList.Find(item => item.itemID == 5);
-            if (reviveItem != null)
-            {
-                reviveItem.itemNum--;
-                if(reviveItem.itemNum <= 0)
-                {
-                    myBag.itemList.Remove(reviveItem);
-                }
-            }
-        }
+        UseReviveItem?.Invoke();
+
         if (playerHealth != null)
         {
             playerHealth.Rivive();

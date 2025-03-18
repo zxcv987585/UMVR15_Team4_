@@ -53,8 +53,6 @@ public class PlayerHealth : MonoBehaviour
     //玩家復活事件
     public event Action PlayerRivive;
 
-    private bool playerHasReviveItem = false;
-
     private bool Isdead = false;
 
     private void Awake()
@@ -62,16 +60,6 @@ public class PlayerHealth : MonoBehaviour
         player = GetComponent<PlayerController>();
         levelSystem = GetComponent<LevelSystem>();
         levelSystem.PlayerLevelup += NewMaxHealth;
-    }
-
-    private void OnEnable()
-    {
-        ItemUseManager.ReviveItemFound += HandleReviveItemFound;
-    }
-
-    private void OnDisable()
-    {
-        ItemUseManager.ReviveItemFound -= HandleReviveItemFound;
     }
 
     private void Update()
@@ -83,12 +71,6 @@ public class PlayerHealth : MonoBehaviour
             CurrentPP = MathF.Floor(nextPP);
             CurrentPP = Mathf.Min(nextPP, MaxPP);
         }
-    }
-
-
-    private void HandleReviveItemFound(ItemData reviveitem)
-    {
-        playerHasReviveItem = (reviveitem != null);
     }
 
     //使用PP系統
@@ -248,7 +230,8 @@ public class PlayerHealth : MonoBehaviour
 
         if (CurrentHealth <= 0)
         {
-            if (playerHasReviveItem)
+            ItemData reviveitem = InventoryManager.instance.myBag.itemList.Find(item => item.itemID == 5);
+            if (reviveitem != null)
             {
                 Isdead = true;
                 HaveReviveItemDead?.Invoke();

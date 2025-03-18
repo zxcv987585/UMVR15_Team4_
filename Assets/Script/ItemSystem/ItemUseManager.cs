@@ -1,10 +1,13 @@
 ﻿using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class ItemUseManager : MonoBehaviour
 {
     public Inventory myBag;
     public HotbarSlot[] hotbarSlot;
+    public RebirthUI rebirthUI;
 
     private PlayerController player;
     private PlayerHealth health;
@@ -16,8 +19,31 @@ public class ItemUseManager : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         health = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+        rebirthUI = GetComponentInChildren<RebirthUI>();
 
-        CheckReviveItemInInventory();
+        rebirthUI.UseReviveItem += UseRivive;
+    }
+
+    private void UseRivive()
+    {
+        ItemData reviveItem = myBag.itemList.Find(item => item.itemID == 5);
+        if (reviveItem != null)
+        {
+            reviveItem.itemNum--;
+            if (reviveItem.itemNum <= 0)
+            {
+                myBag.itemList.Remove(reviveItem);
+
+                foreach (var slot in hotbarSlot)
+                {
+                    if (slot.slotItem != null && slot.slotItem.itemID == 5)
+                    {
+                        slot.slotItem = null;
+                    }
+                }
+            }
+            InventoryManager.instance.RefreshUI();
+        }
     }
 
     private void CheckReviveItemInInventory()
@@ -62,7 +88,7 @@ public class ItemUseManager : MonoBehaviour
                 {
                     Debug.Log($"Use {data.itemName}");
                     if(!player.IsDefenseBuff)
-                        StartCoroutine(player.DefenseUP(data.amount, data.duration));
+                    StartCoroutine(player.DefenseUP(data.amount, data.duration));
                 };
                 break;
             case 5: //5.Rebitrh
@@ -126,5 +152,6 @@ public class ItemUseManager : MonoBehaviour
                 }
             }
         }
+        CheckReviveItemInInventory();
     }
 }
