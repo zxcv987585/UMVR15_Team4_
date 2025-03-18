@@ -71,6 +71,14 @@ public class GunSystem : MonoBehaviour
         AudioManager.Instance.PlaySound("Shoot", transform.position);
         AudioManager.Instance.PlaySound("Shoot", transform.position);
 
+        //開槍準心縮放效果
+        CrosshairUI crosshair = FindObjectOfType<CrosshairUI>();
+        if (crosshair != null)
+        {
+            crosshair.CrosshairShootAnimation();
+        }
+        //-----
+
         readyToShoot = false;
 
         Ray cameraRay = Maincamera.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
