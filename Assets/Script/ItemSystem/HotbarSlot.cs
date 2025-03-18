@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-//¥Nªí­I¥]¤ºªº¤@­Óslot ­t³dÅã¥ÜmyBag itemlist¤º¹ïÀ³ªº¹D¨ã
+//¥NªúÉI¥]¤ºªº¤@­Óslot ­t³dÅã¥ÜmyBag itemlist¤º¹E³ªº¹D¨E
 //°õ¦æRefreshUI®É¡A¨C­Óslot·|§ó·sUI
 public class HotbarSlot : MonoBehaviour
 {

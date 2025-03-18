@@ -84,7 +84,7 @@ Shader "/_Vefects_/SH_Vefects_Zap"
 
 		ENDCG
 		CGPROGRAM
-		#pragma surface surf Unlit keepalpha fullforwardshadows 
+		#pragma surface surf Unlit keepalpha nofog fullforwardshadows 
 
 		ENDCG
 		Pass

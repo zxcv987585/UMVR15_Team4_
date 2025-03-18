@@ -1,18 +1,61 @@
-﻿using UnityEngine;
+﻿using System;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class ItemUseManager : MonoBehaviour
 {
     public Inventory myBag;
     public HotbarSlot[] hotbarSlot;
+    public RebirthUI rebirthUI;
 
     private PlayerController player;
     private PlayerHealth health;
+
+    public delegate void ReviveItemHandler(ItemData reviveitem);
+    public static event ReviveItemHandler ReviveItemFound;
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         health = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+        rebirthUI = GetComponentInChildren<RebirthUI>();
+
+        rebirthUI.UseReviveItem += UseRivive;
     }
+
+    private void UseRivive()
+    {
+        ItemData reviveItem = myBag.itemList.Find(item => item.itemID == 5);
+        if (reviveItem != null)
+        {
+            reviveItem.itemNum--;
+            if (reviveItem.itemNum <= 0)
+            {
+                myBag.itemList.Remove(reviveItem);
+
+                foreach (var slot in hotbarSlot)
+                {
+                    if (slot.slotItem != null && slot.slotItem.itemID == 5)
+                    {
+                        slot.slotItem = null;
+                    }
+                }
+            }
+            InventoryManager.instance.RefreshUI();
+        }
+    }
+
+    private void CheckReviveItemInInventory()
+    {
+        ItemData reviveitem = myBag.itemList.Find(item => item.itemID == 5);
+        if (reviveitem != null) 
+        {
+            Debug.Log("檢查到背包中有復活道具");
+            ReviveItemFound?.Invoke(reviveitem);
+        }
+    }
+
     public void SetupItemAction(ItemData item)
     {
         //檢查道具欄位
@@ -45,15 +88,13 @@ public class ItemUseManager : MonoBehaviour
                 {
                     Debug.Log($"Use {data.itemName}");
                     if(!player.IsDefenseBuff)
-                        StartCoroutine(player.DefenseUP(data.amount, data.duration));
+                    StartCoroutine(player.DefenseUP(data.amount, data.duration));
                 };
                 break;
             case 5: //5.Rebitrh
                 item.itemAction = (ItemData data) =>
                 {
-                    Debug.Log($"Use {data.itemName}");
-                    if(player.IsDie)
-                    health.Rivive();
+                    Debug.Log($"復活道具無法直接使用");
                 };
                 break;
         }
@@ -111,5 +152,6 @@ public class ItemUseManager : MonoBehaviour
                 }
             }
         }
+        CheckReviveItemInInventory();
     }
 }

@@ -33,7 +33,10 @@ public class PlayerHealth : MonoBehaviour
     public event Action OnCriticalDamage;
 
     //玩家死亡時要觸發的委派事件
-    public event Action OnDead;
+    public event Action HaveReviveItemDead;
+
+    //玩家死亡時要觸發的委派事件
+    public event Action NoReviveItemDead;
 
     //玩家回血時要觸發的委派事件
     public event Action OnHeal;
@@ -227,9 +230,19 @@ public class PlayerHealth : MonoBehaviour
 
         if (CurrentHealth <= 0)
         {
-            Isdead = true;
-            OnDead?.Invoke();
-            EnemyDead?.Invoke(transform);
+            ItemData reviveitem = InventoryManager.instance.myBag.itemList.Find(item => item.itemID == 5);
+            if (reviveitem != null)
+            {
+                Isdead = true;
+                HaveReviveItemDead?.Invoke();
+                EnemyDead?.Invoke(transform);
+            }
+            else
+            {
+                Isdead = true;
+                NoReviveItemDead?.Invoke();
+                EnemyDead?.Invoke(transform);
+            }
         }
     }
 
