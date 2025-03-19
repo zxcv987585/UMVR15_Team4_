@@ -60,6 +60,9 @@ public class PlayerController : MonoBehaviour
     //用來記錄最後一次Dash的時間
     private float lastDashTime = -Mathf.Infinity;
 
+    //防呆用受傷紀錄
+    private Coroutine hitCoolDownCoroutine;
+
     //所有狀態旗標
     public bool IsRun { get; private set; } = false;
     public bool IsAiming { get; private set; } = false;
@@ -283,11 +286,21 @@ public class PlayerController : MonoBehaviour
         OnHit?.Invoke();
         IsHit = true;
 
-        StartCoroutine(HitCoolDown());
+        if (hitCoolDownCoroutine != null)
+        {
+            StopCoroutine(hitCoolDownCoroutine);
+        }
+
+        hitCoolDownCoroutine = StartCoroutine(HitCoolDown());
     }
     private void OnCriticalDamage()
     {
         if (IsDie || Invincible) return;
+
+        if(hitCoolDownCoroutine != null)
+        {
+            StopCoroutine (hitCoolDownCoroutine);
+        }
 
         if (IsAiming)
         {
@@ -305,6 +318,10 @@ public class PlayerController : MonoBehaviour
     IEnumerator HitCoolDown()
     {
         yield return new WaitForSeconds(playerData.HitCoolTime);
+
+        if (IsCriticalHit)
+            yield break;
+
         IsHit = false;
         Vector3 inputDirection = GetMoveInput().normalized;
         if (inputDirection == Vector3.zero)
@@ -319,6 +336,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator GunHitCoolDown()
     {
         yield return new WaitForSeconds(playerData.HitCoolTime);
+
         GunHit = false;
         stateMachine.ChangeState(aimState);
     }
