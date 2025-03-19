@@ -1515,7 +1515,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   postProcessVolume: {fileID: 135946406}
   crosshairImage: {fileID: 1279724348}
-  mainCamera: {fileID: 2125191234}
 --- !u!114 &135946406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7731,7 +7730,7 @@ GameObject:
   - component: {fileID: 1099474424}
   - component: {fileID: 1099474425}
   m_Layer: 5
-  m_Name: CharactersWindowPortrait
+  m_Name: CharactersWindowUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7769,6 +7768,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a118700bfae36934380c0ac9ce858475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  openAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1866090346}
+        m_TargetAssemblyTypeName: Michsky.UI.Shift.BagPanelManager, Assembly-CSharp
+        m_MethodName: WindowIn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  closeAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1866090346}
+        m_TargetAssemblyTypeName: Michsky.UI.Shift.BagPanelManager, Assembly-CSharp
+        m_MethodName: WindowOut
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  dialogue: {fileID: 1318415900}
 --- !u!1 &1116182808
 GameObject:
   m_ObjectHideFlags: 0
@@ -13934,6 +13964,17 @@ PrefabInstance:
       addedObject: {fileID: 1931503552}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 743da8d0e2012be439f6a29af8ab2317, type: 3}
+--- !u!114 &1866090346 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4065061077214620726, guid: bad43b830f1337f4d9bf589febe795f6, type: 3}
+  m_PrefabInstance: {fileID: 958969999}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e589d03cb57f54bb51383ab73fe0be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1869436529 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 127072839896463603, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
@@ -15467,11 +15508,6 @@ MonoBehaviour:
 --- !u!4 &2125191231 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1920559016646865334, guid: 22eca212736e34f669a7308846a42048, type: 3}
-  m_PrefabInstance: {fileID: 1745102942}
-  m_PrefabAsset: {fileID: 0}
---- !u!20 &2125191234 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 1706126559645681964, guid: 22eca212736e34f669a7308846a42048, type: 3}
   m_PrefabInstance: {fileID: 1745102942}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &2126674998 stripped
