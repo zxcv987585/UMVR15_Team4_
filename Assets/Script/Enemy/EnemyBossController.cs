@@ -11,7 +11,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	[SerializeField] private Animator _animator;
 	[SerializeField] private Transform _bodyTransform;
 	[SerializeField] private GameObject _shootAttackPrefab;
-	[SerializeField] private GameObject _floorAttackPrefab;
+	//[SerializeField] private GameObject _floorAttackPrefab;
+	[SerializeField] private GameObject _fogPrefab;
 
 	[SerializeField] private float _attackCooldownTime;
 
@@ -416,14 +417,14 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		_shootAttackPrefab.SetActive(true);
 	}
 
-	private IEnumerator DelayFloorAttackCoroutine()
-	{
-		_floorAttackPrefab.SetActive(false);
+	// private IEnumerator DelayFloorAttackCoroutine()
+	// {
+	// 	_floorAttackPrefab.SetActive(false);
 
-		yield return new WaitForSeconds(0.8f);
+	// 	yield return new WaitForSeconds(0.8f);
 
-		_floorAttackPrefab.SetActive(true);
-	}
+	// 	_floorAttackPrefab.SetActive(true);
+	// }
 	
 	// 招喚小怪, 用 Animation Event 來觸發
 	private IEnumerator DelayCallEnemyCoroutine()

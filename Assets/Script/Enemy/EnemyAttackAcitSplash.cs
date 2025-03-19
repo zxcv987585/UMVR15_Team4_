@@ -33,7 +33,7 @@ public class EnemyAttackAcitSplash : MonoBehaviour, IEnemyAttack
         yield return new WaitForSeconds(0.5f);
         
         float timer = 0f;
-        float damageTimer = 8.5f;
+        float damageTimer = 9.5f;
         
         while(timer < damageTimer)
         {
