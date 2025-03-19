@@ -108,6 +108,12 @@ public class AudioManager : MonoBehaviour
 		audioSource.pitch = Random.Range(0.9f, 1.1f);
 		audioSource.Play();
 
+		if(!_nowPlayAudio.ContainsKey(key))
+		{
+			_nowPlayAudio[key] = new List<AudioSource>();
+		}
+		_nowPlayAudio[key].Add(audioSource);
+
 		if(playTimer == 0f)
 		{
 			StartCoroutine(RecycleAudioToPool(key, audioSource, audioClip.length));
@@ -125,7 +131,16 @@ public class AudioManager : MonoBehaviour
 	/// <param name="key"></param>
 	public void StopSound(string key)
 	{
-		
+		if(_nowPlayAudio.ContainsKey(key))
+		{
+			foreach(AudioSource audioSource in _nowPlayAudio[key])
+			{
+				audioSource.Stop();
+				audioSource.clip = null;
+				audioSource.loop = false;
+			}
+			_nowPlayAudio.Remove(key);
+		}
 	}
 
 	// 將 AudioSource 播完後, 回收進物件池中
@@ -136,6 +151,11 @@ public class AudioManager : MonoBehaviour
 		audioSource.Stop();
 		audioSource.clip = null;
 		audioSource.loop = false;
+
+		if(_nowPlayAudio.ContainsKey(key))
+		{
+			_nowPlayAudio[key].Remove(audioSource);
+		}
 
 		_audioPool.Enqueue(audioSource);
 	}
