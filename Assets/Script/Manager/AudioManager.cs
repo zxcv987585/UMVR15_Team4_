@@ -129,7 +129,10 @@ public class AudioManager : MonoBehaviour
 	{
 		yield return new WaitForSeconds(audioTime);
 
+		audioSource.clip = null;
+		audioSource.loop = false;
 		audioSource.Stop();
+		
 		_audioPool.Enqueue(audioSource);
 	}
 

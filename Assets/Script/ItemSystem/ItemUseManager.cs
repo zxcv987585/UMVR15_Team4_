@@ -12,9 +12,6 @@ public class ItemUseManager : MonoBehaviour
     private PlayerController player;
     private PlayerHealth health;
 
-    public delegate void ReviveItemHandler(ItemData reviveitem);
-    public static event ReviveItemHandler ReviveItemFound;
-
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
@@ -43,16 +40,6 @@ public class ItemUseManager : MonoBehaviour
                 }
             }
             InventoryManager.instance.RefreshUI();
-        }
-    }
-
-    private void CheckReviveItemInInventory()
-    {
-        ItemData reviveitem = myBag.itemList.Find(item => item.itemID == 5);
-        if (reviveitem != null) 
-        {
-            Debug.Log("檢查到背包中有復活道具");
-            ReviveItemFound?.Invoke(reviveitem);
         }
     }
 
@@ -152,6 +139,5 @@ public class ItemUseManager : MonoBehaviour
                 }
             }
         }
-        CheckReviveItemInInventory();
     }
 }

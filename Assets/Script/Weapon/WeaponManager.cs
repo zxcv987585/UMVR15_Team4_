@@ -127,6 +127,7 @@ public class WeaponManager : MonoBehaviour
                 if (enemyHealth != null)
                 {
                     enemyHealth.TakeDamage(player.playerData.attackDamage);
+                    health.AttackHealPP(1.5f);
                 }
                 if (player.HitEffect != null)
                 {

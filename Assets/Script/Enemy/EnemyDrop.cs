@@ -40,11 +40,11 @@ public class EnemyDrop : MonoBehaviour
     {
         while(true)
         {
-            Vector3 direction = (_endPosition.position - transform.position).normalized;
+            Vector3 direction = (_endPosition.position - (transform.position + Vector3.down)).normalized;
 
             transform.position += direction * (_moveSpeed * Time.deltaTime);
 
-            if(Vector3.Distance(_endPosition.position, transform.position) < 0.1f)
+            if(Vector3.Distance(_endPosition.position, transform.position + Vector3.down) < 0.1f)
             {
                 GetDropItem();
                 break;
@@ -71,6 +71,8 @@ public class EnemyDrop : MonoBehaviour
                         {
                             itemData.itemNum++;
                             InventoryManager.instance.RefreshUI();
+
+                            AudioManager.Instance.PlaySound("GetItem", transform.position);
                             break;
                         }
                     }
