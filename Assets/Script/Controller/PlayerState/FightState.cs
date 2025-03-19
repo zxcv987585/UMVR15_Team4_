@@ -148,8 +148,6 @@ public class FightState : PlayerState
 
     private void PerformAttack()
     {
-        AudioManager.Instance.PlaySound("PlayerAttack", Vector3.zero);
-
         // 播放對應的攻擊動畫
         switch (currentComboStep)
         {
