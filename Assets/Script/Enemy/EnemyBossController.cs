@@ -267,7 +267,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 				_isIdle = true;
                 break;
             case BossState.Walk:
-				AudioManager.Instance.PlaySound("BossWalk", transform.position, true, _attackCooldownTime);
+				AudioManager.Instance.PlaySound("BossWalk", transform.position, true, _attackCooldownTime*2);
 				StartCoroutine(ReadToAttackCoroutine());
 				break;
             case BossState.RunAttack:
@@ -291,6 +291,9 @@ public class EnemyBossController : MonoBehaviour, IEnemy
     
     private IEnumerator RunAttackCoroutine()
     {
+		GameObject go = Instantiate(_fogPrefab);
+		go.transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+
 		//-----鑽地板
 		float timer = 0f;
 		
@@ -337,7 +340,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		    nextPosition.y = -4f;
 		
 			transform.position = nextPosition;
-			
+			go.transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
 			
 			if(_navMeshAgent.velocity.magnitude < 0.1f)
 			{
@@ -403,6 +406,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		}
 		
 		transform.position = targetVector3;
+
+		Destroy(go);
 		
 		ChangeEnemyState(BossState.Idle);
 		//-----爬起來完成

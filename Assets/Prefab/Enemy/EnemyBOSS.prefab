@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1220775309961108076
 Transform:
   m_ObjectHideFlags: 0
@@ -19383,7 +19383,7 @@ MonoBehaviour:
   _animator: {fileID: 8371627194406533350}
   _bodyTransform: {fileID: 8371627194397431554}
   _shootAttackPrefab: {fileID: 3590640793129886203}
-  _floorAttackPrefab: {fileID: 0}
+  _fogPrefab: {fileID: 2197777194615329155, guid: 6aa6fff0c46ae19498293ba92b86433e, type: 3}
   _attackCooldownTime: 2
 --- !u!65 &2033732344499805180
 BoxCollider:
