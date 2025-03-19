@@ -30,5 +30,7 @@ public class LevelSystem : MonoBehaviour
         playerData.XPForNextLevel = Mathf.RoundToInt(playerData.XPForNextLevel * 1.25f);
         Debug.Log("升級了！當前等級：" + playerData.CurrentLevel + " | 下一級所需經驗值：" + playerData.XPForNextLevel);
         PlayerLevelup?.Invoke();
+        
+        AudioManager.Instance.PlaySound("LevelUp", transform.position);
     }
 }
