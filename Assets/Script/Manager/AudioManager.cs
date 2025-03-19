@@ -13,8 +13,7 @@ public class AudioManager : MonoBehaviour
 
 	[SerializeField] private int _audioPoolSize;
 	private Queue<AudioSource> _audioPool = new Queue<AudioSource>();
-	private Dictionary<string, AudioSource> _nowPlayAudio;
-
+	private Dictionary<string, List<AudioSource>> _nowPlayAudio = new Dictionary<string, List<AudioSource>>();
 	private AudioSource _bgmAudioSource;
 
 	private void Awake()
@@ -106,6 +105,7 @@ public class AudioManager : MonoBehaviour
 		audioSource.clip = audioClip;
 		audioSource.volume = _mainVolume * _sfxVolume;
 		audioSource.loop = isLoop;
+		audioSource.pitch = Random.Range(0.9f, 1.1f);
 		audioSource.Play();
 
 		if(playTimer == 0f)
@@ -119,6 +119,10 @@ public class AudioManager : MonoBehaviour
 		
 	}
 
+	/// <summary>
+	/// 停止指定的音效播放
+	/// </summary>
+	/// <param name="key"></param>
 	public void StopSound(string key)
 	{
 		
@@ -129,10 +133,10 @@ public class AudioManager : MonoBehaviour
 	{
 		yield return new WaitForSeconds(audioTime);
 
+		audioSource.Stop();
 		audioSource.clip = null;
 		audioSource.loop = false;
-		audioSource.Stop();
-		
+
 		_audioPool.Enqueue(audioSource);
 	}
 

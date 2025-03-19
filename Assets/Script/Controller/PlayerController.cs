@@ -238,6 +238,15 @@ public class PlayerController : MonoBehaviour
         if (!CanPerformAction() || IsSkilling) return;
 
         this.IsRun = isRun;
+
+        if(isRun)
+        {
+            AudioManager.Instance.PlaySound("PlayerWalk", transform.position);
+        }
+        else
+        {
+            AudioManager.Instance.StopSound("PlayerWalk");
+        }
     }
 
     //攻擊模式的核心邏輯
