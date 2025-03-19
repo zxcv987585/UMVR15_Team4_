@@ -38,6 +38,8 @@ public class CharactersUIcontroller : MonoBehaviour
         gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
         yield return new WaitForSeconds(1.3f);
         animator.Play("WAIT03");
+
+        AudioManager.Instance.PlaySound("Yaho", transform.position);
     }
 
     private IEnumerator CloseUIAnimation()
@@ -49,5 +51,7 @@ public class CharactersUIcontroller : MonoBehaviour
     private void playAnimation()
     {
         animator.Play("WIN00");
+
+        AudioManager.Instance.PlaySound("Bye", transform.position);
     }
 }
