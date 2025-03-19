@@ -262,6 +262,10 @@ public class PlayerController : MonoBehaviour
     {
         StartCoroutine(coroutine);
     }
+    public void PlayAttackVoice()
+    {
+        AudioManager.Instance.PlaySound("PlayerAttack", Vector3.zero);
+    }
 
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)

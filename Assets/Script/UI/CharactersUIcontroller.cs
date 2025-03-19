@@ -35,6 +35,7 @@ public class CharactersUIcontroller : MonoBehaviour
     private IEnumerator UIAnimation()
     {
         yield return new WaitForSeconds(2.1f);
+        AudioManager.Instance.PlaySound("Radio", transform.position);
         gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
         yield return new WaitForSeconds(1.3f);
         animator.Play("WAIT03");
@@ -45,6 +46,7 @@ public class CharactersUIcontroller : MonoBehaviour
     private IEnumerator CloseUIAnimation()
     {
         yield return new WaitForSeconds(0.5f);
+        AudioManager.Instance.PlaySound("Radio", transform.position);
         gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
     }
 
