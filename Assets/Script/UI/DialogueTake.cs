@@ -17,6 +17,8 @@ public class DialogueTake : MonoBehaviour
     private int Index;
     //用來通知人物視窗何時出現跟消失的委派
     public event Action Take1Finish;
+    //用來通知人物該做什麼動作
+    public event Action LastTakeAction;
 
     void Start()
     {
@@ -38,11 +40,15 @@ public class DialogueTake : MonoBehaviour
                 yield return new WaitForSeconds(WaitForNextLine);
                 TextComponent.text = string.Empty;
             }
+            if (Index == Lines.Length - 1)
+            {
+                LastTakeAction?.Invoke();
+            }
         }
 
-        yield return new WaitForSeconds(7f);
+        yield return new WaitForSeconds(4f);
         Take1Finish?.Invoke();
-        gameObject.SetActive(false);
+        StartCoroutine(CloseUIAnimation());
     }
 
     IEnumerator TypeLine(string line)
@@ -58,5 +64,11 @@ public class DialogueTake : MonoBehaviour
     {
         yield return new WaitForSeconds(2.1f);
         gameObject.GetComponent<DialogueTake>().openAction.Invoke();
+    }
+    private IEnumerator CloseUIAnimation()
+    {
+        gameObject.GetComponent<DialogueTake>().openAction.Invoke();
+        yield return new WaitForSeconds(0.5f);
+        gameObject.SetActive(false);
     }
 }

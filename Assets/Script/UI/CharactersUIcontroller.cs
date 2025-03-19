@@ -1,14 +1,16 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class CharactersUIcontroller : MonoBehaviour
 {
-    //–×‘¶‹âx“®á`
+    //å„²å­˜è¦–çª—å‹•ç•«
     public UnityEvent openAction;
-    //SæŒ€îUI‰î–Ê
+    //æŠ“å–åŠ‡æƒ…UIä»‹é¢
     public DialogueTake dialogue;
+    //æŠ“å–unityé†¬çš„å‹•ç•«
+    public Animator animator;
 
 
     // Start is called before the first frame update
@@ -17,6 +19,7 @@ public class CharactersUIcontroller : MonoBehaviour
 
         StartCoroutine(UIAnimation());
         dialogue.Take1Finish += enabledUI;
+        dialogue.LastTakeAction += playAnimation;
     }
 
     // Update is called once per frame
@@ -26,12 +29,25 @@ public class CharactersUIcontroller : MonoBehaviour
     }
     private void enabledUI()
     {
-        StartCoroutine(UIAnimation());
+        StartCoroutine(CloseUIAnimation());
     }
 
     private IEnumerator UIAnimation()
     {
         yield return new WaitForSeconds(2.1f);
         gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
+        yield return new WaitForSeconds(1.3f);
+        animator.Play("WAIT03");
+    }
+
+    private IEnumerator CloseUIAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
+    }
+
+    private void playAnimation()
+    {
+        animator.Play("WIN00");
     }
 }
