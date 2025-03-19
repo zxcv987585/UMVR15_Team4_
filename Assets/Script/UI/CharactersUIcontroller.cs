@@ -19,6 +19,7 @@ public class CharactersUIcontroller : MonoBehaviour
 
         StartCoroutine(UIAnimation());
         dialogue.Take1Finish += enabledUI;
+        dialogue.LastTakeAction += playAnimation;
     }
 
     // Update is called once per frame
@@ -28,7 +29,7 @@ public class CharactersUIcontroller : MonoBehaviour
     }
     private void enabledUI()
     {
-        StartCoroutine(UIAnimation());
+        StartCoroutine(CloseUIAnimation());
     }
 
     private IEnumerator UIAnimation()
@@ -36,6 +37,17 @@ public class CharactersUIcontroller : MonoBehaviour
         yield return new WaitForSeconds(2.1f);
         gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
         yield return new WaitForSeconds(1.3f);
+        animator.Play("WAIT03");
+    }
+
+    private IEnumerator CloseUIAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
+    }
+
+    private void playAnimation()
+    {
         animator.Play("WIN00");
     }
 }
