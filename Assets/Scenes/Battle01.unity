@@ -3059,6 +3059,11 @@ MonoBehaviour:
   timeBlink: 0.4
   threshold: 0.3
   interval: 3
+--- !u!95 &335804268 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 9500000, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
+  m_PrefabInstance: {fileID: 427756677}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &361243371
 GameObject:
   m_ObjectHideFlags: 0
@@ -7809,6 +7814,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   dialogue: {fileID: 1318415900}
+  animator: {fileID: 335804268}
 --- !u!225 &1099474426
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -9284,8 +9290,7 @@ MonoBehaviour:
         m_CallState: 2
   TextComponent: {fileID: 114619698404971345}
   Lines:
-  - "\u55E8\u55E8\uFF01\u9019\u4E0B\u53EF\u4EE5\u807D\u898B\u4E86\u5427\uFF1F\u63A5\u901A\u7DDA\u8DEF\u82B1\u4E0D\u5C11\u6642\u9593\u3002"
-  - "\u6211\u662F\u8CA0\u8CAC\u5F15\u5C0E\u4F60\u7684"
+  - "\u55E8\uFF01\u807D\u5F97\u898B\u55CE\u65B0\u4EBA\uFF1F\u6211\u662F\u8CA0\u8CAC\u5E36\u9818\u4F60\u7684\u6307\u5F15\u54E1"
   - "\u4F60\u7684\u62AC\u982D\u986F\u793A\u5668\u6703\u544A\u8A34\u4F60\u5982\u4F55\u4F7F\u7528\u6230\u9B25\u670D\uFF0C\u8ACB\u52D9\u5FC5\u9298\u8A18\u5728\u5FC3\u3002"
   - "\u7E3D\u4E4B\u4F60\u6240\u5728\u7684\u5BE6\u9A57\u5712\u5340\u767C\u751F\u5BE6\u9A57\u9AD4\u5916\u6D29\u4E8B\u4EF6\uFF0C\u524D\u56E0\u5F8C\u679C\u6211\u4E5F\u4E0D\u662F\u5F88\u6E05\u695A\uFF0C\u9EBB\u7169\u4F60\u5148\u53BB\u6DF1\u8655\u770B\u770B\u72C0\u6CC1\u5427\uFF01"
   TextSpeed: 0.04
