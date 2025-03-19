@@ -1929,6 +1929,10 @@ PrefabInstance:
       propertyPath: useCustomTexts
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114811678967924108, guid: 99dd25f7aec14f24194a7f0eb3c4507c, type: 3}
+      propertyPath: windowDescription
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 114877243710018220, guid: 99dd25f7aec14f24194a7f0eb3c4507c, type: 3}
       propertyPath: hotkey
       value: 0
@@ -6407,6 +6411,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0.00012207031
       objectReference: {fileID: 0}
+    - target: {fileID: 4065061077214620726, guid: bad43b830f1337f4d9bf589febe795f6, type: 3}
+      propertyPath: isOn
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4654752907634541899, guid: bad43b830f1337f4d9bf589febe795f6, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -6590,7 +6598,7 @@ PrefabInstance:
     - target: {fileID: 7672976011098025480, guid: bad43b830f1337f4d9bf589febe795f6, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 8096e4ccf4cf0a24a807ba168f38f21d, type: 2}
+      objectReference: {fileID: 9100000, guid: 1a933e88bb396cb4cac2ca6311b183ef, type: 2}
     - target: {fileID: 7713415791109009965, guid: bad43b830f1337f4d9bf589febe795f6, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -6711,6 +6719,17 @@ PrefabInstance:
       addedObject: {fileID: 547800936}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bad43b830f1337f4d9bf589febe795f6, type: 3}
+--- !u!114 &958970000 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4065061077214620726, guid: bad43b830f1337f4d9bf589febe795f6, type: 3}
+  m_PrefabInstance: {fileID: 958969999}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e589d03cb57f54bb51383ab73fe0be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &996455541
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7260,9 +7279,13 @@ PrefabInstance:
       value: "- \u4EFB\u52D9\u5931\u6557 -"
       objectReference: {fileID: 0}
     - target: {fileID: 114110888029886766, guid: 99dd25f7aec14f24194a7f0eb3c4507c, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 06facce32cf6be04b9c87048bd990552, type: 2}
+    - target: {fileID: 114110888029886766, guid: 99dd25f7aec14f24194a7f0eb3c4507c, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 21082280118058838, guid: 581c047ed60765249b12f37ff2895497, type: 2}
+      objectReference: {fileID: -4225284177637668020, guid: 06facce32cf6be04b9c87048bd990552, type: 2}
     - target: {fileID: 114110888029886766, guid: 99dd25f7aec14f24194a7f0eb3c4507c, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -7776,6 +7799,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a118700bfae36934380c0ac9ce858475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  openAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 958970000}
+        m_TargetAssemblyTypeName: Michsky.UI.Shift.BagPanelManager, Assembly-CSharp
+        m_MethodName: AnimateWindow
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1116182808
 GameObject:
   m_ObjectHideFlags: 0
@@ -9887,7 +9925,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 261055426434558268, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_Value
-      value: -0.00000062943974
+      value: 0.000000062943975
       objectReference: {fileID: 0}
     - target: {fileID: 320532214279120994, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_SizeDelta.x
@@ -10183,7 +10221,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2265926257615244587, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 224.63908
+      value: 224.63916
       objectReference: {fileID: 0}
     - target: {fileID: 2282603489819538082, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_AnchorMax.x
@@ -10475,7 +10513,7 @@ PrefabInstance:
       objectReference: {fileID: -4225284177637668020, guid: 06facce32cf6be04b9c87048bd990552, type: 2}
     - target: {fileID: 4630899246069818597, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 484.83722
+      value: 484.83707
       objectReference: {fileID: 0}
     - target: {fileID: 4682277129855734503, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_Pivot.x
@@ -10915,7 +10953,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7657248589223531759, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_Value
-      value: -0.0000019019222
+      value: 0.0000002717032
       objectReference: {fileID: 0}
     - target: {fileID: 7658744834013750705, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_AnchorMax.y
