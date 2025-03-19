@@ -84,7 +84,7 @@ public class CrosshairUI : MonoBehaviour
     private IEnumerator FrameAnimationIn()
     {
         float startValue = vignette.intensity.value;
-        float endValue = 0.3f;
+        float endValue = 0.2f;
         float duration = 0.35f;
         float timer = 0f;
 

@@ -37,19 +37,19 @@ namespace Michsky.UI.Shift
                 if (pressedText != null) { pressedText.text = buttonText; }
             }
 
-            if (hasIcon == true)
-            {
-                if (normalIcon != null) { normalIcon.sprite = iconSprite; }
-                if (highlightedIcon != null) { highlightedIcon.sprite = iconSprite; }
-                if (pressedIcon != null) { pressedIcon.sprite = iconSprite; }
-            }
+            //if (hasIcon == true)
+            //{
+            //    if (normalIcon != null) { normalIcon.sprite = iconSprite; }
+            //    if (highlightedIcon != null) { highlightedIcon.sprite = iconSprite; }
+            //    if (pressedIcon != null) { pressedIcon.sprite = iconSprite; }
+            //}
 
-            else if (hasIcon == false)
-            {
-                if (normalIcon != null) { Destroy(normalIcon.gameObject); }
-                if (highlightedIcon != null) { Destroy(highlightedIcon.gameObject); }
-                if (pressedIcon != null) { Destroy(pressedIcon.gameObject); }
-            }
+            //else if (hasIcon == false)
+            //{
+            //    if (normalIcon != null) { Destroy(normalIcon.gameObject); }
+            //    if (highlightedIcon != null) { Destroy(highlightedIcon.gameObject); }
+            //    if (pressedIcon != null) { Destroy(pressedIcon.gameObject); }
+            //}
         }
 
         public void OnPointerEnter(PointerEventData eventData)

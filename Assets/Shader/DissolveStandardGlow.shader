@@ -15,7 +15,7 @@ Shader "Custom/DissolveGlow"
     {
         Tags { "RenderType"="Transparent" }
         CGPROGRAM
-        #pragma surface surf Standard fullforwardshadows
+        #pragma surface surf Standard fullforwardshadows addshadow
 
         sampler2D _MainTex;
         sampler2D _BumpMap;

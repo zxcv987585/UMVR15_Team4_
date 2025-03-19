@@ -77,7 +77,6 @@ public class GunSystem : MonoBehaviour
         {
             crosshair.CrosshairShootAnimation();
         }
-        //-----
 
         readyToShoot = false;
 
