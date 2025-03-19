@@ -7,7 +7,6 @@ public class CharactersUIcontroller : MonoBehaviour
 {
     //ñ◊ë∂éã‚xìÆ·`
     public UnityEvent openAction;
-    public UnityEvent closeAction;
     //ùSéÊåÄèÓUIâÓñ 
     public DialogueTake dialogue;
 
@@ -15,10 +14,9 @@ public class CharactersUIcontroller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (dialogue != null) 
-        {
-            ShowCharactherUI();
-        }
+
+        StartCoroutine(UIAnimation());
+        dialogue.Take1Finish += enabledUI;
     }
 
     // Update is called once per frame
@@ -26,15 +24,14 @@ public class CharactersUIcontroller : MonoBehaviour
     {
         
     }
-
-    private void ShowCharactherUI()
+    private void enabledUI()
     {
-        StartCoroutine(CharactherUIAnimation());
+        StartCoroutine(UIAnimation());
     }
 
-    private IEnumerator CharactherUIAnimation()
+    private IEnumerator UIAnimation()
     {
-        yield return new WaitForSeconds(1.8f);
+        yield return new WaitForSeconds(2.1f);
         gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
     }
 }

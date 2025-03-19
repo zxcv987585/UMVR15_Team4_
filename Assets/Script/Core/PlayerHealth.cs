@@ -265,13 +265,20 @@ public class PlayerHealth : MonoBehaviour
     {
         CurrentPP += amount;
         CurrentPP = Mathf.Min(CurrentPP, MaxPP);
-        OnHeal?.Invoke();
+        OnHealPP?.Invoke();
 
         if (HealPPEffect != null)
         {
             GameObject healPPEffect = Instantiate(HealPPEffect, transform.position + Vector3.down * 0.7f, Quaternion.identity);
             healPPEffect.transform.SetParent(transform);
         }
+    }
+
+    public void AttackHealPP(float amount) 
+    {
+        CurrentPP += amount;
+        CurrentPP = Mathf.Min(CurrentPP,MaxPP);
+        OnHealPP?.Invoke();
     }
 
     //重生系統，用於玩家使用復活道具時使用

@@ -365,7 +365,7 @@ public class PlayerController : MonoBehaviour
     //Dash狀態機的核心邏輯
     private void Dash()
     {
-        if (!CanPerformAction() || stateMachine.GetState<AimState>() != null) return;
+        if (!CanPerformAction() || stateMachine.GetState<AimState>() != null || IsSkilling) return;
 
         if (Time.time >= lastDashTime + playerData.DashCoolTime)
         {
