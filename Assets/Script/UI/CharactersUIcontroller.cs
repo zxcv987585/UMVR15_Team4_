@@ -1,14 +1,16 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class CharactersUIcontroller : MonoBehaviour
 {
-    //–×‘¶‹âx“®á`
+    //å„²å­˜è¦–çª—å‹•ç•«
     public UnityEvent openAction;
-    //SæŒ€îUI‰î–Ê
+    //æŠ“å–åŠ‡æƒ…UIä»‹é¢
     public DialogueTake dialogue;
+    //æŠ“å–unityé†¬çš„å‹•ç•«
+    public Animator animator;
 
 
     // Start is called before the first frame update
@@ -33,5 +35,7 @@ public class CharactersUIcontroller : MonoBehaviour
     {
         yield return new WaitForSeconds(2.1f);
         gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
+        yield return new WaitForSeconds(1.3f);
+        animator.Play("WIN00");
     }
 }
