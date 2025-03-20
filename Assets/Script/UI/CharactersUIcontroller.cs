@@ -69,7 +69,5 @@ public class CharactersUIcontroller : MonoBehaviour
     private void playAnimation()
     {
         animator.Play("WIN00");
-
-        AudioManager.Instance.PlaySound("Bye", transform.position);
     }
 }

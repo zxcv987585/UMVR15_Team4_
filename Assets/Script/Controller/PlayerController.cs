@@ -116,6 +116,15 @@ public class PlayerController : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(gameObject);
+        //初始化數據
+        playerData.CurrentExp = 0;
+        playerData.XPForNextLevel = 100;
+        playerData.MaxHealth = 100;
+        playerData.MaxPP = 100;
+        playerData.CurrentLevel = 1;
+        playerData.attackDamage = 15;
+        playerData.GunDamage = 8;
+        playerData.Defense = 0f;
     }
 
     private void Start()
@@ -134,15 +143,6 @@ public class PlayerController : MonoBehaviour
         health.OnCriticalDamage += OnCriticalDamage;
         health.PlayerRivive += Rivive;
         levelSystem.PlayerLevelup += LevelUp;
-        //初始化數據
-        playerData.CurrentExp = 0;
-        playerData.XPForNextLevel = 100;
-        playerData.MaxHealth = 100;
-        playerData.MaxPP = 100;
-        playerData.CurrentLevel = 1;
-        playerData.attackDamage = 15;
-        playerData.GunDamage = 8;
-        playerData.Defense = 0f;
     }
 
     void Update()

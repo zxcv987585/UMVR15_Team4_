@@ -66,6 +66,7 @@ public class DialogueTake : MonoBehaviour
             }
             if (Index == Lines.Length - 1)
             {
+                AudioManager.Instance.PlaySound("Bye", transform.position);
                 LastTakeAction?.Invoke();
             }
         }
@@ -91,6 +92,7 @@ public class DialogueTake : MonoBehaviour
             }
             if (Index == Lines2.Length - 1)
             {
+                AudioManager.Instance.PlaySound("Bye", transform.position);
                 LastTakeAction?.Invoke();
             }
         }
@@ -103,7 +105,7 @@ public class DialogueTake : MonoBehaviour
     IEnumerator DisplayDialogue3()
     {
         yield return new WaitForSeconds(1f);
-        AudioManager.Instance.PlaySound("Uwa", transform.position);
+        AudioManager.Instance.PlaySound("Surprise", transform.position);
         for (Index = 0; Index < Lines3.Length; Index++)
         {
             yield return StartCoroutine(TypeLine(Lines3[Index]));
@@ -115,6 +117,7 @@ public class DialogueTake : MonoBehaviour
             }
             if (Index == Lines3.Length - 1)
             {
+                AudioManager.Instance.PlaySound("NiceFight", transform.position);
                 LastTakeAction?.Invoke();
             }
         }
