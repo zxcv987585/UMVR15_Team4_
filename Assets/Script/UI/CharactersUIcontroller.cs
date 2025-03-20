@@ -16,18 +16,24 @@ public class CharactersUIcontroller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         StartCoroutine(UIAnimation());
-        dialogue.Take1Finish += enabledUI;
+
+        dialogue.Take1Finish += DisableUI;
         dialogue.LastTakeAction += playAnimation;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
-    private void enabledUI()
+
+    public void EnableUI()
+    {
+        StartCoroutine(OpenUIAnimation());
+    }
+
+    private void DisableUI()
     {
         StartCoroutine(CloseUIAnimation());
     }
@@ -43,11 +49,24 @@ public class CharactersUIcontroller : MonoBehaviour
         AudioManager.Instance.PlaySound("Yaho", transform.position);
     }
 
+    private IEnumerator OpenUIAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        AudioManager.Instance.PlaySound("Radio", transform.position);
+        gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
+        yield return new WaitForSeconds(1.3f);
+        animator.Play("WAIT03");
+
+        AudioManager.Instance.PlaySound("Yaho", transform.position);
+    }
+
     private IEnumerator CloseUIAnimation()
     {
         yield return new WaitForSeconds(0.5f);
         AudioManager.Instance.PlaySound("Radio", transform.position);
         gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
+
+        dialogue.Take1Finish -= DisableUI;
     }
 
     private void playAnimation()
