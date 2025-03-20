@@ -23,6 +23,8 @@ public class CharactersUIcontroller : MonoBehaviour
         dialogue.TakeFinish += DisableUI;
         dialogue.LastTakeAction += playAnimation;
         levelSystem.PlayerFirstLevelup += EnableUI;
+
+        animator = GameObject.FindGameObjectWithTag("UnityChan").GetComponent<Animator>();
     }
 
     // Update is called once per frame
