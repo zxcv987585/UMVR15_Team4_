@@ -178,6 +178,14 @@ public class PlayerController : MonoBehaviour
                 AutoUnlockEnemy();
             }
         }
+        if (IsRun && GetMoveInput().sqrMagnitude >= 0.1)
+        {
+            AudioManager.Instance.PlaySound("PlayerWalk", transform.position);
+        }
+        else
+        {
+            AudioManager.Instance.StopSound("PlayerWalk");
+        }
     }
 
     //技能系統
@@ -238,17 +246,7 @@ public class PlayerController : MonoBehaviour
         if (!CanPerformAction() || IsSkilling) return;
 
         this.IsRun = isRun;
-
-        if(isRun)
-        {
-            AudioManager.Instance.PlaySound("PlayerWalk", transform.position);
-        }
-        else
-        {
-            AudioManager.Instance.StopSound("PlayerWalk");
-        }
     }
-
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
