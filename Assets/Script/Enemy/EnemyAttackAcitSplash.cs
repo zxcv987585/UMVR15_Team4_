@@ -15,7 +15,7 @@ public class EnemyAttackAcitSplash : MonoBehaviour, IEnemyAttack
     private void Start()
     {
         StartCoroutine(IntervalAttack());
-        AudioManager.Instance.PlaySound("AcitSplash", transform.position);
+        
     }
 
     public void ResetHasAttack()
@@ -31,6 +31,7 @@ public class EnemyAttackAcitSplash : MonoBehaviour, IEnemyAttack
     private IEnumerator IntervalAttack()
     {
         yield return new WaitForSeconds(0.5f);
+        AudioManager.Instance.PlaySound("AcitSplash", transform.position);
         
         float timer = 0f;
         float damageTimer = 9.5f;
