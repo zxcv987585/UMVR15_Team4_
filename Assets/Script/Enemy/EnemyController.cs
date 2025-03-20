@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	private IEnemyAttack _enemyAttack;
 	private EnemyState _enemyState;
 
+	//-----消融效果-----
 	[SerializeField] private Renderer _dissolveRenderer;
 	[SerializeField] private ParticleSystem _deadParticle;
 	private float _dissolveTime = 1f;
@@ -21,12 +22,14 @@ public class EnemyController : MonoBehaviour, IEnemy
 	private const string DISSOLVE_AMOUNT = "_DissolveAmount";
 	private const string EMISSION_COLOR= "_EmissionColor";
 	private const string RIM_COLOR = "_RimColor";
+	//-----消融效果-----
 
 	private bool _isInit = true;	// 用來等待生成動畫結束後, 才跑 Update 的旗標
 	private bool _hasInit = false; //用來檢查該物件是否為第一次被生成
 	private bool _isAttack;
 	private bool _isDamage;
 	
+	private Coroutine _rotateCoroutine;
 	private Rigidbody _rb;
 	private NavMeshAgent _navMeshAgent;
 	private Collider _bodyCollider;
@@ -69,7 +72,6 @@ public class EnemyController : MonoBehaviour, IEnemy
 			// 如果不是預設時間, 視為生怪機生的
 			StartCoroutine(RaycastStartDissolveCoroutine(_dissolveTime/2));
 		}
-		
 	}
 
 
@@ -215,7 +217,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 				break;
 			case EnemyState.Attack:
 				_navMeshAgent.isStopped = true;
-				StartCoroutine(TryAttackAfterTurn(_playerTransform.position));
+				_rotateCoroutine = StartCoroutine(TryAttackAfterTurn(_playerTransform.position));
 				break;
 			case EnemyState.Damage:
 				_navMeshAgent.isStopped = true;
@@ -231,6 +233,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 	// 將怪物轉向玩家位置後, 在進行攻擊行為
 	private IEnumerator TryAttackAfterTurn(Vector3 targetPosition)
 	{
+		Debug.Log("TrytoRotate");
+		
 		while (true)
 		{
 			// 如果目前 isPause 為 true, 則暫停更新 Coroutine
