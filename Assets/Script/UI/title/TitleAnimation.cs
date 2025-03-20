@@ -28,7 +28,11 @@ public class TitleAnimation : MonoBehaviour
     public RectTransform ButtonListSettings;
     public RectTransform ButtonListExit;
 
-    private float timer;
+    public InputNameUI inputNameUI;
+    public ExitUI exitUI;
+
+    private float rotationSpeed = 20f;
+    private float targetSpeed = 20f;
 
     private EasyInOut easyInOut;
 
@@ -43,12 +47,15 @@ public class TitleAnimation : MonoBehaviour
     {
         StartCoroutine(titleOpening());
     }
+
     // Update is called once per frame
     void Update()
     {
         //中心圓框自轉效果
-        timer += Time.deltaTime;
-        titleCircleRect.rotation = Quaternion.Euler(0, 0, timer * 20f);
+        rotationSpeed = Mathf.Lerp(rotationSpeed, targetSpeed, Time.deltaTime * 5f);
+
+        // 直接使用 Time.deltaTime 計算旋轉量，確保不會因速度變化而回彈
+        titleCircleRect.rotation *= Quaternion.Euler(0, 0, rotationSpeed * Time.deltaTime);
     }
 
     private IEnumerator titleOpening()
@@ -142,5 +149,68 @@ public class TitleAnimation : MonoBehaviour
           ButtonListExit.anchoredPosition, new Vector2(100f, -200f), 1.7f,
           value => ButtonListExit.anchoredPosition = value,
           EasyInOut.EaseOut));
+    }
+
+    //Start事件--
+    public void OnClickStartButton()
+    {
+        StartCoroutine(StartOpening());
+    }
+
+    private IEnumerator StartOpening()
+    {
+        //關閉所有按鍵互動
+        ButtonListStart.GetComponent<Button>().enabled = false;
+        ButtonListSettings.GetComponent<Button>().enabled = false;
+        ButtonListExit.GetComponent<Button>().enabled = false;
+
+        //閃光
+        StartCoroutine(easyInOut.ChangeValue(
+            new Vector4(255 / 255f, 255 / 255f, 255 / 255f, 255 / 255f),
+            new Vector4(255 / 255f, 255 / 255f, 255 / 255f, 0f),
+            1f,
+           value => flash.GetComponent<Image>().color = value,
+           EasyInOut.EaseOut));
+
+        //中心圓框突然加速旋轉
+        float originalSpeed = rotationSpeed; //記錄原始速度
+        targetSpeed = 200f; //設定短暫加速速度
+
+        StartCoroutine(easyInOut.ChangeValue(
+           Vector3.one, new Vector3(1.05f, 1.05f, 1.05f),  0.5f,
+           value => titleCircleRect.localScale = value,
+           EasyInOut.EaseOut));
+
+        yield return new WaitForSeconds(0.5f);
+
+        StartCoroutine(easyInOut.ChangeValue(
+           new Vector3(1.05f, 1.05f, 1.05f), Vector3.one, 0.5f,
+           value => titleCircleRect.localScale = value,
+           EasyInOut.EaseInOut));
+
+        yield return new WaitForSeconds(0.3f);
+        targetSpeed = originalSpeed;
+
+        //黑幕
+        StartCoroutine(easyInOut.ChangeValue(
+           Vector4.zero, new Vector4(0f, 0f, 0f, 1f),  1.5f,
+           value => blackScreen.color = value,
+           EasyInOut.EaseIn));
+
+        yield return new WaitForSeconds(2f);
+        inputNameUI.ShowInputNameUI();
+
+    }
+
+    //Exit事件--
+    public void OnClickExitButton()
+    {
+        StartCoroutine(ExitOpening());
+    }
+
+    private IEnumerator ExitOpening()
+    {
+        exitUI.ShowExitUI();
+        yield return null;
     }
 }

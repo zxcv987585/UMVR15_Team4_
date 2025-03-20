@@ -7,6 +7,7 @@ public class TeleportToLoadScene : MonoBehaviour
 {
     public Collider portal;
     public bool isUseable = false;
+    public bool isBeUse = false;
     public Transform player;
     public CameraController mainCamera;
 
@@ -18,11 +19,14 @@ public class TeleportToLoadScene : MonoBehaviour
     public Image whiteScreen;
     public Image blackScreen;
 
+    public RectTransform isUseableUI;
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && isUseable == false)
+        if (other.CompareTag("Player") && isUseable == false && isBeUse == false)
         {
             isUseable = true;
+            StartCoroutine(isUseableUIon());
         }
     }
 
@@ -31,6 +35,7 @@ public class TeleportToLoadScene : MonoBehaviour
         if (other.CompareTag("Player") && isUseable == true)
         {
             isUseable = false;
+            StartCoroutine(isUseableUIoff());
         }
     }
 
@@ -41,17 +46,20 @@ public class TeleportToLoadScene : MonoBehaviour
 
     private void Teleport()
     {
-        if (isUseable == true)
+        if (isUseable == true && isBeUse == false)
         {
             AudioManager.Instance.PlaySound("Teleport", transform.position, false, 4f);
-            
+
             StartCoroutine(TeleportSequence());
             isUseable = false;
+            isBeUse = true;
         }
     }
 
     private IEnumerator TeleportSequence()
     {
+        StartCoroutine(isUseableUIoff());
+
         var playerPos = player.transform.position;
         CharacterController charController = player.GetComponent<CharacterController>();
         PlayerController playerController = player.GetComponent<PlayerController>();
@@ -64,7 +72,7 @@ public class TeleportToLoadScene : MonoBehaviour
         if (playerStateMachine != null) playerStateMachine.enabled = false;
         animator.SetBool("Run", false);
         animator.SetBool("Sprint", false);
-
+        
         EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
 
         vfxHyperDriveEffect();
@@ -110,6 +118,40 @@ public class TeleportToLoadScene : MonoBehaviour
         whiteScreen.gameObject.SetActive(false);
 
         LoadManager.Load(LoadManager.Scene.AN_Demo_Boss);
+    }
+    private IEnumerator isUseableUIon()
+    {
+        EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
+
+        StartCoroutine(easyInOut.ChangeValue(
+            Vector3.one, new Vector3(1.1f, 1.1f, 1.1f), 0.3f,
+            value => isUseableUI.localScale = value,
+            EasyInOut.EaseOut
+            ));
+
+        StartCoroutine(easyInOut.ChangeValue(
+            0f, 1f, 0.3f,
+            value => isUseableUI.GetComponent<CanvasGroup>().alpha = value,
+            EasyInOut.EaseOut
+            ));
+        yield return null;
+    }
+    private IEnumerator isUseableUIoff()
+    {
+        EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
+
+        StartCoroutine(easyInOut.ChangeValue(
+            new Vector3(1.1f, 1.1f, 1.1f), Vector3.one, 0.3f,
+            value => isUseableUI.localScale = value,
+            EasyInOut.EaseIn
+            ));
+
+        StartCoroutine(easyInOut.ChangeValue(
+            1f, 0f, 0.3f,
+            value => isUseableUI.GetComponent<CanvasGroup>().alpha = value,
+            EasyInOut.EaseIn
+            ));
+        yield return null;
     }
 
     //=====Change Coroutine=====
@@ -178,8 +220,8 @@ public class TeleportToLoadScene : MonoBehaviour
         if (easyInOut == null) return;
 
         StartCoroutine(easyInOut.ChangeValue(
-            new Vector3(1.15f, 1.15f, 1.15f), 
-            new Vector3(1.30f, 1.30f, 1.30f), 
+            new Vector3(1.15f, 1.15f, 1.15f),
+            new Vector3(1.30f, 1.30f, 1.30f),
             1f,
             value => magicCircle.gameObject.transform.localScale = value,
             EasyInOut.EaseOut
