@@ -9,6 +9,10 @@ public class BattleUIManager : MonoBehaviour
     public static BattleUIManager Instance { get; private set; }
 
     [SerializeField] private Canvas battleCanvas;
+    //
+    [SerializeField] private InputNameUI inputNameUI;
+    [SerializeField] private TextMeshProUGUI playerName;
+    //
 
     //--------------------------傷害數字-------------------------------
     [SerializeField] private Queue<DamageText> damageTextQuene;
@@ -41,6 +45,10 @@ public class BattleUIManager : MonoBehaviour
 
     private void Start()
     {
+        //
+        playerName.text = inputNameUI.playerName.ToString();
+        //
+
         damageTextQuene = new Queue<DamageText>();
         health.OnDamage += ChangeHPStatus;
         health.OnCriticalDamage += ChangeHPStatus;

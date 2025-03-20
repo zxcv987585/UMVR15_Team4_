@@ -6,6 +6,7 @@ public class TeleportToBossArena : MonoBehaviour
 {
     public Collider portal;
     public bool isUseable = false;
+    public bool isBeUse = false;
     public Transform targetPos;
     public Transform player;
     public CameraController mainCamera;
@@ -17,6 +18,8 @@ public class TeleportToBossArena : MonoBehaviour
     public ParticleSystem vfxImplosion;
     public Image whiteScreen;
     public Image blackScreen;
+
+    public RectTransform isUseableUI;
 
     private void Awake()
     {
@@ -51,6 +54,7 @@ public class TeleportToBossArena : MonoBehaviour
 
     private void Start()
     {
+        isUseableUI = GameObject.Find("isUseableUI").GetComponent<RectTransform>();
         EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
         StartCoroutine(easyInOut.ChangeValue(
             new Vector4(0f, 0f, 0f, 1f),
@@ -65,9 +69,10 @@ public class TeleportToBossArena : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && isUseable == false)
+        if (other.CompareTag("Player") && isUseable == false && isBeUse == false)
         {
             isUseable = true;
+            StartCoroutine(isUseableUIon());
         }
     }
 
@@ -76,7 +81,43 @@ public class TeleportToBossArena : MonoBehaviour
         if (other.CompareTag("Player") && isUseable == true)
         {
             isUseable = false;
+            StartCoroutine(isUseableUIoff());
         }
+    }
+
+    private IEnumerator isUseableUIon()
+    {
+        EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
+
+        StartCoroutine(easyInOut.ChangeValue(
+            Vector3.one, new Vector3(1.1f, 1.1f, 1.1f), 0.3f,
+            value => isUseableUI.localScale = value,
+            EasyInOut.EaseOut
+            ));
+
+        StartCoroutine(easyInOut.ChangeValue(
+            0f, 1f, 0.3f,
+            value => isUseableUI.GetComponent<CanvasGroup>().alpha = value,
+            EasyInOut.EaseOut
+            ));
+        yield return null;
+    }
+    private IEnumerator isUseableUIoff()
+    {
+        EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
+
+        StartCoroutine(easyInOut.ChangeValue(
+            new Vector3(1.1f, 1.1f, 1.1f), Vector3.one, 0.3f,
+            value => isUseableUI.localScale = value,
+            EasyInOut.EaseIn
+            ));
+
+        StartCoroutine(easyInOut.ChangeValue(
+            1f, 0f, 0.3f,
+            value => isUseableUI.GetComponent<CanvasGroup>().alpha = value,
+            EasyInOut.EaseIn
+            ));
+        yield return null;
     }
 
     private void Teleport()
@@ -87,11 +128,14 @@ public class TeleportToBossArena : MonoBehaviour
 
             StartCoroutine(TeleportSequence());
             isUseable = false;
+            isBeUse = true;
         }
     }
 
     private IEnumerator TeleportSequence()
     {
+        StartCoroutine(isUseableUIoff());
+
         var playerPos = player.transform.position;
         CharacterController charController = player.GetComponent<CharacterController>();
         PlayerController playerController = player.GetComponent<PlayerController>();

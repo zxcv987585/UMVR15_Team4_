@@ -13,8 +13,11 @@ public class RecoverFullHpPp : MonoBehaviour
     public ParticleSystem useParticle3;
     private PlayerHealth health;
 
+    public RectTransform isUseableUI;
+
     private void Start()
     {
+        isUseableUI = GameObject.Find("isUseableUI").GetComponent<RectTransform>();
         health = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
 
         GameInput.Instance.OnInteraction += HealthPlayer;
@@ -24,6 +27,7 @@ public class RecoverFullHpPp : MonoBehaviour
         if (other.CompareTag("Player") && isUseable == false)
         {
             isUseable = true;
+            StartCoroutine(isUseableUIon());
         }
     }
 
@@ -32,14 +36,50 @@ public class RecoverFullHpPp : MonoBehaviour
         if (other.CompareTag("Player") && isUseable == true)
         {
             isUseable = false;
+            StartCoroutine(isUseableUIoff());
         }
+    }
+
+    private IEnumerator isUseableUIon()
+    {
+        EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
+        
+        StartCoroutine(easyInOut.ChangeValue(
+            Vector3.one, new Vector3(1.1f, 1.1f, 1.1f), 0.3f,
+            value => isUseableUI.localScale = value,
+            EasyInOut.EaseOut
+            ));
+
+        StartCoroutine(easyInOut.ChangeValue(
+            0f, 1f, 0.3f,
+            value => isUseableUI.GetComponent<CanvasGroup>().alpha = value,
+            EasyInOut.EaseOut
+            ));
+        yield return null;
+    }
+    private IEnumerator isUseableUIoff()
+    {
+        EasyInOut easyInOut = FindObjectOfType<EasyInOut>();
+
+        StartCoroutine(easyInOut.ChangeValue(
+            new Vector3(1.1f, 1.1f, 1.1f), Vector3.one, 0.3f,
+            value => isUseableUI.localScale = value,
+            EasyInOut.EaseIn
+            ));
+
+        StartCoroutine(easyInOut.ChangeValue(
+            1f, 0f, 0.3f,
+            value => isUseableUI.GetComponent<CanvasGroup>().alpha = value,
+            EasyInOut.EaseIn
+            ));
+        yield return null;
     }
 
     private void HealthPlayer()
     {
         if (isUseable == true && isBeUse == false)
         {
-            //StartCoroutine(TeleportSequence());
+            StartCoroutine(isUseableUIoff());
             isUseable = false;
             isBeUse = true;
             standbyParticle.SetActive(false);
