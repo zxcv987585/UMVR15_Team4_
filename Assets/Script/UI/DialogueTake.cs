@@ -79,7 +79,7 @@ public class DialogueTake : MonoBehaviour
 
     IEnumerator DisplayDialogue2()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.8f);
         AudioManager.Instance.PlaySound("Uwa", transform.position);
         for (Index = 0; Index < Lines2.Length; Index++)
         {
@@ -104,7 +104,7 @@ public class DialogueTake : MonoBehaviour
 
     IEnumerator DisplayDialogue3()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.8f);
         AudioManager.Instance.PlaySound("Surprise", transform.position);
         for (Index = 0; Index < Lines3.Length; Index++)
         {
