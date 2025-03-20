@@ -12,12 +12,15 @@ public class DialogueTake : MonoBehaviour
     public TextMeshProUGUI TextComponent;
     public string[] Lines;
     public string[] Lines2;
+    public string[] Lines3;
     public float TextSpeed;
     public float WaitForNextLine;
     //記錄文字進度所需Index
     private int Index;
     //需要關閉的第一道屏障牆壁
     public GameObject LockWall;
+    //玩家第一次升級需要觸發的劇情事件
+    public LevelSystem levelSystem;
     //第一區最後一段文字所需傳送的delegate（主要用於控制unity醬)
     public event Action LastTakeAction;
     //劇情結束後需要傳送的delegate
@@ -25,6 +28,8 @@ public class DialogueTake : MonoBehaviour
 
     void Start()
     {
+        levelSystem.PlayerFirstLevelup += playerlevelUp;
+
         TextComponent.text = string.Empty;
 
         StartCoroutine(UIAnimation());
@@ -37,6 +42,14 @@ public class DialogueTake : MonoBehaviour
         gameObject.SetActive(true);
         StartCoroutine(OpenUIAnimation());
         StartCoroutine(DisplayDialogue2());
+    }
+
+    public void playerlevelUp()
+    {
+        TextComponent.text = string.Empty;
+        gameObject.SetActive(true);
+        StartCoroutine(OpenUIAnimation());
+        StartCoroutine(DisplayDialogue3());
     }
 
     IEnumerator DisplayDialogue()
@@ -66,6 +79,7 @@ public class DialogueTake : MonoBehaviour
     IEnumerator DisplayDialogue2()
     {
         yield return new WaitForSeconds(1f);
+        AudioManager.Instance.PlaySound("Uwa", transform.position);
         for (Index = 0; Index < Lines2.Length; Index++)
         {
             yield return StartCoroutine(TypeLine(Lines2[Index]));
@@ -76,6 +90,30 @@ public class DialogueTake : MonoBehaviour
                 TextComponent.text = string.Empty;
             }
             if (Index == Lines2.Length - 1)
+            {
+                LastTakeAction?.Invoke();
+            }
+        }
+
+        yield return new WaitForSeconds(4f);
+        TakeFinish?.Invoke();
+        StartCoroutine(CloseUIAnimation());
+    }
+
+    IEnumerator DisplayDialogue3()
+    {
+        yield return new WaitForSeconds(1f);
+        AudioManager.Instance.PlaySound("Uwa", transform.position);
+        for (Index = 0; Index < Lines3.Length; Index++)
+        {
+            yield return StartCoroutine(TypeLine(Lines3[Index]));
+
+            if (Index < Lines3.Length - 1)
+            {
+                yield return new WaitForSeconds(WaitForNextLine);
+                TextComponent.text = string.Empty;
+            }
+            if (Index == Lines3.Length - 1)
             {
                 LastTakeAction?.Invoke();
             }

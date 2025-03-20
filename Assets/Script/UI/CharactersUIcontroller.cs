@@ -11,6 +11,8 @@ public class CharactersUIcontroller : MonoBehaviour
     public DialogueTake dialogue;
     //抓取unity醬的動畫
     public Animator animator;
+    //抓取玩家的等級系統，播放初次升級事件
+    public LevelSystem levelSystem;
 
 
     // Start is called before the first frame update
@@ -20,6 +22,7 @@ public class CharactersUIcontroller : MonoBehaviour
 
         dialogue.TakeFinish += DisableUI;
         dialogue.LastTakeAction += playAnimation;
+        levelSystem.PlayerFirstLevelup += EnableUI;
     }
 
     // Update is called once per frame
