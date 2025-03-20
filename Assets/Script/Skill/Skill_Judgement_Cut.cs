@@ -86,6 +86,7 @@ public class Skill_Judgement_Cut : BaseSkill
             {
                 EnemyManager.Instance.SetEnemyIsPause(2f);
                 StartCoroutine(WaitToAttack());
+                break;
             }
         }
 
