@@ -178,14 +178,6 @@ public class PlayerController : MonoBehaviour
                 AutoUnlockEnemy();
             }
         }
-        if (IsRun && GetMoveInput().sqrMagnitude >= 0.1)
-        {
-            AudioManager.Instance.PlaySound("PlayerWalk", transform.position);
-        }
-        else
-        {
-            AudioManager.Instance.StopSound("PlayerWalk");
-        }
     }
 
     //技能系統

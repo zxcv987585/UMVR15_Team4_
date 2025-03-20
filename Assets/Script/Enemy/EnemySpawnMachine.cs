@@ -18,6 +18,7 @@ public class EnemySpawnMachine : MonoBehaviour
     [SerializeField] private Collider _triggerCollider;
     private Coroutine _spawnCoroutine;
     private Health _health;
+    private EnemyController _enemyController;
 
     private void Start()
     {
@@ -53,7 +54,7 @@ public class EnemySpawnMachine : MonoBehaviour
 
             spawnTransform =  _spawnTransformArray[Random.Range(0, _spawnTransformArray.Length)];
             _enemySpawnRaycast.SetEndPoint(spawnTransform, _spawnTimer);
-            EnemyManager.Instance.SpawnEnemy(_spawnPrefab, spawnTransform, _spawnTimer);
+            _enemyController = EnemyManager.Instance.SpawnEnemy(_spawnPrefab, spawnTransform, _spawnTimer).GetComponent<EnemyController>();
 
             // 當該物件生超過一定次數, 就不在繼續生成怪物
             spawnCount++;
@@ -84,6 +85,7 @@ public class EnemySpawnMachine : MonoBehaviour
     private IEnumerator DeadCoroutine()
     {
         _bombParticleSystem.Play();
+        _enemyController.StopRaycastSpawnCoroutine();
         yield return new WaitForSeconds(0.7f);
         gameObject.SetActive(false);
     }

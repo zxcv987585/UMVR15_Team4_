@@ -2206,6 +2206,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6982621738269738466}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2130983449809281082}
   m_SourcePrefab: {fileID: 100100000, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
 --- !u!4 &93869846329237620 stripped
 Transform:
@@ -2501,6 +2504,9 @@ MonoBehaviour:
   HitEffect: {fileID: 6465009843436118771, guid: 7b07dfb903a79104e98f12917049f0f9, type: 3}
   Judgement_Cut_Effect: {fileID: 7834434380170384362, guid: 68101499d07aced4aa0ded4acb624942, type: 3}
   LevelUp_Effect: {fileID: 105272, guid: 4623d2ee417ed514aa979e3fb2023294, type: 3}
+  Rivive_Effect: {fileID: 0}
+  AttackUP_Effect: {fileID: 0}
+  DefenseUP_Effect: {fileID: 0}
   LockTarget: {fileID: 0}
   stopRootMotionDistance: 1
 --- !u!114 &3825294987410653912
@@ -2548,7 +2554,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56df9beeaa58be34a9dda2af7e296a74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   playerData: {fileID: 11400000, guid: b770376df1dbd7b49b10747a4fbf0014, type: 2}
 --- !u!114 &8167012412599872900
 MonoBehaviour:
@@ -2579,6 +2584,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 8845005771188919756}
+--- !u!114 &2130983449809281082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8211211446584772470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc4196e0c1141a4fb774c7075b4f134, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8427152175007480866 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8519052518729677307, guid: ccf40fe6e26b7344caa5e582437848fd, type: 3}
