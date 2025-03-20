@@ -16,12 +16,31 @@ public class HotbarSlot : MonoBehaviour
 
     private void Awake()
     {
+        // 確保 ItemImage 和 slotNumText 被正確綁定
+        if (ItemImage == null)
+        {
+            Debug.LogWarning("HotbarSlot: ItemImage is NULL! 嘗試重新獲取...");
+            ItemImage = GetComponent<Image>(); // 嘗試從當前物件獲取
+        }
+
+        if (slotNumtText == null)
+        {
+            Debug.LogWarning("HotbarSlot: slotNumText is NULL! 嘗試重新獲取...");
+            slotNumtText = GetComponentInChildren<TextMeshProUGUI>(); // 從子物件獲取
+        }
         nullImage = GetComponent<Image>().sprite;
     }
 
     public void SetItem(ItemData newItem)
     {
         slotItem = newItem;
+
+        if (ItemImage == null)
+        {
+            Debug.LogError("HotbarSlot: ItemImage 仍為 NULL，請檢查 UI 設置！");
+            return;
+        }
+
         ItemImage.sprite = newItem != null ? newItem.itemIcon : null;
         slotNumtText.text = (newItem != null && newItem.isStack) ? newItem.itemNum.ToString() : "";
     }

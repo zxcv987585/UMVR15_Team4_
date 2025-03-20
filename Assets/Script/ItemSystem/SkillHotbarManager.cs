@@ -15,6 +15,13 @@ public class SkillHotbarManager : MonoBehaviour
     {
         if (instance != null) Destroy(this);
         instance = this;
+        foreach (var slot in hotbarSlots)
+        {
+            if (slot != null)
+            {
+                slot.slotImage = slot.GetComponent<Image>();
+            }
+        }
     }
 
     private void Start()

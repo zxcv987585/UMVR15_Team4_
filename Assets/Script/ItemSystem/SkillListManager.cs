@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SkillListManager : MonoBehaviour
 {
@@ -10,10 +11,19 @@ public class SkillListManager : MonoBehaviour
     {
         if (instance != null)
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
         instance = this;
+
+        // 確保 skillSlots 內的 Image 初始化
+        foreach (var slot in skillSlots)
+        {
+            if (slot != null)
+            {
+                slot.slotImage = slot.GetComponent<Image>();
+            }
+        }
     }
 
     private void Start()

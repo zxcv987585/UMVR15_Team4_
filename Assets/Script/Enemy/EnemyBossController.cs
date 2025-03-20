@@ -6,7 +6,12 @@ using UnityEngine.AI;
 
 public class EnemyBossController : MonoBehaviour, IEnemy
 {
-	[SerializeField] private GameObject _bossUIPrefab;
+    //
+    [SerializeField] private Material bossMaterial;
+    private float dissolveDuration = 3.0f; // 漸變時間
+	//
+
+    [SerializeField] private GameObject _bossUIPrefab;
     [SerializeField] private EnemyDataSO _enemyDataSO;
 	[SerializeField] private Animator _animator;
 	[SerializeField] private Transform _bodyTransform;
@@ -51,7 +56,14 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	
 	private void Start()
 	{
-		_collider = GetComponent<Collider>();
+        //
+        Renderer renderer = GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            bossMaterial = renderer.material;
+        }
+        //
+        _collider = GetComponent<Collider>();
 	
 		// 設定血量及相關事件
 		Health = GetComponent<Health>();
@@ -446,10 +458,32 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		AudioManager.Instance.PlaySound("BossDead", transform.position);
 		
 		_playerTransform.GetComponent<LevelSystem>().AddExperience(_enemyDataSO.exp);
-	}
 
-	//如果需要 Enemy 受傷, 呼叫該函數
-	public void TakeDamage()
+        // 觸發 Shader Dissolve 效果
+        if (bossMaterial != null)
+        {
+            StartCoroutine(FadeOutBoss());
+        }
+		//
+    }
+
+    // Coroutine 讓材質變化
+    private IEnumerator FadeOutBoss()
+    {
+        yield return new WaitForSeconds(2f);
+        float timer = 0f;
+        while (timer < dissolveDuration)
+        {
+            timer += Time.deltaTime;
+            float dissolveValue = Mathf.Lerp(0, 1, timer / dissolveDuration);
+            bossMaterial.SetFloat("_DissolveAmount", dissolveValue);
+            yield return null;
+        }
+        bossMaterial.SetFloat("_DissolveAmount", 1); // 確保最後完全 Dissolve
+    }
+
+    //如果需要 Enemy 受傷, 呼叫該函數
+    public void TakeDamage()
 	{
 		if(_state == BossState.Dead) return;
 
