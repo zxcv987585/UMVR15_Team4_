@@ -15,6 +15,7 @@ public class AudioManager : MonoBehaviour
 	private Queue<AudioSource> _audioPool = new Queue<AudioSource>();
 	private Dictionary<string, List<AudioSource>> _nowPlayAudio = new Dictionary<string, List<AudioSource>>();
 	private AudioSource _bgmAudioSource;
+	private AudioSource _nextAudioSource;
 
 	private void Awake()
 	{
@@ -49,6 +50,9 @@ public class AudioManager : MonoBehaviour
 		{
             PlayBGM("BackGroundMusic");
         }
+        
+        _nextAudioSource = gameObject.AddComponent<AudioSource>();
+        //_nextAudioSource
 	}
 
 	private void OnValidate()
@@ -75,6 +79,11 @@ public class AudioManager : MonoBehaviour
 		_bgmAudioSource.loop = true;
 		_bgmAudioSource.volume = _mainVolume * _bgmVolume;
 		_bgmAudioSource.Play();
+	}
+	
+	private IEnumerator CrossFadeBGM()
+	{
+	    yield return null;
 	}
 
 	public void PlaySound(string key, Vector3 position, bool isLoop = false, float playTimer = 0f)
