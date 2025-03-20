@@ -6,6 +6,8 @@ public class LevelSystem : MonoBehaviour
     public PlayerDataSO playerData;
     public event Action PlayerLevelup;
 
+    public event Action PlayerFirstLevelup;
+
     public void AddExperience(float xp)
     {
         playerData.CurrentExp += xp;
@@ -21,6 +23,11 @@ public class LevelSystem : MonoBehaviour
     public void LevelUp()
     {
         playerData.CurrentLevel++;
+
+        if(playerData.CurrentLevel == 2)
+        {
+            PlayerFirstLevelup?.Invoke();
+        }
 
         playerData.attackDamage += 3;
         playerData.MaxPP += 5;
