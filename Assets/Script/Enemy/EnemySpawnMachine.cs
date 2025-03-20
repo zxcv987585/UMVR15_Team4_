@@ -79,13 +79,14 @@ public class EnemySpawnMachine : MonoBehaviour
         _lockWallPrefab?.SetActive(false);
 
         StartCoroutine(DeadCoroutine());
-        
     }
 
     private IEnumerator DeadCoroutine()
     {
+        if(_enemyController.gameObject.activeSelf)
+            _enemyController.StopRaycastSpawnCoroutine();
+    
         _bombParticleSystem.Play();
-        _enemyController.StopRaycastSpawnCoroutine();
         yield return new WaitForSeconds(0.7f);
         gameObject.SetActive(false);
     }
