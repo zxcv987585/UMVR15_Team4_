@@ -8,6 +8,7 @@ public class MiniMap : MonoBehaviour
 
     private void Start()
     {
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
         DontDestroyOnLoad(gameObject);
     }
     // Update is called once per frame
