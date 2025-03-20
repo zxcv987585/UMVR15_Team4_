@@ -14,6 +14,10 @@ public class CharactersUIcontroller : MonoBehaviour
     //抓取玩家的等級系統，播放初次升級事件
     public LevelSystem levelSystem;
 
+    private void Awake()
+    {
+        levelSystem = GameObject.FindGameObjectWithTag("Player").GetComponent<LevelSystem>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -25,12 +29,6 @@ public class CharactersUIcontroller : MonoBehaviour
         levelSystem.PlayerFirstLevelup += EnableUI;
 
         animator = GameObject.FindGameObjectWithTag("UnityChan").GetComponent<Animator>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void EnableUI()
