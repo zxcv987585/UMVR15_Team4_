@@ -26,11 +26,18 @@ public class DialogueTake : MonoBehaviour
     //劇情結束後需要傳送的delegate
     public event Action TakeFinish;
 
+    private void Awake()
+    {
+        levelSystem = GameObject.FindGameObjectWithTag("Player").GetComponent<LevelSystem>();
+    }
+
     void Start()
     {
         levelSystem.PlayerFirstLevelup += playerlevelUp;
 
         TextComponent.text = string.Empty;
+
+        LockWall = GameObject.Find("ForcefieldRed (4)");
 
         StartCoroutine(UIAnimation());
         StartCoroutine(DisplayDialogue());
