@@ -13,6 +13,7 @@ public class DialogueTake : MonoBehaviour
     public string[] Lines;
     public string[] Lines2;
     public string[] Lines3;
+    public string[] Lines4;
     public float TextSpeed;
     public float WaitForNextLine;
     //記錄文字進度所需Index
@@ -25,6 +26,8 @@ public class DialogueTake : MonoBehaviour
     public event Action LastTakeAction;
     //劇情結束後需要傳送的delegate
     public event Action TakeFinish;
+    //BattleScene最後一區對話用delegate
+    public event Action LastAreaTakeFinish;
 
     private void Awake()
     {
@@ -57,6 +60,14 @@ public class DialogueTake : MonoBehaviour
         gameObject.SetActive(true);
         StartCoroutine(OpenUIAnimation());
         StartCoroutine(DisplayDialogue3());
+    }
+
+    public void AreaTreeTakes()
+    {
+        TextComponent.text = string.Empty;
+        gameObject.SetActive(true);
+        StartCoroutine(OpenUIAnimation());
+        StartCoroutine(DisplayDialogue4());
     }
 
     IEnumerator DisplayDialogue()
@@ -132,6 +143,31 @@ public class DialogueTake : MonoBehaviour
         yield return new WaitForSeconds(4f);
         TakeFinish?.Invoke();
         levelSystem.PlayerFirstLevelup -= playerlevelUp;
+        StartCoroutine(CloseUIAnimation());
+    }
+
+    IEnumerator DisplayDialogue4()
+    {
+        yield return new WaitForSeconds(0.8f);
+        AudioManager.Instance.PlaySound("Uwa", transform.position);
+        for (Index = 0; Index < Lines4.Length; Index++)
+        {
+            yield return StartCoroutine(TypeLine(Lines4[Index]));
+
+            if (Index < Lines4.Length - 1)
+            {
+                yield return new WaitForSeconds(WaitForNextLine);
+                TextComponent.text = string.Empty;
+            }
+            if (Index == Lines4.Length - 1)
+            {
+                AudioManager.Instance.PlaySound("Uwwwaaaa", transform.position);
+                LastAreaTakeFinish?.Invoke();
+            }
+        }
+
+        yield return new WaitForSeconds(4f);
+        TakeFinish?.Invoke();
         StartCoroutine(CloseUIAnimation());
     }
 

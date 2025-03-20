@@ -7571,6 +7571,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1282520464602284429, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1279756301}
+    - targetCorrespondingSourceObject: {fileID: 6086901155628359206, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1976549435}
   m_SourcePrefab: {fileID: 100100000, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
 --- !u!65 &1301500252 stripped
 BoxCollider:
@@ -9145,6 +9148,34 @@ PrefabInstance:
     - target: {fileID: 8671326628917392447, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878238720755922522, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: Lines4.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878238720755922522, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: Lines4.Array.data[0]
+      value: "\u5925\u4F34\uFF01\u5927\u4E8B\u4E0D\u5999\u4E86\uFF01\u6211\u5075\u6E2C\u5230\u4E00\u500B\u8A0A\u865F\u5F9E\u5730\u5E95\u947D\u4E86\u51FA\u4F86\uFF01"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878238720755922522, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: Lines4.Array.data[1]
+      value: "\u6839\u64DA\u89E3\u6790.......\u90A3\u5F88\u53EF\u80FD\u5C31\u662F\u5C0E\u81F4\u9019\u6B21\u5BE6\u9A57\u9AD4\u5916\u6D29\u7684\u7F6A\u9B41\u798D\u9996\uFF01"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878238720755922522, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: Lines4.Array.data[2]
+      value: "\u6839\u64DA\u6211\u525B\u525B\u6536\u5230\u7684\u6D88\u606F\uFF0C\u9019\u662F\u5BE6\u9A57\u9AD4\u5916\u6D29\u4E8B\u6545\uFF0C\u662F\u56E0\u70BA\u4EE3\u865F\u96F6\u7684\u5BE6\u9A57\u9AD4\u5931\u63A7\u5C0E\u81F4\u3002"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878238720755922522, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: Lines4.Array.data[3]
+      value: "\u7260\u6BD4\u4EFB\u4F55\u5BE6\u9A57\u9AD4\u90FD\u5371\u96AA\u6578\u767E\u500D\uFF0C\u5FC5\u9808\u8981\u7ACB\u523B\u9664\u6389\u7260\uFF01"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878238720755922522, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: Lines4.Array.data[4]
+      value: "\u7B49\u7B49\u6211\u6703\u5728\u4F60\u90A3\u88CF\u8A2D\u7F6E\u50B3\u9001\u9580\uFF01\u4F60\u5148\u904E\u4F86\u8207\u6211\u96C6\u5408\uFF01"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878238720755922522, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: Lines4.Array.data[5]
+      value: "\u65E9\u77E5\u9053\u6848\u5B50\u9019\u9EBC\u5371\u96AA\u61C9\u8A72\u591A\u627E\u4E00\u4E9B\u4EBA\u4F86\u5E6B\u4F60\uFF0C\u771F\u662F\u62B1\u6B49......."
       objectReference: {fileID: 0}
     - target: {fileID: 8903675542824253882, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_AnchorMax.y
@@ -12565,6 +12596,25 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4138221109047864, guid: d067854766d57d44a9af41411b5ae1a2, type: 3}
   m_PrefabInstance: {fileID: 1968187914}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1976549431 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6086901155628359206, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+  m_PrefabInstance: {fileID: 1301500251}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1976549435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976549431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 337c6c86f0aa6114aa71f73d02d0731d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charactersUIcontroller: {fileID: 0}
+  dialogueTake: {fileID: 0}
 --- !u!1001 &1981785938
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -26,6 +25,7 @@ public class CharactersUIcontroller : MonoBehaviour
 
         dialogue.TakeFinish += DisableUI;
         dialogue.LastTakeAction += playAnimation;
+        dialogue.LastAreaTakeFinish += ScaredAnimation;
         levelSystem.PlayerFirstLevelup += EnableUI;
 
         animator = GameObject.FindGameObjectWithTag("UnityChan").GetComponent<Animator>();
@@ -39,6 +39,11 @@ public class CharactersUIcontroller : MonoBehaviour
     private void DisableUI()
     {
         StartCoroutine(CloseUIAnimation());
+    }
+
+    public void LastArea()
+    {
+        StartCoroutine (LastAreaUIAnimation());
     }
 
     private IEnumerator UIAnimation()
@@ -66,8 +71,22 @@ public class CharactersUIcontroller : MonoBehaviour
         gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
     }
 
+    private IEnumerator LastAreaUIAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        AudioManager.Instance.PlaySound("Radio", transform.position);
+        gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
+        animator.Play("LOSE00");
+
+    }
+
     private void playAnimation()
     {
         animator.Play("WIN00");
+    }
+
+    private void ScaredAnimation()
+    {
+        animator.Play("REFLESH00");
     }
 }
