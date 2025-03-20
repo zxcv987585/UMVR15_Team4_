@@ -16,7 +16,7 @@ public class AreaUITrigger : MonoBehaviour
         Triggercollider = GetComponent<Collider>();
 
         charactersUIcontroller = GameObject.Find("CharactersWindowUI").GetComponent<CharactersUIcontroller>();
-        dialogueTake = GameObject.Find("Tak DialogueBox").GetComponent<DialogueTake>();
+        dialogueTake = GameObject.Find("Take DialogueBox").GetComponent<DialogueTake>();
         teachingUI = GameObject.Find("Teaching DialogueBox").GetComponent <TeachingUIController>();
     }
 

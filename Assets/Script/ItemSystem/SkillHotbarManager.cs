@@ -13,13 +13,24 @@ public class SkillHotbarManager : MonoBehaviour
 
     private void Awake()
     {
+        skillListManager = GetComponent<SkillListManager>();
+
         if (instance != null) Destroy(this);
         instance = this;
+
         foreach (var slot in hotbarSlots)
         {
-            if (slot != null)
+            if (slot == null)
             {
-                slot.slotImage = slot.GetComponent<Image>();
+                Debug.LogError("SkillHotbarManager: hotbarSlots 中有 null 值！");
+                continue;
+            }
+
+            slot.slotImage = slot.GetComponent<Image>();
+
+            if (slot.slotImage == null)
+            {
+                Debug.LogError($"SkillHotbarManager: Slot {slot.name} 沒有 Image 組件！");
             }
         }
     }
@@ -78,9 +89,21 @@ public class SkillHotbarManager : MonoBehaviour
     }
     public void RefreshHotbarUI()
     {
-        for (int i = 0; i < hotbarSlots.Count; i++)
+        if (hotbarSlots == null || hotbarSlots.Count == 0)
         {
-            hotbarSlots[i].UpdateHotbarSlot(); 
+            Debug.LogError("SkillHotbarManager: hotbarSlots 未初始化！");
+            return;
+        }
+
+        foreach (var slot in hotbarSlots)
+        {
+            if (slot == null)
+            {
+                Debug.LogError("SkillHotbarManager: 某個 hotbarSlot 為 null，跳過更新！");
+                continue;
+            }
+
+            slot.UpdateHotbarSlot();
         }
     }
 }
