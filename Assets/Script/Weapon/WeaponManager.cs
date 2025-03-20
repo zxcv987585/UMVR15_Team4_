@@ -108,6 +108,7 @@ public class WeaponManager : MonoBehaviour
                 if (bossHealth != null)
                 {
                     bossHealth.TakeDamage(player.playerData.attackDamage);
+                    health.AttackHealPP(1.5f);
                 }
                 if (player.HitEffect != null)
                 {
