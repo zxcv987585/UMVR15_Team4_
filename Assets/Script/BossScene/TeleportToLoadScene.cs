@@ -39,6 +39,12 @@ public class TeleportToLoadScene : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        whiteScreen = GameObject.Find("whiteScreen").GetComponent<Image>();
+        blackScreen = GameObject.Find("blackScreen").GetComponent<Image>();
+        isUseableUI = GameObject.Find("isUseableUI").GetComponent<RectTransform>();
+    }
     private void Start()
     {
         GameInput.Instance.OnInteraction += Teleport;
