@@ -44,9 +44,9 @@ public class AudioManager : MonoBehaviour
 
 	private void Start()
 	{
-		// mainVolume = GameDataManager.Instance.gameData.mainVolume;
-		// bgmVolume = GameDataManager.Instance.gameData.bgmVolume;
-		// sfxVolume = GameDataManager.Instance.gameData.sfxVolume;
+		_mainVolume = GameDataManager.Instance.gameData.mainVolume;
+		_bgmVolume = GameDataManager.Instance.gameData.bgmVolume;
+		_sfxVolume = GameDataManager.Instance.gameData.sfxVolume;
 
         if (_bgmAudioSource != null)
 		{
@@ -63,6 +63,14 @@ public class AudioManager : MonoBehaviour
 		{
 			_bgmAudioSource.volume = _mainVolume * _bgmVolume;
 		}
+		
+		if(GameDataManager.Instance != null)
+		{
+		    GameDataManager.Instance.gameData.mainVolume = _mainVolume;
+			GameDataManager.Instance.gameData.bgmVolume = _bgmVolume;
+			GameDataManager.Instance.gameData.sfxVolume = _sfxVolume;
+		}
+		
 	}
 
 	public void PlayBGM(string key, float volume = 0.5f)
