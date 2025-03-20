@@ -64,7 +64,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		_navMeshAgent.updatePosition = false;
 		_navMeshAgent.updateRotation = false;
 		_navMeshAgent.speed = _enemyDataSO.moveSpeed;
-		_navMeshAgent.stoppingDistance = 5f;
+		_navMeshAgent.stoppingDistance = 6f;
 		_navMeshAgent.enabled = true;
 
 		// 抓取玩家資料
@@ -137,7 +137,6 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		_navMeshAgent.SetDestination(_playerTransform.position);
 
 		Vector3 nextPosition = _navMeshAgent.nextPosition;
-        //Vector3 direction = (nextPosition - transform.position).normalized;
 		Vector3 direction = _navMeshAgent.desiredVelocity.normalized;
         direction.y = 0; // 確保不會影響 Y 軸 (防止怪物漂浮)
 
@@ -148,9 +147,11 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 			//transform.rotation = _navMeshAgent.transform.rotation;
 		}
 
-        transform.position += _enemyDataSO.moveSpeed * Time.deltaTime * direction;
-		_navMeshAgent.nextPosition = transform.position;
-		//_navMeshAgent.transform.rotation = transform.rotation;
+		if(Vector3.Distance(transform.position, _playerTransform.position) > 6f)
+		{
+		    transform.position += _enemyDataSO.moveSpeed * Time.deltaTime * direction;
+			_navMeshAgent.nextPosition = transform.position;
+		}
 	}
 
 	// 檢查目前是否為 Idle 狀態

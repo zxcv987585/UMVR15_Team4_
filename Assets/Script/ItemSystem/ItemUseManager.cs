@@ -53,6 +53,7 @@ public class ItemUseManager : MonoBehaviour
                 {
                     Debug.Log($"Use {data.itemName}");
                     health.Heal(data.amount);
+                    AudioManager.Instance.PlaySound("HPHealth", transform.position);
                 };
                 break;
             case 2: //2.PP Potion
@@ -60,6 +61,7 @@ public class ItemUseManager : MonoBehaviour
                 {
                     Debug.Log($"Use {data.itemName}");
                     health.HealPP(data.amount);
+                    AudioManager.Instance.PlaySound("PPHealth", transform.position);
                 };
                 break;
             case 3: //3.Power Up
@@ -68,6 +70,7 @@ public class ItemUseManager : MonoBehaviour
                     Debug.Log($"Use {data.itemName}");
                     if(!player.IsAttackBuff)
                     StartCoroutine(player.AttackUP(data.amount, data.duration));
+                    AudioManager.Instance.PlaySound("StatusUp", transform.position);
                 };
                 break;
             case 4: //4.Defense Up
@@ -76,6 +79,7 @@ public class ItemUseManager : MonoBehaviour
                     Debug.Log($"Use {data.itemName}");
                     if(!player.IsDefenseBuff)
                     StartCoroutine(player.DefenseUP(data.amount, data.duration));
+                    AudioManager.Instance.PlaySound("StatusUp", transform.position);
                 };
                 break;
             case 5: //5.Rebitrh
