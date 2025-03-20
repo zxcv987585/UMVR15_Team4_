@@ -1463,6 +1463,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 120359954}
   m_CullTransparentMesh: 1
+--- !u!114 &126539933 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4489829971934230583, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+  m_PrefabInstance: {fileID: 1432552885}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &135946403
 GameObject:
   m_ObjectHideFlags: 0
@@ -7726,6 +7737,7 @@ MonoBehaviour:
         m_CallState: 2
   dialogue: {fileID: 1318415900}
   animator: {fileID: 335804268}
+  levelSystem: {fileID: 0}
 --- !u!225 &1099474426
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -9215,9 +9227,11 @@ MonoBehaviour:
   - "\u6230\u9B25\u670D\u6703\u5354\u52A9\u4F60\u9032\u884C\u6230\u9B25\uFF0C\u8A73\u7D30\u64CD\u4F5C\u525B\u525B\u5DF2\u7D93\u53CA\u6642\u4E0A\u50B3\u7D66\u4F60\u4E86\uFF01"
   - "\u524D\u9762\u7684\u7D05\u8272\u5C4F\u969C\u662F\u751F\u7269\u80FD\u91CF\u5834\uFF0C\u9019\u8868\u793A\u9644\u8FD1\u6709\u751F\u602A\u88DD\u7F6E\u5728\u963B\u64CB\u4F60\u524D\u9032\uFF0C\u53BB\u628A\u5B83\u627E\u51FA\u4F86\u7834\u58DE\u6389\u5427\uFF01"
   - "\u5730\u5716\u4E0A\u6709\u4F60\u6240\u9700\u7684\u4E00\u5207\u8CC7\u8A0A\uFF01Fighting\uFF01"
+  Lines3: []
   TextSpeed: 0.04
   WaitForNextLine: 4
   LockWall: {fileID: 1981785939}
+  levelSystem: {fileID: 0}
 --- !u!225 &1318415901
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -10919,6 +10933,10 @@ PrefabInstance:
       propertyPath: damageUI
       value: 
       objectReference: {fileID: 1095145678}
+    - target: {fileID: 7023242330529139636, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: playerName
+      value: 
+      objectReference: {fileID: 126539933}
     - target: {fileID: 7023242330529139636, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: levelSystem
       value: 

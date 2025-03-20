@@ -33,6 +33,7 @@ public class InputNameUI : MonoBehaviour
     public IEnumerator CloseInputNameEvent()
     {
         playerName = nameInputField.text;
+        PlayerPrefs.SetString("PlayerName", playerName);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

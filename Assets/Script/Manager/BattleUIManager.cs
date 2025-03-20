@@ -10,7 +10,6 @@ public class BattleUIManager : MonoBehaviour
 
     [SerializeField] private Canvas battleCanvas;
     //
-    [SerializeField] private InputNameUI inputNameUI;
     [SerializeField] private TextMeshProUGUI playerName;
     //
 
@@ -45,9 +44,7 @@ public class BattleUIManager : MonoBehaviour
 
     private void Start()
     {
-        //
-        playerName.text = inputNameUI.playerName.ToString();
-        //
+        playerName.text = PlayerPrefs.GetString("PlayerName");
 
         damageTextQuene = new Queue<DamageText>();
         health.OnDamage += ChangeHPStatus;
