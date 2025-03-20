@@ -13,31 +13,59 @@ public class HotbarManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null) Destroy(this);
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
+
+        // ½T«O HotbarSlots ¬O±q UI ¥¿½T¸j©wªº
+        if (hotbarSlots.Count == 0)
+        {
+            Debug.LogWarning("HotbarManager: ¹Á¸Õ¦Û°ÊÀò¨ú HotbarSlot...");
+            hotbarSlots.AddRange(GetComponentsInChildren<HotbarSlot>());
+        }
+
+        foreach (var slot in hotbarSlots)
+        {
+            if (slot == null)
+            {
+                Debug.LogError("HotbarManager: ¦³ HotbarSlot ¬° NULL¡A½ÐÀË¬d UI ³]¸m¡I");
+            }
+        }
     }
+
     public void AssignItemToHotbar(ItemData item, int slotIndex)
     {
-        if (slotIndex < 0 || slotIndex >= hotbarSlots.Count) return;
+        if (slotIndex < 0 || slotIndex >= hotbarSlots.Count)
+        {
+            Debug.LogError($"HotbarManager: «ü©wªº HotbarSlot ¶W¥X½d³ò ({slotIndex})¡I");
+            return;
+        }
 
+        if (hotbarSlots[slotIndex] == null)
+        {
+            Debug.LogError($"HotbarManager: HotbarSlot at index {slotIndex} is missing!");
+            return;
+        }
         //·j´M¥á¦Ü§Ö±¶Äæ¸Ìªº¹D¨ã¬O§_¤w¦³­«½Æ
         HotbarSlot previousSlot = null;
         for (int i = 0; i < hotbarSlots.Count; i++)
         {
-            if (hotbarSlots[i].slotItem == item) 
+            if (hotbarSlots[i].slotItem == item)
             {
                 //°O¿ý³o­ÓHotbarSlot
-                previousSlot = hotbarSlots[i]; 
+                previousSlot = hotbarSlots[i];
                 break;
             }
         }
 
         if (previousSlot != null)
         {
-            //²M°£­E»§Ö±¶Äæ¤ºªº¹D¨E
+            //²M°£
             previousSlot.ClearSlot();
         }
-
         hotbarSlots[slotIndex].SetItem(item);
 
         RefreshHotbarUI();

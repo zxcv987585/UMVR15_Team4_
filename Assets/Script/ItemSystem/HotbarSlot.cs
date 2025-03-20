@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-//¥NªúÉI¥]¤ºªº¤@­Óslot ­t³dÅã¥ÜmyBag itemlist¤º¹E³ªº¹D¨E
+//¥NªúÉI¥]¤ºªº¤@­Óslot ­t³dÅã¥ÜmyBag itemlist¤º?E³ªº¹D?E
 //°õ¦æRefreshUI®É¡A¨C­Óslot·|§ó·sUI
 public class HotbarSlot : MonoBehaviour
 {
@@ -16,12 +16,31 @@ public class HotbarSlot : MonoBehaviour
 
     private void Awake()
     {
+        // ½T«O ItemImage ©M slotNumText ³Q¥¿½T¸j©w
+        if (ItemImage == null)
+        {
+            Debug.LogWarning("HotbarSlot: ItemImage is NULL! ¹Á¸Õ­«·sÀò¨ú...");
+            ItemImage = GetComponent<Image>(); // ¹Á¸Õ±q·í«eª«¥óÀò¨ú
+        }
+
+        if (slotNumtText == null)
+        {
+            Debug.LogWarning("HotbarSlot: slotNumText is NULL! ¹Á¸Õ­«·sÀò¨ú...");
+            slotNumtText = GetComponentInChildren<TextMeshProUGUI>(); // ±q¤lª«¥óÀò¨ú
+        }
         nullImage = GetComponent<Image>().sprite;
     }
 
     public void SetItem(ItemData newItem)
     {
         slotItem = newItem;
+
+        if (ItemImage == null)
+        {
+            Debug.LogError("HotbarSlot: ItemImage ¤´¬° NULL¡A½ÐÀË¬d UI ³]¸m¡I");
+            return;
+        }
+
         ItemImage.sprite = newItem != null ? newItem.itemIcon : null;
         slotNumtText.text = (newItem != null && newItem.isStack) ? newItem.itemNum.ToString() : "";
     }
