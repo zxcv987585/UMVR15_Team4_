@@ -42,6 +42,9 @@ public class TeleportToLoadScene : MonoBehaviour
     private void Start()
     {
         GameInput.Instance.OnInteraction += Teleport;
+        
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        mainCamera = FindAnyObjectByType<CameraController>();
     }
 
     private void Teleport()
