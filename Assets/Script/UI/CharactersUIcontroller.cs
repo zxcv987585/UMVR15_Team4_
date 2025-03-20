@@ -18,7 +18,7 @@ public class CharactersUIcontroller : MonoBehaviour
     {
         StartCoroutine(UIAnimation());
 
-        dialogue.Take1Finish += DisableUI;
+        dialogue.TakeFinish += DisableUI;
         dialogue.LastTakeAction += playAnimation;
     }
 
@@ -54,10 +54,6 @@ public class CharactersUIcontroller : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         AudioManager.Instance.PlaySound("Radio", transform.position);
         gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
-        yield return new WaitForSeconds(1.3f);
-        animator.Play("WAIT03");
-
-        AudioManager.Instance.PlaySound("Yaho", transform.position);
     }
 
     private IEnumerator CloseUIAnimation()
@@ -65,8 +61,6 @@ public class CharactersUIcontroller : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         AudioManager.Instance.PlaySound("Radio", transform.position);
         gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
-
-        dialogue.Take1Finish -= DisableUI;
     }
 
     private void playAnimation()

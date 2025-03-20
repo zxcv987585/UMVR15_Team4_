@@ -7,6 +7,8 @@ public class AreaUITrigger : MonoBehaviour
 {
     public CharactersUIcontroller charactersUIcontroller;
     public DialogueTake dialogueTake;
+    public TeachingUIController teachingUI;
+
     private Collider Triggercollider;
 
     public event Action RadioTrigger;
@@ -23,6 +25,8 @@ public class AreaUITrigger : MonoBehaviour
             if (other.GetComponent<PlayerController>() != null)
             {
                 charactersUIcontroller.EnableUI();
+                dialogueTake.AreaTwoTakes();
+                teachingUI.ChangeText();
             }
         }
     }

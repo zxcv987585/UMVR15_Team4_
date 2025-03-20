@@ -1,0 +1,16 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TeachingUIController : MonoBehaviour
+{
+    public GameObject BaseText;
+    public GameObject AttackText;
+    
+    public void ChangeText()
+    {
+        BaseText?.SetActive(false);
+        AttackText?.SetActive(true);
+    }
+
+}

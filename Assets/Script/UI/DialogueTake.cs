@@ -6,19 +6,22 @@ using UnityEngine.Events;
 
 public class DialogueTake : MonoBehaviour
 {
-    //–×‘¶‹âx“®á`
+    //µøµ¡°Êµe
     public UnityEvent openAction;
-    //–×‘¶š–‹‘Šè‘u
+    //Àx¦s¤å¦r¬ÛÃö¤º®e
     public TextMeshProUGUI TextComponent;
     public string[] Lines;
+    public string[] Lines2;
     public float TextSpeed;
     public float WaitForNextLine;
-    //—p˜ÒSæ–×‘¶š‹å“Iint
+    //°O¿ı¤å¦r¶i«×©Ò»İIndex
     private int Index;
-    //—p˜Ò’Ê’ml•¨‹âx‰½oŒ»æîÁ¸“IˆÏ”h
-    public event Action Take1Finish;
-    //—p˜Ò’Ê’ml•¨ŠY˜ôY›õ“®ì
+    //»İ­nÃö³¬ªº²Ä¤@¹D«Ì»ÙÀğ¾À
+    public GameObject LockWall;
+    //²Ä¤@°Ï³Ì«á¤@¬q¤å¦r©Ò»İ¶Ç°eªºdelegate¡]¥D­n¥Î©ó±±¨îunityÂæ)
     public event Action LastTakeAction;
+    //¼@±¡µ²§ô«á»İ­n¶Ç°eªºdelegate
+    public event Action TakeFinish;
 
     void Start()
     {
@@ -26,6 +29,14 @@ public class DialogueTake : MonoBehaviour
 
         StartCoroutine(UIAnimation());
         StartCoroutine(DisplayDialogue());
+    }
+
+    public void AreaTwoTakes()
+    {
+        TextComponent.text = string.Empty;
+        gameObject.SetActive(true);
+        StartCoroutine(OpenUIAnimation());
+        StartCoroutine(DisplayDialogue2());
     }
 
     IEnumerator DisplayDialogue()
@@ -47,7 +58,31 @@ public class DialogueTake : MonoBehaviour
         }
 
         yield return new WaitForSeconds(4f);
-        Take1Finish?.Invoke();
+        TakeFinish?.Invoke();
+        LockWall?.SetActive(false);
+        StartCoroutine(CloseUIAnimation());
+    }
+
+    IEnumerator DisplayDialogue2()
+    {
+        yield return new WaitForSeconds(1f);
+        for (Index = 0; Index < Lines2.Length; Index++)
+        {
+            yield return StartCoroutine(TypeLine(Lines2[Index]));
+
+            if (Index < Lines2.Length - 1)
+            {
+                yield return new WaitForSeconds(WaitForNextLine);
+                TextComponent.text = string.Empty;
+            }
+            if (Index == Lines2.Length - 1)
+            {
+                LastTakeAction?.Invoke();
+            }
+        }
+
+        yield return new WaitForSeconds(4f);
+        TakeFinish?.Invoke();
         StartCoroutine(CloseUIAnimation());
     }
 
@@ -70,5 +105,10 @@ public class DialogueTake : MonoBehaviour
         gameObject.GetComponent<DialogueTake>().openAction.Invoke();
         yield return new WaitForSeconds(0.5f);
         gameObject.SetActive(false);
+    }
+    private IEnumerator OpenUIAnimation()
+    {
+        yield return new WaitForSeconds(0.2f);
+        gameObject.GetComponent<DialogueTake>().openAction.Invoke();
     }
 }
