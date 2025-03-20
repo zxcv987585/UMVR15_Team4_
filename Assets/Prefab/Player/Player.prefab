@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 1.61, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalScale: {x: 1.35, y: 1.35, z: 1.35}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8845005771188919756}
@@ -73,8 +73,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a39a066b1ed760247961fbafccc340be, type: 3}
-  m_Color: {r: 0, g: 1, b: 0.07741523, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 0cf0632f93d97ef42a31e4b0632f3f81, type: 3}
+  m_Color: {r: 0, g: 1, b: 0.16470589, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2452,7 +2452,7 @@ MonoBehaviour:
   CurrentHealth: 0
   MaxPP: 0
   CurrentPP: 0
-  PPRecoveryRate: 0.5
+  PPRecoveryRate: 1
   HealEffect: {fileID: 8846938917156980417, guid: 625d05f27810bd844867ceeba476f1f3, type: 3}
   HealPPEffect: {fileID: 2336685109152294099, guid: aeebcbfa648dbd44180cd3739aa8c228, type: 3}
   levelSystem: {fileID: 8631780679438115670}
@@ -2504,9 +2504,9 @@ MonoBehaviour:
   HitEffect: {fileID: 6465009843436118771, guid: 7b07dfb903a79104e98f12917049f0f9, type: 3}
   Judgement_Cut_Effect: {fileID: 7834434380170384362, guid: 68101499d07aced4aa0ded4acb624942, type: 3}
   LevelUp_Effect: {fileID: 105272, guid: 4623d2ee417ed514aa979e3fb2023294, type: 3}
-  Rivive_Effect: {fileID: 0}
-  AttackUP_Effect: {fileID: 0}
-  DefenseUP_Effect: {fileID: 0}
+  Rivive_Effect: {fileID: 1817854474395104945, guid: 4f561dfa35ac0614e9f663a672571bde, type: 3}
+  AttackUP_Effect: {fileID: 7602194534393162823, guid: dc04d91e3a88b304f98c85e86b2e2e6f, type: 3}
+  DefenseUP_Effect: {fileID: 4580601203042676225, guid: f94c88fc6e7c6c849a644907f71c5c09, type: 3}
   LockTarget: {fileID: 0}
   stopRootMotionDistance: 1
 --- !u!114 &3825294987410653912

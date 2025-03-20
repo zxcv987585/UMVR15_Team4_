@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1706126559645681964}
   - component: {fileID: 3070416385868558027}
   - component: {fileID: 1468929069838653373}
+  - component: {fileID: 594797955054961068}
   - component: {fileID: 5884688521178202650}
   m_Layer: 0
   m_Name: Main Camera
@@ -74,7 +75,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 767
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -115,12 +116,27 @@ MonoBehaviour:
   SmoothTime: 0
   AimTarget: {fileID: 0}
   LockOnTargetFollowSpeed: 0.05
+  fadeImage: {fileID: 0}
+  fadeDuration: 4
   transitionSpeed: 10
   collisionLayers:
     serializedVersion: 2
     m_Bits: 64
   collisionRadius: 0.2
   collisionOffset: 0.2
+--- !u!114 &594797955054961068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6857205204805475147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5b2411c633f2b340be49d73614f30ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Camera: {fileID: 1920559016646865334}
 --- !u!114 &5884688521178202650
 MonoBehaviour:
   m_ObjectHideFlags: 0
