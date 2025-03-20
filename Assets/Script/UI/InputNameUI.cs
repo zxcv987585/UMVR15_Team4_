@@ -24,6 +24,8 @@ public class InputNameUI : MonoBehaviour
 
     private IEnumerator InputNameUIAnimation()
     {
+        AudioManager.Instance.PlaySound("MenuOpen",transform.position);
+    
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         gameObject.GetComponent<InputNameUI>().openAction.Invoke();
