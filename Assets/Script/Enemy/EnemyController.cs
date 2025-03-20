@@ -59,7 +59,17 @@ public class EnemyController : MonoBehaviour, IEnemy
 		EnemyManager.Instance.AddToUpdateList(this);
 
 		// 生成動畫, 我也不曉得為啥要 /2 才會正常
-		StartCoroutine(StartDissolveCoroutine(_dissolveTime/2));
+		if(_dissolveTime == 1f)
+		{
+			// 如果是預設消融時間, 則正常生成
+		    StartCoroutine(StartDissolveCoroutine(_dissolveTime/2));
+		}
+		else
+		{
+			// 如果不是預設時間, 視為生怪機生的
+			StartCoroutine(RaycastStartDissolveCoroutine(_dissolveTime/2));
+		}
+		
 	}
 
 
@@ -436,5 +446,55 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_material.SetColor(RIM_COLOR, Color.black);
 
 		_isInit = false;
+	}
+	
+	private IEnumerator  RaycastStartDissolveCoroutine(float showTimer)
+	{
+	    _material.SetColor(EMISSION_COLOR, Color.red);
+		_material.SetColor(RIM_COLOR, Color.red);
+
+		float timer = 0f;
+
+		while(timer < showTimer)
+		{
+			// 如果目前 isPause 為 true, 則暫停更新 Coroutine
+			yield return new WaitUntil(() => !IsPause);
+		
+			timer += Time.deltaTime;
+			_material.SetFloat(DISSOLVE_AMOUNT, 1 - timer/showTimer);
+
+			yield return null;
+		}
+
+		_material.SetFloat(DISSOLVE_AMOUNT, 0f);
+		_material.SetColor(EMISSION_COLOR, Color.black);
+		_material.SetColor(RIM_COLOR, Color.black);
+
+		_isInit = false;
+	}
+	
+	public void StopRaycastSpawnCoroutine()
+	{
+	    StopAllCoroutines();
+	    StartCoroutine(CancelDissolveCoroutine(1f));
+	}
+	
+	private IEnumerator CancelDissolveCoroutine(float showTimer)
+	{
+		float dissolveRatio = _material.GetFloat(DISSOLVE_AMOUNT);
+		float timer = 0f;
+		
+		while(timer < showTimer)
+		{
+			timer += Time.deltaTime;
+		
+			_material.SetFloat(DISSOLVE_AMOUNT, Mathf.Lerp(dissolveRatio, 1, timer/showTimer));
+		
+		    yield return null;
+		}
+		
+		_material.SetFloat(DISSOLVE_AMOUNT, 1f);
+		
+		EnemyManager.Instance.RecycleEnemy(gameObject);
 	}
 }
