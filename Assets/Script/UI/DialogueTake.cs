@@ -124,6 +124,7 @@ public class DialogueTake : MonoBehaviour
 
         yield return new WaitForSeconds(4f);
         TakeFinish?.Invoke();
+        levelSystem.PlayerFirstLevelup -= playerlevelUp;
         StartCoroutine(CloseUIAnimation());
     }
 
