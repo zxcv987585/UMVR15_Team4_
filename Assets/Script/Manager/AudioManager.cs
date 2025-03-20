@@ -63,19 +63,18 @@ public class AudioManager : MonoBehaviour
 	{
 		AudioClip audioClip = _audioLibrarySO.GetAudioClip(key);
 
-		if(audioClip != null)
-		{
-			if(_bgmAudioSource.clip == audioClip) return;
-
-			_bgmAudioSource.clip = audioClip;
-			_bgmAudioSource.loop = true;
-			_bgmAudioSource.volume = _mainVolume * _bgmVolume;
-			_bgmAudioSource.Play();
-		}
-		else
+		if(audioClip == null)
 		{
 			Debug.Log("AudioManager PlaySound 輸入的 Key 有錯");
+			return;
 		}
+		
+		if(_bgmAudioSource.clip == audioClip) return;
+
+		_bgmAudioSource.clip = audioClip;
+		_bgmAudioSource.loop = true;
+		_bgmAudioSource.volume = _mainVolume * _bgmVolume;
+		_bgmAudioSource.Play();
 	}
 
 	public void PlaySound(string key, Vector3 position, bool isLoop = false, float playTimer = 0f)
