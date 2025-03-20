@@ -38,6 +38,8 @@ public class AudioManager : MonoBehaviour
 			audioSource.playOnAwake = false;
 			_audioPool.Enqueue(audioSource);
 		}
+		
+		gameObject.AddComponent<AudioListener>();
 	}
 
 	private void Start()

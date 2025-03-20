@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,6 +13,10 @@ public class CharactersUIcontroller : MonoBehaviour
     //抓取玩家的等級系統，播放初次升級事件
     public LevelSystem levelSystem;
 
+    private void Awake()
+    {
+        levelSystem = GameObject.FindGameObjectWithTag("Player").GetComponent<LevelSystem>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -22,15 +25,10 @@ public class CharactersUIcontroller : MonoBehaviour
 
         dialogue.TakeFinish += DisableUI;
         dialogue.LastTakeAction += playAnimation;
+        dialogue.LastAreaTakeFinish += ScaredAnimation;
         levelSystem.PlayerFirstLevelup += EnableUI;
 
         animator = GameObject.FindGameObjectWithTag("UnityChan").GetComponent<Animator>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void EnableUI()
@@ -41,6 +39,11 @@ public class CharactersUIcontroller : MonoBehaviour
     private void DisableUI()
     {
         StartCoroutine(CloseUIAnimation());
+    }
+
+    public void LastArea()
+    {
+        StartCoroutine (LastAreaUIAnimation());
     }
 
     private IEnumerator UIAnimation()
@@ -68,8 +71,22 @@ public class CharactersUIcontroller : MonoBehaviour
         gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
     }
 
+    private IEnumerator LastAreaUIAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        AudioManager.Instance.PlaySound("Radio", transform.position);
+        gameObject.GetComponent<CharactersUIcontroller>().openAction.Invoke();
+        animator.Play("LOSE00");
+
+    }
+
     private void playAnimation()
     {
         animator.Play("WIN00");
+    }
+
+    private void ScaredAnimation()
+    {
+        animator.Play("REFLESH00");
     }
 }
