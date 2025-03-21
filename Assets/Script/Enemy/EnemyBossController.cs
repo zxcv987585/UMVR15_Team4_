@@ -61,6 +61,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
         {
             bossMaterial = renderer.material;
         }
+        bossMaterial.SetFloat("_DissolveAmount", 0f);
         //
         //_collider = GetComponent<Collider>();
 	
@@ -475,11 +476,11 @@ public class EnemyBossController : MonoBehaviour, IEnemy
         while (timer < dissolveDuration)
         {
             timer += Time.deltaTime;
-            float dissolveValue = Mathf.Lerp(0, 1, timer / dissolveDuration);
+            float dissolveValue = Mathf.Lerp(0, 0.3f, timer / dissolveDuration);
             bossMaterial.SetFloat("_DissolveAmount", dissolveValue);
             yield return null;
         }
-        bossMaterial.SetFloat("_DissolveAmount", 1); // 確保最後完全 Dissolve
+        bossMaterial.SetFloat("_DissolveAmount", 0.3f); // 確保最後完全 Dissolve
     }
 
     //如果需要 Enemy 受傷, 呼叫該函數
