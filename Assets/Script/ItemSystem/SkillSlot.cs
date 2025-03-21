@@ -13,6 +13,27 @@ public class SkillSlot : MonoBehaviour
     public Image slotImage;
     public TextMeshProUGUI skillNameText;
 
+    private void Awake()
+    {
+        if (slotImage == null)
+        {
+            slotImage = GetComponent<Image>();
+            if (slotImage == null)
+            {
+                Debug.LogError($"SkillSlot: {gameObject.name} 沒有 Image 組件！");
+            }
+        }
+
+        if (skillImage == null)
+        {
+            skillImage = transform.Find("SkillImage")?.GetComponent<Image>();
+            if (skillImage == null)
+            {
+                Debug.LogError($"SkillSlot: {gameObject.name} 找不到 SkillImage！");
+            }
+        }
+    }
+
     public void SetSlotIndex(int index)
     {
         slotIndex = index;
@@ -43,6 +64,18 @@ public class SkillSlot : MonoBehaviour
     //更新技能快捷欄UI
     public void UpdateHotbarSlot()
     {
+        if (skillImage == null)
+        {
+            Debug.LogError($"SkillSlot: {gameObject.name} 的 skillImage 為 null，嘗試重新獲取。");
+            skillImage = transform.Find("SkillImage")?.GetComponent<Image>();
+
+            if (skillImage == null)
+            {
+                Debug.LogError($"SkillSlot: {gameObject.name} 仍然無法獲取 skillImage！");
+                return; // 防止進一步錯誤
+            }
+        }
+
         if (skillData != null)
         {
             skillImage.sprite = skillData.skillIcon;

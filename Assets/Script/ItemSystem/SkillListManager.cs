@@ -16,18 +16,39 @@ public class SkillListManager : MonoBehaviour
         }
         instance = this;
 
-        // 確保 skillSlots 內的 Image 初始化
+        if (skillSlots == null || skillSlots.Length == 0)
+        {
+            skillSlots = GetComponentsInChildren<SkillSlot>();
+        }
+
         foreach (var slot in skillSlots)
         {
-            if (slot != null)
+            if (slot == null)
             {
-                slot.slotImage = slot.GetComponent<Image>();
+                Debug.LogError("SkillListManager: skillSlots 中有 null 值！");
+                continue;
+            }
+
+            slot.slotImage = slot.GetComponent<Image>();
+
+            if (slot.slotImage == null)
+            {
+                Debug.LogError($"SkillListManager: Slot {slot.name} 沒有 Image 組件！");
             }
         }
     }
 
     private void Start()
     {
+        foreach (var slot in skillSlots)
+        {
+            if (slot == null) continue;
+
+            if (slot.slotImage == null)
+            {
+                slot.slotImage = slot.GetComponent<Image>();
+            }
+        }
         RefreshUI(); 
     }
 

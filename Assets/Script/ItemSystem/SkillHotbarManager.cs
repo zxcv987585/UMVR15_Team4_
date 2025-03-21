@@ -13,24 +13,54 @@ public class SkillHotbarManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null) Destroy(this);
+        skillListManager = GetComponent<SkillListManager>();
+
+        if (instance != null)
+        {
+            Destroy(this);
+            return;
+        }
         instance = this;
+
+        // 確保 hotbarSlots 被初始化
+        if (hotbarSlots == null || hotbarSlots.Count == 0)
+        {
+            hotbarSlots = new List<SkillSlot>(GetComponentsInChildren<SkillSlot>());
+        }
+
         foreach (var slot in hotbarSlots)
         {
-            if (slot != null)
+            if (slot == null)
             {
-                slot.slotImage = slot.GetComponent<Image>();
+                Debug.LogError("SkillHotbarManager: hotbarSlots 中有 null 值！");
+                continue;
+            }
+
+            slot.slotImage = slot.GetComponent<Image>();
+
+            if (slot.slotImage == null)
+            {
+                Debug.LogError($"SkillHotbarManager: Slot {slot.name} 沒有 Image 組件！");
             }
         }
     }
 
     private void Start()
     {
-        //確保每個hotbar slot有正確的index
+        // 確保每個 hotbarSlot 有正確的 index
+        if (hotbarSlots == null || hotbarSlots.Count == 0)
+        {
+            Debug.LogWarning("SkillHotbarManager: hotbarSlots 在 Start 時仍為空，嘗試重新獲取！");
+            hotbarSlots = new List<SkillSlot>(GetComponentsInChildren<SkillSlot>());
+        }
+
         for (int i = 0; i < hotbarSlots.Count; i++)
         {
             hotbarSlots[i].SetSlotIndex(i);
         }
+
+        // 確保 UI 初始化
+        RefreshHotbarUI();
     }
 
     public void AssignSkillToHotbar(SkillDataSO skill, int slotIndex)
@@ -45,12 +75,12 @@ public class SkillHotbarManager : MonoBehaviour
             {
                 //記錄這個HotbarSlot
                 previousSlot = hotbarSlots[i];
-                
+
                 //清除原本快捷欄內的道具
                 previousSlot.skillData = null;
                 previousSlot.UpdateHotbarSlot();
-                
-                switch(i)
+
+                switch (i)
                 {
                     case 0:
                         SkillManager.Instance.RemoveSkillBind(GameInput.Bind.Skill1);
@@ -59,7 +89,7 @@ public class SkillHotbarManager : MonoBehaviour
                         SkillManager.Instance.RemoveSkillBind(GameInput.Bind.Skill2);
                         break;
                 }
-                
+
                 break;
             }
         }
@@ -78,9 +108,27 @@ public class SkillHotbarManager : MonoBehaviour
     }
     public void RefreshHotbarUI()
     {
-        for (int i = 0; i < hotbarSlots.Count; i++)
+        if (hotbarSlots == null)
         {
-            hotbarSlots[i].UpdateHotbarSlot(); 
+            Debug.LogError("SkillHotbarManager: hotbarSlots 為 null，可能場景切換後未初始化！");
+            return;
+        }
+
+        if (hotbarSlots.Count == 0)
+        {
+            Debug.LogError("SkillHotbarManager: hotbarSlots 數量為 0！");
+            return;
+        }
+
+        foreach (var slot in hotbarSlots)
+        {
+            if (slot == null)
+            {
+                Debug.LogError("SkillHotbarManager: 某個 hotbarSlot 為 null，跳過更新！");
+                continue;
+            }
+
+            slot.UpdateHotbarSlot();
         }
     }
 }

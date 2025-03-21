@@ -15,7 +15,7 @@ public class AreaUITriggerThree : MonoBehaviour
         Triggercollider = GetComponent<Collider>();
 
         charactersUIcontroller = GameObject.Find("CharactersWindowUI").GetComponent<CharactersUIcontroller>();
-        dialogueTake = GameObject.Find("Tak DialogueBox").GetComponent<DialogueTake>();
+        dialogueTake = GameObject.Find("Take DialogueBox").GetComponent<DialogueTake>();
     }
 
     private void OnTriggerEnter(Collider other)
