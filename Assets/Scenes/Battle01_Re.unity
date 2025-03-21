@@ -9228,6 +9228,7 @@ MonoBehaviour:
   - "\u524D\u9762\u7684\u7D05\u8272\u5C4F\u969C\u662F\u751F\u7269\u80FD\u91CF\u5834\uFF0C\u9019\u8868\u793A\u9644\u8FD1\u6709\u751F\u602A\u88DD\u7F6E\u5728\u963B\u64CB\u4F60\u524D\u9032\uFF0C\u53BB\u628A\u5B83\u627E\u51FA\u4F86\u7834\u58DE\u6389\u5427\uFF01"
   - "\u5730\u5716\u4E0A\u6709\u4F60\u6240\u9700\u7684\u4E00\u5207\u8CC7\u8A0A\uFF01Fighting\uFF01"
   Lines3: []
+  Lines4: []
   TextSpeed: 0.04
   WaitForNextLine: 4
   LockWall: {fileID: 1981785939}
@@ -9972,6 +9973,22 @@ PrefabInstance:
     - target: {fileID: 374329066745096741, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 481475233563764195, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 481475233563764195, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 481475233563764195, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 481475233563764195, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 505857911591842478, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_AnchorMax.y
@@ -11091,6 +11108,38 @@ PrefabInstance:
       objectReference: {fileID: -4225284177637668020, guid: 06facce32cf6be04b9c87048bd990552, type: 2}
     - target: {fileID: 8562321488701749437, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8671036088222341993, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8671036088222341993, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8671036088222341993, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8671036088222341993, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8671326628917392447, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8671326628917392447, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8671326628917392447, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8671326628917392447, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8679280010812076772, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
@@ -13370,12 +13419,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3070416385868558027, guid: 22eca212736e34f669a7308846a42048, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6857205204805475147, guid: 22eca212736e34f669a7308846a42048, type: 3}
-      insertIndex: 4
+      insertIndex: 3
       addedObject: {fileID: 2125191232}
   m_SourcePrefab: {fileID: 100100000, guid: 22eca212736e34f669a7308846a42048, type: 3}
 --- !u!1 &1745102943 stripped

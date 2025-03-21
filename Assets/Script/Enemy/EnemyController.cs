@@ -233,8 +233,6 @@ public class EnemyController : MonoBehaviour, IEnemy
 	// 將怪物轉向玩家位置後, 在進行攻擊行為
 	private IEnumerator TryAttackAfterTurn(Vector3 targetPosition)
 	{
-		Debug.Log("TrytoRotate");
-		
 		while (true)
 		{
 			// 如果目前 isPause 為 true, 則暫停更新 Coroutine

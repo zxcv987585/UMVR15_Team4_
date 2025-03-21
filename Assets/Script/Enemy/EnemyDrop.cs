@@ -50,7 +50,8 @@ public class EnemyDrop : MonoBehaviour
                 break;
             }
             
-            transform.LookAt(_endPosition);
+            // transform.forward = direction;
+            // transform.rotation *= Quaternion.Euler(90f, 0f, 0f);
             
             yield return null;
         }
