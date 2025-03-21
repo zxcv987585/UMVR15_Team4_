@@ -41,6 +41,7 @@ public class TitleAnimation : MonoBehaviour
     private void Awake()
     {
         Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
         particle = GameObject.Find("TitleCanvas/Glow Motes").GetComponent<ParticleSystem>();
         blackScreen = GameObject.Find("TitleCanvas/BlackScreen").GetComponent<Image>();
