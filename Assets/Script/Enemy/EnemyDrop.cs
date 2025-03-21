@@ -50,8 +50,6 @@ public class EnemyDrop : MonoBehaviour
                 break;
             }
             
-            transform.LookAt(_endPosition);
-            
             yield return null;
         }
     }

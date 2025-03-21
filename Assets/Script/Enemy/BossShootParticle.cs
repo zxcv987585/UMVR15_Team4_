@@ -11,8 +11,6 @@ public class BossShootParticle : MonoBehaviour
 
     private Transform playerTransform;     // 玩家目標位置
 
-    private float gravity = 9.81f;
-
     private void OnEnable()
     {
         playerTransform = FindObjectOfType<PlayerController>()?.transform;

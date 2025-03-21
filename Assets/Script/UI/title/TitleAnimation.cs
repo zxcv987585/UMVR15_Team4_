@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.ParticleSystem;
 
 public class TitleAnimation : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class TitleAnimation : MonoBehaviour
 
     public InputNameUI inputNameUI;
     public ExitUI exitUI;
+    public SettingUI settingUI;
 
     private float rotationSpeed = 20f;
     private float targetSpeed = 20f;
@@ -38,6 +40,22 @@ public class TitleAnimation : MonoBehaviour
 
     private void Awake()
     {
+        particle = FindAnyObjectByType<ParticleSystem>();
+        blackScreen = GameObject.Find("BlackScreen").GetComponent<Image>();
+        titleEleOpen = GameObject.Find("Mask").GetComponent<Image>();
+        titleEle = GameObject.Find("ele").GetComponent<Image>();
+        titleCircle = GameObject.Find("circle").GetComponent<Image>();
+        titleText = GameObject.Find("text").GetComponent<Image>();
+        flash = GameObject.Find("flash").GetComponent<RectTransform>();
+        shadowImage = GameObject.Find("Shadow").GetComponent<Image>();
+        ButtonList = GameObject.Find("ButtonList");
+        ButtonListStart = GameObject.Find("StartButton").GetComponent<RectTransform>();
+        ButtonListSettings = GameObject.Find("SettingsButton").GetComponent<RectTransform>();
+        ButtonListExit = GameObject.Find("ExitButton").GetComponent<RectTransform>();
+        inputNameUI = FindAnyObjectByType<InputNameUI>();
+        exitUI = FindAnyObjectByType<ExitUI>();
+        settingUI = FindAnyObjectByType<SettingUI>();
+
         titleEleOpenRect = titleEleOpen.GetComponent<RectTransform>();
         titleCircleRect = titleCircle.GetComponent<RectTransform>();
         titleTextRect = titleText.GetComponent<RectTransform>();
@@ -45,6 +63,17 @@ public class TitleAnimation : MonoBehaviour
 
     private void Start()
     {
+        particle.Stop();
+        titleEle.gameObject.SetActive(false);
+        titleCircle.gameObject.SetActive(false);
+        titleText.gameObject.SetActive(false);
+        flash.gameObject.SetActive(false);
+        shadowImage.gameObject.SetActive(false);
+        ButtonList.SetActive(false);
+        ButtonListStart.gameObject.SetActive(false);
+        ButtonListSettings.gameObject.SetActive(false);
+        ButtonListExit.gameObject.SetActive(false);
+
         StartCoroutine(titleOpening());
     }
 
@@ -177,7 +206,7 @@ public class TitleAnimation : MonoBehaviour
         targetSpeed = 200f; //設定短暫加速速度
 
         StartCoroutine(easyInOut.ChangeValue(
-           Vector3.one, new Vector3(1.05f, 1.05f, 1.05f),  0.5f,
+           Vector3.one, new Vector3(1.05f, 1.05f, 1.05f), 0.5f,
            value => titleCircleRect.localScale = value,
            EasyInOut.EaseOut));
 
@@ -193,13 +222,25 @@ public class TitleAnimation : MonoBehaviour
 
         //黑幕
         StartCoroutine(easyInOut.ChangeValue(
-           Vector4.zero, new Vector4(0f, 0f, 0f, 1f),  1.5f,
+           Vector4.zero, new Vector4(0f, 0f, 0f, 1f), 1.5f,
            value => blackScreen.color = value,
            EasyInOut.EaseIn));
 
         yield return new WaitForSeconds(2f);
         inputNameUI.ShowInputNameUI();
 
+    }
+
+    //Settings事件--
+    public void OnClickSettingButton()
+    {
+        StartCoroutine(SettingOpening());
+    }
+
+    private IEnumerator SettingOpening()
+    {
+        settingUI.ShowSettingUI();
+        yield return null;
     }
 
     //Exit事件--

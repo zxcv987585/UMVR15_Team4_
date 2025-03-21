@@ -20,7 +20,8 @@ public class GameInput : MonoBehaviour
 		Skill1,
 		Skill2,
 		ItemMenu,
-		Interaction
+		Interaction,
+		Escape
 	}
 
 	public event Action<bool> OnAttackAction;
@@ -31,6 +32,7 @@ public class GameInput : MonoBehaviour
     public event Action<bool> OnSprintAction;
 	public event Action<Bind> OnSkillAction;
 	public event Action OnInteraction;
+	public event Action OnEscape;
 	
 	public bool isAttackClick = false;
 
@@ -59,7 +61,13 @@ public class GameInput : MonoBehaviour
 		playerInputAction.Player.Skill2.performed += Skill2_performed;
 		playerInputAction.Player.ItemMenu.performed += ItemMenu_performed;
 		playerInputAction.Player.Interaction.performed += Interaction_performed;
+		playerInputAction.Player.Escape.performed += Escape_performed;
 	}
+
+    private void Escape_performed(InputAction.CallbackContext context)
+    {
+        if(canInput) OnEscape?.Invoke();
+    }
 
     private void Interaction_performed(InputAction.CallbackContext context)
     {
