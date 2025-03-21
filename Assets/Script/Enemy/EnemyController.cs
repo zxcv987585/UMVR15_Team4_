@@ -28,7 +28,6 @@ public class EnemyController : MonoBehaviour, IEnemy
 	private bool _hasInit = false; //用來檢查該物件是否為第一次被生成
 	private bool _isIdle = false;
 	private bool _isAttack;
-	private bool _isDamage;
 	
 	private Rigidbody _rb;
 	private NavMeshAgent _navMeshAgent;
@@ -49,7 +48,6 @@ public class EnemyController : MonoBehaviour, IEnemy
 		Health.SetMaxHealth(_enemyDataSO.maxHP);
 
 		_isAttack = false;
-		_isDamage = false;
 		_bodyCollider.enabled = true;
 
 		//預設怪物狀態機以 Idle 開始
@@ -95,14 +93,13 @@ public class EnemyController : MonoBehaviour, IEnemy
 
 		//設定 NavMeshAgent
 		_navMeshAgent = GetComponent<NavMeshAgent>();
-		_navMeshAgent.stoppingDistance = _enemyDataSO.attackRange;
+		_navMeshAgent.stoppingDistance = 0.1f;
 		_navMeshAgent.speed = _enemyDataSO.moveSpeed;
 		_navMeshAgent.updatePosition = false;
 		_navMeshAgent.updateRotation = false;
 
 		//訂閱其他 Enemy 相關事件
 		_enemyAnimatorController.OnAttackChange += SetIsAttack;
-		_enemyAnimatorController.OnDamageChange += SetIsDamage;
 		_enemyAnimatorController.OnIdleChange += SetIsIdle;
 		_enemyAnimatorController.OnStartAttackCheck += AttackIsColliderCheck;
 		_enemyAnimatorController.OnDead += StartDestory;
@@ -169,6 +166,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 	{
 		if(_enemyState != EnemyState.Walk) return;
 	
+		_navMeshAgent.transform.position = transform.position;
+		_navMeshAgent.transform.rotation = transform.rotation;
 		_navMeshAgent.SetDestination(_playerTransform.position);
 	
 		// 計算下個位置的地點及方向
@@ -181,11 +180,16 @@ public class EnemyController : MonoBehaviour, IEnemy
 		{
 			transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
 		}
-        transform.position += _enemyDataSO.moveSpeed * Time.deltaTime * direction;
+		
+		float distance = Vector3.Distance(transform.position, _playerTransform.position);
+	
+		if(distance > _enemyDataSO.attackRange)
+		{
+		    transform.position += _enemyDataSO.moveSpeed * Time.deltaTime * direction;
+		}
         
         // 檢查移動後, 是不是剛好到攻擊範圍
-        float distance = Vector3.Distance(transform.position, _playerTransform.position);
-        if(distance < _enemyDataSO.attackRange && Quaternion.Angle(transform.rotation, targetRotation) < 5f)
+        if(distance <= _enemyDataSO.attackRange && Quaternion.Angle(transform.rotation, targetRotation) < 5f)
         {
 			ChangeEnemyState(EnemyState.Attack);
         }
@@ -205,68 +209,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_enemyState = newState;
 		_enemyAnimatorController?.SetEnemyState(_enemyState);
 
-		switch (_enemyState)
-		{
-			case EnemyState.Idle:
-				_navMeshAgent.isStopped = true;
-				break;
-			case EnemyState.Walk:
-				_navMeshAgent.transform.position = transform.position;
-				_navMeshAgent.transform.rotation = transform.rotation;
-				_navMeshAgent.isStopped = false;
-				break;
-			case EnemyState.Attack:
-				_navMeshAgent.isStopped = true;
-				break;
-			case EnemyState.Damage:
-				_navMeshAgent.isStopped = true;
-				break;
-			case EnemyState.Dead:
-				_navMeshAgent.isStopped = true;
-				break;
-		}
-	}
-
-	// 將怪物轉向玩家位置後, 在進行攻擊行為
-	private IEnumerator TryAttackAfterTurn(Vector3 targetPosition)
-	{
-		while (true)
-		{
-			// 如果目前 isPause 為 true, 則暫停更新 Coroutine
-			yield return new WaitUntil(() => !IsPause);
-		
-			if(_enemyState == EnemyState.Dead) break;
-
-			// 檢查玩家是否仍在攻擊範圍內
-			float distance = Vector3.Distance(transform.position, targetPosition);
-			if (distance > _enemyDataSO.attackRange)
-			{
-				ChangeEnemyState(EnemyState.Walk);
-				yield break;
-			}
-
-			// 計算旋轉方向
-			Vector3 direction = (targetPosition - transform.position).normalized;
-			direction.y = 0;
-			Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-			// 平滑旋轉
-			transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 2f * Time.deltaTime);
-
-			// 檢查是否轉向完成
-			if (Quaternion.Angle(transform.rotation, targetRotation) < 5f)
-			{
-				break;
-			}
-
-			yield return null;
-		}
-
-		// 確保敵人仍在攻擊狀態
-		if (_enemyState == EnemyState.Attack)
-		{
-			_enemyAnimatorController.SetEnemyState(EnemyState.Attack);
-		}
+		_navMeshAgent.isStopped = _enemyState == EnemyState.Walk ? true : false;
 	}
 
 	// 怪物受傷時的事件, 訂閱在 <Health> 的 OnDamage
@@ -363,12 +306,6 @@ public class EnemyController : MonoBehaviour, IEnemy
 		{
 			AudioManager.Instance.PlaySound(_enemyDataSO.SfxAttackKey, transform.position);
 		}
-	}
-	
-	// 設定當前是否正被攻擊
-	public void SetIsDamage(bool isDamage)
-	{
-		_isDamage = isDamage;
 	}
 
 	// 啟動播放死亡動畫的協程

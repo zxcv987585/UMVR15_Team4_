@@ -23,10 +23,6 @@ public class EnemyAnimatorController : MonoBehaviour
 	private const string IDLE = "Idle";
 	private const string ATTACK = "Attack";
 	private const string DAMAGE = "Damage";
-	private const string IS_WALK = "isWalk";
-	private const string IS_ATTACK = "isAttack";
-	private const string IS_DEAD = "isDead";
-	private const string IS_DAMAGE = "isDamage";
 	
 	private void OnEnable()
 	{
@@ -41,7 +37,6 @@ public class EnemyAnimatorController : MonoBehaviour
 	{
 		CheckAnimationIsIdle();
 		CheckAnimationIsAttack();
-		CheckAnimationIsDamage();
 	}
 	
 	// 檢查當前動畫是否是 Animation Idle
@@ -65,20 +60,7 @@ public class EnemyAnimatorController : MonoBehaviour
 		if(_isAttack == isPlayAttack) return;
 		
 		_isAttack = isPlayAttack;
-		_animator.SetBool(IS_ATTACK, _isAttack);
 		OnAttackChange?.Invoke(_isAttack);
-	}
-	
-	// 檢查當前動畫是否是 Animation Damage
-	private void CheckAnimationIsDamage()
-	{
-		_animatorStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-		bool isPlayDamage = _animatorStateInfo.IsName(DAMAGE) && _animatorStateInfo.normalizedTime < 1;
-		
-		if(_isDamage == isPlayDamage) return;
-		
-		_isDamage = isPlayDamage;
-		OnDamageChange?.Invoke(_isDamage);
 	}
 	
 	public void SetEnemyState(EnemyState newState)
@@ -87,28 +69,6 @@ public class EnemyAnimatorController : MonoBehaviour
 		
 		_currentState = newState;
 		_animator.CrossFade(_currentState.ToString(), 0.2f);
-		
-		// switch (_currentState)
-		// {
-		// 	case EnemyState.Idle:
-		// 		_animator.SetBool(IS_WALK, false);
-		// 		_animator.SetBool(IS_ATTACK, false);
-		// 		break;
-		// 	case EnemyState.Walk:
-		// 		_animator.SetBool(IS_WALK, true);
-		// 		_animator.SetBool(IS_ATTACK, false);
-		// 		break;
-		// 	case EnemyState.Attack:
-		// 		_animator.SetBool(IS_WALK, false);
-		// 		_animator.SetBool(IS_ATTACK, true);
-		// 		break;
-		// 	case EnemyState.Damage:
-		// 		_animator.SetTrigger(IS_DAMAGE);
-		// 		break;
-		// 	case EnemyState.Dead:
-		// 		_animator.SetTrigger(IS_DEAD);
-		// 		break;
-		// }
 	}
 	
 	public void OnDeadTrigger()
