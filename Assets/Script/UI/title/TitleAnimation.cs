@@ -40,18 +40,20 @@ public class TitleAnimation : MonoBehaviour
 
     private void Awake()
     {
-        particle = FindAnyObjectByType<ParticleSystem>();
-        blackScreen = GameObject.Find("BlackScreen").GetComponent<Image>();
-        titleEleOpen = GameObject.Find("Mask").GetComponent<Image>();
-        titleEle = GameObject.Find("ele").GetComponent<Image>();
-        titleCircle = GameObject.Find("circle").GetComponent<Image>();
-        titleText = GameObject.Find("text").GetComponent<Image>();
-        flash = GameObject.Find("flash").GetComponent<RectTransform>();
-        shadowImage = GameObject.Find("Shadow").GetComponent<Image>();
-        ButtonList = GameObject.Find("ButtonList");
-        ButtonListStart = GameObject.Find("StartButton").GetComponent<RectTransform>();
-        ButtonListSettings = GameObject.Find("SettingsButton").GetComponent<RectTransform>();
-        ButtonListExit = GameObject.Find("ExitButton").GetComponent<RectTransform>();
+        Cursor.visible = true;
+
+        particle = GameObject.Find("TitleCanvas/Glow Motes").GetComponent<ParticleSystem>();
+        blackScreen = GameObject.Find("TitleCanvas/BlackScreen").GetComponent<Image>();
+        titleEleOpen = GameObject.Find("TitleCanvas/Title/Mask").GetComponent<Image>();
+        titleEle = GameObject.Find("TitleCanvas/Title/ele").GetComponent<Image>();
+        titleCircle = GameObject.Find("TitleCanvas/Title/circle").GetComponent<Image>();
+        titleText = GameObject.Find("TitleCanvas/Title/text").GetComponent<Image>();
+        flash = GameObject.Find("TitleCanvas/Title/flash").GetComponent<RectTransform>();
+        shadowImage = GameObject.Find("TitleCanvas/Title/Shadow").GetComponent<Image>();
+        ButtonList = GameObject.Find("TitleCanvas/ButtonList");
+        ButtonListStart = GameObject.Find("TitleCanvas/ButtonList/StartButton").GetComponent<RectTransform>();
+        ButtonListSettings = GameObject.Find("TitleCanvas/ButtonList/SettingsButton").GetComponent<RectTransform>();
+        ButtonListExit = GameObject.Find("TitleCanvas/ButtonList/ExitButton").GetComponent<RectTransform>();
         inputNameUI = FindAnyObjectByType<InputNameUI>();
         exitUI = FindAnyObjectByType<ExitUI>();
         settingUI = FindAnyObjectByType<SettingUI>();
