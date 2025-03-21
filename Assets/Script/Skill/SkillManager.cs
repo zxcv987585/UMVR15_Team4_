@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SkillManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class SkillManager : MonoBehaviour
 
     private void Awake()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -32,8 +35,23 @@ public class SkillManager : MonoBehaviour
 		GameInput.Instance.OnSkillAction += UseSkill;
 	}
 
-	// 當點擊按鍵時, 呼叫該按鍵綁定的技能
-	private void UseSkill(GameInput.Bind bind)
+    //訂閱跳轉場景事件
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "TitleScene")
+        {
+            GameInput.Instance.OnSkillAction -= UseSkill;
+            Destroy(gameObject);
+            OnDestroy();
+        }
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // 當點擊按鍵時, 呼叫該按鍵綁定的技能
+    private void UseSkill(GameInput.Bind bind)
 	{
 		if (player.IsSkilling || player.IsAiming || player.IsDie) return;
 

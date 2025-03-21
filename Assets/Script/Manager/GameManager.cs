@@ -49,4 +49,13 @@ public class GameManagerSingleton
             return m_Inputcontrol;
         }
     }
+
+    public void DestoryGameManager()
+    {
+        if(gameObject != null)
+        {
+            Object.Destroy(gameObject);
+            m_Instance = null;
+        }
+    }
 }
