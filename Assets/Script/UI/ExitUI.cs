@@ -17,7 +17,7 @@ public class ExitUI : MonoBehaviour
     {
         StartCoroutine(ExitUIAnimation());
     }
-    public void CloseExitUINameUI()
+    public void CloseExitUI()
     {
         StartCoroutine(ExitUIEvent());
     }
