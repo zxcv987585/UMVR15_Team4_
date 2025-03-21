@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour
     public bool CloseEnemy { get; set; } = false;
     public bool Invincible { get; set; } = false;
     public bool InItemMenu { get; set; } = false;
+    public bool InPress {  get; set; } = false;
     public bool IsSkilling { get; private set; } = false;
     public bool IsCriticalHit { get; set; } = false;
     public bool IsAttackBuff { get; private set; } = false;
@@ -139,6 +140,7 @@ public class PlayerController : MonoBehaviour
         GameInput.Instance.OnDashkAction += Dash;
         GameInput.Instance.OnLockAction += LockOn;
         GameInput.Instance.OnItemMenu += ItemMenu;
+        GameInput.Instance.OnEscape += PressESCUI;
         //Delegate訂閱事件
         health.OnDamage += GetHit;
         health.HaveReviveItemDead += Died;
@@ -193,10 +195,6 @@ public class PlayerController : MonoBehaviour
             OnDestroy();
         }
     }
-    private void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
     private void OnDisable()
     {
         GameInput.Instance.OnSprintAction -= SetIsRun;
@@ -205,6 +203,10 @@ public class PlayerController : MonoBehaviour
         GameInput.Instance.OnDashkAction -= Dash;
         GameInput.Instance.OnLockAction -= LockOn;
         GameInput.Instance.OnItemMenu -= ItemMenu;
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     //技能系統
@@ -269,7 +271,7 @@ public class PlayerController : MonoBehaviour
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
-        if (IsCriticalHit || IsHit || IsSkilling || IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+        if (IsCriticalHit || IsHit || IsSkilling || IsDie || InItemMenu || InPress || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
 
         IsAttack = Attack;
     }
@@ -287,7 +289,7 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (!CanPerformAction() || IsSkilling || InItemMenu || stateMachine.GetState<DashState>() != null) return;
+        if (!CanPerformAction() || IsSkilling || InItemMenu || InPress || stateMachine.GetState<DashState>() != null) return;
 
         IsAiming = isAim;
 
@@ -523,6 +525,19 @@ public class PlayerController : MonoBehaviour
         else
         {
             InItemMenu = false;
+        }
+    }
+    //進入暫停選單的邏輯
+    private void PressESCUI()
+    {
+        
+        if (InPress == false)
+        {
+            InPress = true;
+        }
+        else
+        {
+            InPress = false;
         }
     }
 
