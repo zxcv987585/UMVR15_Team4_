@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2513399373988205445}
   - component: {fileID: 5741937860067263681}
   m_Layer: 0
-  m_Name: EnemyDrop
+  m_Name: EnemyDropRebirth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,7 +48,7 @@ MonoBehaviour:
   _moveSpeed: 10
   _dropWeightList:
   - weight: 100
-    itemData: {fileID: 11400000, guid: c6ae1523f6df70f458b72108a7ba0329, type: 2}
+    itemData: {fileID: 11400000, guid: a746f869cf9c90e42aeec2ad8cb309a6, type: 2}
 --- !u!1 &6571526239071377427
 GameObject:
   m_ObjectHideFlags: 0
