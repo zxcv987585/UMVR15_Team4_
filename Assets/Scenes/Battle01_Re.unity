@@ -3762,7 +3762,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1000013153248048, guid: 512f3f3b48bb4b34caa4b38fbbe9b5ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1751758070}
   m_SourcePrefab: {fileID: 100100000, guid: 512f3f3b48bb4b34caa4b38fbbe9b5ad, type: 3}
 --- !u!4 &469834657 stripped
 Transform:
@@ -8986,6 +8989,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 856795748726204447, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnCountInfoList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 982835779215284344, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -13529,6 +13536,25 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6857205204805475147, guid: 22eca212736e34f669a7308846a42048, type: 3}
   m_PrefabInstance: {fileID: 1745102942}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1751758066 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1000013153248048, guid: 512f3f3b48bb4b34caa4b38fbbe9b5ad, type: 3}
+  m_PrefabInstance: {fileID: 469834656}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1751758070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751758066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b9ff7337c0e49c891fa4da7672a04a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 10
+  _currentHealth: 0
 --- !u!1001 &1788150655
 PrefabInstance:
   m_ObjectHideFlags: 0
