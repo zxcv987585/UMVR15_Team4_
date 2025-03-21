@@ -13,6 +13,7 @@ public class EnemySpawnMachine : MonoBehaviour
     [SerializeField] private GameObject _lockWallPrefab;
     [SerializeField] private Transform[] _spawnTransformArray;
     [SerializeField] private ParticleSystem _bombParticleSystem;
+    [SerializeField] private ParticleSystem _bombParticleSystem2;
     [SerializeField] private EnemySpawnRaycast _enemySpawnRaycast;
 
     [SerializeField] private Collider _triggerCollider;
@@ -22,6 +23,8 @@ public class EnemySpawnMachine : MonoBehaviour
 
     private void Start()
     {
+        _bombParticleSystem.Stop();
+        _bombParticleSystem2.gameObject.SetActive(false);
         // 設定血量
         _health = GetComponent<Health>();
         _health.SetMaxHealth(_enemyDataSO.maxHP);
@@ -78,16 +81,23 @@ public class EnemySpawnMachine : MonoBehaviour
         StopCoroutine(_spawnCoroutine);
         _lockWallPrefab?.SetActive(false);
 
-        StartCoroutine(DeadCoroutine());
+        StartCoroutine(DeadCoroutine());    
     }
 
     private IEnumerator DeadCoroutine()
     {
-        if(_enemyController.gameObject.activeSelf)
+        Transform childTransform = transform.Find("Ammo_Shocks");
+        GameObject childObject = childTransform.gameObject;
+
+        if (_enemyController.gameObject.activeSelf)
             _enemyController.StopRaycastSpawnCoroutine();
     
         _bombParticleSystem.Play();
+        _bombParticleSystem2.gameObject.SetActive(true);
+        _bombParticleSystem2.Play();
         yield return new WaitForSeconds(0.7f);
+        childObject.SetActive(false);
+        yield return new WaitForSeconds(3f);
         gameObject.SetActive(false);
     }
 }
