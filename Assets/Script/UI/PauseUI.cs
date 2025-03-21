@@ -90,7 +90,7 @@ public class PauseUI : MonoBehaviour
     {
         for (int i = 0; i < optionList.Length; i++)
         {
-            //¿À¨d±¯•Û°A∏ıπL≠n∂}±“™∫øÔ≥Ê°A•u√ˆ≥¨®‰•L™∫•B§w∂}±“™∫øÔ≥Ê
+            //¿À¨d±¯•Û°A∏ıπL≠n∂}±“™∫øÅEÊ°A•u√ˆ≥¨®‰•L™∫•B§w∂}±“™∫øÅEÅE
             if (i != index && optionList[i].isOn)
             {
                 Animator closeAnim = optionList[i].GetComponent<Animator>();
@@ -99,7 +99,7 @@ public class PauseUI : MonoBehaviour
             }
         }
 
-        //¿À¨døÔ≥Ê¨Oß_§w≥Q∂}±“°A¶p™G®S¶≥¥N∂}±“
+        //¿À¨døÅEÊ¨Oß_§w≥Q∂}±“°A¶p™G®S¶≥¥N∂}±“
         if (!optionList[index].isOn)
         {
             optionList[index].isOn = true;

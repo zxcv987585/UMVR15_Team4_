@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class StopUI : MonoBehaviour
 {
@@ -15,32 +14,10 @@ public class StopUI : MonoBehaviour
 
     private void Start()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-
         blackScreen = GameObject.Find("blackScreen").GetComponent<Image>();
-
-        if (SceneManager.GetActiveScene().name != "TitleScene")
-        {
-            GameInput.Instance.OnEscape += PressESCUI;
-        }
     }
 
-    //ämï€êÿä∑ìûTitleSceneéûâ¬à»éÊè¡delegate
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name != "TitleScene")
-        {
-            return;
-        }
-        if (scene.name == "TitleScene")
-        {
-            GameInput.Instance.OnEscape -= PressESCUI;
-        }
-
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void PressESCUI()
+    public void PressESCUI()
     {
         if (isOpen == false)
         {
@@ -56,8 +33,6 @@ public class StopUI : MonoBehaviour
 
     private IEnumerator StopUIAnimation()
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
         gameObject.GetComponent<StopUI>().openAction.Invoke();
         yield return null;
     }
