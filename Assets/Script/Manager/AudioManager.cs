@@ -125,7 +125,7 @@ public class AudioManager : MonoBehaviour
 		audioSource.clip = audioClip;
 		audioSource.volume = _mainVolume * _sfxVolume;
 		audioSource.loop = isLoop;
-		audioSource.pitch = Random.Range(0.9f, 1.1f);
+		audioSource.pitch = Random.Range(0.95f, 1.05f);
 		audioSource.Play();
 
 		if(!_nowPlayAudio.ContainsKey(key))

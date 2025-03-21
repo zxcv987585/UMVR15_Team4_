@@ -16,17 +16,16 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	[SerializeField] private Animator _animator;
 	[SerializeField] private Transform _bodyTransform;
 	[SerializeField] private GameObject _shootAttackPrefab;
-	//[SerializeField] private GameObject _floorAttackPrefab;
 	[SerializeField] private GameObject _fogPrefab;
 
 	[SerializeField] private float _attackCooldownTime;
 
 	private bool _isIdle = true;
-	private bool _isAttackCooldown = false;
+	//private bool _isAttackCooldown = false;
 	private float _originalAnimatorSpeed;
 	private Transform _playerTransform;
 	private PlayerHealth _playerHealth;
-	private Collider _collider;
+	//private Collider _collider;
 	private AnimatorStateInfo _animatorStateInfo;
 	private BossUI _bossUI;
 	private EnemySpawnTirgger _enemySpawnTirgger;
@@ -63,7 +62,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
             bossMaterial = renderer.material;
         }
         //
-        _collider = GetComponent<Collider>();
+        //_collider = GetComponent<Collider>();
 	
 		// 設定血量及相關事件
 		Health = GetComponent<Health>();
@@ -337,6 +336,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		
 		_navMeshAgent.isStopped = false;
 		_navMeshAgent.speed = 35f;
+		_navMeshAgent.nextPosition = transform.position;
 		_navMeshAgent.SetDestination(transform.position + direct * 100f);
 		
 		bool hasCollider = false;
