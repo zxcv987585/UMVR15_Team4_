@@ -1,11 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InputController : MonoBehaviour
 {
     bool canInput = true;
+
+    private void Awake()
+    {
+        if (SceneManager.GetActiveScene().name != "TitleScene")
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+    }
     private void Start()
     {
         if (GameInput.Instance != null)
@@ -14,6 +20,21 @@ public class InputController : MonoBehaviour
         }
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    //訂閱跳轉場景事件
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name != "TitleScene")
+        {
+            return;
+        }
+        if (scene.name == "TitleScene")
+        {
+            GameInput.Instance.OnItemMenu -= ItemMenu;
+        }
+
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void ItemMenu()

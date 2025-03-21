@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BattleUIManager : MonoBehaviour
 {
@@ -38,6 +39,8 @@ public class BattleUIManager : MonoBehaviour
 
     private void Awake()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -71,9 +74,18 @@ public class BattleUIManager : MonoBehaviour
         health.OnDot += OnDotUI;
     }
 
-    private void Health_OnHeal()
+    //訂閱跳轉場景事件
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        throw new System.NotImplementedException();
+        if (scene.name == "TitleScene")
+        {
+            Destroy(gameObject);
+            OnDestroy();
+        }
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void Update()

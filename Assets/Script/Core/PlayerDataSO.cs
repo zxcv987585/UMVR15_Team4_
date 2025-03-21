@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UIElements.Experimental;
 
 [CreateAssetMenu(fileName = "NewPlayerDataSO", menuName = "ScriptableObject/PlayerDataSO")]
 public class PlayerDataSO : ScriptableObject
@@ -49,4 +50,6 @@ public class PlayerDataSO : ScriptableObject
     public LayerMask EnemyLayer;
     [Tooltip("Boss 的Layer")]
     public LayerMask BossLayer;
+    [Tooltip("玩家要與NPC互動的Layer層")]
+    public LayerMask NPCLayer;
 }

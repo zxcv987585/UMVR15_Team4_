@@ -72,7 +72,7 @@ public class WeaponManager : MonoBehaviour
         }
 
         // 如果玩家被攻擊就停止傷害判定
-        if (player.IsHit || player.IsCriticalHit || player.IsDash)
+        if (player.IsHit || player.IsCriticalHit || player.IsDash || player.IsSkilling)
         {
             isAttackWindowActive = false;
         }

@@ -93,7 +93,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 
 		//設定 NavMeshAgent
 		_navMeshAgent = GetComponent<NavMeshAgent>();
-		_navMeshAgent.stoppingDistance = 0.1f;
+		_navMeshAgent.stoppingDistance = 0.01f;
 		_navMeshAgent.speed = _enemyDataSO.moveSpeed;
 		_navMeshAgent.updatePosition = false;
 		_navMeshAgent.updateRotation = false;
@@ -145,17 +145,6 @@ public class EnemyController : MonoBehaviour, IEnemy
 			}
 			return;
 		}
-
-		//如果目前怪物狀態不是在攻擊或被打中, 則檢查玩家位置
-		// if(!_isAttack && !_isDamage)
-		// {
-		// 	CheckPlayerDistance();
-
-		// 	if(_enemyState == EnemyState.Walk)
-		// 	{
-		// 		HandlerMove();
-		// 	}
-		// }
 		
 		if(_isIdle) ChangeEnemyState(EnemyState.Walk);
 		HandlerMove();
@@ -166,39 +155,51 @@ public class EnemyController : MonoBehaviour, IEnemy
 	{
 		if(_enemyState != EnemyState.Walk) return;
 	
+		// 重置 NavMeshAgent 位置為 物件位置
 		_navMeshAgent.transform.position = transform.position;
+		_navMeshAgent.velocity = (_playerTransform.position - transform.position).normalized * _enemyDataSO.moveSpeed;
+		
 		_navMeshAgent.transform.rotation = transform.rotation;
 		_navMeshAgent.SetDestination(_playerTransform.position);
 	
 		// 計算下個位置的地點及方向
-		Vector3 nextPosition = _navMeshAgent.nextPosition;
-        Vector3 direction = (nextPosition - transform.position).normalized;
+        Vector3 direction = (_navMeshAgent.nextPosition - transform.position).normalized;
         direction.y = 0; // 確保不會影響 Y 軸 (防止怪物漂浮)
 
-		Quaternion targetRotation = Quaternion.LookRotation(direction);
-		if (direction != Vector3.zero)
+		// 取得玩家方向的四元數
+		Quaternion targetRotation = transform.rotation;
+		if (direction.magnitude > 0.01f)
 		{
-			transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
+			targetRotation = Quaternion.LookRotation(direction);
 		}
 		
+		// 計算旋轉角度
+		float rotationAngle = Quaternion.Angle(transform.rotation, targetRotation);
+		Debug.Log(gameObject.name + " rotate " + rotationAngle);
 		float distance = Vector3.Distance(transform.position, _playerTransform.position);
-	
+		
+		// 檢查移動後, 是不是剛好到攻擊範圍
+        if(distance <= _enemyDataSO.attackRange && rotationAngle < 0.1f)
+        {
+			ChangeEnemyState(EnemyState.Attack);
+			return;
+        }
+		
+		// 旋轉物件
+		transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
+		
+		// 判斷玩家距離決定是否要繼續前進
 		if(distance > _enemyDataSO.attackRange)
 		{
 		    transform.position += _enemyDataSO.moveSpeed * Time.deltaTime * direction;
 		}
         
-        // 檢查移動後, 是不是剛好到攻擊範圍
-        if(distance <= _enemyDataSO.attackRange && Quaternion.Angle(transform.rotation, targetRotation) < 5f)
-        {
-			ChangeEnemyState(EnemyState.Attack);
-        }
+        //Debug.Log(gameObject.name + " rotate " + Quaternion.Angle(transform.rotation, targetRotation) );
+        
+        
 	}
 	
-	private void SetIsIdle(bool isIdle)
-	{
-	    _isIdle = isIdle;
-	}
+	private void SetIsIdle(bool isIdle) => _isIdle = isIdle;
 	
 	// 切換怪物狀態機狀態
 	private void ChangeEnemyState(EnemyState newState)
@@ -209,7 +210,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_enemyState = newState;
 		_enemyAnimatorController?.SetEnemyState(_enemyState);
 
-		_navMeshAgent.isStopped = _enemyState == EnemyState.Walk ? true : false;
+		_navMeshAgent.isStopped = _enemyState == EnemyState.Walk ? false : true;
+		_isIdle = _enemyState == EnemyState.Idle;
 	}
 
 	// 怪物受傷時的事件, 訂閱在 <Health> 的 OnDamage
