@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraController : MonoBehaviour
 {
@@ -72,6 +73,8 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         if (FindObjectsOfType<CameraController>().Length > 1)
         {
             Destroy(gameObject);
@@ -83,11 +86,27 @@ public class CameraController : MonoBehaviour
     {
         input = GameManagerSingleton.Instance.InputControl;
         player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+
         GameInput.Instance.OnAimAction += SetAim;
 
         DefaultCameraToTargetDistance = CameraToTargetDistance;
 
         StartCoroutine(FadeIn());
+    }
+
+    //訂閱跳轉場景事件
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "TitleScene")
+        {
+            GameInput.Instance.OnAimAction -= SetAim;
+            Destroy(gameObject);
+            OnDestroy();
+        }
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void LateUpdate()

@@ -186,11 +186,25 @@ public class PlayerController : MonoBehaviour
     //訂閱跳轉場景事件
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(scene.name == "TitleScene")
+        if (scene.name == "TitleScene")
         {
+            OnDisable();
             Destroy(gameObject);
-            SceneManager.sceneLoaded -= OnSceneLoaded;
+            OnDestroy();
         }
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    private void OnDisable()
+    {
+        GameInput.Instance.OnSprintAction -= SetIsRun;
+        GameInput.Instance.OnAimAction -= SetIsAiming;
+        GameInput.Instance.OnAttackAction -= SetIsAttack;
+        GameInput.Instance.OnDashkAction -= Dash;
+        GameInput.Instance.OnLockAction -= LockOn;
+        GameInput.Instance.OnItemMenu -= ItemMenu;
     }
 
     //技能系統

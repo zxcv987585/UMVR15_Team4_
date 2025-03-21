@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class StopUI : MonoBehaviour
 {
@@ -17,9 +15,26 @@ public class StopUI : MonoBehaviour
 
     private void Start()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         blackScreen = GameObject.Find("blackScreen").GetComponent<Image>();
         GameInput.Instance.OnEscape += PressESCUI;
     }
+
+    //訂閱跳轉場景事件
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "TitleScene")
+        {
+            GameInput.Instance.OnEscape -= PressESCUI;
+            OnDestroy();
+        }
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
     private void PressESCUI()
     {
         if (isOpen == false)

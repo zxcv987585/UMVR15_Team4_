@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameInput : MonoBehaviour
 {
@@ -42,6 +43,12 @@ public class GameInput : MonoBehaviour
 
 	private void Awake()
 	{
+		if(SceneManager.GetActiveScene().name == "TitleScene")
+		{
+			Destroy(gameObject);
+			return;
+		}
+
 		Instance = this;
 
 		playerInputAction = new PlayerInputAction();
