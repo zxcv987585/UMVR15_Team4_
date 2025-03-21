@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -109,6 +110,8 @@ public class PlayerController : MonoBehaviour
         health.SetMaxHealth(playerData.MaxHealth);
         //從Data資料庫初始化玩家最大PP值
         health.SetMaxPP(playerData.MaxPP);
+        //確保玩家在TitleScene會自我銷毀
+        SceneManager.sceneLoaded += OnSceneLoaded;
         //設置玩家不會因為切場景而被破壞
         if (FindObjectsOfType<PlayerController>().Length > 1)
         {
@@ -177,6 +180,16 @@ public class PlayerController : MonoBehaviour
             {
                 AutoUnlockEnemy();
             }
+        }
+    }
+
+    //訂閱跳轉場景事件
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name == "TitleScene")
+        {
+            Destroy(gameObject);
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
     }
 
