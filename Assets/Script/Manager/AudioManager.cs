@@ -69,6 +69,8 @@ public class AudioManager : MonoBehaviour
 		    GameDataManager.Instance.gameData.mainVolume = _mainVolume;
 			GameDataManager.Instance.gameData.bgmVolume = _bgmVolume;
 			GameDataManager.Instance.gameData.sfxVolume = _sfxVolume;
+			
+			GameDataManager.Instance.SaveGame();
 		}
 		
 	}
