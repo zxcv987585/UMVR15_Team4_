@@ -48,10 +48,15 @@ public class GameInput : MonoBehaviour
 			Destroy(gameObject);
 			return;
 		}
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
 
-		Instance = this;
-
-		playerInputAction = new PlayerInputAction();
+        playerInputAction = new PlayerInputAction();
 		LoadRebind();
 		playerInputAction.Player.Enable();
 

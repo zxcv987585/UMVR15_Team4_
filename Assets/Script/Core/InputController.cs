@@ -7,7 +7,10 @@ public class InputController : MonoBehaviour
 
     private void Awake()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        if (SceneManager.GetActiveScene().name != "TitleScene")
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
     }
     private void Start()
     {
@@ -22,14 +25,15 @@ public class InputController : MonoBehaviour
     //訂閱跳轉場景事件
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (scene.name != "TitleScene")
+        {
+            return;
+        }
         if (scene.name == "TitleScene")
         {
             GameInput.Instance.OnItemMenu -= ItemMenu;
-            OnDestroy();
         }
-    }
-    private void OnDestroy()
-    {
+
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 

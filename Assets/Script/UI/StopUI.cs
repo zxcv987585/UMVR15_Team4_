@@ -18,20 +18,25 @@ public class StopUI : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         blackScreen = GameObject.Find("blackScreen").GetComponent<Image>();
-        GameInput.Instance.OnEscape += PressESCUI;
+
+        if (SceneManager.GetActiveScene().name != "TitleScene")
+        {
+            GameInput.Instance.OnEscape += PressESCUI;
+        }
     }
 
-    //≠qæ\∏ı¬‡≥ı¥∫®∆•Û
+    //ämï€êÿä∑ìûTitleSceneéûâ¬à»éÊè¡delegate
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (scene.name != "TitleScene")
+        {
+            return;
+        }
         if (scene.name == "TitleScene")
         {
             GameInput.Instance.OnEscape -= PressESCUI;
-            OnDestroy();
         }
-    }
-    private void OnDestroy()
-    {
+
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
