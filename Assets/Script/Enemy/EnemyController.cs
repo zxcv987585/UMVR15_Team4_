@@ -181,7 +181,6 @@ public class EnemyController : MonoBehaviour, IEnemy
 		
 		// 計算旋轉角度
 		float rotationAngle = Quaternion.Angle(transform.rotation, targetRotation);
-		Debug.Log(gameObject.name + " rotate " + rotationAngle);
 		float distance = Vector3.Distance(transform.position, _playerTransform.position);
 		
 		// 檢查移動後, 是不是剛好到攻擊範圍
@@ -293,7 +292,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	//攻擊玩家
 	public void Attack()
 	{
-		if(_isAttack)
+		if(_enemyState == EnemyState.Attack)
 		{
 			_playerHealth.TakeDamage(_enemyDataSO.attackPower);
 		}
