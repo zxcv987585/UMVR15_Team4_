@@ -190,19 +190,15 @@ public class PlayerController : MonoBehaviour
     {
         if (scene.name == "TitleScene")
         {
-            OnDisable();
+            GameInput.Instance.OnSprintAction -= SetIsRun;
+            GameInput.Instance.OnAimAction -= SetIsAiming;
+            GameInput.Instance.OnAttackAction -= SetIsAttack;
+            GameInput.Instance.OnDashkAction -= Dash;
+            GameInput.Instance.OnLockAction -= LockOn;
+            GameInput.Instance.OnItemMenu -= ItemMenu;
             Destroy(gameObject);
             OnDestroy();
         }
-    }
-    private void OnDisable()
-    {
-        GameInput.Instance.OnSprintAction -= SetIsRun;
-        GameInput.Instance.OnAimAction -= SetIsAiming;
-        GameInput.Instance.OnAttackAction -= SetIsAttack;
-        GameInput.Instance.OnDashkAction -= Dash;
-        GameInput.Instance.OnLockAction -= LockOn;
-        GameInput.Instance.OnItemMenu -= ItemMenu;
     }
     private void OnDestroy()
     {
@@ -251,6 +247,8 @@ public class PlayerController : MonoBehaviour
     //取得玩家移動按鍵輸入
     public Vector3 GetMoveInput()
     {
+        if (!CanPerformAction()) return Vector3.zero;
+
         return GameInput.Instance.GetMoveVector3();
     }
 
@@ -329,11 +327,6 @@ public class PlayerController : MonoBehaviour
     {
         if (IsDie || Invincible) return;
 
-        if(hitCoolDownCoroutine != null)
-        {
-            StopCoroutine (hitCoolDownCoroutine);
-        }
-
         if (IsAiming)
         {
             CriticalGunHit?.Invoke();
@@ -341,8 +334,12 @@ public class PlayerController : MonoBehaviour
 
             StartCoroutine(CriticalDamageCoolDown());
         }
-
         IsCriticalHit = true;
+
+        if (hitCoolDownCoroutine != null)
+        {
+            StopCoroutine(hitCoolDownCoroutine);
+        }
 
         StartCoroutine(CriticalDamageCoolDown());
     }
@@ -374,7 +371,7 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator CriticalDamageCoolDown()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
         IsCriticalHit = false;
         Vector3 inputDirection = GetMoveInput().normalized;
         if (inputDirection == Vector3.zero)
