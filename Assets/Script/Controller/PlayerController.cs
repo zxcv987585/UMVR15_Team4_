@@ -190,19 +190,15 @@ public class PlayerController : MonoBehaviour
     {
         if (scene.name == "TitleScene")
         {
-            OnDisable();
+            GameInput.Instance.OnSprintAction -= SetIsRun;
+            GameInput.Instance.OnAimAction -= SetIsAiming;
+            GameInput.Instance.OnAttackAction -= SetIsAttack;
+            GameInput.Instance.OnDashkAction -= Dash;
+            GameInput.Instance.OnLockAction -= LockOn;
+            GameInput.Instance.OnItemMenu -= ItemMenu;
             Destroy(gameObject);
             OnDestroy();
         }
-    }
-    private void OnDisable()
-    {
-        GameInput.Instance.OnSprintAction -= SetIsRun;
-        GameInput.Instance.OnAimAction -= SetIsAiming;
-        GameInput.Instance.OnAttackAction -= SetIsAttack;
-        GameInput.Instance.OnDashkAction -= Dash;
-        GameInput.Instance.OnLockAction -= LockOn;
-        GameInput.Instance.OnItemMenu -= ItemMenu;
     }
     private void OnDestroy()
     {
