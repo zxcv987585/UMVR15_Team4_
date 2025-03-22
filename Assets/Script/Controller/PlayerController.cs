@@ -247,6 +247,8 @@ public class PlayerController : MonoBehaviour
     //取得玩家移動按鍵輸入
     public Vector3 GetMoveInput()
     {
+        if (!CanPerformAction()) return Vector3.zero;
+
         return GameInput.Instance.GetMoveVector3();
     }
 
@@ -370,7 +372,7 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator CriticalDamageCoolDown()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
         IsCriticalHit = false;
         Vector3 inputDirection = GetMoveInput().normalized;
         if (inputDirection == Vector3.zero)

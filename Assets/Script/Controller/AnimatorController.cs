@@ -108,6 +108,8 @@ public class AnimatorController : MonoBehaviour
     private void Hit()
     {
         animator.SetTrigger("Hit");
+        animator.SetBool("Sprint", false);
+        animator.SetBool("Run", false);
     }
 
     private void Dash(string isDash)
@@ -119,6 +121,7 @@ public class AnimatorController : MonoBehaviour
     {
         if (player.IsHit || player.IsCriticalHit || player.IsRivive)
         {
+            animator.SetBool("Sprint", false);
             return;
         }
         animator.SetBool("Sprint", sprint);
@@ -128,6 +131,7 @@ public class AnimatorController : MonoBehaviour
     {
         if (player.IsHit || player.IsCriticalHit || player.IsRivive)
         {
+            animator.SetBool("Run", false);
             return;
         }
         animator.SetBool("Run", Iswalk);
