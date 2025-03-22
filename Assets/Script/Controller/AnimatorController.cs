@@ -64,6 +64,9 @@ public class AnimatorController : MonoBehaviour
     {
         if (isDead) return;
         animator.CrossFade("CriticalDamage", 0f, 0);
+        animator.SetBool("Sprint", false);
+        animator.SetBool("Run", false);
+        animator.SetBool("Idle", false);
     }
 
     private void Dead()
@@ -71,6 +74,9 @@ public class AnimatorController : MonoBehaviour
         if (isDead) return;
         isDead = true;
         animator.Play("Die");
+        animator.SetBool("Sprint", false);
+        animator.SetBool("Run", false);
+        animator.SetBool("Idle", false);
     }
 
     private void AimMove(float moveX, float moveY)
@@ -110,11 +116,15 @@ public class AnimatorController : MonoBehaviour
         animator.SetTrigger("Hit");
         animator.SetBool("Sprint", false);
         animator.SetBool("Run", false);
+        animator.SetBool("Idle", false);
     }
 
     private void Dash(string isDash)
     {
         animator.CrossFade("SlideDash", 0f);
+        animator.SetBool("Sprint", false);
+        animator.SetBool("Run", false);
+        animator.SetBool("Idle", false);
     }
 
     private void Sprint(bool sprint)

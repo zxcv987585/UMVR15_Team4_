@@ -327,11 +327,6 @@ public class PlayerController : MonoBehaviour
     {
         if (IsDie || Invincible) return;
 
-        if(hitCoolDownCoroutine != null)
-        {
-            StopCoroutine (hitCoolDownCoroutine);
-        }
-
         if (IsAiming)
         {
             CriticalGunHit?.Invoke();
@@ -339,8 +334,12 @@ public class PlayerController : MonoBehaviour
 
             StartCoroutine(CriticalDamageCoolDown());
         }
-
         IsCriticalHit = true;
+
+        if (hitCoolDownCoroutine != null)
+        {
+            StopCoroutine(hitCoolDownCoroutine);
+        }
 
         StartCoroutine(CriticalDamageCoolDown());
     }
