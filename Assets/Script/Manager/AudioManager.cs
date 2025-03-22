@@ -15,7 +15,6 @@ public class AudioManager : MonoBehaviour
 	private Queue<AudioSource> _audioPool = new Queue<AudioSource>();
 	private Dictionary<string, List<AudioSource>> _nowPlayAudio = new Dictionary<string, List<AudioSource>>();
 	private AudioSource _bgmAudioSource;
-	private AudioSource _nextAudioSource;
 
 	private void Awake()
 	{
@@ -52,9 +51,6 @@ public class AudioManager : MonoBehaviour
 		{
             PlayBGM("BackGroundMusic");
         }
-        
-        _nextAudioSource = gameObject.AddComponent<AudioSource>();
-        //_nextAudioSource
 	}
 
 	private void OnValidate()
@@ -125,7 +121,7 @@ public class AudioManager : MonoBehaviour
 		audioSource.clip = audioClip;
 		audioSource.volume = _mainVolume * _sfxVolume;
 		audioSource.loop = isLoop;
-		audioSource.pitch = Random.Range(0.95f, 1.05f);
+		//audioSource.pitch = Random.Range(0.95f, 1.05f);
 		audioSource.Play();
 
 		if(!_nowPlayAudio.ContainsKey(key))
@@ -182,6 +178,8 @@ public class AudioManager : MonoBehaviour
 
 	public void SetMainVolume(float mainVolume)
 	{
+		Debug.Log("ABC");
+
 		_mainVolume = mainVolume;
 		_bgmAudioSource.volume = mainVolume * _bgmVolume;
 

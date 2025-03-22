@@ -7,38 +7,31 @@ using UnityEngine.UI;
 
 public class OptionUI : MonoBehaviour
 {
-    [SerializeField] private Slider mainSlider;
-    [SerializeField] private Slider bgmSlider;
-    [SerializeField] private Slider sfxSlider;
-    [SerializeField] private Button exitButton;
+    [SerializeField] private Slider _mainVolumeSlider;
+    [SerializeField] private Slider _bgmVolumeSlider;
+    [SerializeField] private Slider _sfxVolumeSlider;
+    [SerializeField] private Button _settingFinishButton;
 
-    private void Start()
+    private void OnEnable()
     {
-        mainSlider.value = GameDataManager.Instance.gameData.mainVolume;
-        bgmSlider.value = GameDataManager.Instance.gameData.bgmVolume;
-        sfxSlider.value = GameDataManager.Instance.gameData.sfxVolume;
+        if(GameDataManager.Instance == null) return;
+        _mainVolumeSlider.value = GameDataManager.Instance.gameData.mainVolume;
+        _bgmVolumeSlider.value = GameDataManager.Instance.gameData.bgmVolume;
+        _sfxVolumeSlider.value = GameDataManager.Instance.gameData.sfxVolume;
 
-        mainSlider.onValueChanged.AddListener(AudioManager.Instance.SetMainVolume);
-        bgmSlider.onValueChanged.AddListener(AudioManager.Instance.SetBGMVolume);
-        sfxSlider.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
-
-        exitButton.onClick.AddListener(() => 
-        {
-            GameDataManager.Instance.SaveGame();
-            Hide();
-        });
+        if(AudioManager.Instance == null) return;
+        Debug.Log("ABC");
+        _mainVolumeSlider.onValueChanged.AddListener(AudioManager.Instance.SetMainVolume);
+        _bgmVolumeSlider.onValueChanged.AddListener(AudioManager.Instance.SetBGMVolume);
+        _sfxVolumeSlider.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
+        _settingFinishButton.onClick.AddListener(GameDataManager.Instance.SaveGame);
     }
 
-    public void Show()
+    private void OnDisable()
     {
-        gameObject.SetActive(true);
+        _mainVolumeSlider.onValueChanged.RemoveListener(AudioManager.Instance.SetMainVolume);
+        _bgmVolumeSlider.onValueChanged.RemoveListener(AudioManager.Instance.SetBGMVolume);
+        _sfxVolumeSlider.onValueChanged.RemoveListener(AudioManager.Instance.SetSFXVolume);
+        _settingFinishButton.onClick.RemoveListener(GameDataManager.Instance.SaveGame);
     }
-
-    public void Hide()
-    {
-        gameObject.SetActive(false);
-    }
-
-    
-    
 }
