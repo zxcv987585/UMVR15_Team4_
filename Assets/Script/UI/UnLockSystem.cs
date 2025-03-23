@@ -20,15 +20,6 @@ public class UnLockSystem : MonoBehaviour
             Debug.LogError("UnLockSystem: 找不到 LevelSystem！");
             return;
         }
-
-        // **嘗試在同一層 (兄弟物件) 尋找 SkillSlot**
-        SkillSlot skillSlot = transform.parent != null ? transform.parent.GetComponentInChildren<SkillSlot>() : null;
-
-        if (skillSlot != null && skillSlot.skillData != null)
-        {
-            skillName = skillSlot.skillData.skillName; // **取得技能名稱**
-            Debug.Log($"UnLockSystem: 找到技能 {skillName}");
-        }
     }
     void Update()
     {
@@ -42,6 +33,14 @@ public class UnLockSystem : MonoBehaviour
     {
         if (unlockMessagePrefab != null && messageParent != null)
         {
+            SkillSlot skillSlot = transform.parent != null ? transform.parent.GetComponentInChildren<SkillSlot>() : null;
+
+            if (skillSlot != null && skillSlot.skillData != null)
+            {
+                skillName = skillSlot.skillData.skillName; // **取得技能名稱**
+                Debug.Log($"UnLockSystem: 找到技能 {skillName}");
+            }
+
             // **生成訊息物件**
             GameObject messageObj = Instantiate(unlockMessagePrefab, messageParent);
             TextMeshProUGUI messageText = messageObj.GetComponentInChildren<TextMeshProUGUI>();
