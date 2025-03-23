@@ -460,6 +460,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	{
 		ChangeEnemyState(BossState.Dead);
 		AudioManager.Instance.PlaySound("BossDead", transform.position);
+
+		EnemyManager.Instance.TakeAllEnemyDamage(999);
 		
 		_playerTransform.GetComponent<LevelSystem>().AddExperience(_enemyDataSO.exp);
 

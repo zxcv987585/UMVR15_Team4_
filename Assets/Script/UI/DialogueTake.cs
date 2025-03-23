@@ -169,6 +169,9 @@ public class DialogueTake : MonoBehaviour
         yield return new WaitForSeconds(4f);
         TakeFinish?.Invoke();
         StartCoroutine(CloseUIAnimation());
+
+        // 最後一區域, 解鎖傳送門用
+        FindObjectOfType<UnlockPortal>().OpenIsTakeFinish();
     }
 
     IEnumerator TypeLine(string line)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,6 +33,7 @@ public class EnemySpawnTirgger : MonoBehaviour
     [SerializeField][Header("戰鬥時, 怪物少於等於 lessCount 則生成怪物")] private List<EnemySpawnCountInfo> enemySpawnCountInfoList;
 
     private Collider triggerCollider;
+    public event Action OnEnemyClear;
 
     private void Start()
     {
@@ -82,16 +84,38 @@ public class EnemySpawnTirgger : MonoBehaviour
                 return false;
             });
 
+            int nowEnemyCount = EnemyManager.Instance.GetEnemyControllerCount();
+
             // 移除符合生成條件(場上數量)的資料, 並將對應怪物生成
             enemySpawnCountInfoList.RemoveAll(EnemySpawnCountInfo => 
             {
-                if (EnemySpawnCountInfo.lessCount >= EnemyManager.Instance.GetEnemyControllerCount())
+                if (EnemySpawnCountInfo.lessCount >= nowEnemyCount)
                 {
                     EnemyManager.Instance.SpawnEnemy(EnemySpawnCountInfo.enemyPrefab, EnemySpawnCountInfo.enemySpawnPosition);
                     return true;
                 }
                 return false;
             });
+
+            yield return null;
+        }
+
+        StartCoroutine(CheckEnemyIsAllClear());
+    }
+
+    // 檢查是否底下所有怪物全都被清光了
+    private IEnumerator CheckEnemyIsAllClear()
+    {
+        yield return null;
+
+        while(true)
+        {
+            if(EnemyManager.Instance.GetEnemyControllerCount() == 0)
+            {
+                //怪物全部清空
+                OnEnemyClear?.Invoke();
+                break;
+            }
 
             yield return null;
         }
