@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -39,12 +40,13 @@ public class GameInput : MonoBehaviour
 
 	private PlayerInputAction _playerInputAction;
 	private const string REBIND = "ReBind";
-	private bool _canInput = true;
+	//private bool _canInput = true;
 
 	private void Awake()
 	{
         //確保GameInput在TitleScene會自我銷毀
         SceneManager.sceneLoaded += OnSceneLoaded;
+		
 		//確保GameInput在任何場景都是唯一單例
         if (Instance != null && Instance != this)
         {
@@ -66,19 +68,19 @@ public class GameInput : MonoBehaviour
 	{
 		var player = _playerInputAction.Player;
 
-		player.Attack.performed += ctx => OnAttackAction?.Invoke(true);
-        player.Attack.canceled += ctx => OnAttackAction?.Invoke(false);
-        player.Aim.performed += ctx => OnAimAction?.Invoke(true);
-        player.Aim.canceled += ctx => OnAimAction?.Invoke(false);
-        player.Dash.performed += ctx => OnDashAction?.Invoke();
-        player.Sprint.performed += ctx => OnSprintAction?.Invoke(true);
-        player.Sprint.canceled += ctx => OnSprintAction?.Invoke(false);
-        player.LockOn.performed += ctx => OnLockAction?.Invoke();
-        player.Skill1.performed += ctx => OnSkillAction?.Invoke(Bind.Skill1);
-        player.Skill2.performed += ctx => OnSkillAction?.Invoke(Bind.Skill2);
-        player.ItemMenu.performed += ctx => OnItemMenu?.Invoke();
-        player.Interaction.performed += ctx => OnInteraction?.Invoke();
-        player.Escape.performed += ctx => OnEscape?.Invoke();
+		player.Attack.performed += _ => OnAttackAction?.Invoke(true);
+        player.Attack.canceled += _ => OnAttackAction?.Invoke(false);
+        player.Aim.performed += _ => OnAimAction?.Invoke(true);
+        player.Aim.canceled += _ => OnAimAction?.Invoke(false);
+        player.Dash.performed += _ => OnDashAction?.Invoke();
+        player.Sprint.performed += _ => OnSprintAction?.Invoke(true);
+        player.Sprint.canceled += _ => OnSprintAction?.Invoke(false);
+        player.LockOn.performed += _ => OnLockAction?.Invoke();
+        player.Skill1.performed += _ => OnSkillAction?.Invoke(Bind.Skill1);
+        player.Skill2.performed += _ => OnSkillAction?.Invoke(Bind.Skill2);
+        player.ItemMenu.performed += _ => OnItemMenu?.Invoke();
+        player.Interaction.performed += _ => OnInteraction?.Invoke();
+        player.Escape.performed += _ => OnEscape?.Invoke();
 	}
 
     //訂閱跳轉場景事件
@@ -145,33 +147,37 @@ public class GameInput : MonoBehaviour
 		return mouseMoveVector;
 	}
 
+	/// <summary>
+	/// 取得 Bind 對應的文字名稱
+	/// </summary>
+	/// <param name="bind"></param>
+	/// <returns></returns>
 	public string GetBindText(Bind bind)
 	{
-		switch (bind)
-		{
-			default:
-				return "";
-			case Bind.MoveUp:
-				return _playerInputAction.Player.Move.bindings[1].ToDisplayString();
-			case Bind.MoveDown:
-				return _playerInputAction.Player.Move.bindings[2].ToDisplayString();
-			case Bind.MoveLeft:
-				return _playerInputAction.Player.Move.bindings[3].ToDisplayString();
-			case Bind.MoveRight:
-				return _playerInputAction.Player.Move.bindings[4].ToDisplayString();
-			case Bind.Attack:
-				return _playerInputAction.Player.Attack.bindings[0].ToDisplayString();
-			case Bind.Aim:
-				return _playerInputAction.Player.Aim.bindings[0].ToDisplayString();
-			case Bind.Dash:
-				return _playerInputAction.Player.Dash.bindings[0].ToDisplayString();;
-			case Bind.Sprint:
-				return _playerInputAction.Player.Sprint.bindings[0].ToDisplayString();;
-			case Bind.Skill1:
-				return _playerInputAction.Player.Skill1.bindings[0].ToDisplayString();;
-			case Bind.Skill2:
-				return _playerInputAction.Player.Skill2.bindings[0].ToDisplayString();;
-		}
+		Dictionary<Bind, InputAction> bindMap = new Dictionary<Bind, InputAction>
+        {
+            { Bind.MoveUp, _playerInputAction.Player.Move },
+            { Bind.MoveDown, _playerInputAction.Player.Move },
+            { Bind.MoveLeft, _playerInputAction.Player.Move },
+            { Bind.MoveRight, _playerInputAction.Player.Move },
+            { Bind.Attack, _playerInputAction.Player.Attack },
+            { Bind.Aim, _playerInputAction.Player.Aim },
+            { Bind.Dash, _playerInputAction.Player.Dash },
+            { Bind.Sprint, _playerInputAction.Player.Sprint },
+			{ Bind.LockOn, _playerInputAction.Player.LockOn},
+            { Bind.Skill1, _playerInputAction.Player.Skill1 },
+            { Bind.Skill2, _playerInputAction.Player.Skill2 },
+			{ Bind.ItemMenu, _playerInputAction.Player.ItemMenu},
+            { Bind.Interaction, _playerInputAction.Player.Interaction },
+            { Bind.Escape, _playerInputAction.Player.Escape }
+        };
+
+        if (bindMap.TryGetValue(bind, out InputAction action))
+        {
+            return action.bindings[0].ToDisplayString();
+        }
+
+        return "";
 	}
 
 	/// <summary>
@@ -184,57 +190,11 @@ public class GameInput : MonoBehaviour
 	{
 		_playerInputAction.Player.Disable();
 
-		InputAction inputAction;
-		int bindIndex;
-
-		switch (bind)
-		{
-			case Bind.MoveUp:
-				inputAction = _playerInputAction.Player.Move;
-				bindIndex = 1;
-				break;
-			case Bind.MoveDown:
-				inputAction = _playerInputAction.Player.Move;
-				bindIndex = 2;
-				break;
-			case Bind.MoveLeft:
-				inputAction = _playerInputAction.Player.Move;
-				bindIndex = 3;
-				break;
-			case Bind.MoveRight:
-				inputAction = _playerInputAction.Player.Move;
-				bindIndex = 4;
-				break;
-			case Bind.Attack:
-				inputAction = _playerInputAction.Player.Attack;
-				bindIndex = 0;
-				break;
-			case Bind.Aim:
-				inputAction = _playerInputAction.Player.Aim;
-				bindIndex = 0;
-				break;
-			case Bind.Dash:
-				inputAction = _playerInputAction.Player.Dash;
-				bindIndex = 0;
-				break;
-			case Bind.Sprint:
-				inputAction = _playerInputAction.Player.Sprint;
-				bindIndex = 0;
-				break;
-			case Bind.Skill1:
-				inputAction = _playerInputAction.Player.Skill1;
-				bindIndex = 0;
-				break;
-			case Bind.Skill2:
-				inputAction = _playerInputAction.Player.Skill2;
-				bindIndex = 0;
-				break;
-			default:
-				inputAction = null;
-				bindIndex = 0;
-				Debug.LogError("GameInput ReBindKeyboard 輸入的資料有誤");
-				break;
-		}
+		if (!TryGetActionAndIndex(bind, out InputAction inputAction, out int bindIndex))
+        {
+            Debug.LogError("GameInput ReBindKeyboard 輸入的資料有誤");
+            return;
+        }
 
 		inputAction.PerformInteractiveRebinding(bindIndex)
 			.OnComplete(callback =>
@@ -248,16 +208,50 @@ public class GameInput : MonoBehaviour
 					inputAction.RemoveBindingOverride(bindIndex);
 					OnActionFailRebound();
 				}
+				else
+				{
+					onActionRebound();
+					SaveRebind();
+				}
 
 				callback.Dispose();
 				_playerInputAction.Player.Enable();
-				onActionRebound();
-				SaveRebind();
 			})
 			.Start();
-
-		
 	}
+
+	// 取得 Bind 對應的 InputAction 以及 bindIndex
+	private bool TryGetActionAndIndex(Bind bind, out InputAction inputAction, out int bindIndex)
+    {
+        var player = _playerInputAction.Player;
+
+        inputAction = bind switch
+        {
+            Bind.MoveUp or Bind.MoveDown or Bind.MoveLeft or Bind.MoveRight => player.Move,
+            Bind.Attack => player.Attack,
+            Bind.Aim => player.Aim,
+            Bind.Dash => player.Dash,
+            Bind.Sprint => player.Sprint,
+			Bind.LockOn => player.LockOn,
+            Bind.Skill1 => player.Skill1,
+            Bind.Skill2 => player.Skill2,
+			Bind.ItemMenu => player.ItemMenu,
+			Bind.Interaction => player.Interaction,
+			Bind.Escape => player.Escape,
+            _ => null
+        };
+
+        bindIndex = bind switch
+        {
+            Bind.MoveUp => 1,
+            Bind.MoveDown => 2,
+            Bind.MoveLeft => 3,
+            Bind.MoveRight => 4,
+            _ => 0
+        };
+
+        return inputAction != null;
+    }
 
 	/// <summary>
 	/// 確認新綁定的按鍵是否有跟原本的按鍵列表重複, True 為有重複
@@ -274,11 +268,7 @@ public class GameInput : MonoBehaviour
 			for(int i = 0; i < action.bindings.Count; i++)
 			{
 				if(action == inputAction && i == bindIndex) continue;
-
-				if(action.bindings[i].effectivePath == newBind)
-				{
-					return true;
-				}
+				if(action.bindings[i].effectivePath == newBind) return true;
 			}
 		}
 
