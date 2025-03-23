@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour
     public bool CloseEnemy { get; set; } = false;
     public bool Invincible { get; set; } = false;
     public bool InItemMenu { get; set; } = false;
+    public bool InPress {  get; set; } = false;
     public bool IsSkilling { get; private set; } = false;
     public bool IsCriticalHit { get; set; } = false;
     public bool IsAttackBuff { get; private set; } = false;
@@ -139,6 +140,7 @@ public class PlayerController : MonoBehaviour
         GameInput.Instance.OnDashkAction += Dash;
         GameInput.Instance.OnLockAction += LockOn;
         GameInput.Instance.OnItemMenu += ItemMenu;
+        GameInput.Instance.OnEscape += PressESCUI;
         //Delegate訂閱事件
         health.OnDamage += GetHit;
         health.HaveReviveItemDead += Died;
@@ -188,7 +190,12 @@ public class PlayerController : MonoBehaviour
     {
         if (scene.name == "TitleScene")
         {
-            OnDisable();
+            GameInput.Instance.OnSprintAction -= SetIsRun;
+            GameInput.Instance.OnAimAction -= SetIsAiming;
+            GameInput.Instance.OnAttackAction -= SetIsAttack;
+            GameInput.Instance.OnDashkAction -= Dash;
+            GameInput.Instance.OnLockAction -= LockOn;
+            GameInput.Instance.OnItemMenu -= ItemMenu;
             Destroy(gameObject);
             OnDestroy();
         }
@@ -196,15 +203,6 @@ public class PlayerController : MonoBehaviour
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-    private void OnDisable()
-    {
-        GameInput.Instance.OnSprintAction -= SetIsRun;
-        GameInput.Instance.OnAimAction -= SetIsAiming;
-        GameInput.Instance.OnAttackAction -= SetIsAttack;
-        GameInput.Instance.OnDashkAction -= Dash;
-        GameInput.Instance.OnLockAction -= LockOn;
-        GameInput.Instance.OnItemMenu -= ItemMenu;
     }
 
     //技能系統
@@ -249,6 +247,8 @@ public class PlayerController : MonoBehaviour
     //取得玩家移動按鍵輸入
     public Vector3 GetMoveInput()
     {
+        if (!CanPerformAction()) return Vector3.zero;
+
         return GameInput.Instance.GetMoveVector3();
     }
 
@@ -269,7 +269,7 @@ public class PlayerController : MonoBehaviour
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
-        if (IsCriticalHit || IsHit || IsSkilling || IsDie || InItemMenu || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+        if (IsCriticalHit || IsHit || IsSkilling || IsDie || InItemMenu || InPress || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
 
         IsAttack = Attack;
     }
@@ -287,7 +287,7 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (!CanPerformAction() || IsSkilling || InItemMenu || stateMachine.GetState<DashState>() != null) return;
+        if (!CanPerformAction() || IsSkilling || InItemMenu || InPress || stateMachine.GetState<DashState>() != null) return;
 
         IsAiming = isAim;
 
@@ -327,11 +327,6 @@ public class PlayerController : MonoBehaviour
     {
         if (IsDie || Invincible) return;
 
-        if(hitCoolDownCoroutine != null)
-        {
-            StopCoroutine (hitCoolDownCoroutine);
-        }
-
         if (IsAiming)
         {
             CriticalGunHit?.Invoke();
@@ -339,8 +334,12 @@ public class PlayerController : MonoBehaviour
 
             StartCoroutine(CriticalDamageCoolDown());
         }
-
         IsCriticalHit = true;
+
+        if (hitCoolDownCoroutine != null)
+        {
+            StopCoroutine(hitCoolDownCoroutine);
+        }
 
         StartCoroutine(CriticalDamageCoolDown());
     }
@@ -372,7 +371,8 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator CriticalDamageCoolDown()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
+        IsHit = false;
         IsCriticalHit = false;
         Vector3 inputDirection = GetMoveInput().normalized;
         if (inputDirection == Vector3.zero)
@@ -523,6 +523,19 @@ public class PlayerController : MonoBehaviour
         else
         {
             InItemMenu = false;
+        }
+    }
+    //進入暫停選單的邏輯
+    private void PressESCUI()
+    {
+        
+        if (InPress == false)
+        {
+            InPress = true;
+        }
+        else
+        {
+            InPress = false;
         }
     }
 

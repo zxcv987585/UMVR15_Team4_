@@ -43,11 +43,9 @@ public class GameInput : MonoBehaviour
 
 	private void Awake()
 	{
-		if(SceneManager.GetActiveScene().name == "TitleScene")
-		{
-			Destroy(gameObject);
-			return;
-		}
+        //確保GameInput在TitleScene會自我銷毀
+        SceneManager.sceneLoaded += OnSceneLoaded;
+		//確保GameInput在任何場景都是唯一單例
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -75,6 +73,20 @@ public class GameInput : MonoBehaviour
 		playerInputAction.Player.Interaction.performed += Interaction_performed;
 		playerInputAction.Player.Escape.performed += Escape_performed;
 	}
+
+    //訂閱跳轉場景事件
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "TitleScene")
+        {
+            Destroy(gameObject);
+            OnDestroy();
+        }
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 
     private void Escape_performed(InputAction.CallbackContext context)
     {

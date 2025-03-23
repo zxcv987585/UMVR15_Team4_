@@ -32,7 +32,7 @@ public class TitleUIManager : MonoBehaviour
 		});
 		settingButton.onClick.AddListener(() => 
 		{
-			optionUI.Show();
+			//optionUI.Show();
 		});
 		exitButton.onClick.AddListener(() => 
 		{

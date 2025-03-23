@@ -5,18 +5,16 @@ public class InputController : MonoBehaviour
 {
     bool canInput = true;
 
-    private void Awake()
+    private void Start()
     {
         if (SceneManager.GetActiveScene().name != "TitleScene")
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
-    }
-    private void Start()
-    {
         if (GameInput.Instance != null)
         {
             GameInput.Instance.OnItemMenu += ItemMenu;
+            GameInput.Instance.OnEscape += PressESCUI;
         }
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -32,6 +30,7 @@ public class InputController : MonoBehaviour
         if (scene.name == "TitleScene")
         {
             GameInput.Instance.OnItemMenu -= ItemMenu;
+            GameInput.Instance.OnEscape -= PressESCUI;
         }
 
         SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -54,10 +53,23 @@ public class InputController : MonoBehaviour
         StartCoroutine(pauseUI.RunPauseUI());
     }
 
-    private void Update()
+    private void PressESCUI()
     {
-        CheckCursorstate();
+        if (Cursor.lockState == CursorLockMode.None)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        StopUI stopUI = FindAnyObjectByType<StopUI>();
+        stopUI.PressESCUI();
     }
+
     //確認滑鼠狀態是否為隱藏，確保每次輸入不會因為其他狀態而出現異常
     public bool CanProcessInput() => Cursor.lockState == CursorLockMode.Locked && canInput;
     public float GetMouseXAxis() => CanProcessInput() ? Input.GetAxis("Mouse X") : 0;
@@ -67,21 +79,7 @@ public class InputController : MonoBehaviour
     public float GetMouseScrollAxis() => CanProcessInput() ? Input.GetAxis("Mouse ScrollWheel") : 0;
     //獲得空白鍵輸入
     public bool GetSpaceInput() => CanProcessInput() ? Input.GetKeyDown(KeyCode.Space) : false;
-    //確認滑鼠當前狀態（如果按下ESC就顯示或隱藏滑鼠）
-    private void CheckCursorstate()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (Cursor.lockState == CursorLockMode.None)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
-        }
-    }
+
     //獲得移動輸入
     public Vector3 GetMoveInput()
     {

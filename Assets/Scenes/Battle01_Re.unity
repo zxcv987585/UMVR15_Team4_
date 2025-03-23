@@ -9041,6 +9041,14 @@ PrefabInstance:
       propertyPath: enemySpawnInfoList.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7569778489409957508, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnInfoList.Array.data[1].enemyPrefab
+      value: 
+      objectReference: {fileID: 314055311740652304, guid: 5d93422a2bb78b643b204b1fc3876af6, type: 3}
+    - target: {fileID: 7569778489409957508, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnInfoList.Array.data[1].enemySpawnPosition
+      value: 
+      objectReference: {fileID: 1658827272}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12796,6 +12804,11 @@ Transform:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6298141067950230744, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
   m_PrefabInstance: {fileID: 1432552885}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1658827272 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6437767065398033641, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+  m_PrefabInstance: {fileID: 1301500251}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1672303489
 GameObject:

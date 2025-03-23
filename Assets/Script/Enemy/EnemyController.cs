@@ -156,9 +156,12 @@ public class EnemyController : MonoBehaviour, IEnemy
 		if(_enemyState != EnemyState.Walk) return;
 	
 		// 重置 NavMeshAgent 位置為 物件位置
-		_navMeshAgent.transform.position = transform.position;
-		_navMeshAgent.velocity = (_playerTransform.position - transform.position).normalized * _enemyDataSO.moveSpeed;
-		
+		//_navMeshAgent.transform.position = transform.position;
+		// _navMeshAgent.velocity = (_playerTransform.position - transform.position).normalized * _enemyDataSO.moveSpeed;
+		if (Vector3.Distance(transform.position, _navMeshAgent.nextPosition) > 0.5f)
+		{
+			_navMeshAgent.Warp(transform.position);
+		}
 		_navMeshAgent.transform.rotation = transform.rotation;
 		_navMeshAgent.SetDestination(_playerTransform.position);
 	
@@ -166,16 +169,18 @@ public class EnemyController : MonoBehaviour, IEnemy
         Vector3 direction = (_navMeshAgent.nextPosition - transform.position).normalized;
         direction.y = 0; // 確保不會影響 Y 軸 (防止怪物漂浮)
 
+		Vector3 rotateDirection = (_playerTransform.position - transform.position).normalized;
+		rotateDirection.y = 0f;
+
 		// 取得玩家方向的四元數
 		Quaternion targetRotation = transform.rotation;
-		if (direction.magnitude > 0.01f)
+		if (rotateDirection.magnitude > 0.01f)
 		{
-			targetRotation = Quaternion.LookRotation(direction);
+			targetRotation = Quaternion.LookRotation(rotateDirection);
 		}
 		
 		// 計算旋轉角度
 		float rotationAngle = Quaternion.Angle(transform.rotation, targetRotation);
-		Debug.Log(gameObject.name + " rotate " + rotationAngle);
 		float distance = Vector3.Distance(transform.position, _playerTransform.position);
 		
 		// 檢查移動後, 是不是剛好到攻擊範圍
@@ -195,8 +200,6 @@ public class EnemyController : MonoBehaviour, IEnemy
 		}
         
         //Debug.Log(gameObject.name + " rotate " + Quaternion.Angle(transform.rotation, targetRotation) );
-        
-        
 	}
 	
 	private void SetIsIdle(bool isIdle) => _isIdle = isIdle;
@@ -210,7 +213,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_enemyState = newState;
 		_enemyAnimatorController?.SetEnemyState(_enemyState);
 
-		_navMeshAgent.isStopped = _enemyState == EnemyState.Walk ? false : true;
+		_navMeshAgent.isStopped = !(_enemyState == EnemyState.Walk);
 		_isIdle = _enemyState == EnemyState.Idle;
 	}
 
@@ -289,7 +292,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	//攻擊玩家
 	public void Attack()
 	{
-		if(_isAttack)
+		if(_enemyState == EnemyState.Attack)
 		{
 			_playerHealth.TakeDamage(_enemyDataSO.attackPower);
 		}
