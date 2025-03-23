@@ -20,10 +20,8 @@ public class BossSceneDialogue : MonoBehaviour
     public float WaitForNextLine;
     //∞Oø˝§Â¶r∂i´◊©“ª›Index
     private int Index;
-    //∫Xº–¿À¨d¨Oß_•ø¶bπÔ∏‹
+    //∫Xº–¿À¨d¨Oß_•ø¶bπÅE‹
     public bool IsTalk = false;
-
-    public event Action EndFadeOut;
 
     // Start is called before the first frame update
     void Start()
@@ -101,7 +99,6 @@ public class BossSceneDialogue : MonoBehaviour
     IEnumerator LastTalkDialogue()
     {
         yield return new WaitForSeconds(2f);
-        EndFadeOut?.Invoke();
 
         for (Index = 0; Index < Lines3.Length; Index++)
         {

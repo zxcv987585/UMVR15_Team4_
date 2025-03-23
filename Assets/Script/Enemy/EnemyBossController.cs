@@ -20,9 +20,6 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 	[SerializeField] private float _attackCooldownTime;
 
-	//Boss死亡時要呼叫的程式碼
-	public BossSceneDialogue bossScenedialogue;
-
 	private bool _isIdle = true;
 	//private bool _isAttackCooldown = false;
 	private float _originalAnimatorSpeed;
@@ -102,10 +99,6 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 		// 切換 Boss 的 BGM
 		AudioManager.Instance.PlayBGM("BattleBackGoundMusic");
-
-        //抓取場景內劇情系統
-        bossScenedialogue = GameObject.Find("BossSceneDialogueBox").GetComponent<BossSceneDialogue>();
-
     }
 	
 	public void EnemyUpdate()
@@ -488,8 +481,6 @@ public class EnemyBossController : MonoBehaviour, IEnemy
             yield return null;
         }
         bossMaterial.SetFloat("_DissolveAmount", 0.3f); // 確保最後完全 Dissolve
-
-		bossScenedialogue.LastTalk();
     }
 
     //如果需要 Enemy 受傷, 呼叫該函數
