@@ -372,6 +372,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator CriticalDamageCoolDown()
     {
         yield return new WaitForSeconds(1.5f);
+        IsHit = false;
         IsCriticalHit = false;
         Vector3 inputDirection = GetMoveInput().normalized;
         if (inputDirection == Vector3.zero)
