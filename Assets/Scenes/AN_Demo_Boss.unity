@@ -14713,37 +14713,6 @@ ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 69018332000712655, guid: 0f3d407feb92ebb49b98d0157de5008a, type: 3}
   m_PrefabInstance: {fileID: 171877334}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1603305581
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1603305582}
-  m_Layer: 0
-  m_Name: BossDetect
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1603305582
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1603305581}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 88.48994, y: 6.034972, z: 160.87006}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1607296705 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4534406832815686, guid: 284d7a44fa2260d478dc3e2dff4ae5bc, type: 3}
@@ -16692,4 +16661,3 @@ SceneRoots:
   - {fileID: 729288727}
   - {fileID: 121874508}
   - {fileID: 7950954756978291140}
-  - {fileID: 1603305582}

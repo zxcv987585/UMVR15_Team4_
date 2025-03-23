@@ -1,31 +1,36 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using UnityEngine.Events;
 using System;
 
 public class BossSceneDialogue : MonoBehaviour
 {
-    //µøµ¡°Êµe
+    //å‘¼å«UIå‹•ç•«äº‹ä»¶
     public UnityEvent openAction;
-    //¥Î¨Ó½Õ¾ãValue­È
+    //æŠ“å–UIä»‹é¢çš„CanvasGroupä¾†é¡¯ç¤ºè·Ÿéš±è—
     public CanvasGroup canvasGroup;
-    //Àx¦s¤å¦r¬ÛÃö¤º®e
+    //æŠ“å–æ–‡å­—éœ€è¦å­˜æ”¾åœ¨å“ªå€‹Text
     public TextMeshProUGUI TextComponent;
     public string[] Lines;
     public string[] Lines2;
     public string[] Lines3;
     public float TextSpeed;
     public float WaitForNextLine;
-    //°O¿ı¤å¦r¶i«×©Ò»İIndex
+    //ç”¨ä¾†æœå°‹Lineè£¡æ–‡å­—çš„Index
     private int Index;
-    //ºX¼ĞÀË¬d¬O§_¥¿¦b¹EÜ
+    //é˜²æ­¢ç©å®¶çŸ­æ™‚é–“é€£æŒ‰çš„é˜²å‘†æ——æ¨™
     public bool IsTalk = false;
+
+    private CheckToReturnUI checkToReturn;
+
+    public event Action OnDialogueFinished;
 
     // Start is called before the first frame update
     void Start()
     {
+        checkToReturn = GameObject.Find("CheckToReturnUI").GetComponent<CheckToReturnUI>();
+        checkToReturn.gameObject.SetActive(false);
 
         canvasGroup.alpha = 0f;
         canvasGroup.blocksRaycasts = false;
@@ -53,9 +58,8 @@ public class BossSceneDialogue : MonoBehaviour
 
     public void LastTalk()
     {
-        if (IsTalk) return;
-
         TextComponent.text = string.Empty;
+        AudioManager.Instance.PlaySound("Radio", transform.position);
         StartCoroutine(OpenUIAnimation());
         StartCoroutine(LastTalkDialogue());
     }
@@ -75,6 +79,7 @@ public class BossSceneDialogue : MonoBehaviour
         }
 
         yield return new WaitForSeconds(4f);
+        OnDialogueFinished?.Invoke();
         StartCoroutine(CloseUIAnimation());
     }
 
@@ -93,6 +98,7 @@ public class BossSceneDialogue : MonoBehaviour
         }
 
         yield return new WaitForSeconds(4f);
+        OnDialogueFinished?.Invoke();
         StartCoroutine(CloseUIAnimation());
     }
 
@@ -113,6 +119,12 @@ public class BossSceneDialogue : MonoBehaviour
 
         yield return new WaitForSeconds(4f);
         StartCoroutine(CloseUIAnimation());
+        yield return new WaitForSeconds(1f);
+        gameObject.SetActive(false);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        checkToReturn.gameObject.SetActive(true);
+        checkToReturn.ShowCheckToReturnUI();
     }
 
     IEnumerator TypeLine(string line)

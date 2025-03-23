@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,9 +13,13 @@ public class BossUIfin : MonoBehaviour
     //-------------------------------------------------
 
     [SerializeField] private Image blackScreen;
+    [SerializeField] private BossSceneDialogue sceneDialogue;
+
 
     private void Start()
-    {
+    { 
+        sceneDialogue = GameObject.Find("BossSceneDialogueBox").GetComponent<BossSceneDialogue>();
+
         blackScreen = GameObject.Find("blackScreen").GetComponent<Image>();
         blackScreen.color = Color.clear;
 
@@ -81,8 +83,7 @@ public class BossUIfin : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
-        //
-        Debug.Log("接口在這");
-        //
+        sceneDialogue.transform.SetAsLastSibling();
+        sceneDialogue.LastTalk();
     }
 }

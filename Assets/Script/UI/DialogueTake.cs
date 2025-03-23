@@ -20,13 +20,13 @@ public class DialogueTake : MonoBehaviour
     private int Index;
     //»İ­nÃö³¬ªº²Ä¤@¹D«Ì»ÙÀğ¾À
     public GameObject LockWall;
-    //ª±®a²Ä¤@¦¸¤É¯Å»İ­nÄ²µoªº¼@±¡¨Æ¥ó
+    //ª±®a²Ä¤@¦¸¤É¯Å»İ­nÄ²µoªº¼@±¡¨Æ¥E
     public LevelSystem levelSystem;
-    //²Ä¤@°Ï³Ì«á¤@¬q¤å¦r©Ò»İ¶Ç°eªºdelegate¡]¥D­n¥Î©ó±±¨îunityÂæ)
+    //²Ä¤@°Ï³Ì«á¤@¬q¤å¦r©Ò»İ¶Ç°eªºdelegate¡]¥D­n¥Î©ó±±¨û’nityÂE
     public event Action LastTakeAction;
     //¼@±¡µ²§ô«á»İ­n¶Ç°eªºdelegate
     public event Action TakeFinish;
-    //BattleScene³Ì«á¤@°Ï¹ï¸Ü¥Îdelegate
+    //BattleScene³Ì«á¤@°Ï¹EÜ¥Îdelegate
     public event Action LastAreaTakeFinish;
 
     private void Awake()
