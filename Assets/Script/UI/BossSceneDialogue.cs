@@ -22,11 +22,16 @@ public class BossSceneDialogue : MonoBehaviour
     //防止玩家短時間連按的防呆旗標
     public bool IsTalk = false;
 
+    private CheckToReturnUI checkToReturn;
+
     public event Action OnDialogueFinished;
 
     // Start is called before the first frame update
     void Start()
     {
+        checkToReturn = GameObject.Find("CheckToReturnUI").GetComponent<CheckToReturnUI>();
+        checkToReturn.gameObject.SetActive(false);
+
         canvasGroup.alpha = 0f;
         canvasGroup.blocksRaycasts = false;
     }
@@ -114,6 +119,12 @@ public class BossSceneDialogue : MonoBehaviour
 
         yield return new WaitForSeconds(4f);
         StartCoroutine(CloseUIAnimation());
+        yield return new WaitForSeconds(1f);
+        gameObject.SetActive(false);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        checkToReturn.gameObject.SetActive(true);
+        checkToReturn.ShowCheckToReturnUI();
     }
 
     IEnumerator TypeLine(string line)

@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,12 +13,12 @@ public class BossUIfin : MonoBehaviour
     //-------------------------------------------------
 
     [SerializeField] private Image blackScreen;
-    private CheckToReturnUI checkToReturn;
+    [SerializeField] private BossSceneDialogue sceneDialogue;
+
 
     private void Start()
-    {
-        checkToReturn = GameObject.Find("CheckToReturnUI").GetComponent<CheckToReturnUI>();
-        checkToReturn.gameObject.SetActive(false);
+    { 
+        sceneDialogue = GameObject.Find("BossSceneDialogueBox").GetComponent<BossSceneDialogue>();
 
         blackScreen = GameObject.Find("blackScreen").GetComponent<Image>();
         blackScreen.color = Color.clear;
@@ -85,9 +83,7 @@ public class BossUIfin : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
-        //
-        checkToReturn.gameObject.SetActive(true);
-        checkToReturn.ShowCheckToReturnUI();
-        //
+        sceneDialogue.transform.SetAsLastSibling();
+        sceneDialogue.LastTalk();
     }
 }
