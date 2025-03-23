@@ -24,10 +24,14 @@ public class StopUI : MonoBehaviour
             Time.timeScale = 0f;
             StartCoroutine(StopUIAnimation());
             isOpen = true;
+
+            AudioManager.Instance.PlaySound("MenuOpen", transform.position);
         }
         else if (isOpen == true)
         {
             PressContinue();
+
+            AudioManager.Instance.PlaySound("MenuOpen", transform.position);
         }
     }
 
