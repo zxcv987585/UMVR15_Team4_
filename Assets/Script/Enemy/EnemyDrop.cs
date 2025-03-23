@@ -40,11 +40,12 @@ public class EnemyDrop : MonoBehaviour
     {
         while(true)
         {
-            Vector3 direction = (_endPosition.position - (transform.position + Vector3.down)).normalized;
+            Vector3 targetPosition = _endPosition.position + Vector3.up * 0.5f;
+            Vector3 direction = (targetPosition - transform.position ).normalized;
 
             transform.position += direction * (_moveSpeed * Time.deltaTime);
 
-            if(Vector3.Distance(_endPosition.position, transform.position + Vector3.down) < 0.1f)
+            if(Vector3.Distance(targetPosition, transform.position) < 0.1f)
             {
                 GetDropItem();
                 break;
@@ -54,39 +55,32 @@ public class EnemyDrop : MonoBehaviour
         }
     }
     
-    
-
     // 根據道具的掉落來給玩家對應的物品, 並刪除該物件
     private void GetDropItem()
     {
-        bool _hasGetItem;
-
         if(_dropWeightList.Count != 0)
         {
+            float nowWeight = 0f;
+            float totalWeight = 0f;
+
+            for(int i = 0; i < _dropWeightList.Count; i++)
+            {
+                totalWeight += _dropWeightList[i].weight;
+            }
+
+            float r = Random.Range(0f, totalWeight);
+
             foreach(DropWeight dropWeight in _dropWeightList)
             {
-                _hasGetItem = false;
+                nowWeight += dropWeight.weight;
 
-                if(dropWeight.weight > Random.Range(0, 100))
+                if(nowWeight >= r)
                 {
-                    foreach(ItemData itemData in InventoryManager.instance.myBag.itemList)
-                    {
-                        if(dropWeight.itemData.itemID == itemData.itemID)
-                        {
-                            itemData.itemNum++;
-                        
-                            InventoryManager.instance.RefreshUI();
+                    InventoryManager.instance.AddItem(dropWeight.itemData);
+                    InventoryManager.instance.RefreshUI();
+                    AudioManager.Instance.PlaySound("GetItem", transform.position);
 
-                            AudioManager.Instance.PlaySound("GetItem", transform.position);
-                            _hasGetItem = true;
-                            break;
-                        }
-                    }
-
-                    if(!_hasGetItem)
-                    {
-                        InventoryManager.instance.AddItem(dropWeight.itemData);
-                    }
+                    break;
                 }
             }
         }
