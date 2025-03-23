@@ -59,10 +59,14 @@ public class EnemyDrop : MonoBehaviour
     // 根據道具的掉落來給玩家對應的物品, 並刪除該物件
     private void GetDropItem()
     {
+        bool _hasGetItem;
+
         if(_dropWeightList.Count != 0)
         {
             foreach(DropWeight dropWeight in _dropWeightList)
             {
+                _hasGetItem = false;
+
                 if(dropWeight.weight > Random.Range(0, 100))
                 {
                     foreach(ItemData itemData in InventoryManager.instance.myBag.itemList)
@@ -70,11 +74,18 @@ public class EnemyDrop : MonoBehaviour
                         if(dropWeight.itemData.itemID == itemData.itemID)
                         {
                             itemData.itemNum++;
+                        
                             InventoryManager.instance.RefreshUI();
 
                             AudioManager.Instance.PlaySound("GetItem", transform.position);
+                            _hasGetItem = true;
                             break;
                         }
+                    }
+
+                    if(!_hasGetItem)
+                    {
+                        InventoryManager.instance.AddItem(dropWeight.itemData);
                     }
                 }
             }

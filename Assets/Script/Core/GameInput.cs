@@ -23,7 +23,13 @@ public class GameInput : MonoBehaviour
 		Skill2,
 		ItemMenu,
 		Interaction,
-		Escape
+		Escape,
+		UseItem1,
+		UseItem2,
+		UseItem3,
+		UseItem4,
+		UseItem5,
+		UseItem6,
 	}
 
 	public event Action<bool> OnAttackAction;
@@ -35,6 +41,7 @@ public class GameInput : MonoBehaviour
 	public event Action<Bind> OnSkillAction;
 	public event Action OnInteraction;
 	public event Action OnEscape;
+	public event Action<Bind> OnUseItem;
 	
 	public bool isAttackClick = false;
 
@@ -81,6 +88,13 @@ public class GameInput : MonoBehaviour
         player.ItemMenu.performed += _ => OnItemMenu?.Invoke();
         player.Interaction.performed += _ => OnInteraction?.Invoke();
         player.Escape.performed += _ => OnEscape?.Invoke();
+		player.UseItem.performed += _ => OnUseItem?.Invoke(Bind.UseItem1);
+		player.UseItem.performed += _ => OnUseItem?.Invoke(Bind.UseItem2);
+		player.UseItem.performed += _ => OnUseItem?.Invoke(Bind.UseItem3);
+		player.UseItem.performed += _ => OnUseItem?.Invoke(Bind.UseItem4);
+		player.UseItem.performed += _ => OnUseItem?.Invoke(Bind.UseItem5);
+		player.UseItem.performed += _ => OnUseItem?.Invoke(Bind.UseItem6);
+		
 	}
 
     //訂閱跳轉場景事件
@@ -169,7 +183,13 @@ public class GameInput : MonoBehaviour
             { Bind.Skill2, _playerInputAction.Player.Skill2 },
 			{ Bind.ItemMenu, _playerInputAction.Player.ItemMenu},
             { Bind.Interaction, _playerInputAction.Player.Interaction },
-            { Bind.Escape, _playerInputAction.Player.Escape }
+            { Bind.Escape, _playerInputAction.Player.Escape },
+			{ Bind.UseItem1, _playerInputAction.Player.UseItem },
+			{ Bind.UseItem2, _playerInputAction.Player.UseItem },
+			{ Bind.UseItem3, _playerInputAction.Player.UseItem },
+			{ Bind.UseItem4, _playerInputAction.Player.UseItem },
+			{ Bind.UseItem5, _playerInputAction.Player.UseItem },
+			{ Bind.UseItem6, _playerInputAction.Player.UseItem }
         };
 
         if (bindMap.TryGetValue(bind, out InputAction action))
@@ -238,6 +258,7 @@ public class GameInput : MonoBehaviour
 			Bind.ItemMenu => player.ItemMenu,
 			Bind.Interaction => player.Interaction,
 			Bind.Escape => player.Escape,
+			Bind.UseItem1 or Bind.UseItem2 or Bind.UseItem3 or Bind.UseItem4 or Bind.UseItem5 or Bind.UseItem6 => player.UseItem,
             _ => null
         };
 
@@ -247,6 +268,12 @@ public class GameInput : MonoBehaviour
             Bind.MoveDown => 2,
             Bind.MoveLeft => 3,
             Bind.MoveRight => 4,
+			Bind.UseItem1 => 1,
+			Bind.UseItem2 => 2,
+			Bind.UseItem3 => 3,
+			Bind.UseItem4 => 4,
+			Bind.UseItem5 => 5,
+			Bind.UseItem6 => 6,
             _ => 0
         };
 
