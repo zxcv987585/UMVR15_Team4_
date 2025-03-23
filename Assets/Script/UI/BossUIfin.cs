@@ -15,9 +15,13 @@ public class BossUIfin : MonoBehaviour
     //-------------------------------------------------
 
     [SerializeField] private Image blackScreen;
+    private CheckToReturnUI checkToReturn;
 
     private void Start()
     {
+        checkToReturn = GameObject.Find("CheckToReturnUI").GetComponent<CheckToReturnUI>();
+        checkToReturn.gameObject.SetActive(false);
+
         blackScreen = GameObject.Find("blackScreen").GetComponent<Image>();
         blackScreen.color = Color.clear;
 
@@ -82,7 +86,8 @@ public class BossUIfin : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         //
-        Debug.Log("接口在這");
+        checkToReturn.gameObject.SetActive(true);
+        checkToReturn.ShowCheckToReturnUI();
         //
     }
 }
