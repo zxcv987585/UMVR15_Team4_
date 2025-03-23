@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -21,7 +22,16 @@ public class NPCInteractable : MonoBehaviour
     private void Start()
     {
         isUseableUI = GameObject.Find("isUseableUI").GetComponent<RectTransform>();
+        TalkUI.OnDialogueFinished += OnDialogueFinishedHandler;
         animator.CrossFade("REFLESH00", 1.5f, 0);
+    }
+
+    private void OnDialogueFinishedHandler()
+    {
+        if (isUseable)
+        {
+            StartCoroutine(isUseableUIon());
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -44,7 +54,9 @@ public class NPCInteractable : MonoBehaviour
 
     public void Interact()
     {
-        if(TalkCount == 0)
+        StartCoroutine(isUseableUIoff());
+
+        if (TalkCount == 0)
         {
             TalkCount++;
             AudioManager.Instance.PlaySound("Uwa", transform.position);
