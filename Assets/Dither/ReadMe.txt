@@ -1,0 +1,1 @@
+assets are downloaded from - https://github.com/gkjohnson/unity-dithered-transparency-shader
