@@ -9,7 +9,10 @@ public class EnemyBossController : MonoBehaviour, IEnemy
     //
     [SerializeField] private Material bossMaterial;
     private float dissolveDuration = 3.0f; // 漸變時間
-	//
+
+    [SerializeField] private GameObject _bossUIfinPrefab;
+    private BossUIfin _bossUIfin;
+    //
 
     [SerializeField] private GameObject _bossUIPrefab;
     [SerializeField] private EnemyDataSO _enemyDataSO;
@@ -28,7 +31,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	//private Collider _collider;
 	private AnimatorStateInfo _animatorStateInfo;
 	private BossUI _bossUI;
-	private EnemySpawnTirgger _enemySpawnTirgger;
+    private EnemySpawnTirgger _enemySpawnTirgger;
 	private NavMeshAgent _navMeshAgent;
 
 	private bool _hpLessTrigger70 = false;
@@ -85,11 +88,11 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 		// Boss 本身自帶的 UI 效果
 		GameObject go = Instantiate(_bossUIPrefab, FindObjectOfType<BattleUIManager>().transform);
-		_bossUI = go.GetComponent<BossUI>();
-		_bossUI.SetHealth(Health);
+        _bossUI = go.GetComponent<BossUI>();
+        _bossUI.SetHealth(Health);
 
-		// 預設 Boss 狀態為 Idle
-		ChangeEnemyState(BossState.Idle);
+        // 預設 Boss 狀態為 Idle
+        ChangeEnemyState(BossState.Idle);
 		
 		// 用字串去抓, 很蠢, 但先這樣
 		_enemySpawnTirgger = GameObject.Find("EnemyBossSpawnTrigger").GetComponent<EnemySpawnTirgger>();
@@ -465,10 +468,9 @@ public class EnemyBossController : MonoBehaviour, IEnemy
         {
             StartCoroutine(FadeOutBoss());
         }
-		//
     }
 
-    // Coroutine 讓材質變化
+    // Coroutine 讓材質變化 和 Boss死亡
     private IEnumerator FadeOutBoss()
     {
         yield return new WaitForSeconds(2f);
@@ -481,6 +483,10 @@ public class EnemyBossController : MonoBehaviour, IEnemy
             yield return null;
         }
         bossMaterial.SetFloat("_DissolveAmount", 0.3f); // 確保最後完全 Dissolve
+
+        // 最後跳出Boss 死亡UI
+        GameObject go2 = Instantiate(_bossUIfinPrefab, FindObjectOfType<BattleUIManager>().transform);
+        _bossUIfin = go2.GetComponent<BossUIfin>();
     }
 
     //如果需要 Enemy 受傷, 呼叫該函數
