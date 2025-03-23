@@ -1,7 +1,9 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine.Events;
+using System;
 
 public class BossSceneDialogue : MonoBehaviour
 {
@@ -21,9 +23,12 @@ public class BossSceneDialogue : MonoBehaviour
     //旗標檢查是否正在對話
     public bool IsTalk = false;
 
+    public event Action EndFadeOut;
+
     // Start is called before the first frame update
     void Start()
     {
+
         canvasGroup.alpha = 0f;
         canvasGroup.blocksRaycasts = false;
     }
@@ -95,7 +100,9 @@ public class BossSceneDialogue : MonoBehaviour
 
     IEnumerator LastTalkDialogue()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
+        EndFadeOut?.Invoke();
+
         for (Index = 0; Index < Lines3.Length; Index++)
         {
             yield return StartCoroutine(TypeLine(Lines3[Index]));

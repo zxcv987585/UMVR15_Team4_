@@ -48,6 +48,9 @@ public class CameraController : MonoBehaviour
     // 攝影機上一幀的距離
     private float PreviousCameraToTargetDistance;
 
+    //遊戲結束時，攝影機接收劇情系統的委派
+    public BossSceneDialogue bossScene;
+
     // 最小與最大攝影機仰角程度
     float MinVerticalAngle = -15;
     float MaxVerticalAngle = 35;
@@ -74,6 +77,7 @@ public class CameraController : MonoBehaviour
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        bossScene = GameObject.Find("BossSceneDialogueBox").GetComponent<BossSceneDialogue>();
 
         if (FindObjectsOfType<CameraController>().Length > 1)
         {
@@ -88,6 +92,7 @@ public class CameraController : MonoBehaviour
         player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
 
         GameInput.Instance.OnAimAction += SetAim;
+        bossScene.EndFadeOut += FadeOut;
 
         DefaultCameraToTargetDistance = CameraToTargetDistance;
 
@@ -260,6 +265,27 @@ public class CameraController : MonoBehaviour
         }
         tempcolor.a = 0f;
         fadeImage.color = tempcolor;
-        fadeImage.gameObject.SetActive(false);
+        //fadeImage.gameObject.SetActive(false);
+    }
+
+    private void FadeOut()
+    {
+        StartCoroutine(CameraFadeout());
+    }
+
+    private IEnumerator CameraFadeout()
+    {
+        float elapsed = 0f;
+        Color tempcolor = fadeImage.color;
+        while (elapsed < fadeDuration)
+        {
+            tempcolor.a = Mathf.Lerp(0f, 1.5f, elapsed / fadeDuration);
+            fadeImage.color = tempcolor;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        tempcolor.a = 1f;
+        fadeImage.color = tempcolor;
+        //fadeImage.gameObject.SetActive(false);
     }
 }

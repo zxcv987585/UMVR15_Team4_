@@ -8,11 +8,23 @@ public class MiniMapFadeIn : MonoBehaviour
     [SerializeField] private CanvasGroup MiniMapCanvasGroup;
     [SerializeField] private float FadeDuration = 3f;
 
+    public BossSceneDialogue bossScene;
+
+    private void Awake()
+    {
+        bossScene = GameObject.Find("BossSceneDialogueBox").GetComponent<BossSceneDialogue>();
+    }
     // Start is called before the first frame update
     void Start()
     {
         MiniMapCanvasGroup.alpha = 0f;
         StartCoroutine(FadeIn());
+        bossScene.EndFadeOut += FadeOut;
+    }
+
+    private void FadeOut()
+    {
+        StartCoroutine(UIFadeout());
     }
 
     private IEnumerator FadeIn()
@@ -26,5 +38,18 @@ public class MiniMapFadeIn : MonoBehaviour
             yield return null;
         }
         MiniMapCanvasGroup.alpha = 1f;
+    }
+
+    private IEnumerator UIFadeout()
+    {
+        yield return new WaitForSeconds(1.6f);
+        float elapse = 0f;
+        while (elapse < FadeDuration)
+        {
+            MiniMapCanvasGroup.alpha = Mathf.Lerp(1f, 0f, elapse / FadeDuration);
+            elapse += Time.deltaTime;
+            yield return null;
+        }
+        MiniMapCanvasGroup.alpha = 0f;
     }
 }
