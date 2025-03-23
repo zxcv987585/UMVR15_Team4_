@@ -53,9 +53,8 @@ public class BossSceneDialogue : MonoBehaviour
 
     public void LastTalk()
     {
-        if (IsTalk) return;
-
         TextComponent.text = string.Empty;
+        AudioManager.Instance.PlaySound("Radio", transform.position);
         StartCoroutine(OpenUIAnimation());
         StartCoroutine(LastTalkDialogue());
     }

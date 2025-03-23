@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour
         playerData.MaxPP = 100;
         playerData.CurrentLevel = 1;
         playerData.attackDamage = 15;
-        playerData.GunDamage = 8;
+        playerData.GunDamage = 100;
         playerData.Defense = 0f;
     }
 

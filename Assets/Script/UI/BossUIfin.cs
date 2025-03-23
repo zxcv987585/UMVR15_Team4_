@@ -15,10 +15,13 @@ public class BossUIfin : MonoBehaviour
     //-------------------------------------------------
 
     [SerializeField] private Image blackScreen;
+    [SerializeField] private BossSceneDialogue sceneDialogue;
 
     private void Start()
     {
         blackScreen = GameObject.Find("blackScreen").GetComponent<Image>();
+        sceneDialogue = GameObject.Find("BossSceneDialogueBox").GetComponent<BossSceneDialogue>();
+
         blackScreen.color = Color.clear;
 
         Transform parent = transform.parent;
@@ -81,8 +84,7 @@ public class BossUIfin : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
-        //
-        Debug.Log("接口在這");
-        //
+        sceneDialogue.transform.SetAsLastSibling();
+        sceneDialogue.LastTalk();
     }
 }
