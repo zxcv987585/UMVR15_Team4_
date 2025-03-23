@@ -134,6 +134,8 @@ public class TitleAnimation : MonoBehaviour
            value => flash.GetComponent<Image>().color = value,
            EasyInOut.EaseOut));
 
+        AudioManager.Instance.PlaySound("TitleAudio", transform.position);
+
         //©³³¡³±¼v
         shadowImage.gameObject.SetActive(true);
         StartCoroutine(easyInOut.ChangeValue(
