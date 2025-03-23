@@ -88,12 +88,12 @@ public class GameInput : MonoBehaviour
         player.ItemMenu.performed += _ => OnItemMenu?.Invoke();
         player.Interaction.performed += _ => OnInteraction?.Invoke();
         player.Escape.performed += _ => OnEscape?.Invoke();
-		player.UseItem.performed += _ => OnUseItem?.Invoke(Bind.UseItem1);
-		player.UseItem.performed += _ => OnUseItem?.Invoke(Bind.UseItem2);
-		player.UseItem.performed += _ => OnUseItem?.Invoke(Bind.UseItem3);
-		player.UseItem.performed += _ => OnUseItem?.Invoke(Bind.UseItem4);
-		player.UseItem.performed += _ => OnUseItem?.Invoke(Bind.UseItem5);
-		player.UseItem.performed += _ => OnUseItem?.Invoke(Bind.UseItem6);
+		player.UseItem1.performed += _ => OnUseItem?.Invoke(Bind.UseItem1);
+		player.UseItem2.performed += _ => OnUseItem?.Invoke(Bind.UseItem2);
+		player.UseItem3.performed += _ => OnUseItem?.Invoke(Bind.UseItem3);
+		player.UseItem4.performed += _ => OnUseItem?.Invoke(Bind.UseItem4);
+		player.UseItem5.performed += _ => OnUseItem?.Invoke(Bind.UseItem5);
+		player.UseItem6.performed += _ => OnUseItem?.Invoke(Bind.UseItem6);
 		
 	}
 
@@ -184,12 +184,12 @@ public class GameInput : MonoBehaviour
 			{ Bind.ItemMenu, _playerInputAction.Player.ItemMenu},
             { Bind.Interaction, _playerInputAction.Player.Interaction },
             { Bind.Escape, _playerInputAction.Player.Escape },
-			{ Bind.UseItem1, _playerInputAction.Player.UseItem },
-			{ Bind.UseItem2, _playerInputAction.Player.UseItem },
-			{ Bind.UseItem3, _playerInputAction.Player.UseItem },
-			{ Bind.UseItem4, _playerInputAction.Player.UseItem },
-			{ Bind.UseItem5, _playerInputAction.Player.UseItem },
-			{ Bind.UseItem6, _playerInputAction.Player.UseItem }
+			{ Bind.UseItem1, _playerInputAction.Player.UseItem1 },
+			{ Bind.UseItem2, _playerInputAction.Player.UseItem2 },
+			{ Bind.UseItem3, _playerInputAction.Player.UseItem3 },
+			{ Bind.UseItem4, _playerInputAction.Player.UseItem4 },
+			{ Bind.UseItem5, _playerInputAction.Player.UseItem5 },
+			{ Bind.UseItem6, _playerInputAction.Player.UseItem6 }
         };
 
         if (bindMap.TryGetValue(bind, out InputAction action))
@@ -258,7 +258,12 @@ public class GameInput : MonoBehaviour
 			Bind.ItemMenu => player.ItemMenu,
 			Bind.Interaction => player.Interaction,
 			Bind.Escape => player.Escape,
-			Bind.UseItem1 or Bind.UseItem2 or Bind.UseItem3 or Bind.UseItem4 or Bind.UseItem5 or Bind.UseItem6 => player.UseItem,
+			Bind.UseItem1 => player.UseItem1,
+			Bind.UseItem2 => player.UseItem2,
+			Bind.UseItem3 => player.UseItem3,
+			Bind.UseItem4 => player.UseItem4,
+			Bind.UseItem5 => player.UseItem5,
+			Bind.UseItem6 => player.UseItem6,
             _ => null
         };
 
@@ -268,12 +273,6 @@ public class GameInput : MonoBehaviour
             Bind.MoveDown => 2,
             Bind.MoveLeft => 3,
             Bind.MoveRight => 4,
-			Bind.UseItem1 => 1,
-			Bind.UseItem2 => 2,
-			Bind.UseItem3 => 3,
-			Bind.UseItem4 => 4,
-			Bind.UseItem5 => 5,
-			Bind.UseItem6 => 6,
             _ => 0
         };
 
