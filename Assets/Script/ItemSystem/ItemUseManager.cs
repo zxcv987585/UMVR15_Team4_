@@ -19,6 +19,12 @@ public class ItemUseManager : MonoBehaviour
         rebirthUI = GetComponentInChildren<RebirthUI>();
 
         rebirthUI.UseReviveItem += UseRivive;
+        GameInput.Instance.OnUseItem += TryTry;
+    }
+
+    private void TryTry(GameInput.Bind bind)
+    {
+        
     }
 
     private void UseRivive()
