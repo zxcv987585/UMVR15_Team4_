@@ -16,12 +16,12 @@ public class ButtonUISound : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        AudioManager.Instance.PlaySound(_selectSound ?? "ButtonSelect", transform.position);
+        AudioManager.Instance.PlaySound(string.IsNullOrEmpty(_selectSound) ? "ButtonSelect" : _selectSound, transform.position);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        AudioManager.Instance.PlaySound(_clickSound ?? "ButtonClick", transform.position);
+        AudioManager.Instance.PlaySound(string.IsNullOrEmpty(_clickSound) ? "ButtonClick" : _clickSound, transform.position);
         
     }
 

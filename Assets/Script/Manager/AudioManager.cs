@@ -178,8 +178,6 @@ public class AudioManager : MonoBehaviour
 
 	public void SetMainVolume(float mainVolume)
 	{
-		Debug.Log("ABC");
-
 		_mainVolume = mainVolume;
 		_bgmAudioSource.volume = mainVolume * _bgmVolume;
 

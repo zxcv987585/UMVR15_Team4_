@@ -18,6 +18,8 @@ public class DropBox : MonoBehaviour
     {
         Instantiate(ImpactEffect, transform.position + Vector3.up * 0.5f, Quaternion.identity);
         Instantiate(_enemyDrop, transform.position, Quaternion.identity);
+
+        AudioManager.Instance.PlaySound("DropBox", transform.position);
         
         Destroy(gameObject);
     }
