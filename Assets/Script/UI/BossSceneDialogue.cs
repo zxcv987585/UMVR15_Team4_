@@ -1,7 +1,9 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine.Events;
+using System;
 
 public class BossSceneDialogue : MonoBehaviour
 {
@@ -18,12 +20,13 @@ public class BossSceneDialogue : MonoBehaviour
     public float WaitForNextLine;
     //∞Oø˝§Â¶r∂i´◊©“ª›Index
     private int Index;
-    //∫Xº–¿À¨d¨Oß_•ø¶bπÔ∏‹
+    //∫Xº–¿À¨d¨Oß_•ø¶bπÅE‹
     public bool IsTalk = false;
 
     // Start is called before the first frame update
     void Start()
     {
+
         canvasGroup.alpha = 0f;
         canvasGroup.blocksRaycasts = false;
     }
@@ -95,7 +98,8 @@ public class BossSceneDialogue : MonoBehaviour
 
     IEnumerator LastTalkDialogue()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
+
         for (Index = 0; Index < Lines3.Length; Index++)
         {
             yield return StartCoroutine(TypeLine(Lines3[Index]));

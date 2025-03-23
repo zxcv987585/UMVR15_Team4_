@@ -102,7 +102,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 		// 切換 Boss 的 BGM
 		AudioManager.Instance.PlayBGM("BattleBackGoundMusic");
-	}
+    }
 	
 	public void EnemyUpdate()
     {

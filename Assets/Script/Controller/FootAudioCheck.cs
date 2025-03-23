@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FootAudioCheck : MonoBehaviour
@@ -8,8 +6,6 @@ public class FootAudioCheck : MonoBehaviour
     {
         FootAudio,
         FootAudio2,
-        // FootAudio3,
-        // FootAudio4
     }
     
     private FootAudioName _footAudioName;

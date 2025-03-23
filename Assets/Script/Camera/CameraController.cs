@@ -260,6 +260,6 @@ public class CameraController : MonoBehaviour
         }
         tempcolor.a = 0f;
         fadeImage.color = tempcolor;
-        fadeImage.gameObject.SetActive(false);
+        //fadeImage.gameObject.SetActive(false);
     }
 }
