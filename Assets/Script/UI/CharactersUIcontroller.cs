@@ -82,7 +82,7 @@ public class CharactersUIcontroller : MonoBehaviour
 
     private void playAnimation()
     {
-        animator.Play("WIN00");
+        animator.Play("WIN00"); 
     }
 
     private void ScaredAnimation()
