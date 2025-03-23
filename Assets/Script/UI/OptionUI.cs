@@ -20,7 +20,6 @@ public class OptionUI : MonoBehaviour
         _sfxVolumeSlider.value = GameDataManager.Instance.gameData.sfxVolume;
 
         if(AudioManager.Instance == null) return;
-        Debug.Log("ABC");
         _mainVolumeSlider.onValueChanged.AddListener(AudioManager.Instance.SetMainVolume);
         _bgmVolumeSlider.onValueChanged.AddListener(AudioManager.Instance.SetBGMVolume);
         _sfxVolumeSlider.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);

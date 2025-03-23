@@ -137,7 +137,7 @@ public class PlayerController : MonoBehaviour
         GameInput.Instance.OnSprintAction += SetIsRun;
         GameInput.Instance.OnAimAction += SetIsAiming;
         GameInput.Instance.OnAttackAction += SetIsAttack;
-        GameInput.Instance.OnDashkAction += Dash;
+        GameInput.Instance.OnDashAction += Dash;
         GameInput.Instance.OnLockAction += LockOn;
         GameInput.Instance.OnItemMenu += ItemMenu;
         GameInput.Instance.OnEscape += PressESCUI;
@@ -193,7 +193,7 @@ public class PlayerController : MonoBehaviour
             GameInput.Instance.OnSprintAction -= SetIsRun;
             GameInput.Instance.OnAimAction -= SetIsAiming;
             GameInput.Instance.OnAttackAction -= SetIsAttack;
-            GameInput.Instance.OnDashkAction -= Dash;
+            GameInput.Instance.OnDashAction -= Dash;
             GameInput.Instance.OnLockAction -= LockOn;
             GameInput.Instance.OnItemMenu -= ItemMenu;
             Destroy(gameObject);
