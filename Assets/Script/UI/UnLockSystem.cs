@@ -48,7 +48,7 @@ public class UnLockSystem : MonoBehaviour
             CanvasGroup canvasGroup = messageObj.GetComponent<CanvasGroup>();
 
             if (messageText != null)
-                messageText.text = $"Žæ“¾‹Z”\:{skillName}";
+                messageText.text = $"Žæ“¾‹Z”\";
         }
     }
 }
