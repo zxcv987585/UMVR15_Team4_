@@ -104,6 +104,7 @@ public class BossSceneDialogue : MonoBehaviour
 
     IEnumerator LastTalkDialogue()
     {
+        checkToReturn.gameObject.SetActive(true);
         yield return new WaitForSeconds(2f);
 
         for (Index = 0; Index < Lines3.Length; Index++)
@@ -122,9 +123,8 @@ public class BossSceneDialogue : MonoBehaviour
         yield return new WaitForSeconds(1f);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        checkToReturn.gameObject.SetActive(true);
-        checkToReturn.ShowCheckToReturnUI();
 
+        checkToReturn.ShowCheckToReturnUI();
         yield return new WaitForSeconds(0.1f);
         gameObject.SetActive(false);
     }
