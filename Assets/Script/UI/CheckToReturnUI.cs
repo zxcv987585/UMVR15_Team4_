@@ -10,7 +10,6 @@ public class CheckToReturnUI : MonoBehaviour
 
     private EasyInOut easyInOut;
 
-
     public void ShowCheckToReturnUI()
     {
         StartCoroutine(CheckToReturnUIAnimation());

@@ -120,11 +120,13 @@ public class BossSceneDialogue : MonoBehaviour
         yield return new WaitForSeconds(4f);
         StartCoroutine(CloseUIAnimation());
         yield return new WaitForSeconds(1f);
-        gameObject.SetActive(false);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         checkToReturn.gameObject.SetActive(true);
         checkToReturn.ShowCheckToReturnUI();
+
+        yield return new WaitForSeconds(0.1f);
+        gameObject.SetActive(false);
     }
 
     IEnumerator TypeLine(string line)
