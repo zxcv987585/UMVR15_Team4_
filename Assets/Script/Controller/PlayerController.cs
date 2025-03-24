@@ -367,7 +367,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(playerData.HitCoolTime);
 
         GunHit = false;
-        stateMachine.ChangeState(aimState);
     }
     IEnumerator CriticalDamageCoolDown()
     {
