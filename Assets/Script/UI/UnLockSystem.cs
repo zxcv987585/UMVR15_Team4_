@@ -17,17 +17,8 @@ public class UnLockSystem : MonoBehaviour
         level = FindAnyObjectByType<LevelSystem>();
         if (level == null)
         {
-            Debug.LogError("UnLockSystem: ß‰§£®ÅELevelSystem°I");
+            Debug.LogError("UnLockSystem: ß‰§£®Ï LevelSystem°I");
             return;
-        }
-
-        // **π¡∏’¶b¶P§@ºh (•SßÃ™´•ÅE ¥MßÅESkillSlot**
-        SkillSlot skillSlot = transform.parent != null ? transform.parent.GetComponentInChildren<SkillSlot>() : null;
-
-        if (skillSlot != null && skillSlot.skillData != null)
-        {
-            skillName = skillSlot.skillData.skillName; // **®˙±oßﬁØ‡¶W∫Ÿ**
-            Debug.Log($"UnLockSystem: ß‰®ÅEﬁØÅE{skillName}");
         }
     }
     void Update()
@@ -35,20 +26,28 @@ public class UnLockSystem : MonoBehaviour
         if (level.playerData.CurrentLevel >= unlockLevel)
         {
             ShowUnlockMessage();
-            gameObject.SetActive(false); // **∑˙—•Ø≈πFº–Æ…°A∞±•Œ¶€®≠**
+            gameObject.SetActive(false); // **∑Ìµ•Ø≈πFº–Æ…°A∞±•Œ¶€®≠**
         }
     }
     private void ShowUnlockMessage()
     {
         if (unlockMessagePrefab != null && messageParent != null)
         {
-            // **•Õ¶®∞TÆß™´•ÅE*
+            SkillSlot skillSlot = transform.parent != null ? transform.parent.GetComponentInChildren<SkillSlot>() : null;
+
+            if (skillSlot != null && skillSlot.skillData != null)
+            {
+                skillName = skillSlot.skillData.skillName; // **®˙±oßﬁØ‡¶W∫Ÿ**
+                Debug.Log($"UnLockSystem: ß‰®ÏßﬁØ‡ {skillName}");
+            }
+
+            // **•Õ¶®∞TÆß™´•Û**
             GameObject messageObj = Instantiate(unlockMessagePrefab, messageParent);
             TextMeshProUGUI messageText = messageObj.GetComponentInChildren<TextMeshProUGUI>();
             CanvasGroup canvasGroup = messageObj.GetComponent<CanvasGroup>();
 
             if (messageText != null)
-                messageText.text = $"éÊìæãZî\";
+                messageText.text = $"®˙±oßﬁØ‡°G{skillName}";
         }
     }
 }

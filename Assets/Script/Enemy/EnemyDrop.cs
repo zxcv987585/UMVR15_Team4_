@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -58,33 +59,28 @@ public class EnemyDrop : MonoBehaviour
     // 根據道具的掉落來給玩家對應的物品, 並刪除該物件
     private void GetDropItem()
     {
-        if(_dropWeightList.Count != 0)
+        if(_dropWeightList == null || _dropWeightList.Count == 0) return;
+
+        float nowWeight = 0f;
+        float totalWeight = _dropWeightList.Sum(drop => drop.weight);
+
+        float r = Random.Range(0f, totalWeight);
+
+        foreach(DropWeight dropWeight in _dropWeightList)
         {
-            float nowWeight = 0f;
-            float totalWeight = 0f;
+            nowWeight += dropWeight.weight;
 
-            for(int i = 0; i < _dropWeightList.Count; i++)
+            if(nowWeight >= r)
             {
-                totalWeight += _dropWeightList[i].weight;
-            }
+                InventoryManager.instance.AddItem(dropWeight.itemData);
+                InventoryManager.instance.RefreshUI();
 
-            float r = Random.Range(0f, totalWeight);
+                AudioManager.Instance.PlaySound("GetItem", transform.position);
 
-            foreach(DropWeight dropWeight in _dropWeightList)
-            {
-                nowWeight += dropWeight.weight;
-
-                if(nowWeight >= r)
-                {
-                    InventoryManager.instance.AddItem(dropWeight.itemData);
-                    InventoryManager.instance.RefreshUI();
-                    AudioManager.Instance.PlaySound("GetItem", transform.position);
-
-                    break;
-                }
+                break;
             }
         }
-
+        
         Destroy(gameObject);
     }
 

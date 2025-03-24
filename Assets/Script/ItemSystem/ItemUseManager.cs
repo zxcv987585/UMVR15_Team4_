@@ -1,16 +1,17 @@
-﻿using System;
-using Unity.VisualScripting;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class ItemUseManager : MonoBehaviour
 {
     public Inventory myBag;
-    public HotbarSlot[] hotbarSlot;
+    public HotbarSlot[] hotbarSlotList;
     public RebirthUI rebirthUI;
 
     private PlayerController player;
     private PlayerHealth health;
+
+    private Dictionary<GameInput.Bind, HotbarSlot> _itemBind;
 
     private void Start()
     {
@@ -19,6 +20,47 @@ public class ItemUseManager : MonoBehaviour
         rebirthUI = GetComponentInChildren<RebirthUI>();
 
         rebirthUI.UseReviveItem += UseRivive;
+
+        GameInput.Instance.OnUseItem += CallBindItem;
+    }
+
+    private void InitItemBind()
+    {
+        if(hotbarSlotList.Length < 6)
+        {
+            Debug.Log("ItemUseManager 的 HotbarSlotList 數量少於 6 個");
+            return;
+        }
+        
+        _itemBind = new Dictionary<GameInput.Bind, HotbarSlot>
+        {
+            {GameInput.Bind.UseItem1, hotbarSlotList[0]},
+            {GameInput.Bind.UseItem2, hotbarSlotList[1]},
+            {GameInput.Bind.UseItem3, hotbarSlotList[2]},
+            {GameInput.Bind.UseItem4, hotbarSlotList[3]},
+            {GameInput.Bind.UseItem5, hotbarSlotList[4]},
+            {GameInput.Bind.UseItem6, hotbarSlotList[5]},
+        };
+    }
+
+    private void CallBindItem(GameInput.Bind bind)
+    {
+        if(_itemBind == null) InitItemBind();
+        if(!_itemBind.TryGetValue(bind, out HotbarSlot hotbarSlot)) return;
+        if(hotbarSlot.slotItem == null || hotbarSlot.slotItem.itemNum <= 0) return;
+
+        if(UseItem(hotbarSlot.slotItem))
+        {
+            hotbarSlot.slotItem.itemNum--;
+
+            if(hotbarSlot.slotItem.itemNum == 0)
+            {
+                myBag.itemList.Remove(hotbarSlot.slotItem);
+                hotbarSlot.slotItem = null;
+            }
+
+            InventoryManager.instance.RefreshUI();
+        }
     }
 
     private void UseRivive()
@@ -31,7 +73,7 @@ public class ItemUseManager : MonoBehaviour
             {
                 myBag.itemList.Remove(reviveItem);
 
-                foreach (var slot in hotbarSlot)
+                foreach (var slot in hotbarSlotList)
                 {
                     if (slot.slotItem != null && slot.slotItem.itemID == 5)
                     {
@@ -120,28 +162,5 @@ public class ItemUseManager : MonoBehaviour
 
         item.itemAction?.Invoke(item);
         return true;
-    }
-
-    private void Update()
-    {
-        for (int i = 0; i < hotbarSlot.Length; i++)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1 + i)
-                && hotbarSlot[i].slotItem != null && hotbarSlot[i].slotItem.itemNum > 0)
-            {
-                if (UseItem(hotbarSlot[i].slotItem))
-                {
-                    hotbarSlot[i].slotItem.itemNum -= 1;
-                    //成功使用道具才減少數量
-                    if (hotbarSlot[i].slotItem.itemNum == 0)
-                    {
-                        ItemData removedItem = hotbarSlot[i].slotItem;
-                        hotbarSlot[i].slotItem = null;
-                        myBag.itemList.Remove(removedItem);
-                    }
-                    InventoryManager.instance.RefreshUI();
-                }
-            }
-        }
     }
 }
