@@ -59,7 +59,7 @@ public class NPCInteractable : MonoBehaviour
         if (TalkCount == 0)
         {
             TalkCount++;
-            AudioManager.Instance.PlaySound("Uwa", transform.position);
+            this.PlaySound("Uwa");
             TalkUI.FirstTalkToPlayer();
         }
         else if(TalkCount == 1)

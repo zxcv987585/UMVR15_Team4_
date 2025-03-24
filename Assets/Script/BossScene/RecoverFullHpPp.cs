@@ -6,7 +6,7 @@ public class RecoverFullHpPp : MonoBehaviour
 {
     public bool isUseable = false;
 
-    public bool isBeUse = false; //­­¨î¥u¯à¨Ï¥Î¤@¦¸
+    public bool isBeUse = false; //ï¿½ï¿½ï¿½ï¿½uï¿½ï¿½Ï¥Î¤@ï¿½ï¿½
     public GameObject standbyParticle;
     public ParticleSystem useParticle1;
     public ParticleSystem useParticle2;
@@ -93,7 +93,7 @@ public class RecoverFullHpPp : MonoBehaviour
             health.Heal(1000);
             health.HealPP(1000);
 
-            AudioManager.Instance.PlaySound("Health", transform.position);
+            this.PlaySound("Health");
         }
     }
 }

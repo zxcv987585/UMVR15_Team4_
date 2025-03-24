@@ -281,7 +281,7 @@ public class PlayerController : MonoBehaviour
     }
     public void PlayAttackVoice()
     {
-        AudioManager.Instance.PlaySound("PlayerAttack", Vector3.zero);
+        this.PlaySound("PlayerAttack");
     }
 
     //瞄準模式的核心邏輯

@@ -14,6 +14,6 @@ public class FootAudioCheck : MonoBehaviour
     {
         _footAudioName = (FootAudioName)Random.Range(0, 2);
 
-        AudioManager.Instance.PlaySound(_footAudioName.ToString(), transform.position);
+        this.PlaySound(_footAudioName.ToString());
     }
 }

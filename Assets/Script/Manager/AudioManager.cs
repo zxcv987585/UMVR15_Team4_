@@ -91,7 +91,7 @@ public class AudioManager : MonoBehaviour
 	    yield return null;
 	}
 
-	public void PlaySound(string key, Vector3 position = default, GameObject caller = null, bool isLoop = false, float playTimer = 0f)
+	public void PlaySound(string key, Vector3? position = default, GameObject caller = null, bool isLoop = false, float playTimer = 0f)
 	{
 		// 檢查輸入的 key 是否正確
 		AudioClip audioClip = _audioLibrarySO.GetAudioClip(key);
@@ -106,7 +106,7 @@ public class AudioManager : MonoBehaviour
 		if(_audioPool.Count == 0) audioSource.playOnAwake = false;
 
 		// 設置 AudioSource 相關參數並播放
-		audioSource.transform.position = position;
+		audioSource.transform.position = position ?? caller.transform.position;
 		audioSource.clip = audioClip;
 		audioSource.volume = _mainVolume * _sfxVolume;
 		audioSource.loop = isLoop;
@@ -114,6 +114,7 @@ public class AudioManager : MonoBehaviour
 
 		// 將新播放的 AudioSource 放入 Dictionary 方便追蹤
 		if(!_nowPlayAudio.ContainsKey(key)) _nowPlayAudio[key] = new Dictionary<GameObject, List<AudioSource>>();
+		if(caller == null) caller = new GameObject();
 		if(!_nowPlayAudio[key].ContainsKey(caller)) _nowPlayAudio[key][caller] = new List<AudioSource>();
 		_nowPlayAudio[key][caller].Add(audioSource);
 
@@ -128,18 +129,37 @@ public class AudioManager : MonoBehaviour
 	/// <param name="key"></param>
 	public void StopSound(string key, GameObject caller)
 	{
-		if(_nowPlayAudio.ContainsKey(key) && _nowPlayAudio[key].ContainsKey(caller))
+		if (!_nowPlayAudio.ContainsKey(key)) return;
+
+		if (caller == null)
 		{
-			foreach(AudioSource audioSource in _nowPlayAudio[key][caller])
+			// 停止所有播放該 key 的音效
+			foreach (var pair in _nowPlayAudio[key])
 			{
-				audioSource.Stop();
-				audioSource.clip = null;
-				audioSource.loop = false;
-				_audioPool.Enqueue(audioSource);
+				foreach (AudioSource audioSource in pair.Value)
+				{
+					audioSource.Stop();
+					audioSource.clip = null;
+					audioSource.loop = false;
+					_audioPool.Enqueue(audioSource);
+				}
 			}
 			_nowPlayAudio.Remove(key);
-
-			if(_nowPlayAudio[key].Count == 0) _nowPlayAudio.Remove(key);
+		}
+		else
+		{
+			// 只停止 caller 的音效
+			if (_nowPlayAudio[key].ContainsKey(caller))
+			{
+				foreach (AudioSource audioSource in _nowPlayAudio[key][caller])
+				{
+					audioSource.Stop();
+					audioSource.clip = null;
+					audioSource.loop = false;
+					_audioPool.Enqueue(audioSource);
+				}
+				_nowPlayAudio[key].Remove(caller);
+			}
 		}
 	}
 
