@@ -13,7 +13,7 @@ public class AudioManager : MonoBehaviour
 
 	[SerializeField] private int _audioPoolSize;
 	private Queue<AudioSource> _audioPool = new Queue<AudioSource>();
-	private Dictionary<string, List<AudioSource>> _nowPlayAudio = new Dictionary<string, List<AudioSource>>();
+	private Dictionary<string, Dictionary<GameObject,List<AudioSource>>> _nowPlayAudio = new Dictionary<string, Dictionary<GameObject, List<AudioSource>>>();
 	private AudioSource _bgmAudioSource;
 
 	private void Awake()
@@ -47,10 +47,7 @@ public class AudioManager : MonoBehaviour
 		_bgmVolume = GameDataManager.Instance.gameData.bgmVolume;
 		_sfxVolume = GameDataManager.Instance.gameData.sfxVolume;
 
-        if (_bgmAudioSource != null)
-		{
-            PlayBGM("BackGroundMusic");
-        }
+        if (_bgmAudioSource != null) PlayBGM("BackGroundMusic");
 	}
 
 	private void OnValidate()
@@ -71,7 +68,7 @@ public class AudioManager : MonoBehaviour
 		
 	}
 
-	public void PlayBGM(string key, float volume = 0.5f)
+	public void PlayBGM(string key)
 	{
 		AudioClip audioClip = _audioLibrarySO.GetAudioClip(key);
 
@@ -94,50 +91,34 @@ public class AudioManager : MonoBehaviour
 	    yield return null;
 	}
 
-	public void PlaySound(string key, Vector3 position, bool isLoop = false, float playTimer = 0f)
+	public void PlaySound(string key, Vector3 position = default, GameObject caller = null, bool isLoop = false, float playTimer = 0f)
 	{
 		// 檢查輸入的 key 是否正確
 		AudioClip audioClip = _audioLibrarySO.GetAudioClip(key);
-
 		if(audioClip == null)
 		{
 			Debug.Log("AudioManager PlaySound 輸入的 Key 有錯, key 為" + key);
 			return;
 		}
 
-		AudioSource audioSource;
+		// 如果物件池數量不夠了, 就在多新增 AudioSource
+		AudioSource audioSource = _audioPool.Count > 0 ? _audioPool.Dequeue() : gameObject.AddComponent<AudioSource>();
+		if(_audioPool.Count == 0) audioSource.playOnAwake = false;
 
-		if(_audioPool.Count > 0)
-		{
-			audioSource = _audioPool.Dequeue();
-		}
-		else
-		{
-			audioSource = gameObject.AddComponent<AudioSource>();
-			audioSource.playOnAwake = false;
-		}
-
+		// 設置 AudioSource 相關參數並播放
 		audioSource.transform.position = position;
 		audioSource.clip = audioClip;
 		audioSource.volume = _mainVolume * _sfxVolume;
 		audioSource.loop = isLoop;
-		//audioSource.pitch = Random.Range(0.95f, 1.05f);
 		audioSource.Play();
 
-		if(!_nowPlayAudio.ContainsKey(key))
-		{
-			_nowPlayAudio[key] = new List<AudioSource>();
-		}
-		_nowPlayAudio[key].Add(audioSource);
+		// 將新播放的 AudioSource 放入 Dictionary 方便追蹤
+		if(!_nowPlayAudio.ContainsKey(key)) _nowPlayAudio[key] = new Dictionary<GameObject, List<AudioSource>>();
+		if(!_nowPlayAudio[key].ContainsKey(caller)) _nowPlayAudio[key][caller] = new List<AudioSource>();
+		_nowPlayAudio[key][caller].Add(audioSource);
 
-		if(playTimer == 0f)
-		{
-			StartCoroutine(RecycleAudioToPool(key, audioSource, audioClip.length));
-		}
-		else
-		{
-			StartCoroutine(RecycleAudioToPool(key, audioSource, playTimer));
-		}
+		float duration = playTimer == 0f ? audioClip.length : playTimer;
+		StartCoroutine(RecycleAudioToPool(key, caller, audioSource, duration));
 		
 	}
 
@@ -145,34 +126,39 @@ public class AudioManager : MonoBehaviour
 	/// 停止指定的音效播放
 	/// </summary>
 	/// <param name="key"></param>
-	public void StopSound(string key)
+	public void StopSound(string key, GameObject caller)
 	{
-		if(_nowPlayAudio.ContainsKey(key))
+		if(_nowPlayAudio.ContainsKey(key) && _nowPlayAudio[key].ContainsKey(caller))
 		{
-			foreach(AudioSource audioSource in _nowPlayAudio[key])
+			foreach(AudioSource audioSource in _nowPlayAudio[key][caller])
 			{
 				audioSource.Stop();
 				audioSource.clip = null;
 				audioSource.loop = false;
+				_audioPool.Enqueue(audioSource);
 			}
 			_nowPlayAudio.Remove(key);
+
+			if(_nowPlayAudio[key].Count == 0) _nowPlayAudio.Remove(key);
 		}
 	}
 
 	// 將 AudioSource 播完後, 回收進物件池中
-	private IEnumerator RecycleAudioToPool(string key, AudioSource audioSource, float audioTime)
+	private IEnumerator RecycleAudioToPool(string key, GameObject caller, AudioSource audioSource, float audioTime)
 	{
 		yield return new WaitForSeconds(audioTime);
+
+		if(_nowPlayAudio.ContainsKey(key) && _nowPlayAudio[key].ContainsKey(caller))
+		{
+			_nowPlayAudio[key][caller].Remove(audioSource);
+
+			if (_nowPlayAudio[key][caller].Count == 0) _nowPlayAudio[key].Remove(caller);
+			if (_nowPlayAudio[key].Count == 0) _nowPlayAudio.Remove(key);
+		}
 
 		audioSource.Stop();
 		audioSource.clip = null;
 		audioSource.loop = false;
-
-		if(_nowPlayAudio.ContainsKey(key))
-		{
-			_nowPlayAudio[key].Remove(audioSource);
-		}
-
 		_audioPool.Enqueue(audioSource);
 	}
 
