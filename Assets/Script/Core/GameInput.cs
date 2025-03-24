@@ -31,6 +31,30 @@ public class GameInput : MonoBehaviour
 		UseItem5,
 		UseItem6,
 	}
+	
+	public readonly Dictionary<Bind, string> BindChinese = new Dictionary<Bind, string>
+	{
+	    { Bind.MoveUp, "前進" },
+        { Bind.MoveDown, "後退" },
+        { Bind.MoveLeft, "左移" },
+        { Bind.MoveRight, "右移" },
+        { Bind.Attack, "攻擊" },
+        { Bind.Aim, "瞄準" },
+        { Bind.Dash, "衝刺" },
+        { Bind.Sprint, "疾跑" },
+        { Bind.LockOn, "鎖定" },
+        { Bind.Skill1, "技能 1" },
+        { Bind.Skill2, "技能 2" },
+        { Bind.ItemMenu, "道具選單" },
+        { Bind.Interaction, "互動" },
+        { Bind.Escape, "暫停" },
+        { Bind.UseItem1, "使用道具 1" },
+        { Bind.UseItem2, "使用道具 2" },
+        { Bind.UseItem3, "使用道具 3" },
+        { Bind.UseItem4, "使用道具 4" },
+        { Bind.UseItem5, "使用道具 5" },
+        { Bind.UseItem6, "使用道具 6" },
+	};
 
 	public event Action<bool> OnAttackAction;
 	public event Action<bool> OnAimAction;
@@ -94,7 +118,12 @@ public class GameInput : MonoBehaviour
 		player.UseItem4.performed += _ => OnUseItem?.Invoke(Bind.UseItem4);
 		player.UseItem5.performed += _ => OnUseItem?.Invoke(Bind.UseItem5);
 		player.UseItem6.performed += _ => OnUseItem?.Invoke(Bind.UseItem6);
-		
+	}
+	
+	// 取得 Bind 對應的 中文名稱
+	public string GetBindChinese(Bind bind)
+	{
+	    return BindChinese.TryGetValue(bind, out string name) ? name : bind.ToString();
 	}
 
     //訂閱跳轉場景事件

@@ -59,11 +59,7 @@ public class EnemyDrop : MonoBehaviour
     // 根據道具的掉落來給玩家對應的物品, 並刪除該物件
     private void GetDropItem()
     {
-        if(_dropWeightList == null || _dropWeightList.Count == 0)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        if(_dropWeightList == null || _dropWeightList.Count == 0) return;
 
         float nowWeight = 0f;
         float totalWeight = _dropWeightList.Sum(drop => drop.weight);
@@ -84,6 +80,8 @@ public class EnemyDrop : MonoBehaviour
                 break;
             }
         }
+        
+        Destroy(gameObject);
     }
 
 }

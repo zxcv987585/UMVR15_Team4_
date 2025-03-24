@@ -20,9 +20,18 @@ public class ItemUseManager : MonoBehaviour
         rebirthUI = GetComponentInChildren<RebirthUI>();
 
         rebirthUI.UseReviveItem += UseRivive;
-        
-        InitItemBind();
         GameInput.Instance.OnUseItem += CallBindItem;
+    }
+
+    private void OnEnable()
+    {
+        InitItemBind();
+        
+    }
+
+    private void OnDisable()
+    {
+        //GameInput.Instance.OnUseItem -= CallBindItem;
     }
 
     private void InitItemBind()
@@ -32,8 +41,8 @@ public class ItemUseManager : MonoBehaviour
             Debug.Log("ItemUseManager 的 HotbarSlotList 數量少於 6 個");
             return;
         }
-
-        _itemBind = new Dictionary<GameInput.Bind, HotbarSlot>
+        
+        new Dictionary<GameInput.Bind, HotbarSlot>
         {
             {GameInput.Bind.UseItem1, hotbarSlotList[0]},
             {GameInput.Bind.UseItem2, hotbarSlotList[1]},
