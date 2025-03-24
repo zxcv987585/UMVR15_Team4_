@@ -20,18 +20,8 @@ public class ItemUseManager : MonoBehaviour
         rebirthUI = GetComponentInChildren<RebirthUI>();
 
         rebirthUI.UseReviveItem += UseRivive;
+
         GameInput.Instance.OnUseItem += CallBindItem;
-    }
-
-    private void OnEnable()
-    {
-        InitItemBind();
-        
-    }
-
-    private void OnDisable()
-    {
-        //GameInput.Instance.OnUseItem -= CallBindItem;
     }
 
     private void InitItemBind()
@@ -42,7 +32,7 @@ public class ItemUseManager : MonoBehaviour
             return;
         }
         
-        new Dictionary<GameInput.Bind, HotbarSlot>
+        _itemBind = new Dictionary<GameInput.Bind, HotbarSlot>
         {
             {GameInput.Bind.UseItem1, hotbarSlotList[0]},
             {GameInput.Bind.UseItem2, hotbarSlotList[1]},
@@ -55,6 +45,7 @@ public class ItemUseManager : MonoBehaviour
 
     private void CallBindItem(GameInput.Bind bind)
     {
+        if(_itemBind == null) InitItemBind();
         if(!_itemBind.TryGetValue(bind, out HotbarSlot hotbarSlot)) return;
         if(hotbarSlot.slotItem == null || hotbarSlot.slotItem.itemNum <= 0) return;
 
