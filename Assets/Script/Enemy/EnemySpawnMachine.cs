@@ -87,16 +87,17 @@ public class EnemySpawnMachine : MonoBehaviour
     private IEnumerator DeadCoroutine()
     {
         Transform childTransform = transform.Find("Ammo_Shocks");
-        GameObject childObject = childTransform.gameObject;
+        GameObject childObject = childTransform != null ? childTransform.gameObject : null;
 
-        if (_enemyController.gameObject.activeSelf)
+        if (_enemyController != null && _enemyController.gameObject.activeSelf)
             _enemyController.StopRaycastSpawnCoroutine();
     
         _bombParticleSystem.Play();
         _bombParticleSystem2.gameObject.SetActive(true);
         _bombParticleSystem2.Play();
+        
         yield return new WaitForSeconds(0.7f);
-        childObject.SetActive(false);
+        if(childObject != null) childObject.SetActive(false);
         yield return new WaitForSeconds(3f);
         gameObject.SetActive(false);
     }
