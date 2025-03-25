@@ -21,15 +21,9 @@ public abstract class BaseSkill : MonoBehaviour
 
 	public abstract void SkillAbility();
 	
-	public virtual SkillDataSO GetSkillDataSO()
-	{
-		return skillDataSO;
-	}
+	public virtual SkillDataSO GetSkillDataSO() => skillDataSO;
 
-	public void StartCooldown()
-	{
-		StartCoroutine(CooldownCoroutine());
-	}
+	public void StartCooldown() => StartCoroutine(CooldownCoroutine());
 
 	public IEnumerator CooldownCoroutine()
 	{
