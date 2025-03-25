@@ -59,12 +59,12 @@ public class SkillManager : MonoBehaviour
 		{
 			if(baseSkill.canUse)
 			{
-				if (!playerHealth.UsePP(baseSkill.PPCost))
+				if (!playerHealth.UsePP(baseSkill.ppCost))
 				{
 					Debug.Log("PP不足!");
 					return;
 				}
-                player.CastSkill(baseSkill.AnimationName, baseSkill.CastDurtion);
+                player.CastSkill(baseSkill.animationName, baseSkill.castDurtion);
                 baseSkill.Use();
 			}
 		}

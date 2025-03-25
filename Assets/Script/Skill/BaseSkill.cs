@@ -9,9 +9,9 @@ public abstract class BaseSkill : MonoBehaviour
 	
 	public bool canUse = true;
 	public const string ENEMY = "Enemy";
-	public string AnimationName;
-	public float CastDurtion;
-	public float PPCost;
+	public string animationName;
+	public float castDurtion;
+	public float ppCost;
 
     public virtual void Use()
 	{
