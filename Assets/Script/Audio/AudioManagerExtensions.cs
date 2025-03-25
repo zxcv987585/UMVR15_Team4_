@@ -20,7 +20,7 @@ public static class AudioManagerExtensions
             return;
         }
 
-        AudioManager.Instance.PlaySound(key, position, caller.gameObject, isLoop, playTimer);
+        AudioManager.Instance.PlaySound(key, caller.transform.position, caller.gameObject, isLoop, playTimer);
     }
 
     public static void StopSound(this MonoBehaviour caller, string key)

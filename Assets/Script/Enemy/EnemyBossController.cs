@@ -19,16 +19,14 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	[SerializeField] private Animator _animator;
 	[SerializeField] private Transform _bodyTransform;
 	[SerializeField] private GameObject _shootAttackPrefab;
-	[SerializeField] private GameObject _fogPrefab;
+	[SerializeField] private Transform _fogTransform;
 
 	[SerializeField] private float _attackCooldownTime;
 
 	private bool _isIdle = true;
-	//private bool _isAttackCooldown = false;
 	private float _originalAnimatorSpeed;
 	private Transform _playerTransform;
 	private PlayerHealth _playerHealth;
-	//private Collider _collider;
 	private AnimatorStateInfo _animatorStateInfo;
 	private BossUI _bossUI;
     private EnemySpawnTirgger _enemySpawnTirgger;
@@ -155,9 +153,12 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		Vector3 direction = _navMeshAgent.desiredVelocity.normalized;
         direction.y = 0; // 確保不會影響 Y 軸 (防止怪物漂浮)
 
-		if (direction != Vector3.zero)
+		Vector3 rotateDirection = (_playerTransform.position - transform.position).normalized;
+		rotateDirection.y = 0f;
+		
+		if (rotateDirection.magnitude > 0.1f)
 		{
-			Quaternion targetRotation = Quaternion.LookRotation(direction);
+			Quaternion targetRotation = Quaternion.LookRotation(rotateDirection);
 			transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
 			//transform.rotation = _navMeshAgent.transform.rotation;
 		}
@@ -307,45 +308,68 @@ public class EnemyBossController : MonoBehaviour, IEnemy
     
     private IEnumerator RunAttackCoroutine()
     {
-		GameObject go = Instantiate(_fogPrefab);
-		go.transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
-
-		//-----鑽地板
-		float timer = 0f;
 		
+		//-----鑽地板
+		yield return StartCoroutine(MoveVertically(-4f, 1.3f));
+		
+		
+		//-----旋轉衝刺
+		this.PlaySound("BossAttackGround");
+		yield return StartCoroutine(CollisionToPlayer());
+		//yield return StartCoroutine(CollisionToPlayer());
+		yield return StartCoroutine(EndCollisionToPlayer());
+		
+		// 爬起來
+		yield return StartCoroutine(MoveVertically(4f, 1.3f));
+		
+		_fogTransform.GetComponent<ParticleSystem>().Stop();
+		
+		ChangeEnemyState(BossState.Idle);
+    }
+    
+    // 垂直位移, Boss 位置
+	private IEnumerator MoveVertically(float height, float duration)
+	{
+		float timer = 0f;
 		Vector3 originalVector3 = transform.position;
-		Vector3 targetVector3 = transform.position + Vector3.down * 4f;
+		Vector3 targetVector3 = transform.position + Vector3.up * height;
+		
+		Vector3 originalFogVector3 = _fogTransform.localPosition;
+		Vector3 fogTargetVector3 = _fogTransform.localPosition + Vector3.down * height;
 		
 		yield return new WaitForSeconds(0.8f);
 		
+		if(!_fogTransform.GetComponent<ParticleSystem>().isPlaying) _fogTransform.GetComponent<ParticleSystem>().Play();
+		
 		// 鑽到地板的動畫
-		while(timer < 1.3f)
+		while(timer < duration)
 		{
 			yield return new WaitUntil(() => !IsPause);
 			
-			transform.position = Vector3.Slerp(originalVector3, targetVector3, timer/1.3f);
+			transform.position = Vector3.Lerp(originalVector3, targetVector3, timer/duration);
+			_fogTransform.localPosition = Vector3.Lerp(originalFogVector3, fogTargetVector3 , timer/duration);
 			
 			timer += Time.deltaTime;
 		    yield return null;
 		}
 		
 		transform.position = targetVector3;
-		//-----鑽地板結束
-		
-		
-		//-----旋轉衝刺
-		// 取得向玩家的方向
-		Vector3 direct = (_playerTransform.position - transform.position).normalized;
+		_fogTransform.localPosition = fogTargetVector3;
+	}
+	
+	// 在地下時旋轉衝向玩家
+	private IEnumerator CollisionToPlayer()
+	{
+	    Vector3 direct = (_playerTransform.position - transform.position).normalized;
 		direct.y = 0;
 		
 		_navMeshAgent.isStopped = false;
-		_navMeshAgent.speed = 35f;
+		_navMeshAgent.speed = 50f;
+		_navMeshAgent.acceleration = 30f;
 		_navMeshAgent.nextPosition = transform.position;
 		_navMeshAgent.SetDestination(transform.position + direct * 100f);
 		
-		bool hasCollider = false;
-		
-		timer = 0f;
+		float timer = 0f;
 
 		AudioManager.Instance.PlaySound("GoGoGo", transform.position);
 		
@@ -354,17 +378,11 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		    yield return new WaitUntil(() => !IsPause);
 		    
 		    Vector3 nextPosition = _navMeshAgent.nextPosition;
-		    nextPosition.y = -4f;
-		
-			transform.position = nextPosition;
-			go.transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+			transform.position = new Vector3(nextPosition.x, -4f, nextPosition.z);
 			
-			if(_navMeshAgent.velocity.magnitude < 0.1f)
-			{
-				timer += Time.deltaTime;
-			}
-			
-			if(timer > 0.5f) break;
+			// 判斷是否卡住了
+			if(_navMeshAgent.velocity.magnitude < 0.1f) timer += Time.deltaTime;
+			if(timer > 0.3f) break;
 		    
 		    Collider[] colliderArray = Physics.OverlapSphere(transform.position + Vector3.up * 4f, 4f);
 		    _bodyTransform.Rotate(Vector3.up * 20f);
@@ -373,24 +391,22 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		    {
 		        if(collider.TryGetComponent(out PlayerHealth playerHealth))
 		        {
-		            //Debug.Log("123");
 		            playerHealth.CriticalDamage(50);
-		            hasCollider = true;
+		            yield break;
 		        }
 		    }
-		    
-		    if(hasCollider) break;
 		    
 		    yield return null;
 		}
 		
 		_navMeshAgent.isStopped = true;
 		_navMeshAgent.speed = _enemyDataSO.moveSpeed;
-		//-----旋轉衝刺結束
-		
-		//-----爬起來
-		AudioManager.Instance.PlaySound("BossAttackGround", transform.position);
-		timer = 0f;
+		_navMeshAgent.acceleration = 8f;
+	}
+	
+	private IEnumerator EndCollisionToPlayer()
+	{
+	    float timer = 0f;
 		
 		_animator.Play(_state.ToString(), 0, 0f);
 		Quaternion startRotation = _bodyTransform.localRotation; // 記錄起始旋轉
@@ -406,29 +422,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		}
 		
 		_bodyTransform.localRotation = Quaternion.identity;
-		
-		timer = 0f;
-		originalVector3 = transform.position;
-		targetVector3 = transform.position + Vector3.up * 4f;
-	
-		// 鑽到地板的動畫
-		while(timer < 1.3f)
-		{
-			yield return new WaitUntil(() => !IsPause);
-			
-			transform.position = Vector3.Slerp(originalVector3, targetVector3, timer/1.3f);
-			
-			timer += Time.deltaTime;
-		    yield return null;
-		}
-		
-		transform.position = targetVector3;
-
-		Destroy(go);
-		
-		ChangeEnemyState(BossState.Idle);
-		//-----爬起來完成
-    }
+	}
 
 	private IEnumerator DelayShootAttackCoroutine()
 	{
