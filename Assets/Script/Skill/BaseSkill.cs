@@ -20,17 +20,13 @@ public abstract class BaseSkill : MonoBehaviour
 	}
 
 	public abstract void SkillAbility();
-	
 	public virtual SkillDataSO GetSkillDataSO() => skillDataSO;
-
 	public void StartCooldown() => StartCoroutine(CooldownCoroutine());
 
 	public IEnumerator CooldownCoroutine()
 	{
 		canUse = false;
-
 		yield return new WaitForSeconds(skillDataSO.cooldownTime);
-
 		canUse = true;
 	}
 }
