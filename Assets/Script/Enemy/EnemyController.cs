@@ -413,7 +413,11 @@ public class EnemyController : MonoBehaviour, IEnemy
 	
 	public void StopRaycastSpawnCoroutine()
 	{
+		if(!_isInit) return;
+
 	    StopAllCoroutines();
+		Health.SetIsInvincibility(false);
+
 	    StartCoroutine(CancelDissolveCoroutine(1f));
 	}
 	
