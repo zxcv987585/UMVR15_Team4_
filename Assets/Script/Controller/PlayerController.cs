@@ -32,6 +32,16 @@ public class PlayerController : MonoBehaviour
     [Tooltip("玩家的位移Vector3")]
     public Vector3 Velocity;
 
+    [Header("鎖定邏輯")]
+    [Tooltip("動態存放鎖定的敵方單位")]
+    public Transform LockTarget;
+    //紀錄每次檢查周遭敵人的時間
+    private float NextCheckTime = 0f;
+    //多久檢查一次附近敵人
+    private float CheckInterval = 0.2f;
+    //檢查玩家與敵人的距離
+    [SerializeField] float stopRootMotionDistance = 1f;
+
     [Header("玩家特效")]
     [Tooltip("玩家奔跑時的特效")]
     [SerializeField] GameObject SprintEffect;
@@ -47,16 +57,6 @@ public class PlayerController : MonoBehaviour
     public GameObject AttackUP_Effect;
     [Tooltip("玩家防禦上升時的特效")]
     public GameObject DefenseUP_Effect;
-
-    [Header("鎖定邏輯")]
-    [Tooltip("動態存放鎖定的敵方單位")]
-    public Transform LockTarget;
-    //紀錄每次檢查周遭敵人的時間
-    private float NextCheckTime = 0f;
-    //多久檢查一次附近敵人
-    private float CheckInterval = 0.2f;
-    //檢查玩家與敵人的距離
-    [SerializeField] float stopRootMotionDistance = 1f;
 
     //用來記錄最後一次Dash的時間
     private float lastDashTime = -Mathf.Infinity;
