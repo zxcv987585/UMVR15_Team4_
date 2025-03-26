@@ -24229,7 +24229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootParticle: {fileID: 3704323611805342151}
   acitSplashPrefab: {fileID: 1000010671471726, guid: f760942a2ec454c4dafcff53e2d868e9, type: 3}
-  flightTime: 1
+  flightTime: 0.6
 --- !u!1 &4288509543236599835
 GameObject:
   m_ObjectHideFlags: 0
@@ -25840,7 +25840,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
-  looping: 1
+  looping: 0
   prewarm: 0
   playOnAwake: 0
   useUnscaledTime: 0
