@@ -9,9 +9,9 @@ public abstract class BaseSkill : MonoBehaviour
 	
 	public bool canUse = true;
 	public const string ENEMY = "Enemy";
-	public string AnimationName;
-	public float CastDurtion;
-	public float PPCost;
+	public string animationName;
+	public float castDurtion;
+	public float ppCost;
 
     public virtual void Use()
 	{
@@ -20,23 +20,13 @@ public abstract class BaseSkill : MonoBehaviour
 	}
 
 	public abstract void SkillAbility();
-	
-	public virtual SkillDataSO GetSkillDataSO()
-	{
-		return skillDataSO;
-	}
-
-	public void StartCooldown()
-	{
-		StartCoroutine(CooldownCoroutine());
-	}
+	public virtual SkillDataSO GetSkillDataSO() => skillDataSO;
+	public void StartCooldown() => StartCoroutine(CooldownCoroutine());
 
 	public IEnumerator CooldownCoroutine()
 	{
 		canUse = false;
-
 		yield return new WaitForSeconds(skillDataSO.cooldownTime);
-
 		canUse = true;
 	}
 }

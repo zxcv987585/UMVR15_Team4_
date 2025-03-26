@@ -43,7 +43,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
     {
         if(!_hasAttack)
         {
-            AudioManager.Instance.PlaySound("EggyAttack", transform.position);
+            this.PlaySound("EggyAttack");
             StartCoroutine(DelayBombAttack(bombTimer/2));
             _hasAttack = true;
         }
@@ -58,7 +58,11 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
         {
             yield return new WaitUntil(() => !enemyController.IsPause);
             
-            if(enemyController.Health.IsDead()) break;
+            if(enemyController.Health.IsDead())
+            {
+                this.StopSound("EggyAttack");
+                break;
+            }
             
             // 計算進度 (0 ~ 1)
             float progress = timer / delayBombTime;

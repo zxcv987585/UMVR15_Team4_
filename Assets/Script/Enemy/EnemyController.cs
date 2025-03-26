@@ -252,6 +252,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	public void HitFly(float flyPower)
 	{
 		if (_enemyState == EnemyState.Dead) return;
+		if(_isInit) return;	// 如果還在生成中, 無法被擊飛
 
 		//navMeshAgent.enabled = false;
 		_rb.isKinematic = false;
@@ -384,6 +385,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 	
 	private IEnumerator  RaycastStartDissolveCoroutine(float showTimer)
 	{
+		Health.SetIsInvincibility(true);
+
 	    _material.SetColor(EMISSION_COLOR, Color.red);
 		_material.SetColor(RIM_COLOR, Color.red);
 
@@ -404,12 +407,17 @@ public class EnemyController : MonoBehaviour, IEnemy
 		_material.SetColor(EMISSION_COLOR, Color.black);
 		_material.SetColor(RIM_COLOR, Color.black);
 
+		Health.SetIsInvincibility(false);
 		_isInit = false;
 	}
 	
 	public void StopRaycastSpawnCoroutine()
 	{
+		if(!_isInit) return;
+
 	    StopAllCoroutines();
+		Health.SetIsInvincibility(false);
+
 	    StartCoroutine(CancelDissolveCoroutine(1f));
 	}
 	

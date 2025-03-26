@@ -13,6 +13,7 @@ public class DropWeight
 public class EnemyDrop : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed;
+    [SerializeField] private GameObject _dropItemMessagePrefab;
     [SerializeField] private List<DropWeight> _dropWeightList;
     private Transform _endPosition;
 
@@ -76,6 +77,9 @@ public class EnemyDrop : MonoBehaviour
                 InventoryManager.instance.RefreshUI();
 
                 AudioManager.Instance.PlaySound("GetItem", transform.position);
+                
+                GameObject go = Instantiate(_dropItemMessagePrefab, GameObject.Find("DropItemUIPosition").transform);
+                go.GetComponent<DropItemMessageUI>().SetItemInfo(dropWeight.itemData);
 
                 break;
             }

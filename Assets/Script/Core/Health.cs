@@ -19,6 +19,7 @@ public class Health : MonoBehaviour
     public float LastDamage {get; private set;}
     
     private bool _isdead = false;
+    private bool _isInvincibility = false;  // 無敵狀態
 
     // 設置怪物的血量上限
     public void SetMaxHealth(float maxHealth)
@@ -26,6 +27,8 @@ public class Health : MonoBehaviour
         _maxHealth = maxHealth;
         _currentHealth = _maxHealth;
     }
+
+    public void SetIsInvincibility(bool isInvincibility) => _isInvincibility = isInvincibility;
 
     public void Init()
     {
@@ -46,6 +49,8 @@ public class Health : MonoBehaviour
     public void TakeDamage(float damage)
     {
         if (_isdead) return;
+
+        if(_isInvincibility) return;
 
         //Debug.Log($"受到共{damage}傷害！剩餘血量：{_currentHealth}");
         _currentHealth -= damage;

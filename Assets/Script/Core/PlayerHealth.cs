@@ -164,7 +164,7 @@ public class PlayerHealth : MonoBehaviour
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
         Debug.Log($"受到 {damage} 傷害（防禦值 {player.playerData.Defense} 抵消），實際傷害：{effectiveDamage}！剩餘血量：{CurrentHealth}");
 
-        AudioManager.Instance.PlaySound("PlayerDamage", transform.position);
+        this.PlaySound("PlayerDamage");
 
         if (CurrentHealth > 0)
         {
@@ -187,7 +187,7 @@ public class PlayerHealth : MonoBehaviour
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
         Debug.Log($"受到 {damage} 傷害（防禦值 {player.playerData.Defense} 抵消），實際傷害：{effectiveDamage}！剩餘血量：{CurrentHealth}");
 
-        AudioManager.Instance.PlaySound("PlayerDamage", transform.position);
+        this.PlaySound("PlayerDamage");
 
         if (CurrentHealth > 0)
         {
@@ -210,7 +210,7 @@ public class PlayerHealth : MonoBehaviour
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
         Debug.Log($"受到 {damage} 傷害（防禦值 {player.playerData.Defense} 抵消），實際傷害：{effectiveDamage}！剩餘血量：{CurrentHealth}");
 
-        AudioManager.Instance.PlaySound("PlayerDamage", transform.position);
+        this.PlaySound("PlayerDamage");
 
         if (CurrentHealth > 0)
         {

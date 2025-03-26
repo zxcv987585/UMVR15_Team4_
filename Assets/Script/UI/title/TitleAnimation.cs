@@ -73,9 +73,6 @@ public class TitleAnimation : MonoBehaviour
         flash.gameObject.SetActive(false);
         shadowImage.gameObject.SetActive(false);
         ButtonList.SetActive(false);
-        ButtonListStart.gameObject.SetActive(false);
-        ButtonListSettings.gameObject.SetActive(false);
-        ButtonListExit.gameObject.SetActive(false);
 
         StartCoroutine(titleOpening());
     }
@@ -151,9 +148,9 @@ public class TitleAnimation : MonoBehaviour
 
         //選單飛入
         yield return new WaitForSeconds(1.25f);
-        ButtonListStart.anchoredPosition = new Vector2(120f, -30f);
-        ButtonListSettings.anchoredPosition = new Vector2(120f, -115f);
-        ButtonListExit.anchoredPosition = new Vector2(120f, -200f);
+        ButtonListStart.anchoredPosition = new Vector2(100f, -30f);
+        ButtonListSettings.anchoredPosition = new Vector2(100f, -115f);
+        ButtonListExit.anchoredPosition = new Vector2(100f, -200f);
 
         ButtonList.gameObject.SetActive(true);
         StartCoroutine(easyInOut.ChangeValue(
@@ -161,28 +158,6 @@ public class TitleAnimation : MonoBehaviour
           value => ButtonList.GetComponent<CanvasGroup>().alpha = value,
           EasyInOut.EaseOut));
 
-        //Start
-        ButtonListStart.gameObject.SetActive(true);
-        StartCoroutine(easyInOut.ChangeValue(
-          ButtonListStart.anchoredPosition, new Vector2(100f, -30f), 1.3f,
-          value => ButtonListStart.anchoredPosition = value,
-          EasyInOut.EaseOut));
-        yield return new WaitForSeconds(0.5f);
-
-        //Settings
-        ButtonListSettings.gameObject.SetActive(true);
-        StartCoroutine(easyInOut.ChangeValue(
-          ButtonListSettings.anchoredPosition, new Vector2(100f, -115f), 1.5f,
-          value => ButtonListSettings.anchoredPosition = value,
-          EasyInOut.EaseOut));
-        yield return new WaitForSeconds(0.35f);
-
-        //Exit
-        ButtonListExit.gameObject.SetActive(true);
-        StartCoroutine(easyInOut.ChangeValue(
-          ButtonListExit.anchoredPosition, new Vector2(100f, -200f), 1.7f,
-          value => ButtonListExit.anchoredPosition = value,
-          EasyInOut.EaseOut));
     }
 
     //Start事件--
