@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public class FightState : PlayerState
 {
@@ -18,6 +19,8 @@ public class FightState : PlayerState
     public Action<string> AttackCombo;
     //傳送重置Trigger的指令給動畫控制器
     public Action<bool> isAttacking;
+    //記錄跳砍協程
+    private Coroutine DashAttackcoroutine;
 
     public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) {}
 
@@ -47,6 +50,7 @@ public class FightState : PlayerState
         }
         if (player.IsDash)
         {
+            CancelDashAttackCoroutine();
             StateMachine.ChangeState(player.dashState);
             ResetCombo();
             return;
@@ -59,16 +63,19 @@ public class FightState : PlayerState
         }
         if (player.IsDie)
         {
+            CancelDashAttackCoroutine();
             StateMachine.ChangeState(player.deadState);
             return;
         }
         if (player.IsHit)
         {
+            CancelDashAttackCoroutine();
             ResetCombo();
             return;
         }
         if (player.IsCriticalHit)
         {
+            CancelDashAttackCoroutine();
             ResetCombo();
             return;
         }
@@ -82,6 +89,7 @@ public class FightState : PlayerState
 
         if (player.LockTarget != null)
         {
+            DashAttackcoroutine = player.StartCoroutine(DashAttack());
             Vector3 direction = (player.LockTarget.position - player.transform.position).normalized;
             direction.y = 0;
             player.transform.rotation = Quaternion.LookRotation(direction);
@@ -189,6 +197,15 @@ public class FightState : PlayerState
         CanAttack = true;
         player.IsAttack = false;
         currentComboStep++;
+    }
+
+    private void CancelDashAttackCoroutine()
+    {
+        if (DashAttackcoroutine != null)
+        {
+            player.StopCoroutine(DashAttackcoroutine);
+            DashAttackcoroutine = null;
+        }
     }
 
     bool QuitState()

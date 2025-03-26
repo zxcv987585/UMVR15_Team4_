@@ -167,6 +167,7 @@ public class AnimatorController : MonoBehaviour
             animator.ResetTrigger("Attack2");
             animator.ResetTrigger("Attack3");
             animator.ResetTrigger("Attack4");
+            animator.ResetTrigger("DashAttack");
         }
     }
 

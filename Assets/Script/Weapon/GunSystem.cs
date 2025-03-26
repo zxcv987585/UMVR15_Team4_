@@ -18,6 +18,7 @@ public class GunSystem : MonoBehaviour
     public RaycastHit rayHit;
     public LayerMask Enemy;
     public LayerMask Boss;
+    public LayerMask Box;
     public LayerMask Wall;
     public PlayerController player;
     public PlayerHealth health;
@@ -101,8 +102,10 @@ public class GunSystem : MonoBehaviour
         var tracer = Instantiate(tracerEffect, attackPoint.position, Quaternion.identity);
         tracer.AddPosition(attackPoint.position);
 
+        int TargetLayer = Enemy | Box | Boss;
+
         //射線判定
-        if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Enemy) )
+        if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, TargetLayer) )
         {
             Debug.Log(rayHit.collider.name);
             rayHit.collider.GetComponent<Health>().TakeDamage(player.playerData.GunDamage);
@@ -122,18 +125,18 @@ public class GunSystem : MonoBehaviour
             GunFire.transform.SetParent(attackPoint);
         }
 
-        if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Boss))
-        {
-            Debug.Log(rayHit.collider.name);
-            rayHit.collider.GetComponent<Health>().TakeDamage(player.playerData.GunDamage);
+        //if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Boss))
+        //{
+        //    Debug.Log(rayHit.collider.name);
+        //    rayHit.collider.GetComponent<Health>().TakeDamage(player.playerData.GunDamage);
 
-            if (bulletHole != null)
-            {
-                Instantiate(bulletHole, rayHit.point, Quaternion.Euler(0, 180, 0));
-            }
+        //    if (bulletHole != null)
+        //    {
+        //        Instantiate(bulletHole, rayHit.point, Quaternion.Euler(0, 180, 0));
+        //    }
 
-            tracer.transform.position = rayHit.point;
-        }
+        //    tracer.transform.position = rayHit.point;
+        //}
 
         if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Wall))
         {

@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
     public Transform MainCamera;
     //取得等級系統
     public LevelSystem levelSystem;
+    //取得暫停UI的介面
+    public StopUI stopUI;
 
     [Header("玩家Data")]
     public PlayerDataSO playerData;
@@ -96,6 +98,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         MainCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
         levelSystem = GetComponent<LevelSystem>();
+        stopUI = FindObjectOfType<StopUI>();
         //初始化時建立玩家狀態機
         stateMachine = gameObject.AddComponent<PlayerStateMachine>();
         //初始化所有狀態，讓狀態成為單例
@@ -148,6 +151,7 @@ public class PlayerController : MonoBehaviour
         health.OnCriticalDamage += OnCriticalDamage;
         health.PlayerRivive += Rivive;
         levelSystem.PlayerLevelup += LevelUp;
+        stopUI.ContinueGame += Continue;
     }
 
     void Update()
@@ -709,5 +713,10 @@ public class PlayerController : MonoBehaviour
         {
             stateMachine.ChangeState(moveState);
         }
+    }
+
+    private void Continue()
+    {
+        InPress = false;
     }
 }

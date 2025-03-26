@@ -23,7 +23,7 @@ MonoBehaviour:
   Defense: 0
   MaxPP: 100
   CurrentLevel: 1
-  CurrentExp: 15
+  CurrentExp: 0
   XPForNextLevel: 100
   HitCoolTime: 1
   attackDamage: 15
@@ -36,6 +36,9 @@ MonoBehaviour:
   BossLayer:
     serializedVersion: 2
     m_Bits: 512
+  BoxLayer:
+    serializedVersion: 2
+    m_Bits: 4096
   NPCLayer:
     serializedVersion: 2
     m_Bits: 2048
