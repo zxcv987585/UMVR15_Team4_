@@ -1,48 +1,52 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAttackGroundShake : MonoBehaviour
 {
-    [SerializeField] private float radius = 9f;
-    [SerializeField] private float damage = 10;
-    [SerializeField] private float attackCooldown = 0.5f;
+    [SerializeField] private float _damage = 10;
+    private float _radius;
+    private float _duration;
+    private ParticleSystem _particleSystem;
+    private LayerMask _layerMask;
 
-    private void OnEnable()
+    private void Start()
     {
-        StartCoroutine(IntervalAttack());
-    }
-
-    public void ResetHasAttack()
-    {
-        
+        _particleSystem = GetComponent<ParticleSystem>();
+        _radius = _particleSystem.main.startSize.constant / 2f;
+        _duration = _particleSystem.main.startLifetime.constant;
+        _layerMask = LayerMask.GetMask("Player");
     }
 
     public void StartAttack()
     {
-
+        StartCoroutine(GroundAttack());
     }
-    
-    private IEnumerator IntervalAttack()
+
+    private IEnumerator GroundAttack()
     {
-        yield return new WaitForSeconds(1f);
-        
+        _particleSystem.Play();
+    
         float timer = 0f;
-        float damageTimer = 3f;
         
-        while(timer < damageTimer)
+        while(timer < _duration)
         {
-            Collider[] colliderArray = Physics.OverlapSphere(transform.position, radius, LayerMask.GetMask("Player"));
+            timer += Time.deltaTime;
+            
+            float currentRadius = Mathf.Lerp(0, _radius, timer/_duration);
+            
+            Collider[] colliderArray = Physics.OverlapSphere(transform.position, currentRadius, _layerMask);
             foreach(Collider collider in colliderArray)
             {
                 if(collider.TryGetComponent(out PlayerHealth playerHealth))
                 {
-                    playerHealth.TakeDamage(damage);
+                    playerHealth.TakeDamage(_damage);
+                    yield break;
                 }
             }
             
-            yield return new WaitForSeconds(attackCooldown);
-            timer += attackCooldown;
+            yield return null;
         }
     }
 }
