@@ -47,7 +47,7 @@ public class UnLockSystem : MonoBehaviour
             CanvasGroup canvasGroup = messageObj.GetComponent<CanvasGroup>();
 
             if (messageText != null)
-                messageText.text = $"取得技能:{skillName}";
+                messageText.text = $"取得技能：{skillName}";
         }
     }
 }
