@@ -103,6 +103,8 @@ public class GunSystem : MonoBehaviour
         tracer.AddPosition(attackPoint.position);
 
         int TargetLayer = Enemy | Box | Boss;
+        int ignoreLayer = 1 << LayerMask.NameToLayer("Default");
+        TargetLayer &= ~ignoreLayer;
 
         //射線判定
         if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, TargetLayer) )
@@ -124,19 +126,6 @@ public class GunSystem : MonoBehaviour
             GunFire.transform.rotation = attackPoint.rotation;
             GunFire.transform.SetParent(attackPoint);
         }
-
-        //if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Boss))
-        //{
-        //    Debug.Log(rayHit.collider.name);
-        //    rayHit.collider.GetComponent<Health>().TakeDamage(player.playerData.GunDamage);
-
-        //    if (bulletHole != null)
-        //    {
-        //        Instantiate(bulletHole, rayHit.point, Quaternion.Euler(0, 180, 0));
-        //    }
-
-        //    tracer.transform.position = rayHit.point;
-        //}
 
         if (Physics.Raycast(attackPoint.position, direction, out rayHit, range, Wall))
         {

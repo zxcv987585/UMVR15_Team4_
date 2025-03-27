@@ -117,45 +117,6 @@ public class WeaponManager : MonoBehaviour
                 }
             }
         }
-
-        //Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, player.playerData.EnemyLayer);
-        //foreach (Collider enemy in hitEnemies)
-        //{
-        //    if (!attackedEnemies.Contains(enemy))
-        //    {
-        //        attackedEnemies.Add(enemy);
-        //        Debug.Log($"擊中 {enemy.name}");
-        //        Health enemyHealth = enemy.GetComponent<Health>();
-        //        if (enemyHealth != null)
-        //        {
-        //            enemyHealth.TakeDamage(player.playerData.attackDamage);
-        //            health.AttackHealPP(1.5f);
-        //        }
-        //        if (player.HitEffect != null)
-        //        {
-        //            Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
-        //        }
-        //    }
-        //}
-
-        //Collider[] hitBoxs = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, player.playerData.BoxLayer);
-        //foreach (Collider Box in hitBoxs)
-        //{
-        //    if (!attackedEnemies.Contains(Box))
-        //    {
-        //        attackedEnemies.Add(Box);
-        //        Debug.Log($"擊中 {Box.name}");
-        //        Health enemyHealth = Box.GetComponent<Health>();
-        //        if (enemyHealth != null)
-        //        {
-        //            enemyHealth.TakeDamage(player.playerData.attackDamage);
-        //        }
-        //        if (player.HitEffect != null)
-        //        {
-        //            Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
-        //        }
-        //    }
-        //}
     }
 
 
