@@ -1,9 +1,9 @@
+using System;
 using UnityEngine;
 
 public class AnimatorController : MonoBehaviour
 {
     Animator animator;
-    RuntimeAnimatorController DefaultController;
     PlayerController player;
     PlayerHealth health;
 
@@ -14,8 +14,6 @@ public class AnimatorController : MonoBehaviour
         animator = GetComponent<Animator>();
         player = GetComponent<PlayerController>();
         health = GetComponent<PlayerHealth>();
-
-        DefaultController = animator.runtimeAnimatorController;
 
         if (player != null)
         {
@@ -96,13 +94,23 @@ public class AnimatorController : MonoBehaviour
         }
         if (!isAim)
         {
-            animator.SetLayerWeight(0, 1);
-            animator.SetLayerWeight(1, 0);
-            animator.Play("TakeRifle", 1, 0f);
-            animator.SetBool("IsAim", false);
-            animator.SetTrigger("Take");
-            animator.SetFloat("MoveX", 0);
-            animator.SetFloat("MoveY", 0);
+            if (player.IsDie)
+            {
+                animator.SetLayerWeight(0, 1);
+                animator.SetLayerWeight(1, 0);
+                animator.CrossFade("Die", 0f, 0);
+            }
+            else
+            {
+                animator.SetLayerWeight(0, 1);
+                animator.SetLayerWeight(1, 0);
+                animator.Play("TakeRifle", 1, 0f);
+                animator.SetBool("IsAim", false);
+                animator.SetTrigger("Take");
+                animator.SetFloat("MoveX", 0);
+                animator.SetFloat("MoveY", 0);
+            }
+
         }
     }
 
