@@ -136,7 +136,7 @@ public class CameraController : MonoBehaviour
 
             if (isAiming && AimTarget != null)
             {
-                if (player.IsDie) return;
+                if (player.IsDie || player.IsDash) return;
                 Vector3 cameraForward = Camera.main.transform.forward;
                 AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
             }
@@ -219,7 +219,7 @@ public class CameraController : MonoBehaviour
     // 取得瞄準輸入
     private void SetAim(bool isAiming)
     {
-        if (player.IsDie) return;
+        if (player.IsDie || player.IsDash) return;
         this.isAiming = isAiming;
     }
 
