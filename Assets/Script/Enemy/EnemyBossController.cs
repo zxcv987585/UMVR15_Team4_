@@ -19,6 +19,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	[SerializeField] private Animator _animator;
 	[SerializeField] private Transform _bodyTransform;
 	[SerializeField] private GameObject _shootAttackPrefab;
+	[SerializeField] private EnemyAttackGroundShake _enemyAttackGroundShake;
 	[SerializeField] private Transform _fogTransform;
 
 	[SerializeField] private float _attackCooldownTime;
@@ -181,10 +182,10 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	{
 	    _attackWeights = new Dictionary<BossState, int>()
 		{
-			{ BossState.RunAttack, 45 },
+			{ BossState.RunAttack, 30 },
 			{ BossState.CallEnemy, 10 },
-			{ BossState.ShootAttack, 45 },
-			{ BossState.FloorAttack, 0 }
+			{ BossState.ShootAttack, 30 },
+			{ BossState.FloorAttack, 30 }
 		};
 	}
 	
@@ -230,18 +231,22 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		// 根據玩家距離, 調整攻擊方式
 		if (distance < _enemyDataSO.attackRange)
 		{
-			_attackWeights[BossState.RunAttack] = 60;
-			_attackWeights[BossState.ShootAttack] = 30;
+			// 玩家在近距離
+			_attackWeights[BossState.RunAttack] = 35;
+			_attackWeights[BossState.ShootAttack] = 20;
+			_attackWeights[BossState.FloorAttack] = 35;
 		}
 		else
 		{
-			_attackWeights[BossState.RunAttack] = 30;
-			_attackWeights[BossState.ShootAttack] = 60;
+			// 玩家在遠距離
+			_attackWeights[BossState.RunAttack] = 35;
+			_attackWeights[BossState.ShootAttack] = 35;
+			_attackWeights[BossState.FloorAttack] = 20;
 		}
 
 		if(_attackWeights.TryGetValue(_lastAttackState, out int value))
 		{
-			_attackWeights[_lastAttackState] -= 35;
+			_attackWeights[_lastAttackState] -= 20;
 		}
 	}
 	
@@ -284,22 +289,24 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 				_isIdle = true;
                 break;
             case BossState.Walk:
-				AudioManager.Instance.PlaySound("BossWalk", transform.position, true, _attackCooldownTime*2);
+				AudioManager.Instance.PlaySound("BossWalk", transform.position, this.gameObject, true, _attackCooldownTime*2);
 				StartCoroutine(ReadToAttackCoroutine());
 				break;
             case BossState.RunAttack:
-				AudioManager.Instance.PlaySound("BossAttackGround", transform.position);
+				this.PlaySound("BossAttackGround");
 				StartCoroutine(RunAttackCoroutine());
                 break;
 			case BossState.CallEnemy:
-				AudioManager.Instance.PlaySound("BossAttackCall", transform.position);
+				this.PlaySound("BossAttackCall");
 				StartCoroutine(DelayCallEnemyCoroutine());
                 break;
             case BossState.ShootAttack:
-				AudioManager.Instance.PlaySound("BossAttackShoot", transform.position);
+				this.PlaySound("BossAttackShoot");
 				StartCoroutine(DelayShootAttackCoroutine());
                 break;
             case BossState.FloorAttack:
+				this.PlaySound("BossAttackGround");
+				StartCoroutine(DelayFloorAttackCoroutine());
                 break;
             case BossState.Dead:
                 break;
@@ -316,7 +323,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		//-----旋轉衝刺
 		this.PlaySound("BossAttackGround");
 		yield return StartCoroutine(CollisionToPlayer());
-		//yield return StartCoroutine(CollisionToPlayer());
+		yield return StartCoroutine(CollisionToPlayer());
 		yield return StartCoroutine(EndCollisionToPlayer());
 		
 		// 爬起來
@@ -382,7 +389,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 			
 			// 判斷是否卡住了
 			if(_navMeshAgent.velocity.magnitude < 0.1f) timer += Time.deltaTime;
-			if(timer > 0.3f) break;
+			if(timer > 0.2f) break;
 		    
 		    Collider[] colliderArray = Physics.OverlapSphere(transform.position + Vector3.up * 4f, 4f);
 		    _bodyTransform.Rotate(Vector3.up * 20f);
@@ -412,9 +419,9 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		Quaternion startRotation = _bodyTransform.localRotation; // 記錄起始旋轉
 		Quaternion targetRotation = Quaternion.identity; // 目標旋轉
 		
-		while(timer < 0.3f)
+		while(timer < 0.2f)
 		{
-			float rotateSpeed = Mathf.Lerp(540f, 0f, timer/0.3f);
+			float rotateSpeed = Mathf.Lerp(540f, 0f, timer/0.2f);
 			_bodyTransform.localRotation = Quaternion.RotateTowards(_bodyTransform.localRotation, targetRotation, rotateSpeed * Time.deltaTime);
 		    
 		    timer += Time.deltaTime;
@@ -433,14 +440,12 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		_shootAttackPrefab.SetActive(true);
 	}
 
-	// private IEnumerator DelayFloorAttackCoroutine()
-	// {
-	// 	_floorAttackPrefab.SetActive(false);
+	private IEnumerator DelayFloorAttackCoroutine()
+	{
+		yield return new WaitForSeconds(1.3f);
 
-	// 	yield return new WaitForSeconds(0.8f);
-
-	// 	_floorAttackPrefab.SetActive(true);
-	// }
+		_enemyAttackGroundShake.StartAttack();
+	}
 	
 	// 招喚小怪, 用 Animation Event 來觸發
 	private IEnumerator DelayCallEnemyCoroutine()
