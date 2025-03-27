@@ -40,7 +40,7 @@ public class GameInput : MonoBehaviour
         { Bind.MoveRight, "右移" },
         { Bind.Attack, "攻擊" },
         { Bind.Aim, "瞄準" },
-        { Bind.Dash, "衝刺" },
+        { Bind.Dash, "閃避" },
         { Bind.Sprint, "疾跑" },
         { Bind.LockOn, "鎖定" },
         { Bind.Skill1, "技能 1" },
