@@ -114,7 +114,7 @@ public class AudioManager : MonoBehaviour
 
 		// 將新播放的 AudioSource 放入 Dictionary 方便追蹤
 		if(!_nowPlayAudio.ContainsKey(key)) _nowPlayAudio[key] = new Dictionary<GameObject, List<AudioSource>>();
-		if(caller == null) caller = new GameObject();
+		if(caller == null) caller = this.gameObject;
 		if(!_nowPlayAudio[key].ContainsKey(caller)) _nowPlayAudio[key][caller] = new List<AudioSource>();
 		_nowPlayAudio[key][caller].Add(audioSource);
 

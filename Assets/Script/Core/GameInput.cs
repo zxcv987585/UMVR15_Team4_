@@ -55,6 +55,8 @@ public class GameInput : MonoBehaviour
         { Bind.UseItem5, "使用道具 5" },
         { Bind.UseItem6, "使用道具 6" },
 	};
+	
+	
 
 	public event Action<bool> OnAttackAction;
 	public event Action<bool> OnAimAction;
@@ -223,7 +225,17 @@ public class GameInput : MonoBehaviour
 
         if (bindMap.TryGetValue(bind, out InputAction action))
         {
-            return action.bindings[0].ToDisplayString();
+			if(action != _playerInputAction.Player.Move)
+				return action.bindings[0].ToDisplayString();
+            
+            return bind switch
+            {
+                Bind.MoveUp => action.bindings[1].ToDisplayString(),
+                Bind.MoveDown => action.bindings[2].ToDisplayString(),
+                Bind.MoveLeft => action.bindings[3].ToDisplayString(),
+                Bind.MoveRight => action.bindings[4].ToDisplayString(),
+                _ => "出問題了"
+            };
         }
 
         return "";
