@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,6 +12,8 @@ public class StopUI : MonoBehaviour
     private EasyInOut easyInOut;
 
     private bool isOpen = false;
+
+    public event Action ContinueGame;
 
     private void Start()
     {
@@ -52,6 +55,7 @@ public class StopUI : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        ContinueGame?.Invoke();
         gameObject.GetComponent<StopUI>().closeAction.Invoke();
         yield return null;
     }

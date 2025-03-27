@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public class FightState : PlayerState
 {
@@ -18,6 +19,8 @@ public class FightState : PlayerState
     public Action<string> AttackCombo;
     //傳送重置Trigger的指令給動畫控制器
     public Action<bool> isAttacking;
+    //記錄跳砍協程
+    private Coroutine DashAttackcoroutine;
 
     public FightState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) {}
 
@@ -105,6 +108,8 @@ public class FightState : PlayerState
         }
         else
         {
+            Vector3 cameraForward = player.GetCurrentCameraForward();
+            player.transform.rotation = Quaternion.LookRotation(cameraForward, Vector3.up);
             PerformAttack();
         }
     }

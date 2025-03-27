@@ -17,7 +17,7 @@ public class UnLockSystem : MonoBehaviour
         level = FindAnyObjectByType<LevelSystem>();
         if (level == null)
         {
-            Debug.LogError("UnLockSystem: §ä¤£¨ì LevelSystem¡I");
+            Debug.LogError("UnLockSystem: –³–@Žæ“¾ELevelSystem¡I");
             return;
         }
     }
@@ -26,7 +26,7 @@ public class UnLockSystem : MonoBehaviour
         if (level.playerData.CurrentLevel >= unlockLevel)
         {
             ShowUnlockMessage();
-            gameObject.SetActive(false); // **·íµ¥¯Å¹F¼Ð®É¡A°±¥Î¦Û¨­**
+            gameObject.SetActive(false); // **·úÑ¥¯Å¹F¼Ð®É¡A°±¥Î¦Û¨­**
         }
     }
     private void ShowUnlockMessage()
@@ -38,16 +38,16 @@ public class UnLockSystem : MonoBehaviour
             if (skillSlot != null && skillSlot.skillData != null)
             {
                 skillName = skillSlot.skillData.skillName; // **¨ú±o§Þ¯à¦WºÙ**
-                Debug.Log($"UnLockSystem: §ä¨ì§Þ¯à {skillName}");
+                Debug.Log($"UnLockSystem: §Þ¯à{skillName}");
             }
 
-            // **¥Í¦¨°T®§ª«¥ó**
+            // **¥Í¦¨°T®§ª«?E*
             GameObject messageObj = Instantiate(unlockMessagePrefab, messageParent);
             TextMeshProUGUI messageText = messageObj.GetComponentInChildren<TextMeshProUGUI>();
             CanvasGroup canvasGroup = messageObj.GetComponent<CanvasGroup>();
 
             if (messageText != null)
-                messageText.text = $"¨ú±o§Þ¯à¡G{skillName}";
+                messageText.text = $"¨ú±o§Þ¯à:{skillName}";
         }
     }
 }

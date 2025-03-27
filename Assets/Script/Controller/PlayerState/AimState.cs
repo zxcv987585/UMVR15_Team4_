@@ -8,6 +8,7 @@ public class AimState : PlayerState
 
     public Action<bool> OnAim;
     public Action<float, float> OnAimMove;
+    public Action<string> OnAimHit;
 
     public AimState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player)
     {
@@ -26,10 +27,6 @@ public class AimState : PlayerState
 
     public override void Update()
     {
-        if (player.IsHit || player.IsCriticalHit || player.IsRivive || player.IsDie)
-        {
-            return;
-        }
         if (!player.IsAiming)
         {
             StateMachine.ChangeState(player.moveState);
@@ -48,6 +45,12 @@ public class AimState : PlayerState
             OnAim?.Invoke(false);
             return;
         }
+        if (player.GetGunHit)
+        {
+            OnAimHit?.Invoke("GunHit");
+            return;
+        }
+
 
         RotateToCamera();
         Move();

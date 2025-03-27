@@ -96,17 +96,19 @@ public class WeaponManager : MonoBehaviour
     {
         if (attackPoint == null) return;
 
-        Collider[] hitBosses = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, player.playerData.BossLayer);
-        foreach (Collider boss in hitBosses)
+        int combinedLayer = player.playerData.BossLayer | player.playerData.EnemyLayer | player.playerData.BoxLayer;
+
+        Collider[] hitTarget = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, combinedLayer);
+        foreach (Collider Target in hitTarget)
         {
-            if (!attackedEnemies.Contains(boss))
+            if (!attackedEnemies.Contains(Target))
             {
-                attackedEnemies.Add(boss);
-                Debug.Log($"攻擊到 Boss: {boss.name}");
-                Health bossHealth = boss.GetComponent<Health>();
-                if (bossHealth != null)
+                attackedEnemies.Add(Target);
+                Debug.Log($"攻擊到: {Target.name}");
+                Health TargetHealth = Target.GetComponent<Health>();
+                if (TargetHealth != null)
                 {
-                    bossHealth.TakeDamage(player.playerData.attackDamage);
+                    TargetHealth.TakeDamage(player.playerData.attackDamage);
                     health.AttackHealPP(1.5f);
                 }
                 if (player.HitEffect != null)
@@ -116,25 +118,44 @@ public class WeaponManager : MonoBehaviour
             }
         }
 
-        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, player.playerData.EnemyLayer);
-        foreach (Collider enemy in hitEnemies)
-        {
-            if (!attackedEnemies.Contains(enemy))
-            {
-                attackedEnemies.Add(enemy);
-                Debug.Log($"擊中 {enemy.name}");
-                Health enemyHealth = enemy.GetComponent<Health>();
-                if (enemyHealth != null)
-                {
-                    enemyHealth.TakeDamage(player.playerData.attackDamage);
-                    health.AttackHealPP(1.5f);
-                }
-                if (player.HitEffect != null)
-                {
-                    Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
-                }
-            }
-        }
+        //Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, player.playerData.EnemyLayer);
+        //foreach (Collider enemy in hitEnemies)
+        //{
+        //    if (!attackedEnemies.Contains(enemy))
+        //    {
+        //        attackedEnemies.Add(enemy);
+        //        Debug.Log($"擊中 {enemy.name}");
+        //        Health enemyHealth = enemy.GetComponent<Health>();
+        //        if (enemyHealth != null)
+        //        {
+        //            enemyHealth.TakeDamage(player.playerData.attackDamage);
+        //            health.AttackHealPP(1.5f);
+        //        }
+        //        if (player.HitEffect != null)
+        //        {
+        //            Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
+        //        }
+        //    }
+        //}
+
+        //Collider[] hitBoxs = Physics.OverlapSphere(attackPoint.position, player.playerData.attackRadius, player.playerData.BoxLayer);
+        //foreach (Collider Box in hitBoxs)
+        //{
+        //    if (!attackedEnemies.Contains(Box))
+        //    {
+        //        attackedEnemies.Add(Box);
+        //        Debug.Log($"擊中 {Box.name}");
+        //        Health enemyHealth = Box.GetComponent<Health>();
+        //        if (enemyHealth != null)
+        //        {
+        //            enemyHealth.TakeDamage(player.playerData.attackDamage);
+        //        }
+        //        if (player.HitEffect != null)
+        //        {
+        //            Instantiate(player.HitEffect, attackPoint.position, attackPoint.rotation);
+        //        }
+        //    }
+        //}
     }
 
 

@@ -26,6 +26,9 @@ public class PlayerHealth : MonoBehaviour
     //受到攻擊時要觸發的委派事件
     public event Action OnDamage;
 
+    //持槍狀態下受到攻擊時要觸發的委派事件
+    public event Action OnGunDamage;
+
     //受到持續傷害時要觸發的委派事件
     public event Action OnDot;
 
@@ -169,6 +172,11 @@ public class PlayerHealth : MonoBehaviour
         if (CurrentHealth > 0)
         {
             OnDamage?.Invoke();
+        }
+
+        if (player.IsAiming)
+        {
+            OnGunDamage?.Invoke();
         }
 
         if (CurrentHealth <= 0)

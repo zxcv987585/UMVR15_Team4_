@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
     public Transform MainCamera;
     //取得等級系統
     public LevelSystem levelSystem;
+    //取得暫停UI的介面
+    public StopUI stopUI;
 
     [Header("玩家Data")]
     public PlayerDataSO playerData;
@@ -64,6 +66,9 @@ public class PlayerController : MonoBehaviour
     //防呆用受傷紀錄
     private Coroutine hitCoolDownCoroutine;
 
+    //防呆用槍傷紀錄
+    private Coroutine AimhitCoolCoroutine;
+
     //所有狀態旗標
     public bool IsRun { get; private set; } = false;
     public bool IsAiming { get; private set; } = false;
@@ -80,7 +85,7 @@ public class PlayerController : MonoBehaviour
     public bool IsAttackBuff { get; private set; } = false;
     public bool IsDefenseBuff { get; private set; } = false;
     public bool IsRivive { get; set; } = false;
-    public bool GunHit { get; set; } = false;
+    public bool GetGunHit { get; set; } = false;
 
     //玩家受傷與死亡的Delegate事件
     public event Action OnHit;
@@ -96,6 +101,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         MainCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
         levelSystem = GetComponent<LevelSystem>();
+        stopUI = FindObjectOfType<StopUI>();
         //初始化時建立玩家狀態機
         stateMachine = gameObject.AddComponent<PlayerStateMachine>();
         //初始化所有狀態，讓狀態成為單例
@@ -146,8 +152,10 @@ public class PlayerController : MonoBehaviour
         health.HaveReviveItemDead += Died;
         health.NoReviveItemDead += Died;
         health.OnCriticalDamage += OnCriticalDamage;
+        health.OnGunDamage += TakeAimHit;
         health.PlayerRivive += Rivive;
         levelSystem.PlayerLevelup += LevelUp;
+        stopUI.ContinueGame += Continue;
     }
 
     void Update()
@@ -307,12 +315,6 @@ public class PlayerController : MonoBehaviour
     {
         if (IsDie || Invincible) return;
 
-        if (IsAiming) 
-        {
-            GunHit = true;
-            OnGunHit?.Invoke();
-            StartCoroutine(GunHitCoolDown());
-        }
         OnHit?.Invoke();
         IsHit = true;
 
@@ -343,6 +345,20 @@ public class PlayerController : MonoBehaviour
 
         StartCoroutine(CriticalDamageCoolDown());
     }
+    private void TakeAimHit()
+    {
+        if (IsDie || Invincible) return;
+
+        OnGunHit?.Invoke();
+        GetGunHit = true;
+
+        if (AimhitCoolCoroutine != null)
+        {
+            StopCoroutine(AimhitCoolCoroutine);
+        }
+
+        AimhitCoolCoroutine = StartCoroutine(GunHitCoolDown());
+    }
     //計算玩家受傷時的硬質協程
     IEnumerator HitCoolDown()
     {
@@ -361,12 +377,16 @@ public class PlayerController : MonoBehaviour
         {
             stateMachine.ChangeState(moveState);
         }
+        else if (IsAiming)
+        {
+            stateMachine.ChangeState(moveState);
+        }
     }
     IEnumerator GunHitCoolDown()
     {
-        yield return new WaitForSeconds(playerData.HitCoolTime);
+        yield return new WaitForSeconds(0.1f);
 
-        GunHit = false;
+        GetGunHit = false;
     }
     IEnumerator CriticalDamageCoolDown()
     {
@@ -709,5 +729,10 @@ public class PlayerController : MonoBehaviour
         {
             stateMachine.ChangeState(moveState);
         }
+    }
+
+    private void Continue()
+    {
+        InPress = false;
     }
 }

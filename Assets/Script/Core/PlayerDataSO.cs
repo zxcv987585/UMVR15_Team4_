@@ -50,6 +50,8 @@ public class PlayerDataSO : ScriptableObject
     public LayerMask EnemyLayer;
     [Tooltip("Boss 的Layer")]
     public LayerMask BossLayer;
+    [Tooltip("玩家可以攻擊箱子的Layer層")]
+    public LayerMask BoxLayer;
     [Tooltip("玩家要與NPC互動的Layer層")]
     public LayerMask NPCLayer;
 }
