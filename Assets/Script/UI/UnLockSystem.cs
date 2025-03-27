@@ -38,16 +38,16 @@ public class UnLockSystem : MonoBehaviour
             if (skillSlot != null && skillSlot.skillData != null)
             {
                 skillName = skillSlot.skillData.skillName; // **¨ú±o§Ş¯à¦WºÙ**
-                Debug.Log($"UnLockSystem: Šl“¾E{skillName}");
+                Debug.Log($"UnLockSystem: §Ş¯à{skillName}");
             }
 
-            // **¥Í¦¨°T®§ª«¥E*
+            // **¥Í¦¨°T®§ª«?E*
             GameObject messageObj = Instantiate(unlockMessagePrefab, messageParent);
             TextMeshProUGUI messageText = messageObj.GetComponentInChildren<TextMeshProUGUI>();
             CanvasGroup canvasGroup = messageObj.GetComponent<CanvasGroup>();
 
             if (messageText != null)
-                messageText.text = $"æ“¾‹Z”\:{skillName}";
+                messageText.text = $"¨ú±o§Ş¯à:{skillName}";
         }
     }
 }
