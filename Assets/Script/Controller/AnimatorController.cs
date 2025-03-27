@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class AnimatorController : MonoBehaviour
@@ -29,9 +28,9 @@ public class AnimatorController : MonoBehaviour
             player.dashState.ForceIdle += Idle;
             player.aimState.OnAim += Aim;
             player.aimState.OnAimMove += AimMove;
+            player.aimState.OnAimHit += AimHit;
             player.deadState.Dead += Dead;
             player.OnHit += Hit;
-            player.OnGunHit += GunHit;
             player.CriticalGunHit += CriticalGunHit;
             health.HaveReviveItemDead += Dead;
             health.NoReviveItemDead += Dead;
@@ -47,12 +46,6 @@ public class AnimatorController : MonoBehaviour
         animator.SetLayerWeight(1, 0);
         animator.SetBool("IsAim", false);
         animator.CrossFade("CriticalDamage", 0f, 0);
-    }
-
-    private void GunHit()
-    {
-        if (isDead) return;
-        animator.SetTrigger("GunHit");
     }
 
     private void Rivive()
@@ -113,15 +106,20 @@ public class AnimatorController : MonoBehaviour
         }
     }
 
+    private void AimHit(string Hit)
+    {
+        animator.CrossFade(Hit, 0f);
+    }
+
     private void Hit()
     {
-        if (player.IsAiming)
-        {
-            animator.SetTrigger("GunHit");
-            animator.SetBool("Sprint", false);
-            animator.SetBool("Run", false);
-            animator.SetBool("Idle", false);
-        }
+        //if (player.IsAiming)
+        //{
+        //    animator.SetTrigger("GunHit");
+        //    animator.SetBool("Sprint", false);
+        //    animator.SetBool("Run", false);
+        //    animator.SetBool("Idle", false);
+        //}
         animator.SetTrigger("Hit");
         animator.SetBool("Sprint", false);
         animator.SetBool("Run", false);
