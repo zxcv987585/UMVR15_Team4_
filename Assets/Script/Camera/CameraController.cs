@@ -111,6 +111,11 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (player.IsDie || player.IsCriticalHit)
+        {
+            isAiming = false;
+        }
+
         HandleCameraRotation();
 
         if (!isLocked)
@@ -136,7 +141,6 @@ public class CameraController : MonoBehaviour
 
             if (isAiming && AimTarget != null)
             {
-                if (player.IsDie || player.IsDash) return;
                 Vector3 cameraForward = Camera.main.transform.forward;
                 AimTarget.position = Camera.main.transform.position + cameraForward * 10f;
             }

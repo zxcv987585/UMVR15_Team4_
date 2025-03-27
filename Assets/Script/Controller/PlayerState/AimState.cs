@@ -41,8 +41,8 @@ public class AimState : PlayerState
         }
         if (player.IsDie)
         {
-            StateMachine.ChangeState(player.deadState);
             OnAim?.Invoke(false);
+            StateMachine.ChangeState(player.deadState);
             return;
         }
         if (player.GetGunHit)
