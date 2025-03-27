@@ -9,8 +9,13 @@ public class SingleInputButtonUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _bindText;
     [SerializeField] private Button _bindButton;
     [SerializeField] private List<TextMeshProUGUI> _bindButtonText;
-    private GameInput.Bind _bind;
-    
+    [SerializeField] private GameInput.Bind _bind;
+
+    private void Start()
+    {
+        SetBind(_bind);
+    }
+
     public void SetBind(GameInput.Bind bind)
     {
         _bind = bind;
