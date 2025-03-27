@@ -50,7 +50,6 @@ public class FightState : PlayerState
         }
         if (player.IsDash)
         {
-            CancelDashAttackCoroutine();
             StateMachine.ChangeState(player.dashState);
             ResetCombo();
             return;
@@ -63,19 +62,16 @@ public class FightState : PlayerState
         }
         if (player.IsDie)
         {
-            CancelDashAttackCoroutine();
             StateMachine.ChangeState(player.deadState);
             return;
         }
         if (player.IsHit)
         {
-            CancelDashAttackCoroutine();
             ResetCombo();
             return;
         }
         if (player.IsCriticalHit)
         {
-            CancelDashAttackCoroutine();
             ResetCombo();
             return;
         }
@@ -89,7 +85,6 @@ public class FightState : PlayerState
 
         if (player.LockTarget != null)
         {
-            DashAttackcoroutine = player.StartCoroutine(DashAttack());
             Vector3 direction = (player.LockTarget.position - player.transform.position).normalized;
             direction.y = 0;
             player.transform.rotation = Quaternion.LookRotation(direction);
@@ -113,6 +108,8 @@ public class FightState : PlayerState
         }
         else
         {
+            Vector3 cameraForward = player.GetCurrentCameraForward();
+            player.transform.rotation = Quaternion.LookRotation(cameraForward, Vector3.up);
             PerformAttack();
         }
     }
@@ -197,15 +194,6 @@ public class FightState : PlayerState
         CanAttack = true;
         player.IsAttack = false;
         currentComboStep++;
-    }
-
-    private void CancelDashAttackCoroutine()
-    {
-        if (DashAttackcoroutine != null)
-        {
-            player.StopCoroutine(DashAttackcoroutine);
-            DashAttackcoroutine = null;
-        }
     }
 
     bool QuitState()

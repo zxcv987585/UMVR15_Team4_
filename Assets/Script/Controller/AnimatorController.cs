@@ -29,6 +29,7 @@ public class AnimatorController : MonoBehaviour
             player.dashState.ForceIdle += Idle;
             player.aimState.OnAim += Aim;
             player.aimState.OnAimMove += AimMove;
+            player.deadState.Dead += Dead;
             player.OnHit += Hit;
             player.OnGunHit += GunHit;
             player.CriticalGunHit += CriticalGunHit;
@@ -73,10 +74,15 @@ public class AnimatorController : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
-        animator.Play("Die");
+        animator.CrossFade("Die", 0f, 0);
         animator.SetBool("Sprint", false);
         animator.SetBool("Run", false);
         animator.SetBool("Idle", false);
+        animator.ResetTrigger("Attack1");
+        animator.ResetTrigger("Attack2");
+        animator.ResetTrigger("Attack3");
+        animator.ResetTrigger("Attack4");
+        animator.ResetTrigger("DashAttack");
     }
 
     private void AimMove(float moveX, float moveY)
@@ -87,10 +93,6 @@ public class AnimatorController : MonoBehaviour
 
     private void Aim(bool isAim)
     {
-        if (player.IsHit || player.IsCriticalHit || player.IsRivive || player.IsDie)
-        {
-            return;
-        }
         if (isAim)
         {
             animator.SetLayerWeight(0, 0);
@@ -113,6 +115,13 @@ public class AnimatorController : MonoBehaviour
 
     private void Hit()
     {
+        if (player.IsAiming)
+        {
+            animator.SetTrigger("GunHit");
+            animator.SetBool("Sprint", false);
+            animator.SetBool("Run", false);
+            animator.SetBool("Idle", false);
+        }
         animator.SetTrigger("Hit");
         animator.SetBool("Sprint", false);
         animator.SetBool("Run", false);

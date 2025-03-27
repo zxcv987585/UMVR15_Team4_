@@ -1,9 +1,16 @@
 
+using System;
+
 public class DeadState : PlayerState
 {
     public DeadState(PlayerStateMachine stateMachine, PlayerController player) : base(stateMachine, player) { }
 
-    public override void Enter() {}
+    public event Action Dead;
+
+    public override void Enter() 
+    {
+        Dead?.Invoke();
+    }
 
     public override void Update(){}
 

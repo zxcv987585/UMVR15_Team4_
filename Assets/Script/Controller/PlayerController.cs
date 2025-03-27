@@ -311,12 +311,12 @@ public class PlayerController : MonoBehaviour
     {
         if (IsDie || Invincible) return;
 
-        if (IsAiming) 
-        {
-            GunHit = true;
-            OnGunHit?.Invoke();
-            StartCoroutine(GunHitCoolDown());
-        }
+        //if (IsAiming) 
+        //{
+        //    GunHit = true;
+        //    OnGunHit?.Invoke();
+        //    StartCoroutine(GunHitCoolDown());
+        //}
         OnHit?.Invoke();
         IsHit = true;
 
@@ -365,13 +365,17 @@ public class PlayerController : MonoBehaviour
         {
             stateMachine.ChangeState(moveState);
         }
+        else if (IsAiming)
+        {
+            stateMachine.ChangeState(moveState);
+        }
     }
-    IEnumerator GunHitCoolDown()
-    {
-        yield return new WaitForSeconds(playerData.HitCoolTime);
+    //IEnumerator GunHitCoolDown()
+    //{
+    //    yield return new WaitForSeconds(playerData.HitCoolTime);
 
-        GunHit = false;
-    }
+    //    GunHit = false;
+    //}
     IEnumerator CriticalDamageCoolDown()
     {
         yield return new WaitForSeconds(1.5f);

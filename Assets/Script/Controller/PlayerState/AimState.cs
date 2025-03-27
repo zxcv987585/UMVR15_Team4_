@@ -26,10 +26,6 @@ public class AimState : PlayerState
 
     public override void Update()
     {
-        if (player.IsHit || player.IsCriticalHit || player.IsRivive || player.IsDie)
-        {
-            return;
-        }
         if (!player.IsAiming)
         {
             StateMachine.ChangeState(player.moveState);
@@ -48,6 +44,16 @@ public class AimState : PlayerState
             OnAim?.Invoke(false);
             return;
         }
+        //if (player.IsHit)
+        //{
+        //    OnAim?.Invoke(false);
+        //    return;
+        //}
+        //if (player.IsCriticalHit)
+        //{
+        //    OnAim?.Invoke(false);
+        //    return;
+        //}
 
         RotateToCamera();
         Move();

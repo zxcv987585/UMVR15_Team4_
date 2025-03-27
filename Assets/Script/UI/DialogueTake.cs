@@ -20,13 +20,13 @@ public class DialogueTake : MonoBehaviour
     private int Index;
     //»İ­nÃö³¬ªº²Ä¤@¹D«Ì»ÙÀğ¾À
     public GameObject LockWall;
-    //ª±®a²Ä¤@¦¸¤É¯Å»İ­nÄ²µoªº¼@±¡¨Æ¥E
+    //ª±®a²Ä¤@¦¸¤É¯Å»İ­nÄ²µoªº¼@±¡¨Æ?E
     public LevelSystem levelSystem;
-    //²Ä¤@°Ï³Ì«á¤@¬q¤å¦r©Ò»İ¶Ç°eªºdelegate¡]¥D­n¥Î©ó±±¨û’nityÂE
+    //²Ä¤@°Ï³Ì«á¤@¬q¤å¦r©Ò»İ¶Ç°eªºdelegate¡]¥D­n¥Î©ó±±¨û’nity?E
     public event Action LastTakeAction;
     //¼@±¡µ²§ô«á»İ­n¶Ç°eªºdelegate
     public event Action TakeFinish;
-    //BattleScene³Ì«á¤@°Ï¹EÜ¥Îdelegate
+    //BattleScene³Ì«á¤@°Ï?EÜ¥Îdelegate
     public event Action LastAreaTakeFinish;
 
     private void Awake()
@@ -91,8 +91,9 @@ public class DialogueTake : MonoBehaviour
 
         yield return new WaitForSeconds(4f);
         TakeFinish?.Invoke();
-        LockWall?.SetActive(false);
         StartCoroutine(CloseUIAnimation());
+        yield return new WaitForSeconds(0.3f);
+        LockWall?.SetActive(false);
     }
 
     IEnumerator DisplayDialogue2()
