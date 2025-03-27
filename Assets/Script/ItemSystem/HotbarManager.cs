@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,9 @@ public class HotbarManager : MonoBehaviour
 
     public List<HotbarSlot> hotbarSlots;
     public Inventory myBag;
+    
+    [SerializeField] private TextMeshProUGUI[] _itemTextArray;
+    [SerializeField] private TextMeshProUGUI[] _skillTextArray;
 
     private void Awake()
     {
@@ -33,6 +37,28 @@ public class HotbarManager : MonoBehaviour
             {
                 Debug.LogError("HotbarManager: 有 HotbarSlot 為 NULL，請檢查 UI 設置！");
             }
+        }
+    }
+    
+    private void Start()
+    {
+        GameInput gameInput = GameInput.Instance;
+        
+        if(_itemTextArray != null)
+        {
+            _itemTextArray[0].text = gameInput.GetBindText(GameInput.Bind.UseItem1);
+            _itemTextArray[1].text = gameInput.GetBindText(GameInput.Bind.UseItem2);
+            _itemTextArray[2].text = gameInput.GetBindText(GameInput.Bind.UseItem3);
+            _itemTextArray[3].text = gameInput.GetBindText(GameInput.Bind.UseItem4);
+            _itemTextArray[4].text = gameInput.GetBindText(GameInput.Bind.UseItem5);
+            _itemTextArray[5].text = gameInput.GetBindText(GameInput.Bind.UseItem6);
+        }
+        
+        if(_skillTextArray != null)
+        {
+            _skillTextArray[0].text = gameInput.GetBindText(GameInput.Bind.Attack);
+            _skillTextArray[1].text = gameInput.GetBindText(GameInput.Bind.Skill1);
+            _skillTextArray[2].text = gameInput.GetBindText(GameInput.Bind.Skill2);
         }
     }
 
