@@ -45,18 +45,16 @@ public class GameInput : MonoBehaviour
         { Bind.LockOn, "鎖定" },
         { Bind.Skill1, "技能 1" },
         { Bind.Skill2, "技能 2" },
-        { Bind.ItemMenu, "道具選單" },
+        { Bind.ItemMenu, "選單" },
         { Bind.Interaction, "互動" },
         { Bind.Escape, "暫停" },
-        { Bind.UseItem1, "使用道具 1" },
-        { Bind.UseItem2, "使用道具 2" },
-        { Bind.UseItem3, "使用道具 3" },
-        { Bind.UseItem4, "使用道具 4" },
-        { Bind.UseItem5, "使用道具 5" },
-        { Bind.UseItem6, "使用道具 6" },
+        { Bind.UseItem1, "道具 1" },
+        { Bind.UseItem2, "道具 2" },
+        { Bind.UseItem3, "道具 3" },
+        { Bind.UseItem4, "道具 4" },
+        { Bind.UseItem5, "道具 5" },
+        { Bind.UseItem6, "道具 6" },
 	};
-	
-	
 
 	public event Action<bool> OnAttackAction;
 	public event Action<bool> OnAimAction;
@@ -78,7 +76,7 @@ public class GameInput : MonoBehaviour
 	private void Awake()
 	{
         //確保GameInput在TitleScene會自我銷毀
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        // SceneManager.sceneLoaded += OnSceneLoaded;
 		
 		//確保GameInput在任何場景都是唯一單例
         if (Instance != null && Instance != this)
@@ -129,18 +127,18 @@ public class GameInput : MonoBehaviour
 	}
 
     //訂閱跳轉場景事件
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name == "TitleScene")
-        {
-            Destroy(gameObject);
-            OnDestroy();
-        }
-    }
-    private void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
+    // private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    // {
+    //     if (scene.name == "TitleScene")
+    //     {
+    //         Destroy(gameObject);
+    //         OnDestroy();
+    //     }
+    // }
+    // private void OnDestroy()
+    // {
+    //     SceneManager.sceneLoaded -= OnSceneLoaded;
+    // }
 
 	// 存檔按鍵的綁定鍵位
     private void SaveRebind()
