@@ -19,6 +19,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	[SerializeField] private Animator _animator;
 	[SerializeField] private Transform _bodyTransform;
 	[SerializeField] private GameObject _shootAttackPrefab;
+	[SerializeField] private GameObject _delayRaycastPrefab;
 	[SerializeField] private EnemyAttackGroundShake _enemyAttackGroundShake;
 	[SerializeField] private Transform _fogTransform;
 
@@ -49,6 +50,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		RunAttack,
 		CallEnemy,
 		ShootAttack,
+		DelayRaycastAttack,
 		FloorAttack,
 		Dead
 	}
@@ -161,7 +163,6 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		{
 			Quaternion targetRotation = Quaternion.LookRotation(rotateDirection);
 			transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _navMeshAgent.angularSpeed * Time.deltaTime);
-			//transform.rotation = _navMeshAgent.transform.rotation;
 		}
 
 		if(Vector3.Distance(transform.position, _playerTransform.position) > 6f)
@@ -182,10 +183,11 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	{
 	    _attackWeights = new Dictionary<BossState, int>()
 		{
-			{ BossState.RunAttack, 30 },
+			{ BossState.RunAttack, 25 },
 			{ BossState.CallEnemy, 10 },
-			{ BossState.ShootAttack, 30 },
-			{ BossState.FloorAttack, 30 }
+			{ BossState.ShootAttack, 25 },
+			{ BossState.DelayRaycastAttack, 25},
+			{ BossState.FloorAttack, 25 }
 		};
 	}
 	
@@ -207,6 +209,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 				{ BossState.RunAttack, 0 },
 				{ BossState.CallEnemy, 100 },
 				{ BossState.ShootAttack, 0 },
+				{ BossState.DelayRaycastAttack, 0},
 				{ BossState.FloorAttack, 0 }
 			};
 			
@@ -222,6 +225,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 				{ BossState.RunAttack, 0 },
 				{ BossState.CallEnemy, 100 },
 				{ BossState.ShootAttack, 0 },
+				{ BossState.DelayRaycastAttack, 0},
 				{ BossState.FloorAttack, 0 }
 			};
 			
@@ -233,20 +237,22 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		{
 			// 玩家在近距離
 			_attackWeights[BossState.RunAttack] = 35;
-			_attackWeights[BossState.ShootAttack] = 20;
+			_attackWeights[BossState.ShootAttack] = 10;
+			_attackWeights[BossState.DelayRaycastAttack] = 10;
 			_attackWeights[BossState.FloorAttack] = 35;
 		}
 		else
 		{
 			// 玩家在遠距離
-			_attackWeights[BossState.RunAttack] = 35;
+			_attackWeights[BossState.RunAttack] = 10;
 			_attackWeights[BossState.ShootAttack] = 35;
-			_attackWeights[BossState.FloorAttack] = 20;
+			_attackWeights[BossState.DelayRaycastAttack] = 35;
+			_attackWeights[BossState.FloorAttack] = 10;
 		}
 
 		if(_attackWeights.TryGetValue(_lastAttackState, out int value))
 		{
-			_attackWeights[_lastAttackState] -= 20;
+			_attackWeights[_lastAttackState] -= 25;
 		}
 
 		if(_hpLessTrigger35) _attackWeights[BossState.RunAttack] = 0;
@@ -288,33 +294,37 @@ public class EnemyBossController : MonoBehaviour, IEnemy
         switch (_state)
         {
             case BossState.Idle:
-				_isIdle = true;
+                _isIdle = true;
                 break;
             case BossState.Walk:
-				AudioManager.Instance.PlaySound("BossWalk", transform.position, this.gameObject, true, _attackCooldownTime*2);
-				StartCoroutine(ReadToAttackCoroutine());
-				break;
-            case BossState.RunAttack:
-				this.PlaySound("BossAttackGround");
-				StartCoroutine(RunAttackCoroutine());
+                AudioManager.Instance.PlaySound("BossWalk", transform.position, this.gameObject, true, _attackCooldownTime * 2);
+                StartCoroutine(ReadToAttackCoroutine());
                 break;
-			case BossState.CallEnemy:
-				this.PlaySound("BossAttackCall");
-				StartCoroutine(DelayCallEnemyCoroutine());
+            case BossState.RunAttack:
+                this.PlaySound("BossAttackGround");
+                StartCoroutine(RunAttackCoroutine());
+                break;
+            case BossState.CallEnemy:
+                this.PlaySound("BossAttackCall");
+                StartCoroutine(DelayCallEnemyCoroutine());
                 break;
             case BossState.ShootAttack:
+                this.PlaySound("BossAttackShoot");
+                StartCoroutine(DelayShootAttackCoroutine());
+                break;
+			case BossState.DelayRaycastAttack:
 				this.PlaySound("BossAttackShoot");
-				StartCoroutine(DelayShootAttackCoroutine());
+				StartCoroutine(DelayRaycastAttackCoroutine());
                 break;
             case BossState.FloorAttack:
-				this.PlaySound("BossAttackGround");
-				StartCoroutine(DelayFloorAttackCoroutine());
+                this.PlaySound("BossAttackGround");
+                StartCoroutine(DelayFloorAttackCoroutine());
                 break;
             case BossState.Dead:
                 break;
         }
     }
-    
+
     private IEnumerator RunAttackCoroutine()
     {
 		
@@ -445,6 +455,15 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		yield return new WaitForSeconds(1.7f);
 
 		_shootAttackPrefab.SetActive(true);
+	}
+
+	private IEnumerator DelayRaycastAttackCoroutine()
+	{
+		_delayRaycastPrefab.SetActive(false);
+
+		yield return new WaitForSeconds(1.7f);
+
+		_delayRaycastPrefab.SetActive(true);
 	}
 
 	private IEnumerator DelayFloorAttackCoroutine()

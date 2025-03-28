@@ -71,9 +71,8 @@ public class BossShootParticle : MonoBehaviour
     // 顯示飛彈落地的酸液地板
     private IEnumerator InstantiateAcitSplash(Vector3 targetPosition)
     {
-        yield return new WaitForSeconds(flightTime);
+        yield return new WaitForSeconds(flightTime + 0.6f);
 
-        //targetPosition.y = 0.2f;
         Instantiate(acitSplashPrefab, targetPosition, Quaternion.identity);
     }
 }
