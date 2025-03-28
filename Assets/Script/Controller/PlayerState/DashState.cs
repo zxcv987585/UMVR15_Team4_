@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DashState : PlayerState
@@ -49,6 +50,11 @@ public class DashState : PlayerState
         {
             dashTimer -= Time.deltaTime;
             player.controller.SimpleMove(player.Velocity);
+            return;
+        }
+        if (player.IsDie)
+        {
+            StateMachine.ChangeState(player.deadState);
             return;
         }
         player.IsDash = false;

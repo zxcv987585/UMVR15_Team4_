@@ -11,8 +11,6 @@ public class LockOnIndicator : MonoBehaviour
     public PlayerController playerController;
     //指向被鎖定的敵人
     public Transform Enemy;
-    //參考Canvas的RectTransform
-    public RectTransform canvasRect;
     //補正白點位置
     public float verticalOffset = 1.0f;
 
@@ -20,7 +18,7 @@ public class LockOnIndicator : MonoBehaviour
     void Awake()
     {
         Maincamera = Camera.main;
-        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        playerController = FindAnyObjectByType<PlayerController>();
         indicatorRect.gameObject.SetActive(false);
     }
 
