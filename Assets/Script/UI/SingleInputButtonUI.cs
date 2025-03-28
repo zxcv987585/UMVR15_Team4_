@@ -38,6 +38,7 @@ public class SingleInputButtonUI : MonoBehaviour
     private void ShowFailBindMessage()
     {
         UpdateVisualText();
-        Debug.Log("按鍵衝突");
+        this.PlaySound("BindFail");
+        //Debug.Log("按鍵衝突");
     }
 }
