@@ -111,16 +111,18 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
+        //玩家如果進入特定狀態，強制攝影機取消越肩視角
         if (player.IsDie || player.IsCriticalHit || player.IsDash || player.IsSkilling)
         {
             isAiming = false;
         }
 
+        //隨時監控玩家滑鼠動向
         HandleCameraRotation();
 
         if (!isLocked)
         {
-            // 根據是否瞄準，計算過渡參數（0~1）
+            // 根據是否瞄準計算過渡參數
             float targetTransition = isAiming ? 1f : 0f;
             transitionValue = Mathf.Lerp(transitionValue, targetTransition, Time.deltaTime * transitionSpeed);
 
@@ -129,7 +131,7 @@ public class CameraController : MonoBehaviour
             Quaternion normalRotation = Quaternion.Euler(Mouse_y, Mouse_x, 0);
             float normalCamDistance = CameraToTargetDistance;
 
-            // 瞄準模式下的參數（可根據需求調整）
+            // 瞄準模式下的參數
             Vector3 aimPosition = target.position + target.right * AimOffset.x + target.up * AimOffset.y;
             Quaternion aimRotation = Quaternion.Euler(Mouse_y, Mouse_x + 15f, 0);
             float aimCamDistance = AimOffset.z;
