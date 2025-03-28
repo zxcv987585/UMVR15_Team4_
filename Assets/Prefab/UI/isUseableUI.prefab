@@ -722,6 +722,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8140aa0aaa9ebd741af7a4de781c1828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _selectSound: 
+  _clickSound: 
 --- !u!225 &3729230207769434889
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -746,6 +748,7 @@ GameObject:
   - component: {fileID: 4828136517950362712}
   - component: {fileID: 36768307521799786}
   - component: {fileID: 8139376928728735075}
+  - component: {fileID: 4132431208498851495}
   m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
@@ -887,6 +890,18 @@ MonoBehaviour:
   useCustomColor: 0
   colorType: 1
   fontType: 3
+--- !u!114 &4132431208498851495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099319909581801924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26db1779c9d98324d9c8a47c003d5fb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6120765503171508265
 GameObject:
   m_ObjectHideFlags: 0
