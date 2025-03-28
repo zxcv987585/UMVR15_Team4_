@@ -9903,8 +9903,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2536530367738981054, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      propertyPath: Lines.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536530367738981054, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: Lines.Array.data[2]
-      value: "\u70BA\u6B64\u6211\u642C\u4F86\u4E86\u6CBB\u7642\u8259\uFF0C\u51FA\u767C\u524D\u5148\u6062\u5FA9\u4E00\u4E0B\u5427\uFF01"
+      value: "\u6211\u642C\u4F86\u4E86\u6CBB\u7642\u8259\uFF0C\u51FA\u767C\u524D\u5148\u6062\u5FA9\u4E00\u4E0B\u5427\uFF01"
       objectReference: {fileID: 0}
     - target: {fileID: 2536530367738981054, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
       propertyPath: Lines.Array.data[3]
