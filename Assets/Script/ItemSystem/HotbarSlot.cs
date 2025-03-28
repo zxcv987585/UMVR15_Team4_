@@ -40,7 +40,10 @@ public class HotbarSlot : MonoBehaviour
             Debug.LogError("HotbarSlot: ItemImage 仍為 NULL，請檢查 UI 設置！");
             return;
         }
-
+        else
+        {
+            this.PlaySound("EquipSkill");
+        }
         ItemImage.sprite = newItem != null ? newItem.itemIcon : null;
         slotNumtText.text = (newItem != null && newItem.isStack) ? newItem.itemNum.ToString() : "";
     }
