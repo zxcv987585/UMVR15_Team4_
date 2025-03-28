@@ -89,6 +89,11 @@ public class FightState : PlayerState
             direction.y = 0;
             player.transform.rotation = Quaternion.LookRotation(direction);
         }
+        else
+        {
+            Vector3 cameraForward = player.GetCurrentCameraForward();
+            player.transform.rotation = Quaternion.LookRotation(cameraForward, Vector3.up);
+        }
 
         attackTimer = 0;
         CanAttack = false;
@@ -108,8 +113,6 @@ public class FightState : PlayerState
         }
         else
         {
-            Vector3 cameraForward = player.GetCurrentCameraForward();
-            player.transform.rotation = Quaternion.LookRotation(cameraForward, Vector3.up);
             PerformAttack();
         }
     }

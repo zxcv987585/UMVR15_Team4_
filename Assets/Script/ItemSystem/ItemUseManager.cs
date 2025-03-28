@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ItemUseManager : MonoBehaviour
 {
@@ -13,6 +13,12 @@ public class ItemUseManager : MonoBehaviour
 
     private Dictionary<GameInput.Bind, HotbarSlot> _itemBind;
 
+    private void Awake()
+    {
+        //確保物件在TitleScene會自我銷毀
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
@@ -22,6 +28,21 @@ public class ItemUseManager : MonoBehaviour
         rebirthUI.UseReviveItem += UseRivive;
 
         GameInput.Instance.OnUseItem += CallBindItem;
+    }
+
+    //訂閱跳轉場景事件
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "TitleScene")
+        {
+            GameInput.Instance.OnUseItem -= CallBindItem;
+            Destroy(gameObject);
+            OnDestroy();
+        }
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void InitItemBind()

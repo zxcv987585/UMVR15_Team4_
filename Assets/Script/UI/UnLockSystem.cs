@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -38,7 +36,7 @@ public class UnLockSystem : MonoBehaviour
             if (skillSlot != null && skillSlot.skillData != null)
             {
                 skillName = skillSlot.skillData.skillName; // **®˙±oßﬁØ‡¶W∫Ÿ**
-                Debug.Log($"UnLockSystem: ßﬁØ‡{skillName");
+                Debug.Log($"UnLockSystem: ßﬁØ‡{skillName}");
             }
 
             // **•Õ¶®∞TÆß™´?E*
@@ -47,7 +45,7 @@ public class UnLockSystem : MonoBehaviour
             CanvasGroup canvasGroup = messageObj.GetComponent<CanvasGroup>();
 
             if (messageText != null)
-                messageText.text = $"éÊìæãZî\ÅF{skillName}";
+                messageText.text = $"®˙±oßﬁØ‡°G{skillName}";
         }
     }
 }
