@@ -379,14 +379,24 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	// 在地下時旋轉衝向玩家
 	private IEnumerator CollisionToPlayer()
 	{
+		// **強制 NavMeshAgent 與當前物件位置同步（忽略 Y 軸）**
+		Vector3 syncPosition = new Vector3(transform.position.x, _navMeshAgent.transform.position.y, transform.position.z);
+		_navMeshAgent.Warp(syncPosition);
+
 	    Vector3 direct = (_playerTransform.position - transform.position).normalized;
 		direct.y = 0;
 		
 		_navMeshAgent.isStopped = false;
 		_navMeshAgent.speed = 50f;
 		_navMeshAgent.acceleration = 30f;
-		_navMeshAgent.nextPosition = transform.position;
-		_navMeshAgent.SetDestination(transform.position + direct * 100f);
+
+		// 計算終點（基於當前方向），並確保它在 NavMesh 上
+		Vector3 targetPosition = transform.position + direct * 100f;
+		if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, 10f, NavMesh.AllAreas))
+		{
+			targetPosition = hit.position;
+		}
+		_navMeshAgent.SetDestination(targetPosition);
 		
 		float timer = 0f;
 
@@ -396,8 +406,12 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		{
 		    yield return new WaitUntil(() => !IsPause);
 		    
-		    Vector3 nextPosition = _navMeshAgent.nextPosition;
-			transform.position = new Vector3(nextPosition.x, -4f, nextPosition.z);
+		    // 讓敵人始終保持在 NavMesh 上
+			Vector3 nextPosition = _navMeshAgent.nextPosition;
+			if (NavMesh.SamplePosition(nextPosition, out NavMeshHit validPos, 1f, NavMesh.AllAreas))
+			{
+				transform.position = new Vector3(validPos.position.x, -4f, validPos.position.z);
+			}
 			
 			// 判斷是否卡住了
 			if(_navMeshAgent.velocity.magnitude < 0.1f) timer += Time.deltaTime;
