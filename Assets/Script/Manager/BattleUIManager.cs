@@ -37,6 +37,10 @@ public class BattleUIManager : MonoBehaviour
     private Coroutine onDotEffectCoroutine;
     private bool isDotEffectPlaying = false;
 
+    [SerializeField] private Slider EXPBar;
+    [SerializeField] private TextMeshProUGUI currentEXPText;
+    [SerializeField] private TextMeshProUGUI maxEXPText;
+
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -71,7 +75,20 @@ public class BattleUIManager : MonoBehaviour
         currentPPText.text = health.GetMaxPP().ToString();
         maxPPText.text = health.GetMaxPP().ToString();
 
+        levelSystem.PlayerLevelup += UpdateEXPUI;
+        UpdateEXPUI();
+
         health.OnDot += OnDotUI;
+    }
+
+    public void UpdateEXPUI()
+    {
+        float currentExp = levelSystem.playerData.CurrentExp;
+        float maxExp = levelSystem.playerData.XPForNextLevel;
+
+        currentEXPText.text = Mathf.FloorToInt(currentExp).ToString();
+        maxEXPText.text = Mathf.FloorToInt(maxExp).ToString();
+        EXPBar.value = currentExp / maxExp;
     }
 
     //訂閱跳轉場景事件

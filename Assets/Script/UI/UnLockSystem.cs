@@ -36,7 +36,7 @@ public class UnLockSystem : MonoBehaviour
             if (skillSlot != null && skillSlot.skillData != null)
             {
                 skillName = skillSlot.skillData.skillName; // **¨ú±o§Ş¯à¦WºÙ**
-                Debug.Log($"UnLockSystem: §Ş¯à{skillName}");
+                Debug.Log($"UnLockSystem: §Ş¯à{skillName");
             }
 
             // **¥Í¦¨°T®§ª«?E*
@@ -45,7 +45,7 @@ public class UnLockSystem : MonoBehaviour
             CanvasGroup canvasGroup = messageObj.GetComponent<CanvasGroup>();
 
             if (messageText != null)
-                messageText.text = $"¨ú±o§Ş¯à¡G{skillName}";
+                messageText.text = $"æ“¾‹Z”\F{skillName}";
         }
     }
 }
