@@ -111,7 +111,7 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (player.IsDie || player.IsCriticalHit)
+        if (player.IsDie || player.IsCriticalHit || player.IsDash || player.IsSkilling)
         {
             isAiming = false;
         }
