@@ -24,7 +24,7 @@ public class RecoverFullHpPp : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && isUseable == false)
+        if (other.CompareTag("Player") && isUseable == false && isBeUse == false)
         {
             isUseable = true;
             StartCoroutine(isUseableUIon());
