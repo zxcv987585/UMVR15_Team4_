@@ -9,6 +9,7 @@ public class EnemyAttackFireBall : MonoBehaviour, IEnemyAttack
 
     [SerializeField] private float _flightTime;
     [SerializeField] private float _height;
+    [SerializeField] private float _damage;
 
     public void ResetHasAttack()
     {
@@ -22,7 +23,9 @@ public class EnemyAttackFireBall : MonoBehaviour, IEnemyAttack
 
     private void Start()
     {
-        StartCoroutine(ParabolaFireBall(transform.position, FindAnyObjectByType<PlayerController>().transform.position, _height, _flightTime));
+        Transform playerTransform = FindAnyObjectByType<PlayerController>().transform;
+        Vector3 targetPosition = playerTransform.position;
+        StartCoroutine(ParabolaFireBall(transform.position, targetPosition, _height, _flightTime));
     }
 
     private IEnumerator ParabolaFireBall(Vector3 start, Vector3 end, float height, float flightTime)
@@ -51,7 +54,7 @@ public class EnemyAttackFireBall : MonoBehaviour, IEnemyAttack
     {
         if(other.TryGetComponent(out PlayerHealth playerHealth))
         {
-            OnAttackHit?.Invoke();
+            playerHealth.TakeDamage(_damage);
             Destroy(gameObject);
         }
     }
