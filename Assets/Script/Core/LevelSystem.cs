@@ -18,6 +18,8 @@ public class LevelSystem : MonoBehaviour
             playerData.CurrentExp -= playerData.XPForNextLevel;
             LevelUp();
         }
+
+        BattleUIManager.Instance?.UpdateEXPUI();
     }
 
     public void LevelUp()
