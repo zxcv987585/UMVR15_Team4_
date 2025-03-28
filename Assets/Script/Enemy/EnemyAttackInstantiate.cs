@@ -22,5 +22,6 @@ public class EnemyAttackInstantiate : MonoBehaviour, IEnemyAttack
     public void AttackTrigger()
     {
         Instantiate(_fireBallPrefab, transform.position + Vector3.up * 1.3f, Quaternion.identity);
+        this.PlaySound("KiwiAttack");
     }
 }

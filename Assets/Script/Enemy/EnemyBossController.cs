@@ -248,6 +248,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		{
 			_attackWeights[_lastAttackState] -= 20;
 		}
+
+		if(_hpLessTrigger35) _attackWeights[BossState.RunAttack] = 0;
 	}
 	
 	// 根據攻擊的分配權重, 取得要用哪招
@@ -378,7 +380,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		
 		float timer = 0f;
 
-		AudioManager.Instance.PlaySound("GoGoGo", transform.position);
+		this.PlaySound("GoGoGo");
 		
 		while(true)
 		{
@@ -391,7 +393,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 			if(_navMeshAgent.velocity.magnitude < 0.1f) timer += Time.deltaTime;
 			if(timer > 0.2f) break;
 		    
-		    Collider[] colliderArray = Physics.OverlapSphere(transform.position + Vector3.up * 4f, 4f);
+		    Collider[] colliderArray = Physics.OverlapSphere(transform.position + Vector3.up * 4f, 4f, LayerMask.GetMask("Player", "Enemy"));
 		    _bodyTransform.Rotate(Vector3.up * 20f);
 		    
 		    foreach(Collider collider in colliderArray)
@@ -401,6 +403,11 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		            playerHealth.CriticalDamage(50);
 		            yield break;
 		        }
+
+				if(collider.TryGetComponent(out Health health))
+				{
+					health.TakeDamage(999);
+				}
 		    }
 		    
 		    yield return null;
@@ -458,7 +465,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	private void DeadHandler()
 	{
 		ChangeEnemyState(BossState.Dead);
-		AudioManager.Instance.PlaySound("BossDead", transform.position);
+		this.PlaySound("BossDead");
 
 		EnemyManager.Instance.TakeAllEnemyDamage(999);
 		
@@ -494,8 +501,6 @@ public class EnemyBossController : MonoBehaviour, IEnemy
     public void TakeDamage()
 	{
 		if(_state == BossState.Dead) return;
-
-		//AudioManager.Instance.PlaySound(enemyDataSO.SfxDamageKey, transform.position);
 
 		BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up * 6, Health.LastDamage);
 	}

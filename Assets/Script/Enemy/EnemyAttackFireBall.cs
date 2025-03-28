@@ -11,6 +11,9 @@ public class EnemyAttackFireBall : MonoBehaviour, IEnemyAttack
     [SerializeField] private float _height;
     [SerializeField] private float _damage;
 
+    [SerializeField] private GameObject _firePrefab;
+    [SerializeField] private ParticleSystem _bombParticleSystem;
+
     public void ResetHasAttack()
     {
         
@@ -47,15 +50,32 @@ public class EnemyAttackFireBall : MonoBehaviour, IEnemyAttack
         }
 
         transform.position = end; // 確保最後位置精準
-        Destroy(gameObject);
+        StartCoroutine(ShowExplosion());
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.TryGetComponent(out PlayerHealth playerHealth))
         {
-            playerHealth.TakeDamage(_damage);
-            Destroy(gameObject);
+            StartCoroutine(ShowExplosion());
         }
+    }
+
+    private IEnumerator ShowExplosion()
+    {
+        _firePrefab.SetActive(false);
+        _bombParticleSystem.Play();
+        this.PlaySound("FireBallBomb");
+
+        Collider[] colliderArray = Physics.OverlapSphere(transform.position, 3f, LayerMask.GetMask("Player"));
+        foreach(Collider collider in colliderArray)
+        {
+            if(collider.TryGetComponent(out PlayerHealth playerHealth))
+                playerHealth.TakeDamage(_damage);
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        Destroy(gameObject);
     }
 }

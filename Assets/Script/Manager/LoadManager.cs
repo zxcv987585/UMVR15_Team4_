@@ -26,5 +26,6 @@ public static class LoadManager
     public static void LoadCallback()
     {
         SceneManager.LoadScene(targetScene.ToString());
+        if(targetScene == Scene.TitleScene) AudioManager.Instance.PlayBGM("BackGroundMusic");
     }
 }
