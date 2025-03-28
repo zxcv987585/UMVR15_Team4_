@@ -156,8 +156,6 @@ public class EnemyController : MonoBehaviour, IEnemy
 		if(_enemyState != EnemyState.Walk) return;
 	
 		// 重置 NavMeshAgent 位置為 物件位置
-		//_navMeshAgent.transform.position = transform.position;
-		// _navMeshAgent.velocity = (_playerTransform.position - transform.position).normalized * _enemyDataSO.moveSpeed;
 		if (Vector3.Distance(transform.position, _navMeshAgent.nextPosition) > 0.5f)
 		{
 			_navMeshAgent.Warp(transform.position);
@@ -198,8 +196,6 @@ public class EnemyController : MonoBehaviour, IEnemy
 		{
 		    transform.position += _enemyDataSO.moveSpeed * Time.deltaTime * direction;
 		}
-        
-        //Debug.Log(gameObject.name + " rotate " + Quaternion.Angle(transform.rotation, targetRotation) );
 	}
 	
 	private void SetIsIdle(bool isIdle) => _isIdle = isIdle;
