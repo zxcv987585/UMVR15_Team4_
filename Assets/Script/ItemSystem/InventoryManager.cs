@@ -41,7 +41,7 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("­I¥]¤wº¡");
+            Debug.Log("ï¿½Iï¿½]ï¿½wï¿½ï¿½");
         }
     }
 
@@ -67,8 +67,9 @@ public class InventoryManager : MonoBehaviour
         ItemData temp = myBag.itemList[indexA];
         myBag.itemList[indexA] = myBag.itemList[indexB];
         myBag.itemList[indexB] = temp;
+        
+        this.PlaySound("EquipSkill");
 
         RefreshUI();
     }
 }
-

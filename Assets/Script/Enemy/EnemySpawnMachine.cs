@@ -25,12 +25,8 @@ public class EnemySpawnMachine : MonoBehaviour
     {
         _bombParticleSystem.Stop();
         _bombParticleSystem2.gameObject.SetActive(false);
+        
         // 設定血量
-        _health = GetComponent<Health>();
-        _health.SetMaxHealth(_enemyDataSO.maxHP);
-        _health.OnDamage += DamageHandle;
-        _health.OnDead += DeadHandle;
-
         StartCoroutine(CheckTriggerIsEnter());
     }
 
@@ -42,6 +38,11 @@ public class EnemySpawnMachine : MonoBehaviour
         }
 
         _spawnCoroutine = StartCoroutine(SpawnEnemyCoroutine());
+        
+        _health = GetComponent<Health>();
+        _health.SetMaxHealth(_enemyDataSO.maxHP);
+        _health.OnDamage += DamageHandle;
+        _health.OnDead += DeadHandle;
     }
 
     private IEnumerator SpawnEnemyCoroutine()
@@ -78,8 +79,12 @@ public class EnemySpawnMachine : MonoBehaviour
     {
         AudioManager.Instance.PlaySound("EggyDead", transform.position);
 
-        StopCoroutine(_spawnCoroutine);
+        if(_spawnCoroutine != null)
+            StopCoroutine(_spawnCoroutine);
+        
         _lockWallPrefab?.SetActive(false);
+        
+        _enemySpawnRaycast.StopRaycast();
 
         StartCoroutine(DeadCoroutine());    
     }
@@ -98,7 +103,8 @@ public class EnemySpawnMachine : MonoBehaviour
         
         yield return new WaitForSeconds(0.7f);
         if(childObject != null) childObject.SetActive(false);
-        yield return new WaitForSeconds(3f);
+        
+        yield return new WaitForSeconds(0.5f);
         gameObject.SetActive(false);
     }
 }

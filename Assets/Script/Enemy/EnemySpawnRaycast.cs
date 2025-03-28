@@ -56,4 +56,6 @@ public class EnemySpawnRaycast : MonoBehaviour
 
         _particleSystem.Stop();
     }
+    
+    public void StopRaycast() => _particleSystem.Stop();
 }
