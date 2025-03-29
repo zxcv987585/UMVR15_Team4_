@@ -24392,7 +24392,6 @@ GameObject:
   - component: {fileID: 2033732344499805180}
   - component: {fileID: 7993485179535711386}
   - component: {fileID: 732910810102195617}
-  - component: {fileID: 8302190211633890044}
   m_Layer: 9
   m_Name: EnemyBOSS
   m_TagString: Boss
@@ -24461,7 +24460,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 6.833996, y: 6.5801506, z: 5.506637}
   m_Center: {x: -0.26182652, y: 2.7900753, z: 0.26298118}
@@ -24501,27 +24500,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!135 &8302190211633890044
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4288509543236599835}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 3.47
-  m_Center: {x: 0, y: 2.49, z: 0}
 --- !u!1 &5588115071818368178
 GameObject:
   m_ObjectHideFlags: 0
