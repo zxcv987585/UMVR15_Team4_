@@ -63,6 +63,7 @@ public class StopUI : MonoBehaviour
 
     public void PressExit()
     {
+        UIManager.CurrentState = UIState.None;
         StartCoroutine(Exit());
     }
 
