@@ -9,6 +9,7 @@ public class TestLevelUp : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.H))
         {
             FindObjectOfType<LevelSystem>().AddExperience(500);
+            FindAnyObjectByType<PlayerHealth>().HealPP(200);
         }
     }
 }

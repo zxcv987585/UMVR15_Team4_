@@ -256,7 +256,8 @@ public class EnemyController : MonoBehaviour, IEnemy
 		float originalHeight = transform.position.y;
 		_rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
 		_rb.AddForce(Vector3.up * flyPower, ForceMode.Impulse);
-		StartCoroutine(EnableNavMeshDelay(1f, originalHeight));
+		//StartCoroutine(EnableNavMeshDelay(1f, originalHeight));
+		StartCoroutine(EnableNavMeshDelay());
 	}
 
 	// 判斷怪物是否已落地
@@ -271,6 +272,33 @@ public class EnemyController : MonoBehaviour, IEnemy
 		}
 
 		_rb.isKinematic = true;
+	}
+
+	private IEnumerator EnableNavMeshDelay(float checkInterval = 0.1f)
+	{
+		NavMeshHit hit;
+
+		yield return new WaitForSeconds(0.1f);
+		
+		// 等待敵人落地
+		while (true)
+		{
+			// 嘗試在當前位置附近尋找 NavMesh 上的點
+			if (NavMesh.SamplePosition(transform.position, out hit, 1f, NavMesh.AllAreas))
+			{
+				// 當 y 軸低於 NavMesh 點 或 靠近該點，視為已落地
+				if (transform.position.y <= hit.position.y + 0.1f)
+					break;
+			}
+
+			yield return new WaitForSeconds(checkInterval);
+		}
+
+		Debug.Log("So Quit");
+
+		// 確保 NavMeshAgent 可用
+		_rb.isKinematic = true;
+		//_navMeshAgent.enabled = true;
 	}
 	
 	// 如果 EnemyAnimatorController 有回傳 開關攻擊事件, 則去呼叫 EnemyAttack 對應的 攻擊/結束 函式
