@@ -121,13 +121,6 @@ public class AnimatorController : MonoBehaviour
 
     private void Hit()
     {
-        //if (player.IsAiming)
-        //{
-        //    animator.SetTrigger("GunHit");
-        //    animator.SetBool("Sprint", false);
-        //    animator.SetBool("Run", false);
-        //    animator.SetBool("Idle", false);
-        //}
         animator.SetTrigger("Hit");
         animator.SetBool("Sprint", false);
         animator.SetBool("Run", false);

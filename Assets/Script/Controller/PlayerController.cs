@@ -86,7 +86,8 @@ public class PlayerController : MonoBehaviour
     public bool IsDefenseBuff { get; private set; } = false;
     public bool IsRivive { get; set; } = false;
     public bool GetGunHit { get; set; } = false;
-    public bool IsDashAttack {  get; set; } = false;
+    public bool IsDashAttack { get; set; } = false;
+    public bool IsTeleporting { get; set; } = false;
 
     //玩家受傷與死亡的Delegate事件
     public event Action OnHit;
@@ -587,7 +588,7 @@ public class PlayerController : MonoBehaviour
     //將受傷與死亡相關內容集合
     public bool CanPerformAction()
     {
-        return !IsCriticalHit || !IsHit || !IsDie || !IsRivive;
+        return !IsCriticalHit || !IsHit || !IsDie || !IsRivive || !IsTeleporting;
     }
 
     //隱藏玩家
@@ -735,5 +736,25 @@ public class PlayerController : MonoBehaviour
     private void Continue()
     {
         InPress = false;
+    }
+
+    public void GetIntoPortal()
+    {
+        if (IsAiming)
+        {
+            animator.SetLayerWeight(0, 1);
+            animator.SetLayerWeight(1, 0);
+            animator.Play("TakeRifle", 1, 0f);
+            animator.SetBool("IsAim", false);
+            animator.SetTrigger("Take");
+            animator.SetFloat("MoveX", 0);
+            animator.SetFloat("MoveY", 0);
+            stateMachine.ChangeState(idleState);
+            IsAiming = false;
+        }
+        else
+        {
+            stateMachine.ChangeState(idleState);
+        }
     }
 }

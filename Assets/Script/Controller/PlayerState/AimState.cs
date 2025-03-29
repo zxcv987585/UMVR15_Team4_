@@ -51,7 +51,6 @@ public class AimState : PlayerState
             return;
         }
 
-
         RotateToCamera();
         Move();
     }

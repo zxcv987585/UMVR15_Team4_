@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TeleportToLoadScene : MonoBehaviour
@@ -75,10 +74,18 @@ public class TeleportToLoadScene : MonoBehaviour
         AnimatorController animatorController = player.GetComponent<AnimatorController>();
         PlayerStateMachine playerStateMachine = player.GetComponent<PlayerStateMachine>();
         Animator animator = player.GetComponent<Animator>();
+        LookAtTarget lookAtTarget = player.GetComponentInChildren<LookAtTarget>();
+        playerController.GetIntoPortal();
+        playerController.IsTeleporting = true;
+
+        yield return new WaitForSeconds(0.1f);
+
         if (charController != null) charController.enabled = false;
         if (playerController != null) playerController.enabled = false;
         if (animatorController != null) animatorController.enabled = false;
         if (playerStateMachine != null) playerStateMachine.enabled = false;
+        if (lookAtTarget != null) lookAtTarget.enabled = false;
+        mainCamera.forPortal = true;
         animator.SetBool("Run", false);
         animator.SetBool("Sprint", false);
         
@@ -111,6 +118,9 @@ public class TeleportToLoadScene : MonoBehaviour
         playerController.enabled = true;
         animatorController.enabled = true;
         playerStateMachine.enabled = true;
+        lookAtTarget.enabled = true;
+        playerController.IsTeleporting = false;
+        mainCamera.forPortal = false;
 
         yield return new WaitForSeconds(0.25f);
         blackScreen.gameObject.SetActive(true);
