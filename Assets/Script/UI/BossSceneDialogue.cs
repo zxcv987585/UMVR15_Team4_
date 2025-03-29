@@ -217,6 +217,7 @@ public class BossSceneDialogue : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+        canvasGroup.alpha = 0f;
         canvasGroup.blocksRaycasts = false;
         IsTalk = false;
     }
