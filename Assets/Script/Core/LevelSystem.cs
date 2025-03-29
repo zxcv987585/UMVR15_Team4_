@@ -36,7 +36,7 @@ public class LevelSystem : MonoBehaviour
         playerData.MaxHealth += 10;
         playerData.GunDamage += 2;
 
-        playerData.XPForNextLevel = Mathf.RoundToInt(playerData.XPForNextLevel * 1.3f);
+        playerData.XPForNextLevel = Mathf.RoundToInt(playerData.XPForNextLevel * 1.35f);
         Debug.Log("升級了！當前等級：" + playerData.CurrentLevel + " | 下一級所需經驗值：" + playerData.XPForNextLevel);
         PlayerLevelup?.Invoke();
         

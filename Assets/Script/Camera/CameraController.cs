@@ -62,6 +62,7 @@ public class CameraController : MonoBehaviour
 
     private InputController input;
     private PlayerController player;
+    private BossSceneDialogue DialogueUI;
 
     private bool isAiming = false;
     private bool isLocked => player?.LockTarget != null;
@@ -74,6 +75,7 @@ public class CameraController : MonoBehaviour
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        DialogueUI = GameObject.Find("BossSceneDialogueBox").GetComponent<BossSceneDialogue>();
 
         if (FindObjectsOfType<CameraController>().Length > 1)
         {
@@ -112,7 +114,7 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         //玩家如果進入特定狀態，強制攝影機取消越肩視角
-        if (player.IsDie || player.IsCriticalHit || player.IsDash || player.IsSkilling)
+        if (player.IsDie || player.IsCriticalHit || player.IsDash || player.IsSkilling || player.IsDashAttack || DialogueUI.IsTalk)
         {
             isAiming = false;
         }
