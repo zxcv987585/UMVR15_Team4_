@@ -160,7 +160,7 @@ public class PlayerHealth : MonoBehaviour
     //受傷函式，用於傳入傷害
     public void TakeDamage(float damage)
     {
-        if (player.IsSkilling || Isdead || player.Invincible || player.IsCriticalHit || player.IsRivive) return;
+        if (player.IsSkilling || Isdead || player.Invincible || player.IsCriticalHit || player.IsRivive || player.IsDashAttack) return;
 
         float effectiveDamage = Mathf.Max(damage - player.playerData.Defense, 0);
         CurrentHealth -= effectiveDamage;

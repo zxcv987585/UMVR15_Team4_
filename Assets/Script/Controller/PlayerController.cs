@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
     public bool IsAttack { get; set; } = false;
     public bool IsDash { get; set; } = false;
     public bool IsDie { get; set; } = false;
-    public bool CloseEnemy { get; set; } = false;
+    public bool IsCloseEnemy { get; set; } = false;
     public bool Invincible { get; set; } = false;
     public bool InItemMenu { get; set; } = false;
     public bool InPress {  get; set; } = false;
@@ -86,6 +86,7 @@ public class PlayerController : MonoBehaviour
     public bool IsDefenseBuff { get; private set; } = false;
     public bool IsRivive { get; set; } = false;
     public bool GetGunHit { get; set; } = false;
+    public bool IsDashAttack {  get; set; } = false;
 
     //玩家受傷與死亡的Delegate事件
     public event Action OnHit;
@@ -174,7 +175,7 @@ public class PlayerController : MonoBehaviour
             GetClosestEnemy();
         }
         //鎖定敵人邏輯，如果有鎖定敵人並且相當靠近就停止RootMotion
-        if (LockTarget != null && CloseEnemy)
+        if (LockTarget != null && IsCloseEnemy)
         {
             DisableRootMotion();
         }
@@ -190,6 +191,12 @@ public class PlayerController : MonoBehaviour
             {
                 AutoUnlockEnemy();
             }
+        }
+
+        if (IsDie && hitCoolDownCoroutine != null) 
+        {
+            StopCoroutine(hitCoolDownCoroutine);
+            animator.CrossFade("Die", 0f, 0);
         }
     }
 
@@ -313,8 +320,6 @@ public class PlayerController : MonoBehaviour
     //玩家受傷邏輯（無狀態機，屬於隨時都可能進入狀態
     public void GetHit()
     {
-        if (IsDie || Invincible) return;
-
         OnHit?.Invoke();
         IsHit = true;
 
@@ -327,8 +332,6 @@ public class PlayerController : MonoBehaviour
     }
     private void OnCriticalDamage()
     {
-        if (IsDie || Invincible) return;
-
         if (IsAiming)
         {
             CriticalGunHit?.Invoke();
@@ -347,8 +350,6 @@ public class PlayerController : MonoBehaviour
     }
     private void TakeAimHit()
     {
-        if (IsDie || Invincible) return;
-
         OnGunHit?.Invoke();
         GetGunHit = true;
 
@@ -363,7 +364,11 @@ public class PlayerController : MonoBehaviour
     IEnumerator HitCoolDown()
     {
         yield return new WaitForSeconds(playerData.HitCoolTime);
-
+        //if (IsDie)
+        //{
+        //    animator.CrossFade("Die", 0f, 0);
+        //    yield break;
+        //}
         if (IsCriticalHit)
             yield break;
 
@@ -414,7 +419,7 @@ public class PlayerController : MonoBehaviour
     //Dash狀態機的核心邏輯
     private void Dash()
     {
-        if (!CanPerformAction() || stateMachine.GetState<AimState>() != null || IsSkilling) return;
+        if (!CanPerformAction() || stateMachine.GetState<AimState>() != null || IsSkilling || IsDashAttack) return;
 
         if (Time.time >= lastDashTime + playerData.DashCoolTime)
         {
@@ -475,7 +480,7 @@ public class PlayerController : MonoBehaviour
             if (enemyHealth != null)
             {
                 enemyHealth.EnemyDead -= EnemyDead;
-                CloseEnemy = false; 
+                IsCloseEnemy = false; 
             }
         }
         LockTarget = null;
@@ -497,7 +502,7 @@ public class PlayerController : MonoBehaviour
                     bossTarget = boss.transform;
                 }
             }
-            CloseEnemy = (closestBossDistance <= stopRootMotionDistance);
+            IsCloseEnemy = (closestBossDistance <= stopRootMotionDistance);
             return bossTarget;
         }
 
@@ -519,7 +524,7 @@ public class PlayerController : MonoBehaviour
                 foundCloseEnemy = true;
             }
         }
-        CloseEnemy = foundCloseEnemy;
+        IsCloseEnemy = foundCloseEnemy;
         return closestEnemy;
     }
     //檢查敵人與玩家距離是否需要開關RootMotion

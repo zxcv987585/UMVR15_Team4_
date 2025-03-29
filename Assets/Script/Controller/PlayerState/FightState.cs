@@ -129,6 +129,8 @@ public class FightState : PlayerState
         Vector3 startPos = player.transform.position;
         Vector3 TargetPos = player.LockTarget.position;
 
+        player.IsDashAttack = true;
+
         AttackCombo?.Invoke("DashAttack");
 
         yield return new WaitForSeconds(0.35f);
@@ -152,6 +154,7 @@ public class FightState : PlayerState
         }
 
         PerformAttack();
+        player.IsDashAttack = false;
     }
 
     private void PerformAttack()
