@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum UIState { None, Menu, Pause }
+public static class UIManager
+{
+    public static UIState CurrentState = UIState.None;
+}
 public class InputController : MonoBehaviour
 {
     bool canInput = true;
@@ -40,17 +45,22 @@ public class InputController : MonoBehaviour
 
     private void ItemMenu()
     {
-        if (Cursor.lockState == CursorLockMode.None && !menu)
+        if (UIManager.CurrentState != UIState.None && UIManager.CurrentState != UIState.Menu)
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            menu = true;
+            return;
         }
-        else
+
+        if (UIManager.CurrentState == UIState.None)
         {
+            UIManager.CurrentState = UIState.Menu;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            menu = false;
+        }
+        else if (UIManager.CurrentState == UIState.Menu)
+        {
+            UIManager.CurrentState = UIState.None;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         PauseUI pauseUI = FindAnyObjectByType<PauseUI>();
@@ -59,17 +69,22 @@ public class InputController : MonoBehaviour
 
     private void PressESCUI()
     {
-        if (Cursor.lockState == CursorLockMode.None && !press)
+        if (UIManager.CurrentState != UIState.None && UIManager.CurrentState != UIState.Pause)
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            press = true;
+            return;
         }
-        else
+
+        if (UIManager.CurrentState == UIState.None)
         {
+            UIManager.CurrentState = UIState.Pause;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            press = false;
+        }
+        else if (UIManager.CurrentState == UIState.Pause)
+        {
+            UIManager.CurrentState = UIState.None;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         StopUI stopUI = FindAnyObjectByType<StopUI>();

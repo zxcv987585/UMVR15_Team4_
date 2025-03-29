@@ -49,6 +49,7 @@ public class StopUI : MonoBehaviour
         Time.timeScale = 1f;
         StartCoroutine(Continue());
         isOpen = false;
+        UIManager.CurrentState = UIState.None;
     }
 
     private IEnumerator Continue()
