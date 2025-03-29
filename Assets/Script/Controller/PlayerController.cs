@@ -234,7 +234,7 @@ public class PlayerController : MonoBehaviour
         }
 
         IsSkilling = true;
-        animator.Play(skillName);
+        animator.CrossFade(skillName, 0f, 0);
         StartCoroutine(SkillCastingRoutine(SkillDuration));
     }
     private IEnumerator SkillCastingRoutine(float Duration)
@@ -420,7 +420,11 @@ public class PlayerController : MonoBehaviour
 
         if (Time.time >= lastDashTime + playerData.DashCoolTime)
         {
-            IsHit = false;
+            if (hitCoolDownCoroutine != null) 
+            {
+                IsHit = false;
+                StopCoroutine(HitCoolDown());
+            }
             IsDash = true;
             lastDashTime = Time.time;
         }
