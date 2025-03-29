@@ -7,6 +7,7 @@ public class EnemyAttackInstantiate : MonoBehaviour, IEnemyAttack
 {
     public event Action OnAttackHit;
 
+    [SerializeField] private EnemyController _enemyController;
     [SerializeField] private GameObject _fireBallPrefab;
 
     public void ResetHasAttack()
@@ -21,7 +22,9 @@ public class EnemyAttackInstantiate : MonoBehaviour, IEnemyAttack
 
     public void AttackTrigger()
     {
-        Instantiate(_fireBallPrefab, transform.position + Vector3.up * 1.3f, Quaternion.identity);
+        GameObject go = Instantiate(_fireBallPrefab, transform.position + Vector3.up * 1.3f, Quaternion.identity);
+        go.GetComponent<EnemyAttackFireBall>().StartFly(_enemyController);
+        
         this.PlaySound("KiwiAttack");
     }
 }

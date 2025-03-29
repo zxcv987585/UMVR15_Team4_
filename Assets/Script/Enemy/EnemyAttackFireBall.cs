@@ -14,6 +14,8 @@ public class EnemyAttackFireBall : MonoBehaviour, IEnemyAttack
     [SerializeField] private GameObject _firePrefab;
     [SerializeField] private ParticleSystem _bombParticleSystem;
 
+    private EnemyController _enemyController;
+
     public void ResetHasAttack()
     {
         
@@ -24,8 +26,10 @@ public class EnemyAttackFireBall : MonoBehaviour, IEnemyAttack
         
     }
 
-    private void Start()
+    public void StartFly(EnemyController enemyController)
     {
+        _enemyController = enemyController;
+
         Transform playerTransform = FindAnyObjectByType<PlayerController>().transform;
         Vector3 targetPosition = playerTransform.position;
         StartCoroutine(ParabolaFireBall(transform.position, targetPosition, _height, _flightTime));
@@ -36,6 +40,7 @@ public class EnemyAttackFireBall : MonoBehaviour, IEnemyAttack
         float timer = 0f;
         while (timer < flightTime)
         {
+            yield return new WaitUntil(() => !_enemyController.IsPause);
             timer += Time.deltaTime;
             float t = timer / flightTime;
 
