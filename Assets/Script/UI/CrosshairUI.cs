@@ -15,6 +15,8 @@ public class CrosshairUI : MonoBehaviour
     private Coroutine crosshairCoroutine; //記錄睛頰的Coroutine
     private Coroutine frameCoroutine;     //記錄睛頰的Coroutine
 
+    private bool IsRightKeyDown = false;
+
     private void Start()
     {
         player = FindObjectOfType<PlayerController>();
@@ -29,11 +31,26 @@ public class CrosshairUI : MonoBehaviour
             vignette.intensity.value = 0f;
             postProcessVolume.isGlobal = false;
         }
+
+        GameInput.Instance.OnAimAction += OnAimAction;
+    }
+
+    private void OnAimAction(bool obj)
+    {
+        this.IsRightKeyDown = obj;
     }
 
     private void Update()
     {
-        if (player.IsTeleporting) ToggleCrosshair(false);
+        if (player.IsTeleporting || player.IsCriticalHit)
+        {
+            ToggleCrosshair(false);
+
+            if (IsRightKeyDown)
+            {
+                ToggleCrosshair(true);
+            }
+        }
     }
 
     private void ToggleCrosshair(bool isAiming)

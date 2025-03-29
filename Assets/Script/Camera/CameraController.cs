@@ -62,6 +62,8 @@ public class CameraController : MonoBehaviour
 
     //給傳送門抓取得變數
     public bool forPortal = false;
+    //抓取我右鍵是否放開
+    public bool isRightKeyDown = false;
 
     private InputController input;
     private PlayerController player;
@@ -117,9 +119,13 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         //玩家如果進入特定狀態，強制攝影機取消越肩視角
-        if (player.IsDie || player.IsCriticalHit || player.IsDash || player.IsSkilling || player.IsDashAttack || DialogueUI.IsTalk || forPortal)
+        if (player.IsDie || player.IsCriticalHit || player.IsDash || player.IsSkilling || player.IsDashAttack || DialogueUI.IsTalk || forPortal || player.IsHit)
         {
             isAiming = false;
+        }
+        if(!player.IsCriticalHit && isRightKeyDown)
+        {
+            isAiming = true;
         }
 
         //隨時監控玩家滑鼠動向
@@ -232,6 +238,7 @@ public class CameraController : MonoBehaviour
     {
         if (player.IsDie || player.IsDash) return;
         this.isAiming = isAiming;
+        this.isRightKeyDown = isAiming;
     }
 
     // BOSS 傳送門進入後的角度調整

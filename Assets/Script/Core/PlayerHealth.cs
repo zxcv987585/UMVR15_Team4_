@@ -1,5 +1,6 @@
 ﻿using MagicaCloth;
 using System;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
@@ -171,12 +172,14 @@ public class PlayerHealth : MonoBehaviour
 
         if (CurrentHealth > 0)
         {
-            OnDamage?.Invoke();
-        }
-
-        if (player.IsAiming)
-        {
-            OnGunDamage?.Invoke();
+            if (player.IsAiming)
+            {
+                OnGunDamage?.Invoke();
+            }
+            else
+            {
+                OnDamage?.Invoke();
+            }
         }
 
         if (CurrentHealth <= 0)
