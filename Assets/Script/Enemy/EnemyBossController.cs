@@ -41,7 +41,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	public bool IsPause{get; private set;}
 
 	private BossState _state;
-	private BossState _lastAttackState;
+	private List<BossState> _previousAttackStates; // 存放最近的攻擊
+
 
 	private enum BossState
 	{
@@ -203,32 +204,14 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		if(!_hpLessTrigger70 && healthRatio < 0.7f)
 		{
 		    _hpLessTrigger70 = true;
-		    
-		    _attackWeights = new Dictionary<BossState, int>()
-			{
-				{ BossState.RunAttack, 0 },
-				{ BossState.CallEnemy, 100 },
-				{ BossState.ShootAttack, 0 },
-				{ BossState.DelayRaycastAttack, 0},
-				{ BossState.FloorAttack, 0 }
-			};
-			
+		    SetOnlyAttack(BossState.CallEnemy);
 			return;
 		}
 		
 		if(!_hpLessTrigger35 && healthRatio < 0.35f)
 		{
 		    _hpLessTrigger35 = true;
-		    
-		    _attackWeights = new Dictionary<BossState, int>()
-			{
-				{ BossState.RunAttack, 0 },
-				{ BossState.CallEnemy, 100 },
-				{ BossState.ShootAttack, 0 },
-				{ BossState.DelayRaycastAttack, 0},
-				{ BossState.FloorAttack, 0 }
-			};
-			
+		    SetOnlyAttack(BossState.CallEnemy);
 			return;
 		}
 
@@ -250,12 +233,25 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 			_attackWeights[BossState.FloorAttack] = 10;
 		}
 
-		if(_attackWeights.TryGetValue(_lastAttackState, out int value))
+		// **降低最近施放過的技能的權重**
+		foreach (var prevState in _previousAttackStates)
 		{
-			_attackWeights[_lastAttackState] = 10;
+			if (_attackWeights.ContainsKey(prevState))
+			{
+				_attackWeights[prevState] = Mathf.Max(_attackWeights[prevState] / 2, 5); // 至少保留 5 的權重，防止無法選擇
+			}
 		}
 
 		if(_hpLessTrigger35) _attackWeights[BossState.RunAttack] = 0;
+	}
+
+	// 指定一個攻擊模式
+	private void SetOnlyAttack(BossState state)
+	{
+		_attackWeights = new Dictionary<BossState, int>()
+		{
+			{ state, 100 }
+		};
 	}
 	
 	// 根據攻擊的分配權重, 取得要用哪招
@@ -275,7 +271,12 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 			sumRandomValue += data.Value;
 			if (randomValue < sumRandomValue)
 			{
-				_lastAttackState = data.Key;
+				// 更新最近使用的技能列表
+				_previousAttackStates.Add(data.Key);
+				
+				if (_previousAttackStates.Count > 2) // 只記錄最近 2 次
+					_previousAttackStates.RemoveAt(0);
+
 				return data.Key;
 			}
 		}
