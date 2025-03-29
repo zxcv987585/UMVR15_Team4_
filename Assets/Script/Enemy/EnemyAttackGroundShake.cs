@@ -45,7 +45,7 @@ public class EnemyAttackGroundShake : MonoBehaviour
                 {
                     if(collider.TryGetComponent(out PlayerHealth playerHealth))
                     {
-                        playerHealth.TakeDamage(_damage);
+                        playerHealth.CriticalDamage(_damage);
                         yield break;
                     }
                 }
