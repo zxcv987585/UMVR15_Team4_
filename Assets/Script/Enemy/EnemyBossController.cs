@@ -41,7 +41,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	public bool IsPause{get; private set;}
 
 	private BossState _state;
-	private List<BossState> _previousAttackStates; // 存放最近的攻擊
+	private List<BossState> _previousAttackStates = new List<BossState>(); // 存放最近的攻擊
 
 
 	private enum BossState
