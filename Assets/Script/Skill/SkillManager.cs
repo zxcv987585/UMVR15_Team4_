@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -52,8 +53,8 @@ public class SkillManager : MonoBehaviour
 
     // 當點擊按鍵時, 呼叫該按鍵綁定的技能
     private void UseSkill(GameInput.Bind bind)
-	{
-		if (player.IsSkilling || player.IsAiming || player.IsDie) return;
+    {
+		if (player.IsSkilling || player.IsAiming || player.IsDie || player.IsCriticalHit || player.IsHit || player.IsRivive || player.IsTeleporting) return;
 
 		if(skillBind.TryGetValue(bind, out BaseSkill baseSkill))
 		{
