@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 public class InputController : MonoBehaviour
 {
     bool canInput = true;
+    bool menu = false;
+    bool press = false;
 
     private void Start()
     {
@@ -38,15 +40,17 @@ public class InputController : MonoBehaviour
 
     private void ItemMenu()
     {
-        if (Cursor.lockState == CursorLockMode.None)
+        if (Cursor.lockState == CursorLockMode.None && !menu)
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            menu = true;
         }
         else
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            menu = false;
         }
 
         PauseUI pauseUI = FindAnyObjectByType<PauseUI>();
@@ -55,15 +59,17 @@ public class InputController : MonoBehaviour
 
     private void PressESCUI()
     {
-        if (Cursor.lockState == CursorLockMode.None)
+        if (Cursor.lockState == CursorLockMode.None && !press)
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            press = true;
         }
         else
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            press = false;
         }
 
         StopUI stopUI = FindAnyObjectByType<StopUI>();

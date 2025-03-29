@@ -9026,6 +9026,14 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 856795748726204447, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnInfoList.Array.data[8].enemyPrefab
+      value: 
+      objectReference: {fileID: 5832451840274780777, guid: 10183d505f11f9546874aa0a21722503, type: 3}
+    - target: {fileID: 856795748726204447, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnInfoList.Array.data[9].enemyPrefab
+      value: 
+      objectReference: {fileID: 5832451840274780777, guid: 10183d505f11f9546874aa0a21722503, type: 3}
+    - target: {fileID: 856795748726204447, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
       propertyPath: enemySpawnCountInfoList.Array.data[0].lessCount
       value: 0
       objectReference: {fileID: 0}
@@ -9180,6 +9188,38 @@ PrefabInstance:
     - target: {fileID: 2061552540572837543, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
       propertyPath: m_Name
       value: EnemySpawnAllTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 4590073882583139216, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnInfoList.Array.data[3].enemyPrefab
+      value: 
+      objectReference: {fileID: 5832451840274780777, guid: 10183d505f11f9546874aa0a21722503, type: 3}
+    - target: {fileID: 6935161145045181666, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnInfoList.Array.data[1].enemyPrefab
+      value: 
+      objectReference: {fileID: 5832451840274780777, guid: 10183d505f11f9546874aa0a21722503, type: 3}
+    - target: {fileID: 6935161145045181666, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnInfoList.Array.data[3].enemyPrefab
+      value: 
+      objectReference: {fileID: 314055311740652304, guid: 5d93422a2bb78b643b204b1fc3876af6, type: 3}
+    - target: {fileID: 6935161145045181666, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnInfoList.Array.data[6].enemyPrefab
+      value: 
+      objectReference: {fileID: 5832451840274780777, guid: 10183d505f11f9546874aa0a21722503, type: 3}
+    - target: {fileID: 6935161145045181666, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnInfoList.Array.data[7].enemyPrefab
+      value: 
+      objectReference: {fileID: 314055311740652304, guid: 5d93422a2bb78b643b204b1fc3876af6, type: 3}
+    - target: {fileID: 7313524493152567489, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnInfoList.Array.data[2].enemyPrefab
+      value: 
+      objectReference: {fileID: 5225343519086672903, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
+    - target: {fileID: 7313524493152567489, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnInfoList.Array.data[7].enemyPrefab
+      value: 
+      objectReference: {fileID: 5225343519086672903, guid: 9769a6ece564960498f0833b3f2a7f32, type: 3}
+    - target: {fileID: 7569778489409957508, guid: 1f43855b94ac4094b83d1c0a53d7c748, type: 3}
+      propertyPath: enemySpawnInfoList.Array.size
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

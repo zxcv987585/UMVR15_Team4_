@@ -188,7 +188,7 @@ public class PlayerHealth : MonoBehaviour
     //重傷函式，用於傳入重傷情形（爆炸或BOSS衝撞
     public void CriticalDamage(float damage)
     {
-        if (player.IsSkilling  || Isdead || player.Invincible || player.IsRivive) return;
+        if (player.IsSkilling  || Isdead || player.Invincible || player.IsRivive || player.IsDashAttack) return;
 
         float effectiveDamage = Mathf.Max(damage - player.playerData.Defense, 0);
         CurrentHealth -= effectiveDamage;
@@ -211,7 +211,7 @@ public class PlayerHealth : MonoBehaviour
     //持續受傷函式，用來接收持續性傷害
     public void TakeDot(float damage)
     {
-        if (Isdead || player.Invincible || player.IsRivive) return;
+        if (Isdead || player.Invincible || player.IsRivive || player.IsDashAttack) return;
 
         float effectiveDamage = Mathf.Max(damage - player.playerData.Defense, 0);
         CurrentHealth -= effectiveDamage;
