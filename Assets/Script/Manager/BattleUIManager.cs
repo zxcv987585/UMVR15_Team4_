@@ -60,6 +60,7 @@ public class BattleUIManager : MonoBehaviour
 
         damageTextQuene = new Queue<DamageText>();
         health.OnDamage += ChangeHPStatus;
+        health.OnGunDamage += ChangeHPStatus;
         health.OnCriticalDamage += ChangeHPStatus;
         health.OnDot += ChangeHPStatus;
         health.HaveReviveItemDead += ChangeHPStatus;
