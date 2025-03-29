@@ -24,7 +24,14 @@ public class LookAtTarget : MonoBehaviour
 
         if (player.IsAiming)
         {
-            rig.weight = 1f;
+            if (player.IsCriticalHit)
+            {
+                rig.weight = 0f;
+            }
+            else
+            {
+                rig.weight = 1f;
+            }
         }
         else
         {

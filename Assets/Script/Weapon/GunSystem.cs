@@ -62,6 +62,8 @@ public class GunSystem : MonoBehaviour
     //射擊程式碼
     private void Shoot()
     {
+        if (player.IsHit || player.IsCriticalHit || player.IsDie) return;
+
         if (!health.UsePP(GunShotPP)) 
         {
             Debug.Log("PP不足，無法開火！");

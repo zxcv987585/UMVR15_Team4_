@@ -85,9 +85,12 @@ public class PlayerController : MonoBehaviour
     public bool IsAttackBuff { get; private set; } = false;
     public bool IsDefenseBuff { get; private set; } = false;
     public bool IsRivive { get; set; } = false;
-    public bool GetGunHit { get; set; } = false;
+    public bool IsGunHit { get; set; } = false;
     public bool IsDashAttack { get; set; } = false;
     public bool IsTeleporting { get; set; } = false;
+    public bool IsRightKeyDown { get; private set; } = false;
+
+    private bool isInCriticalDamageCooldown = false;
 
     //玩家受傷與死亡的Delegate事件
     public event Action OnHit;
@@ -144,6 +147,7 @@ public class PlayerController : MonoBehaviour
         //從GameInput取得玩家輸入
         GameInput.Instance.OnSprintAction += SetIsRun;
         GameInput.Instance.OnAimAction += SetIsAiming;
+        GameInput.Instance.OnAimAction += SetRightKey;
         GameInput.Instance.OnAttackAction += SetIsAttack;
         GameInput.Instance.OnDashAction += Dash;
         GameInput.Instance.OnLockAction += LockOn;
@@ -224,7 +228,7 @@ public class PlayerController : MonoBehaviour
     //技能系統
     public void CastSkill(string skillName, float SkillDuration)
     {
-        if (!CanPerformAction() || IsSkilling || IsAiming) return;
+        if (IsCriticalHit || IsHit || IsDie || IsRivive || IsTeleporting || IsSkilling || IsAiming) return;
 
         if (LockTarget != null)
         {
@@ -263,7 +267,7 @@ public class PlayerController : MonoBehaviour
     //取得玩家移動按鍵輸入
     public Vector3 GetMoveInput()
     {
-        if (!CanPerformAction()) return Vector3.zero;
+        if (IsCriticalHit || IsHit || IsDie || IsRivive || IsTeleporting) return Vector3.zero;
 
         return GameInput.Instance.GetMoveVector3();
     }
@@ -271,14 +275,14 @@ public class PlayerController : MonoBehaviour
     //Walk、Run狀態機的核心邏輯
     public void MoveCharacter(Vector3 targetDirection, float currentSpeed)
     {
-        if (!CanPerformAction() || IsDash || IsSkilling) return;
+        if (IsCriticalHit || IsHit || IsDie || IsRivive || IsTeleporting || IsDash || IsSkilling) return;
 
         controller.Move(targetDirection * currentSpeed * Time.deltaTime);
         SmoothRotation(targetDirection);
     }
     private void SetIsRun(bool isRun)
     {
-        if (!CanPerformAction() || IsSkilling) return;
+        if (IsCriticalHit || IsHit || IsDie || IsRivive || IsTeleporting || IsSkilling) return;
 
         this.IsRun = isRun;
     }
@@ -303,9 +307,21 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (!CanPerformAction() || IsSkilling || InItemMenu || InPress || stateMachine.GetState<DashState>() != null) return;
+        if (IsCriticalHit || IsHit || IsDie || IsRivive || IsTeleporting || IsSkilling || InItemMenu || InPress || stateMachine.GetState<DashState>() != null) return;
 
-        IsAiming = isAim;
+        this.IsAiming = isAim;
+
+        if (LockTarget != null)
+        {
+            LockTarget = null;
+        }
+    }
+    private void SetRightKey(bool isAim)
+    {
+        if (isInCriticalDamageCooldown)
+            return;
+
+        IsRightKeyDown = isAim;
 
         if (LockTarget != null)
         {
@@ -337,22 +353,25 @@ public class PlayerController : MonoBehaviour
         {
             CriticalGunHit?.Invoke();
             IsCriticalHit = true;
-
+            isInCriticalDamageCooldown = true;
             StartCoroutine(CriticalDamageCoolDown());
         }
-        IsCriticalHit = true;
+        else
+        {
+            IsCriticalHit = true;
+            isInCriticalDamageCooldown = true;
+            StartCoroutine(CriticalDamageCoolDown());
+        }
 
         if (hitCoolDownCoroutine != null)
         {
             StopCoroutine(hitCoolDownCoroutine);
         }
-
-        StartCoroutine(CriticalDamageCoolDown());
     }
     private void TakeAimHit()
     {
         OnGunHit?.Invoke();
-        GetGunHit = true;
+        IsGunHit = true;
 
         if (AimhitCoolCoroutine != null)
         {
@@ -379,30 +398,40 @@ public class PlayerController : MonoBehaviour
         {
             stateMachine.ChangeState(moveState);
         }
-        else if (IsAiming)
-        {
-            stateMachine.ChangeState(moveState);
-        }
     }
     IEnumerator GunHitCoolDown()
     {
-        yield return new WaitForSeconds(0.1f);
-
-        GetGunHit = false;
+        yield return new WaitForSeconds(0.5f);
+        animator.CrossFade("AimLocoMotion", 0f, 1);
+        IsGunHit = false;
     }
     IEnumerator CriticalDamageCoolDown()
     {
         yield return new WaitForSeconds(1.5f);
         IsHit = false;
         IsCriticalHit = false;
+        // 等待前先取得移動輸入
         Vector3 inputDirection = GetMoveInput().normalized;
-        if (inputDirection == Vector3.zero)
+        yield return new WaitForSeconds(0.1f);
+
+        // 直接輪詢右鍵狀態，確保獲取的是最新狀態
+        bool rightKeyCurrentlyDown = Input.GetMouseButton(1);
+
+        if (inputDirection == Vector3.zero && !rightKeyCurrentlyDown)
         {
+            IsAiming = false;
             stateMachine.ChangeState(idleState);
         }
-        else if (inputDirection != Vector3.zero)
+        else if (inputDirection != Vector3.zero && !rightKeyCurrentlyDown)
         {
+            IsAiming = false;
             stateMachine.ChangeState(moveState);
+        }
+        else if (rightKeyCurrentlyDown)
+        {
+            IsAiming = true;
+            animator.CrossFade("AimLocoMotion", 0f, 1);
+            stateMachine.ChangeState(aimState);
         }
     }
 
@@ -416,7 +445,7 @@ public class PlayerController : MonoBehaviour
     //Dash狀態機的核心邏輯
     private void Dash()
     {
-        if (!CanPerformAction() || stateMachine.GetState<AimState>() != null || IsSkilling || IsDashAttack) return;
+        if (IsCriticalHit || IsDie || IsRivive || IsTeleporting || stateMachine.GetState<AimState>() != null || IsSkilling || IsDashAttack) return;
 
         if (Time.time >= lastDashTime + playerData.DashCoolTime)
         {
@@ -428,6 +457,8 @@ public class PlayerController : MonoBehaviour
             IsDash = true;
             lastDashTime = Time.time;
         }
+
+        this.PlaySound("Dash");
     }
     //紀錄Dash時玩家輸入的方向
     public void SetRotation(Vector3 direction)
@@ -587,12 +618,6 @@ public class PlayerController : MonoBehaviour
         cameraRight.y = 0f;
         cameraRight.Normalize();
         return cameraRight;
-    }
-
-    //將受傷與死亡相關內容集合
-    public bool CanPerformAction()
-    {
-        return !IsCriticalHit || !IsHit || !IsDie || !IsRivive || !IsTeleporting;
     }
 
     //隱藏玩家

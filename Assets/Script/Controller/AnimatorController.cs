@@ -26,7 +26,7 @@ public class AnimatorController : MonoBehaviour
             player.dashState.ForceIdle += Idle;
             player.aimState.OnAim += Aim;
             player.aimState.OnAimMove += AimMove;
-            player.aimState.OnAimHit += AimHit;
+            player.OnGunHit += AimHit;
             player.deadState.Dead += Dead;
             player.OnHit += Hit;
             player.CriticalGunHit += CriticalGunHit;
@@ -44,6 +44,10 @@ public class AnimatorController : MonoBehaviour
         animator.SetLayerWeight(1, 0);
         animator.SetBool("IsAim", false);
         animator.CrossFade("CriticalDamage", 0f, 0);
+        //if (!player.IsRightKeyDown)
+        //{
+
+        //}
     }
 
     private void Rivive()
@@ -114,9 +118,9 @@ public class AnimatorController : MonoBehaviour
         }
     }
 
-    private void AimHit(string Hit)
+    private void AimHit()
     {
-        animator.CrossFade(Hit, 0f);
+        animator.CrossFade("GunHit", 0f, 1);
     }
 
     private void Hit()

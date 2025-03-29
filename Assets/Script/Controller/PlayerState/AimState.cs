@@ -45,9 +45,9 @@ public class AimState : PlayerState
             StateMachine.ChangeState(player.deadState);
             return;
         }
-        if (player.GetGunHit)
+        if (player.IsCriticalHit && !player.IsRightKeyDown)
         {
-            OnAimHit?.Invoke("GunHit");
+            OnAim?.Invoke(false);
             return;
         }
 
