@@ -1991,6 +1991,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4138221109047864, guid: d067854766d57d44a9af41411b5ae1a2, type: 3}
   m_PrefabInstance: {fileID: 246695988}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &252058971 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6092024093166303602, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+  m_PrefabInstance: {fileID: 1432552885}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &252058973
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252058971}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &252058974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252058971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eff5a0fa7ac9554ca1a094897fe0075, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MiniMapCanvasGroup: {fileID: 252058973}
+  FadeDuration: 2
 --- !u!1 &259130361
 GameObject:
   m_ObjectHideFlags: 0
@@ -9676,7 +9707,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6092024093166303602, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 252058974}
+    - targetCorrespondingSourceObject: {fileID: 6092024093166303602, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 252058973}
   m_SourcePrefab: {fileID: 100100000, guid: b5a6abaa9cafb8448a8985e523cdf6f7, type: 3}
 --- !u!1 &1435193881
 GameObject:
