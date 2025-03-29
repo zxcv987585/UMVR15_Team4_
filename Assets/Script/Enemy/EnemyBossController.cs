@@ -256,6 +256,16 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		}
 
 		if(_hpLessTrigger35) _attackWeights[BossState.RunAttack] = 0;
+
+		//-----測試 記得砍
+		_attackWeights = new Dictionary<BossState, int>()
+		{
+			{ BossState.RunAttack, 0 },
+			{ BossState.CallEnemy, 0 },
+			{ BossState.ShootAttack, 0 },
+			{ BossState.DelayRaycastAttack, 100},
+			{ BossState.FloorAttack, 0 }
+		};
 	}
 	
 	// 根據攻擊的分配權重, 取得要用哪招
