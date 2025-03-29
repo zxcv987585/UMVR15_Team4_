@@ -56,7 +56,8 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
     
         while(timer < delayBombTime)
         {
-            yield return new WaitUntil(() => !enemyController.IsPause);
+            if(enemyController != null)
+                yield return new WaitUntil(() => !enemyController.IsPause);
             
             if(enemyController.Health.IsDead)
             {

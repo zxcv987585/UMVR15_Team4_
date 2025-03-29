@@ -40,7 +40,8 @@ public class EnemyAttackFireBall : MonoBehaviour, IEnemyAttack
         float timer = 0f;
         while (timer < flightTime)
         {
-            yield return new WaitUntil(() => !_enemyController.IsPause);
+            if(_enemyController != null)
+                yield return new WaitUntil(() => !_enemyController.IsPause);
             timer += Time.deltaTime;
             float t = timer / flightTime;
 
