@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     //宣告血量系統
     private PlayerHealth health;
     //取得動畫控制器（用來開關RootMotion）
-    private Animator animator;
+    public Animator animator;
     //取得攝影機
     public Transform MainCamera;
     //取得等級系統
@@ -364,11 +364,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator HitCoolDown()
     {
         yield return new WaitForSeconds(playerData.HitCoolTime);
-        //if (IsDie)
-        //{
-        //    animator.CrossFade("Die", 0f, 0);
-        //    yield break;
-        //}
+
         if (IsCriticalHit)
             yield break;
 
