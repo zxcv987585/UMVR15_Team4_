@@ -12,8 +12,8 @@ public class CrosshairUI : MonoBehaviour
     private PlayerController player;
     private EasyInOut easyInOut;
 
-    private Coroutine crosshairCoroutine; //記錄當下的Coroutine
-    private Coroutine frameCoroutine;     //記錄當下的Coroutine
+    private Coroutine crosshairCoroutine; //記錄睛頰的Coroutine
+    private Coroutine frameCoroutine;     //記錄睛頰的Coroutine
 
     private void Start()
     {
@@ -31,6 +31,11 @@ public class CrosshairUI : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (player.IsTeleporting) ToggleCrosshair(false);
+    }
+
     private void ToggleCrosshair(bool isAiming)
     {
         if (isAiming)
@@ -38,7 +43,7 @@ public class CrosshairUI : MonoBehaviour
             crosshairImage.gameObject.SetActive(true);
             postProcessVolume.isGlobal = true;
 
-            // 停止舊的動畫，確保每次進入瞄準時都會重新播放
+            // 停牛瓽的動畫，確保每次進入瞄準時都會重新播��E
             if (crosshairCoroutine != null) StopCoroutine(crosshairCoroutine);
             if (frameCoroutine != null) StopCoroutine(frameCoroutine);
 
@@ -48,7 +53,7 @@ public class CrosshairUI : MonoBehaviour
         }
         else
         {
-            // 瞄準結束時，停止動畫並隱藏 UI
+            // 瞄準結束時，停牛昃畫並隱藏 UI
             if (crosshairCoroutine != null) StopCoroutine(crosshairCoroutine);
             if (frameCoroutine != null) StopCoroutine(frameCoroutine);
 

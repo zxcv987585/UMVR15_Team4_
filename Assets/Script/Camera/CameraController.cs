@@ -60,6 +60,9 @@ public class CameraController : MonoBehaviour
     //存儲震動偏移量的變數
     Vector3 shakeOffset = Vector3.zero;
 
+    //給傳送門抓取得變數
+    public bool forPortal = false;
+
     private InputController input;
     private PlayerController player;
     private BossSceneDialogue DialogueUI;
@@ -114,7 +117,7 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         //玩家如果進入特定狀態，強制攝影機取消越肩視角
-        if (player.IsDie || player.IsCriticalHit || player.IsDash || player.IsSkilling || player.IsDashAttack || DialogueUI.IsTalk)
+        if (player.IsDie || player.IsCriticalHit || player.IsDash || player.IsSkilling || player.IsDashAttack || DialogueUI.IsTalk || forPortal)
         {
             isAiming = false;
         }
