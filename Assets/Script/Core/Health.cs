@@ -17,8 +17,8 @@ public class Health : MonoBehaviour
     public event Action<Transform> EnemyDead;
 
     public float LastDamage {get; private set;}
-    
-    private bool _isdead = false;
+    public bool IsDead {get; private set;}
+
     private bool _isInvincibility = false;  // 無敵狀態
 
     // 設置怪物的血量上限
@@ -30,10 +30,7 @@ public class Health : MonoBehaviour
 
     public void SetIsInvincibility(bool isInvincibility) => _isInvincibility = isInvincibility;
 
-    public void Init()
-    {
-        _isdead = false;
-    }
+    public void Init() => IsDead = false;
 
     //取得當前血量
     public float GetCurrentHealth() => _currentHealth;
@@ -43,12 +40,12 @@ public class Health : MonoBehaviour
     public float GetHealthRatio() => _currentHealth / _maxHealth;
 
     //確認玩家是否為死亡狀態
-    public bool IsDead() => _isdead;
+    // public bool IsDead() => _isdead;
 
     //受傷函式，用於傳入傷害
     public void TakeDamage(float damage)
     {
-        if (_isdead) return;
+        if (IsDead) return;
 
         if(_isInvincibility) return;
 
@@ -72,11 +69,11 @@ public class Health : MonoBehaviour
     //死亡後傳送訂閱給各大系統
     private void HandleDeath()
     {
-        if (_isdead) return;
+        if (IsDead) return;
 
         if (_currentHealth <= 0)
         {
-            _isdead = true;
+            IsDead = true;
             OnDead?.Invoke();
             EnemyDead?.Invoke(transform);
         }

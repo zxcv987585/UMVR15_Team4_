@@ -57,15 +57,16 @@ public class AudioManager : MonoBehaviour
 			_bgmAudioSource.volume = _mainVolume * _bgmVolume;
 		}
 		
-		if(GameDataManager.Instance != null)
-		{
-		    GameDataManager.Instance.gameData.mainVolume = _mainVolume;
-			GameDataManager.Instance.gameData.bgmVolume = _bgmVolume;
-			GameDataManager.Instance.gameData.sfxVolume = _sfxVolume;
+		// if(GameDataManager.Instance != null)
+		// {
+		//     GameDataManager.Instance.gameData.mainVolume = _mainVolume;
+		// 	GameDataManager.Instance.gameData.bgmVolume = _bgmVolume;
+		// 	GameDataManager.Instance.gameData.sfxVolume = _sfxVolume;
 			
-			GameDataManager.Instance.SaveGame();
-		}
-		
+		// 	GameDataManager.Instance.SaveGame();
+
+		// 	Debug.Log("Is this issue");
+		// }
 	}
 
 	public void PlayBGM(string key)

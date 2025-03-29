@@ -58,7 +58,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
         {
             yield return new WaitUntil(() => !enemyController.IsPause);
             
-            if(enemyController.Health.IsDead())
+            if(enemyController.Health.IsDead)
             {
                 this.StopSound("EggyAttack");
                 break;
@@ -80,7 +80,7 @@ public class EnemyAttackOverlapSphere : MonoBehaviour, IEnemyAttack
             yield return null;
         }
         
-        if(!enemyController.Health.IsDead())
+        if(!enemyController.Health.IsDead)
         {
             material.SetColor(EMISSION_COLOR, Color.red);
             enemyController.Health.TakeDamage(999);

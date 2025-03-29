@@ -252,7 +252,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 		if(_attackWeights.TryGetValue(_lastAttackState, out int value))
 		{
-			_attackWeights[_lastAttackState] -= 25;
+			_attackWeights[_lastAttackState] = 10;
 		}
 
 		if(_hpLessTrigger35) _attackWeights[BossState.RunAttack] = 0;
@@ -468,7 +468,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 		yield return new WaitForSeconds(1.7f);
 
-		_shootAttackPrefab.SetActive(true);
+		if(!Health.IsDead)
+			_shootAttackPrefab.SetActive(true);
 	}
 
 	private IEnumerator DelayRaycastAttackCoroutine()
@@ -477,14 +478,16 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 		yield return new WaitForSeconds(1.7f);
 
-		_delayRaycastPrefab.SetActive(true);
+		if(!Health.IsDead)
+			_delayRaycastPrefab.SetActive(true);
 	}
 
 	private IEnumerator DelayFloorAttackCoroutine()
 	{
 		yield return new WaitForSeconds(1.3f);
 
-		_enemyAttackGroundShake.StartAttack();
+		if(!Health.IsDead)
+			_enemyAttackGroundShake.StartAttack();
 	}
 	
 	// 招喚小怪, 用 Animation Event 來觸發
@@ -492,7 +495,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 	{
 		yield return new WaitForSeconds(1.0f);
 		
-	    _enemySpawnTirgger.StartSpawnEnemy();
+		if(!Health.IsDead)
+	    	_enemySpawnTirgger.StartSpawnEnemy();
 	}
 
 	private void DeadHandler()
@@ -518,6 +522,8 @@ public class EnemyBossController : MonoBehaviour, IEnemy
         float timer = 0f;
         while (timer < dissolveDuration)
         {
+			yield return new WaitUntil(() => !IsPause);
+
             timer += Time.deltaTime;
             float dissolveValue = Mathf.Lerp(0, 0.3f, timer / dissolveDuration);
             bossMaterial.SetFloat("_DissolveAmount", dissolveValue);
