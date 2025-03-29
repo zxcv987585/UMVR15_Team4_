@@ -38,6 +38,7 @@ public class FightState : PlayerState
         }
         if (QuitState())
         {
+            player.IsDashAttack = false;
             ResetCombo();
             StateMachine.ChangeState(player.idleState);
             return;
@@ -50,28 +51,33 @@ public class FightState : PlayerState
         }
         if (player.IsDash)
         {
+            player.IsDashAttack = false;
             StateMachine.ChangeState(player.dashState);
             ResetCombo();
             return;
         }
         if (player.IsAiming)
         {
+            player.IsDashAttack = false;
             StateMachine.ChangeState(player.aimState);
             ResetCombo();
             return;
         }
         if (player.IsDie)
         {
+            player.IsDashAttack = false;
             StateMachine.ChangeState(player.deadState);
             return;
         }
         if (player.IsHit)
         {
+            player.IsDashAttack = false;
             ResetCombo();
             return;
         }
         if (player.IsCriticalHit)
         {
+            player.IsDashAttack = false;
             ResetCombo();
             return;
         }
@@ -131,7 +137,7 @@ public class FightState : PlayerState
 
         player.IsDashAttack = true;
 
-        AttackCombo?.Invoke("DashAttack");
+        player.animator.CrossFade("GetCloseAttack", 0f, 0);
 
         yield return new WaitForSeconds(0.35f);
 
