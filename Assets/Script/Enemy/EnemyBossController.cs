@@ -36,6 +36,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 
 	private bool _hpLessTrigger70 = false;
 	private bool _hpLessTrigger35 = false;
+	private bool _hasCollisionPlayer = false;
 	
 	public Health Health{get; private set;}
 	public bool IsPause{get; private set;}
@@ -335,8 +336,9 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		
 		//-----旋轉衝刺
 		this.PlaySound("BossAttackGround");
+		_hasCollisionPlayer = false;
 		yield return StartCoroutine(CollisionToPlayer());
-		yield return StartCoroutine(CollisionToPlayer());
+		if(!_hasCollisionPlayer) yield return StartCoroutine(CollisionToPlayer());
 		yield return StartCoroutine(EndCollisionToPlayer());
 		
 		// 爬起來
@@ -426,6 +428,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		        if(collider.TryGetComponent(out PlayerHealth playerHealth))
 		        {
 		            playerHealth.CriticalDamage(50);
+					_hasCollisionPlayer = true;
 		            yield break;
 		        }
 
