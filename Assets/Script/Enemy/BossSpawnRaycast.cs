@@ -12,7 +12,7 @@ public class BossSpawnRaycast : MonoBehaviour
         if(_spawnTransformList == null) return;
 
         float baseTime = 1.5f;
-        float step = 0f;
+        float step = 0.2f;
 
         _spawnTransformList.ForEach(spawnTransform => {
             GameObject go = Instantiate(_delayRaycastPrefab, spawnTransform.position, spawnTransform.rotation);
