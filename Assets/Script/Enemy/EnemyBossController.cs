@@ -34,8 +34,10 @@ public class EnemyBossController : MonoBehaviour, IEnemy
     private EnemySpawnTirgger _enemySpawnTirgger;
 	private NavMeshAgent _navMeshAgent;
 
-	private bool _hpLessTrigger70 = false;
-	private bool _hpLessTrigger35 = false;
+	//private bool _hpLessTrigger70 = false;
+	private bool _isHPLess50 = false;
+	private bool _isHPLess35 = false;
+	//private bool _hpLessTrigger35 = false;
 	private bool _hasCollisionPlayer = false;
 	
 	public Health Health{get; private set;}
@@ -202,19 +204,15 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 		float distance = Vector3.Distance(transform.position, _playerTransform.position);
 
 		// 調整召喚小怪機率
-		if(!_hpLessTrigger70 && healthRatio < 0.7f)
+		if(!_isHPLess50 && healthRatio < 0.5f)
 		{
-		    _hpLessTrigger70 = true;
+		    _isHPLess50 = true;
 		    SetOnlyAttack(BossState.CallEnemy);
 			return;
 		}
 		
-		if(!_hpLessTrigger35 && healthRatio < 0.35f)
-		{
-		    _hpLessTrigger35 = true;
-		    SetOnlyAttack(BossState.CallEnemy);
-			return;
-		}
+		if(!_isHPLess35 && healthRatio < 0.35f)
+			_isHPLess35 = true;
 
 		// 根據玩家距離, 調整攻擊方式
 		if (distance < _enemyDataSO.attackRange)
@@ -243,7 +241,7 @@ public class EnemyBossController : MonoBehaviour, IEnemy
 			}
 		}
 
-		if(_hpLessTrigger35) _attackWeights[BossState.RunAttack] = 0;
+		if(_isHPLess35) _attackWeights[BossState.RunAttack] = 0;
 	}
 
 	// 指定一個攻擊模式
