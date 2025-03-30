@@ -7,13 +7,7 @@ namespace Michsky.UI.Shift
         Animator windowAnimator;
         public bool isOn = false;
 
-        private void Update()
-        {
-            if(Input.GetKeyDown(KeyCode.I))
-            {
-                AnimateWindow();
-            }
-        }
+   
         void Start()
         {
             windowAnimator = gameObject.GetComponent<Animator>();
