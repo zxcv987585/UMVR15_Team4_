@@ -41,7 +41,7 @@ public class CrosshairUI : MonoBehaviour
 
             IsRightKeyDown = Input.GetMouseButton(1);
 
-            if(!player.IsCriticalHit && IsRightKeyDown)
+            if(!player.IsCriticalHit && IsRightKeyDown || !player.IsTeleporting && IsRightKeyDown)
             {
                 ToggleCrosshair(true);
             }
