@@ -70,14 +70,14 @@ public class EnemySpawnMachine : MonoBehaviour
 
     private void DamageHandle()
     {
-        AudioManager.Instance.PlaySound("SpawnMachineDamage", transform.position);
+        this.PlaySound("SpawnMachineDamage");
 
         BattleUIManager.Instance.ShowDamageText(transform.position + Vector3.up * 2f, _health.LastDamage);
     }
 
     private void DeadHandle()
     {
-        AudioManager.Instance.PlaySound("EggyDead", transform.position);
+        this.PlaySound("EggyDead");
 
         if(_spawnCoroutine != null)
             StopCoroutine(_spawnCoroutine);
@@ -86,7 +86,7 @@ public class EnemySpawnMachine : MonoBehaviour
         
         _enemySpawnRaycast.StopRaycast();
 
-        StartCoroutine(DeadCoroutine());    
+        StartCoroutine(DeadCoroutine());
     }
 
     private IEnumerator DeadCoroutine()
