@@ -26,6 +26,7 @@ public class RebirthUI : MonoBehaviour
     }
     private void ShowRebirthUI()
     {
+        UIManager.CurrentState = UIState.Rebirth;
         StartCoroutine(RebirthUIAnimation());
     }
 
@@ -48,6 +49,8 @@ public class RebirthUI : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         gameObject.GetComponent<RebirthUI>().closeAction.Invoke();
+
+        UIManager.CurrentState = UIState.None;
     }
     public void PressExit()
     {
