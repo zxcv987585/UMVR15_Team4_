@@ -155,7 +155,7 @@ public class ItemUseManager : MonoBehaviour
     }
     public bool UseItem(ItemData item)
     {
-        if (item == null) return false;
+        if (item == null || player.IsDie) return false;
         //itemAction
         if (item.itemID == 3 && player.IsAttackBuff)
         {

@@ -440,6 +440,15 @@ public class PlayerController : MonoBehaviour
     public void Died()
     {
         IsDie = true;
+
+        if (UIManager.CurrentState == UIState.Menu)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            PauseUI pauseUI = FindAnyObjectByType<PauseUI>();
+            StartCoroutine(pauseUI.RunPauseUI());
+        }
     }
 
     //Dash狀態機的核心邏輯
@@ -745,8 +754,9 @@ public class PlayerController : MonoBehaviour
     }
     private IEnumerator RiviveCoolDown()
     {
-        yield return new WaitForSeconds(1.8f);
+        yield return new WaitForSeconds(1f);
         IsRivive = false;
+        IsDie = false;
 
         Vector3 inputDirection = GetMoveInput().normalized;
         if (inputDirection == Vector3.zero)
@@ -757,6 +767,8 @@ public class PlayerController : MonoBehaviour
         {
             stateMachine.ChangeState(moveState);
         }
+
+        UIManager.CurrentState = UIState.None;
     }
 
     private void Continue()

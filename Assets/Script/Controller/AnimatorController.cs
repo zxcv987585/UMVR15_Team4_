@@ -108,7 +108,7 @@ public class AnimatorController : MonoBehaviour
             {
                 animator.SetLayerWeight(0, 1);
                 animator.SetLayerWeight(1, 0);
-                animator.Play("TakeRifle", 1, 0f);
+                animator.CrossFade("TakeRifle", 0f, 0);
                 animator.SetBool("IsAim", false);
                 animator.SetTrigger("Take");
                 animator.SetFloat("MoveX", 0);
