@@ -31,13 +31,6 @@ public class CrosshairUI : MonoBehaviour
             vignette.intensity.value = 0f;
             postProcessVolume.isGlobal = false;
         }
-
-        GameInput.Instance.OnAimAction += OnAimAction;
-    }
-
-    private void OnAimAction(bool obj)
-    {
-        this.IsRightKeyDown = obj;
     }
 
     private void Update()
@@ -46,7 +39,9 @@ public class CrosshairUI : MonoBehaviour
         {
             ToggleCrosshair(false);
 
-            if (IsRightKeyDown)
+            IsRightKeyDown = Input.GetMouseButton(1);
+
+            if(!player.IsCriticalHit && IsRightKeyDown)
             {
                 ToggleCrosshair(true);
             }
@@ -60,7 +55,7 @@ public class CrosshairUI : MonoBehaviour
             crosshairImage.gameObject.SetActive(true);
             postProcessVolume.isGlobal = true;
 
-            // 停牛瓽的動畫，確保每次進入瞄準時都會重新播��E
+            // 停牛瓽的動畫，確保每次進入瞄準時都會重新播?E
             if (crosshairCoroutine != null) StopCoroutine(crosshairCoroutine);
             if (frameCoroutine != null) StopCoroutine(frameCoroutine);
 
