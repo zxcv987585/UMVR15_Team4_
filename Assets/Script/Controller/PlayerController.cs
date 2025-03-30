@@ -587,15 +587,9 @@ public class PlayerController : MonoBehaviour
     //進入暫停選單的邏輯
     private void PressESCUI()
     {
-        
-        if (InPress == false)
-        {
-            InPress = true;
-        }
-        else
-        {
-            InPress = false;
-        }
+        if (UIManager.CurrentState == UIState.Menu) return;
+
+        InPress = !InPress;
     }
 
     //平滑旋轉角度
