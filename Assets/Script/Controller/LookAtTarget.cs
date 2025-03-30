@@ -9,6 +9,8 @@ public class LookAtTarget : MonoBehaviour
     private PlayerController player;
     private BossSceneDialogue DialogueUI;
 
+    private bool IsRightKeyDown = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -27,10 +29,13 @@ public class LookAtTarget : MonoBehaviour
             if (player.IsCriticalHit)
             {
                 rig.weight = 0f;
-            }
-            else
-            {
-                rig.weight = 1f;
+
+                IsRightKeyDown = Input.GetMouseButton(1);
+
+                if(!player.IsCriticalHit && IsRightKeyDown) 
+                {
+                    rig.weight = 1f;
+                }
             }
         }
         else

@@ -457,7 +457,10 @@ public class PlayerController : MonoBehaviour
             IsDash = true;
             lastDashTime = Time.time;
         }
-
+    }
+    //播放Dash音效
+    public void DashSound()
+    {
         this.PlaySound("Dash");
     }
     //紀錄Dash時玩家輸入的方向

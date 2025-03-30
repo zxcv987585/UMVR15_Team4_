@@ -140,6 +140,7 @@ public class CameraController : MonoBehaviour
             // 普通模式下的參數
             Vector3 normalPosition = target.position + Vector3.up * offset.y;
             Quaternion normalRotation = Quaternion.Euler(Mouse_y, Mouse_x, 0);
+            CameraToTargetDistance = Mathf.Lerp(CameraToTargetDistance, DefaultCameraToTargetDistance, Time.deltaTime * 10f);
             float normalCamDistance = CameraToTargetDistance;
 
             // 瞄準模式下的參數
