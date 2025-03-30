@@ -21,9 +21,16 @@ public class Health : MonoBehaviour
 
     private bool _isInvincibility = false;  // 無敵狀態
 
+    public Health()
+    {
+        LastDamage = 0;
+        IsDead = false;
+    }
+
     // 設置怪物的血量上限
     public void SetMaxHealth(float maxHealth)
     {
+        Init();
         _maxHealth = maxHealth;
         _currentHealth = _maxHealth;
     }
