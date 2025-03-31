@@ -34,6 +34,7 @@ public class PauseUI : MonoBehaviour
                 0.15f,
                 value => blackScreen.color = value,
                 EasyInOut.EaseOut));
+            UIManager.CurrentState = UIState.Menu;
             //button·Æ¤J
             foreach (var Button in optionButtons)
             {
@@ -61,7 +62,7 @@ public class PauseUI : MonoBehaviour
                     optionList[i].isOn = false;
                 }
             }
-
+            UIManager.CurrentState = UIState.None;
             //¶Â«Ì
             StartCoroutine(easyInOut.ChangeValue(
                 blackScreenTargetColor,

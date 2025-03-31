@@ -78,7 +78,6 @@ public class PlayerController : MonoBehaviour
     public bool IsDie { get; set; } = false;
     public bool IsCloseEnemy { get; set; } = false;
     public bool Invincible { get; set; } = false;
-    public bool InItemMenu { get; set; } = false;
     public bool InPress {  get; set; } = false;
     public bool IsSkilling { get; private set; } = false;
     public bool IsCriticalHit { get; set; } = false;
@@ -151,7 +150,6 @@ public class PlayerController : MonoBehaviour
         GameInput.Instance.OnAttackAction += SetIsAttack;
         GameInput.Instance.OnDashAction += Dash;
         GameInput.Instance.OnLockAction += LockOn;
-        GameInput.Instance.OnItemMenu += ItemMenu;
         GameInput.Instance.OnEscape += PressESCUI;
         //Delegate訂閱事件
         health.OnDamage += GetHit;
@@ -215,7 +213,6 @@ public class PlayerController : MonoBehaviour
             GameInput.Instance.OnAttackAction -= SetIsAttack;
             GameInput.Instance.OnDashAction -= Dash;
             GameInput.Instance.OnLockAction -= LockOn;
-            GameInput.Instance.OnItemMenu -= ItemMenu;
             Destroy(gameObject);
             OnDestroy();
         }
@@ -289,7 +286,7 @@ public class PlayerController : MonoBehaviour
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
-        if (IsCriticalHit || IsHit || IsSkilling || IsDie || InItemMenu || InPress || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+        if (IsCriticalHit || IsHit || IsSkilling || IsDie || UIManager.CurrentState == UIState.Menu || InPress || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
 
         IsAttack = Attack;
     }
@@ -307,7 +304,7 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (IsCriticalHit || IsHit || IsDie || IsRivive || IsTeleporting || IsSkilling || InItemMenu || InPress || stateMachine.GetState<DashState>() != null) return;
+        if (IsCriticalHit || IsHit || IsDie || IsRivive || IsTeleporting || IsSkilling || UIManager.CurrentState == UIState.Menu || InPress || stateMachine.GetState<DashState>() != null) return;
 
         this.IsAiming = isAim;
 
@@ -581,18 +578,6 @@ public class PlayerController : MonoBehaviour
         animator.applyRootMotion = false;
     }
 
-    //進入道具系統的邏輯
-    private void ItemMenu()
-    {
-        if (InItemMenu == false)
-        {
-            InItemMenu = true;
-        }
-        else
-        {
-            InItemMenu = false;
-        }
-    }
     //進入暫停選單的邏輯
     private void PressESCUI()
     {
