@@ -214,7 +214,7 @@ public class PlayerHealth : MonoBehaviour
     //持續受傷函式，用來接收持續性傷害
     public void TakeDot(float damage)
     {
-        if (Isdead || player.Invincible || player.IsRivive || player.IsDashAttack) return;
+        if (Isdead || player.Invincible || player.IsRivive || player.IsDashAttack || player.IsSkilling) return;
 
         float effectiveDamage = Mathf.Max(damage - player.playerData.Defense, 0);
         CurrentHealth -= effectiveDamage;
