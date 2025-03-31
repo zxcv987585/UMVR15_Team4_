@@ -165,13 +165,14 @@ public class BattleUIManager : MonoBehaviour
         LevelText.text = Mathf.FloorToInt(player.playerData.CurrentLevel).ToString();
         PPSlider.value = health.GetPPRatio();
         HPSlider.value = health.GetHealthRatio();
+        currentPPText.text = health.GetCurrentPP().ToString();
+        PPSlider.value = health.GetPPRatio();
     }
 
     //當玩家的PP變動，也跟著變動 UI 的 PP
     private void ChangePPStatus()
     {
         currentPPText.text = health.GetCurrentPP().ToString();
-
         PPSlider.value = health.GetPPRatio();
     }
     private void playerMaxPPupdate()

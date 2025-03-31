@@ -298,6 +298,7 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("玩家已復活！");
 
         CurrentHealth = MaxHealth;
+        CurrentPP = MaxPP;
         Isdead = false;
         player.IsDie = false;
         PlayerRivive?.Invoke();

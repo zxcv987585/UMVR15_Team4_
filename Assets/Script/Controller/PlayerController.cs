@@ -754,7 +754,7 @@ public class PlayerController : MonoBehaviour
     }
     private IEnumerator RiviveCoolDown()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.8f);
         IsRivive = false;
         IsDie = false;
 
