@@ -22,6 +22,14 @@ public class PauseUI : MonoBehaviour
     public BagPanelManager[] optionList;
     private Animator closeWindow;
 
+    private void Update()
+    {
+        if(UIManager.CurrentState == UIState.Rebirth && isOpen || UIManager.CurrentState == UIState.MissionFail && isOpen)
+        {
+            StartCoroutine(RunPauseUI());
+        }
+    }
+
     public IEnumerator RunPauseUI()
     {
         AudioManager.Instance.PlaySound("MenuOpen", Vector3.zero);
