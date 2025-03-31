@@ -29,13 +29,14 @@ public class LookAtTarget : MonoBehaviour
             if (player.IsCriticalHit)
             {
                 rig.weight = 0f;
-
-                IsRightKeyDown = Input.GetMouseButton(1);
-
-                if(!player.IsCriticalHit && IsRightKeyDown) 
-                {
-                    rig.weight = 1f;
-                }
+            }
+            else if (Input.GetMouseButton(1))
+            {
+                rig.weight = 1f;
+            }
+            else
+            {
+                rig.weight = 0f;
             }
         }
         else
