@@ -15,6 +15,8 @@ public class PauseUI : MonoBehaviour
     public RectTransform optionBar;
     private Vector2 optionBarDefaultPos = new Vector2(0f, 170f);
 
+    private PlayerController player;
+
     public RectTransform[] optionButtons;
 
     public BagPanelManager[] optionList;
