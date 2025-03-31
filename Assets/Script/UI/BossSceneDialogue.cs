@@ -148,6 +148,7 @@ public class BossSceneDialogue : MonoBehaviour
 
     IEnumerator LastTalkDialogue()
     {
+        UIManager.CurrentState = UIState.Finish;
         checkToReturn.gameObject.SetActive(true);
         if (charController != null) charController.enabled = false;
         if (playerController != null) playerController.enabled = false;

@@ -23,6 +23,7 @@ public class CheckToReturnUI : MonoBehaviour
 
     public void PressExit()
     {
+        UIManager.CurrentState = UIState.None;
         StartCoroutine(Exit());
     }
 

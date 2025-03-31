@@ -56,7 +56,7 @@ public class SkillManager : MonoBehaviour
     // 當點擊按鍵時, 呼叫該按鍵綁定的技能
     private void UseSkill(GameInput.Bind bind)
     {
-		if (player.IsSkilling || player.IsAiming || player.IsDie || player.IsCriticalHit || player.IsHit || player.IsRivive || player.IsTeleporting || bossScene.IsTalk) return;
+		if (player.IsSkilling || player.IsAiming || player.IsDie || player.IsCriticalHit || player.IsHit || player.IsRivive || player.IsTeleporting || bossScene.IsTalk || UIManager.CurrentState != UIState.None) return;
 
 		if(skillBind.TryGetValue(bind, out BaseSkill baseSkill))
 		{
