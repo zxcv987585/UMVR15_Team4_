@@ -440,15 +440,15 @@ public class PlayerController : MonoBehaviour
     public void Died()
     {
         IsDie = true;
+        IsAiming = false;
+        //if (UIManager.CurrentState == UIState.Menu)
+        //{
+        //    Cursor.lockState = CursorLockMode.Locked;
+        //    Cursor.visible = false;
 
-        if (UIManager.CurrentState == UIState.Menu)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-
-            PauseUI pauseUI = FindAnyObjectByType<PauseUI>();
-            StartCoroutine(pauseUI.RunPauseUI());
-        }
+        //    PauseUI pauseUI = FindAnyObjectByType<PauseUI>();
+        //    StartCoroutine(pauseUI.RunPauseUI());
+        //}
     }
 
     //Dash狀態機的核心邏輯
