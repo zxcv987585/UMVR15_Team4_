@@ -12,6 +12,7 @@ public class SkillManager : MonoBehaviour
 	private Dictionary<GameInput.Bind, BaseSkill> skillBind;
 	private PlayerController player;
 	private PlayerHealth playerHealth;
+	private BossSceneDialogue bossScene;
 
     private void Awake()
     {
@@ -30,6 +31,7 @@ public class SkillManager : MonoBehaviour
 	{
         player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         playerHealth = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
+        bossScene = FindAnyObjectByType<BossSceneDialogue>();
 
         skillBind = new Dictionary<GameInput.Bind, BaseSkill>();
 		
@@ -54,7 +56,7 @@ public class SkillManager : MonoBehaviour
     // 當點擊按鍵時, 呼叫該按鍵綁定的技能
     private void UseSkill(GameInput.Bind bind)
     {
-		if (player.IsSkilling || player.IsAiming || player.IsDie || player.IsCriticalHit || player.IsHit || player.IsRivive || player.IsTeleporting) return;
+		if (player.IsSkilling || player.IsAiming || player.IsDie || player.IsCriticalHit || player.IsHit || player.IsRivive || player.IsTeleporting || bossScene.IsTalk) return;
 
 		if(skillBind.TryGetValue(bind, out BaseSkill baseSkill))
 		{
