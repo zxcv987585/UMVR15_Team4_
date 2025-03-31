@@ -237,7 +237,7 @@ public class CameraController : MonoBehaviour
     // 取得瞄準輸入
     private void SetAim(bool isAiming)
     {
-        if (player.IsDie || player.IsDash || DialogueUI.IsTalk || forPortal) return;
+        if (player.IsDie || player.IsDash || DialogueUI.IsTalk || forPortal || player.IsHit || player.IsDashAttack) return;
         this.isAiming = isAiming;
         this.isRightKeyDown = isAiming;
     }

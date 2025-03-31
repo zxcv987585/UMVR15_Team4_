@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -23,6 +22,7 @@ public class MissonFailUI : MonoBehaviour
     }
     private void ShowMissonFailUI()
     {
+        UIManager.CurrentState = UIState.MissionFail;
         StartCoroutine(MissonFailUIAnimation());
     }
 
