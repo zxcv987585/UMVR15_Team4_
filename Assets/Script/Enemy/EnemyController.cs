@@ -277,6 +277,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 	private IEnumerator EnableNavMeshDelay(float checkInterval = 0.1f)
 	{
 		NavMeshHit hit;
+		int enemyAreaMask = 1 << NavMesh.GetAreaFromName("Enemy");
 
 		yield return new WaitForSeconds(0.1f);
 		
@@ -284,7 +285,7 @@ public class EnemyController : MonoBehaviour, IEnemy
 		while (true)
 		{
 			// 嘗試在當前位置附近尋找 NavMesh 上的點
-			if (NavMesh.SamplePosition(transform.position, out hit, 1f, NavMesh.AllAreas))
+			if (NavMesh.SamplePosition(transform.position, out hit, 1f, enemyAreaMask))
 			{
 				// 當 y 軸低於 NavMesh 點 或 靠近該點，視為已落地
 				if (transform.position.y <= hit.position.y + 0.1f)

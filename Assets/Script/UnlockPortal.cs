@@ -10,6 +10,8 @@ public class UnlockPortal : MonoBehaviour
     private bool _isEnemyClear = false;
     private bool _isTakeFinish = false;
 
+    private int _hideUnlockCount = 0;
+
     private void Start()
     {
         if(_enemySpawnTirgger != null)
@@ -33,6 +35,18 @@ public class UnlockPortal : MonoBehaviour
         if(_isEnemyClear && _isTakeFinish)
         {
             _enableObject.SetActive(true);
+        }
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            _hideUnlockCount++;
+            if(_hideUnlockCount >= 10)
+            {
+                _enableObject.SetActive(true);
+            }
         }
     }
 }
