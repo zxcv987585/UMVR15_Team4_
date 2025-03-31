@@ -123,7 +123,7 @@ public class CameraController : MonoBehaviour
         {
             isAiming = false;
         }
-        if(!player.IsCriticalHit && isRightKeyDown)
+        if(!player.IsCriticalHit && !player.IsDie && isRightKeyDown)
         {
             isAiming = true;
         }
@@ -235,11 +235,11 @@ public class CameraController : MonoBehaviour
 
 
     // 取得瞄準輸入
-    private void SetAim(bool isAiming)
+    private void SetAim(bool IsAiming)
     {
-        if (player.IsDie || player.IsDash || DialogueUI.IsTalk || forPortal) return;
-        this.isAiming = isAiming;
-        this.isRightKeyDown = isAiming;
+        if (player.IsDash || DialogueUI.IsTalk || forPortal || player.IsHit || player.IsDashAttack) return;
+        this.isAiming = IsAiming;
+        this.isRightKeyDown = IsAiming;
     }
 
     // BOSS 傳送門進入後的角度調整

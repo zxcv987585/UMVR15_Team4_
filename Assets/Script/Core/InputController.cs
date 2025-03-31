@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum UIState { None, Menu, Pause, Rebirth }
+public enum UIState { None, Menu, Pause, Rebirth, MissionFail }
 public static class UIManager
 {
     public static UIState CurrentState = UIState.None;
@@ -9,8 +9,6 @@ public static class UIManager
 public class InputController : MonoBehaviour
 {
     bool canInput = true;
-    bool menu = false;
-    bool press = false;
 
     private void Start()
     {
@@ -45,7 +43,7 @@ public class InputController : MonoBehaviour
 
     private void ItemMenu()
     {
-        if (UIManager.CurrentState == UIState.Rebirth)
+        if (UIManager.CurrentState == UIState.Rebirth || UIManager.CurrentState == UIState.MissionFail)
         {
             return;
         }
@@ -74,7 +72,7 @@ public class InputController : MonoBehaviour
 
     private void PressESCUI()
     {
-        if (UIManager.CurrentState == UIState.Rebirth)
+        if (UIManager.CurrentState == UIState.Rebirth || UIManager.CurrentState == UIState.MissionFail)
         {
             return;
         }
