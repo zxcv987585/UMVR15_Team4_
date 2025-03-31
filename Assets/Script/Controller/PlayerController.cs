@@ -78,7 +78,6 @@ public class PlayerController : MonoBehaviour
     public bool IsDie { get; set; } = false;
     public bool IsCloseEnemy { get; set; } = false;
     public bool Invincible { get; set; } = false;
-    public bool InPress {  get; set; } = false;
     public bool IsSkilling { get; private set; } = false;
     public bool IsCriticalHit { get; set; } = false;
     public bool IsAttackBuff { get; private set; } = false;
@@ -150,7 +149,6 @@ public class PlayerController : MonoBehaviour
         GameInput.Instance.OnAttackAction += SetIsAttack;
         GameInput.Instance.OnDashAction += Dash;
         GameInput.Instance.OnLockAction += LockOn;
-        GameInput.Instance.OnEscape += PressESCUI;
         //Delegate訂閱事件
         health.OnDamage += GetHit;
         health.HaveReviveItemDead += Died;
@@ -159,7 +157,6 @@ public class PlayerController : MonoBehaviour
         health.OnGunDamage += TakeAimHit;
         health.PlayerRivive += Rivive;
         levelSystem.PlayerLevelup += LevelUp;
-        stopUI.ContinueGame += Continue;
     }
 
     void Update()
@@ -286,7 +283,7 @@ public class PlayerController : MonoBehaviour
     //攻擊模式的核心邏輯
     public void SetIsAttack(bool Attack)
     {
-        if (IsCriticalHit || IsHit || IsSkilling || IsDie || UIManager.CurrentState == UIState.Menu || InPress || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
+        if (IsCriticalHit || IsHit || IsSkilling || IsDie || UIManager.CurrentState == UIState.Menu || UIManager.CurrentState == UIState.Pause || stateMachine.GetState<AimState>() != null || stateMachine.GetState<DashState>() != null) return;
 
         IsAttack = Attack;
     }
@@ -304,7 +301,7 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (IsCriticalHit || IsHit || IsDie || IsRivive || IsTeleporting || IsSkilling || UIManager.CurrentState == UIState.Menu || InPress || stateMachine.GetState<DashState>() != null) return;
+        if (IsCriticalHit || IsHit || IsDie || IsRivive || IsTeleporting || IsSkilling || UIManager.CurrentState == UIState.Menu || UIManager.CurrentState == UIState.Pause || stateMachine.GetState<DashState>() != null) return;
 
         this.IsAiming = isAim;
 
@@ -438,14 +435,6 @@ public class PlayerController : MonoBehaviour
     {
         IsDie = true;
         IsAiming = false;
-        //if (UIManager.CurrentState == UIState.Menu)
-        //{
-        //    Cursor.lockState = CursorLockMode.Locked;
-        //    Cursor.visible = false;
-
-        //    PauseUI pauseUI = FindAnyObjectByType<PauseUI>();
-        //    StartCoroutine(pauseUI.RunPauseUI());
-        //}
     }
 
     //Dash狀態機的核心邏輯
@@ -576,14 +565,6 @@ public class PlayerController : MonoBehaviour
     private void DisableRootMotion()
     {
         animator.applyRootMotion = false;
-    }
-
-    //進入暫停選單的邏輯
-    private void PressESCUI()
-    {
-        if (UIManager.CurrentState == UIState.Menu) return;
-
-        InPress = !InPress;
     }
 
     //平滑旋轉角度
@@ -754,11 +735,6 @@ public class PlayerController : MonoBehaviour
         }
 
         UIManager.CurrentState = UIState.None;
-    }
-
-    private void Continue()
-    {
-        InPress = false;
     }
 
     public void GetIntoPortal()
