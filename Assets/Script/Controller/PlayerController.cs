@@ -198,6 +198,11 @@ public class PlayerController : MonoBehaviour
             StopCoroutine(hitCoolDownCoroutine);
             animator.CrossFade("Die", 0f, 0);
         }
+
+        if(UIManager.CurrentState == UIState.Menu)
+        {
+            IsAiming = false;
+        }
     }
 
     //訂閱跳轉場景事件

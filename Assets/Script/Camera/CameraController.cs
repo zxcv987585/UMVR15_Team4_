@@ -119,7 +119,7 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         //玩家如果進入特定狀態，強制攝影機取消越肩視角
-        if (player.IsDie || player.IsCriticalHit || player.IsDash || player.IsSkilling || player.IsDashAttack || DialogueUI.IsTalk || forPortal || player.IsHit)
+        if (player.IsDie || player.IsCriticalHit || player.IsDash || player.IsSkilling || player.IsDashAttack || DialogueUI.IsTalk || forPortal || player.IsHit || UIManager.CurrentState == UIState.Menu)
         {
             isAiming = false;
         }
