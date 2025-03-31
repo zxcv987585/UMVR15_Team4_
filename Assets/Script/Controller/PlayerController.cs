@@ -306,7 +306,7 @@ public class PlayerController : MonoBehaviour
     //瞄準模式的核心邏輯
     private void SetIsAiming(bool isAim)
     {
-        if (IsCriticalHit || IsHit || IsDie || IsRivive || IsTeleporting || IsSkilling || UIManager.CurrentState == UIState.Menu || UIManager.CurrentState == UIState.Pause || stateMachine.GetState<DashState>() != null) return;
+        if (IsCriticalHit || IsHit || IsDie || IsRivive || IsTeleporting || IsSkilling || IsDashAttack || UIManager.CurrentState == UIState.Menu || UIManager.CurrentState == UIState.Pause || stateMachine.GetState<DashState>() != null) return;
 
         this.IsAiming = isAim;
 
@@ -455,6 +455,7 @@ public class PlayerController : MonoBehaviour
                 StopCoroutine(HitCoolDown());
             }
             IsDash = true;
+            IsAttack = false;
             lastDashTime = Time.time;
         }
     }
