@@ -384,7 +384,7 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(playerData.HitCoolTime);
 
-        if (IsCriticalHit)
+        if (IsCriticalHit || IsDash)
             yield break;
 
         IsHit = false;
